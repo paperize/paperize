@@ -1,7 +1,7 @@
 {
   "name": "paperize",
   "version": "0.0.1",
-  "description": "Monorepo of all Paperize projects!",
+  "description": "Monorepo of all Paperize projects",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
