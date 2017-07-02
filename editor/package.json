@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "$(npm bin)/cypress run",
     "deploy": "coffee deploy.coffee"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
