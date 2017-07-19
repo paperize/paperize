@@ -45,6 +45,7 @@ lock.on("authenticated", (authResult) => {
   lock.getProfile(authResult.idToken, (error, profile) => {
     if (error) {
       // Handle error
+      console.error("Error fetching User ID Token: ", error)
       return
     }
     // Store the user
