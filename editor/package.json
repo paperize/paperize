@@ -20,6 +20,7 @@
     "bluebird": "^3.4.7",
     "coffee-script": "^1.12.4",
     "concurrently": "^3.5.0",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.2",
     "cypress": "^0.10.1",
     "express": "^4.14.1",

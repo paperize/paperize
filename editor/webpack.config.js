@@ -1,4 +1,5 @@
-var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin')
+  , path = require('path');
 
 module.exports = {
   entry: './lib/main.js',
@@ -6,6 +7,11 @@ module.exports = {
     filename: 'editor.js',
     path: path.resolve(__dirname, 'build')
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      { context: 'static', from: '**'}
+    ])
+  ],
   module: {
     loaders: [
       {
