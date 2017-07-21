@@ -1,16 +1,14 @@
 <template lang="pug">
 .top-bar
-  .row
-    .columns.small-12
-      .top-bar-title
-        p
-          router-link(to="/")
-            strong Paperize.io
-      div
-        .top-bar-right
-          ul.menu
-            li
-              profile-component
+  .top-bar-left
+    ul.menu
+      li
+        router-link(to="/")
+          strong Paperize.io
+  .top-bar-right
+    ul.menu
+      li
+        profile-component
 </template>
 
 <script>

@@ -1,9 +1,8 @@
 <template lang="pug">
-div
+.grid-container
   title-bar
-
-  .row
-    .small-12.columns
+  .grid-x
+    .small-12.cell
       h2 Welcome to New Paperize!
 
       p We're in beta right now, just starting to put the basic pieces together, but we can still have some fun.
