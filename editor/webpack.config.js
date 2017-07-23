@@ -1,4 +1,5 @@
-var CopyWebpackPlugin = require('copy-webpack-plugin')
+var webpack = require('webpack')
+  , CopyWebpackPlugin = require('copy-webpack-plugin')
   , path = require('path');
 
 module.exports = {
@@ -8,6 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build')
   },
   plugins: [
+    new webpack.EnvironmentPlugin({'NODE_ENV': 'development'}),
     new CopyWebpackPlugin([
       { context: 'static', from: '**'}
     ])

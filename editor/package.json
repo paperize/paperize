@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run start-webpack\" \"npm run start-server\"",
     "start-webpack": "webpack --watch",
     "start-server": "http-server build",
-    "test": "cypress run",
+    "test": "NODE_ENV=test npm start",
     "deploy": "coffee deploy.coffee"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
