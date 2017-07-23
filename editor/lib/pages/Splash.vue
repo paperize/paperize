@@ -12,7 +12,7 @@
 
 <script>
 
-  import TitleBar from './TitleBar.vue'
+  import TitleBar from '../TitleBar.vue'
 
   export default {
     components: {

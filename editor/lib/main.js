@@ -4,7 +4,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { router } from './routes'
 
-if(process.env['NODE_ENV'] == 'test') {
+if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
 }

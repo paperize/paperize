@@ -52,8 +52,8 @@ div
 
 <script>
 
-  import TitleBar from './TitleBar.vue'
-  import GameRepo from './game.js'
+  import TitleBar from '../TitleBar.vue'
+  import GameRepo from '../game.js'
 
   let game = {}
   let activeComponentId = null
