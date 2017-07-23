@@ -1,3 +1,5 @@
+import config from './config'
+
 const AUTH0_CLIENT_ID    = 'hgqnKQas6FWes8vnrpM6ig4Y5e4PzGJU'
 const AUTH0_DOMAIN       = 'paperize.auth0.com'
 const AUTH0_CALLBACK_URL = location.href
@@ -5,7 +7,8 @@ const LOCAL_STORAGE_KEY  = 'id_token'
 
 let profileCallback = null
 let profileMemo = null
-const lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN)
+
+const lock = new config.Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN)
 
 let callbackForProfile = () => {
   // Have a profile? Have a callback? Call the callback with the profile!

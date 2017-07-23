@@ -19,6 +19,7 @@
     user.authenticated = true
     user.name          = profile.nickname
     user.avatarSrc     = profile.picture
+    window.location.href = "/#/games"
   })
 
   let logout = () => {
