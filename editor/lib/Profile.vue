@@ -8,11 +8,11 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState, mapMutations, mapActions } from 'vuex'
 
   export default {
     computed: mapState(['authenticated', 'profile']),
-    methods: mapMutations(['logout'])
+    methods: {...mapMutations(['logout']), ...mapActions(['login'])}
   }
 </script>
 
