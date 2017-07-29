@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import jwtDecode from 'jwt-decode'
 
 import auth from '../auth'
 
@@ -17,6 +18,11 @@ const EMPTY_STATE = {
 
 // LocalStore persistence layer
 let persistence = {
+  tokenToRecordId: function(idToken) {
+    // parse the JWT for a globally unique user id
+    return jwtDecode(idToken).sub
+  },
+
   getLocalDB: function() {
     return JSON.parse(localStorage.getItem("persistence")) || {}
   },
@@ -33,35 +39,43 @@ let persistence = {
   },
 
   loadProfile: function(idToken) {
-    // hydrate the profile from the session
-    let localDB = this.getLocalDB()
-    console.log(localDB)
-    let profile = localDB[idToken] && localDB[idToken].profile
+    return this.loadPersisted("profile", idToken)
+  },
 
-    return profile
+  loadGames: function(idToken) {
+    return this.loadPersisted("games", idToken)
+  },
+
+  loadPersisted: function(recordName, idToken) {
+    // get a record ID
+    let recordId = this.tokenToRecordId(idToken)
+    // load the entire database
+    let localDB = this.getLocalDB()
+    // look up this record by name under the id
+    let record = localDB[recordId] && localDB[recordId][recordName] || null
+
+    return record
   },
 
   saveState: function({ idToken, profile, games }) {
-    if(idToken) {
-      localStorage.setItem("id_token", idToken)
-    } else {
+    if(!idToken) {
       localStorage.removeItem("id_token")
+    } else {
+      localStorage.setItem("id_token", idToken)
+
+      let recordId = this.tokenToRecordId(idToken)
+      let localDB = this.getLocalDB()
+
+      if(!localDB[recordId]) {
+        localDB[recordId] = {}
+      }
+
+      localDB[recordId].profile = profile
+      localDB[recordId].games = games
+
+      this.setLocalDB(localDB)
     }
-
-    let localDB = this.getLocalDB()
-
-    if(!localDB[idToken]) {
-      localDB[idToken] = {}
-    }
-
-    localDB[idToken].profile = profile
-    localDB[idToken].games = games
-
-    this.setLocalDB(localDB)
-
   }
-  // - hydrate the games collection from the user token
-  // games = JSON.load(localStorage.getItem())
 }
 
 let store = new Vuex.Store({

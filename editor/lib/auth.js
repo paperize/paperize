@@ -9,17 +9,4 @@ lock.promptForLogin = () => {
   lock.show()
 }
 
-// lock.on("authenticated", (authResult) => {
-//   lock.getProfile(authResult.idToken, (error, profile) => {
-//     if (error) {
-//       // Handle error
-//       console.error("Error fetching User ID Token: ", error)
-//       return
-//     }
-//     // Store the ID Token
-//     // localStorage.setItem(LOCAL_STORAGE_KEY, authResult.idToken)
-//     // Store the Profile
-//   })
-// })
-
 export default lock
