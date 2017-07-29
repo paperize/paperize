@@ -5,35 +5,35 @@ const ID_TOKEN_KEY = 'id_token'
 const DATABASE_KEY = 'persistence'
 
 export default {
-  tokenToRecordId: function(idToken) {
+  tokenToRecordId (idToken) {
     // parse the JWT for a globally unique user id
     return jwtDecode(idToken).sub
   },
 
-  getLocalDB: function() {
+  getLocalDB () {
     return JSON.parse(localStorage.getItem(DATABASE_KEY)) || {}
   },
 
-  setLocalDB: function(localDB) {
+  setLocalDB (localDB) {
     localStorage.setItem(DATABASE_KEY, JSON.stringify(localDB))
   },
 
-  loadToken: function() {
+  loadToken () {
     // fetch the JWT from storage
     let token = localStorage.getItem(ID_TOKEN_KEY)
 
     return token
   },
 
-  loadProfile: function(idToken) {
+  loadProfile (idToken) {
     return this.loadPersisted("profile", idToken)
   },
 
-  loadGames: function(idToken) {
+  loadGames (idToken) {
     return this.loadPersisted("games", idToken)
   },
 
-  loadPersisted: function(recordName, idToken) {
+  loadPersisted (recordName, idToken) {
     // get a record ID
     let recordId = this.tokenToRecordId(idToken)
     // load the entire database
@@ -44,7 +44,7 @@ export default {
     return record
   },
 
-  saveState: function({ idToken, profile, games }) {
+  saveState ({ idToken, profile, games }) {
     if(!idToken) {
       localStorage.removeItem(ID_TOKEN_KEY)
     } else {
