@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import jwtDecode from 'jwt-decode'
 
+import persistence from './local_store_persistence'
 import auth from '../auth'
 
 Vue.use(Vuex)
@@ -14,68 +14,6 @@ const EMPTY_STATE = {
     avatarSrc: ''
   },
   games: []
-}
-
-// LocalStore persistence layer
-let persistence = {
-  tokenToRecordId: function(idToken) {
-    // parse the JWT for a globally unique user id
-    return jwtDecode(idToken).sub
-  },
-
-  getLocalDB: function() {
-    return JSON.parse(localStorage.getItem("persistence")) || {}
-  },
-
-  setLocalDB: function(localDB) {
-    localStorage.setItem("persistence", JSON.stringify(localDB))
-  },
-
-  loadToken: function() {
-    // fetch the JWT from storage
-    let token = localStorage.getItem("id_token")
-
-    return token
-  },
-
-  loadProfile: function(idToken) {
-    return this.loadPersisted("profile", idToken)
-  },
-
-  loadGames: function(idToken) {
-    return this.loadPersisted("games", idToken)
-  },
-
-  loadPersisted: function(recordName, idToken) {
-    // get a record ID
-    let recordId = this.tokenToRecordId(idToken)
-    // load the entire database
-    let localDB = this.getLocalDB()
-    // look up this record by name under the id
-    let record = localDB[recordId] && localDB[recordId][recordName] || null
-
-    return record
-  },
-
-  saveState: function({ idToken, profile, games }) {
-    if(!idToken) {
-      localStorage.removeItem("id_token")
-    } else {
-      localStorage.setItem("id_token", idToken)
-
-      let recordId = this.tokenToRecordId(idToken)
-      let localDB = this.getLocalDB()
-
-      if(!localDB[recordId]) {
-        localDB[recordId] = {}
-      }
-
-      localDB[recordId].profile = profile
-      localDB[recordId].games = games
-
-      this.setLocalDB(localDB)
-    }
-  }
 }
 
 let store = new Vuex.Store({
