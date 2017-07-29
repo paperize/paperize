@@ -2,7 +2,7 @@ console.log("Loading Paperize Editor...")
 
 import Vue from 'vue'
 import store from './store'
-import { router } from './routes'
+import router from './routes'
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false

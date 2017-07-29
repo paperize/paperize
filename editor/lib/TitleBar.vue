@@ -3,7 +3,7 @@
   .top-bar-left
     ul.menu
       li
-        router-link(to="/")
+        router-link(:to="{ name: 'splash' }")
           strong Paperize.io
   .top-bar-right
     ul.menu

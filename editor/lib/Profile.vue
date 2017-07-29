@@ -12,7 +12,7 @@
 
   export default {
     computed: mapState(['authenticated', 'profile']),
-    methods: {...mapMutations(['logout']), ...mapActions(['login'])}
+    methods: { ...mapMutations(['logout']), ...mapActions(['login']) }
   }
 </script>
 
@@ -21,6 +21,10 @@
     max-width: 40px;
     max-height: 40px;
     border-radius: 50px;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   button, .avatar {

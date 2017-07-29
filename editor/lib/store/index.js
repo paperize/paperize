@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import persistence from './local_store_persistence'
 import auth from '../auth'
+import router from '../routes'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,7 @@ let store = new Vuex.Store({
       state.profile.avatarSrc = ''
 
       persistence.saveState(state)
+      router.push({ name: 'splash' })
     },
 
     authenticateAs (state, payload) {
@@ -50,6 +52,7 @@ let store = new Vuex.Store({
 
       let commitProfile = function() {
         context.commit("authenticateAs", { idToken, profile })
+        router.push({ name: 'gameManager' })
       }
 
       if(!profile) {
