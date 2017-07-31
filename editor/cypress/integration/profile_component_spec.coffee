@@ -11,15 +11,7 @@ describe "Profile component", ->
 
   context "with login", ->
     beforeEach ->
-      localStorage.setItem('id_token', 'test_login')
-
-      localStorage.setItem 'persistence', JSON.stringify
-        'test_login':
-          profile:
-            name: 'Avid Gamer',
-            avatarSrc: 'http://placehold.it/20/20'
-          games: []
-
+      cy.login()
       cy.visit("/")
 
     it "'Sign In' link is not active", ->

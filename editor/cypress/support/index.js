@@ -17,7 +17,9 @@
 // using ES2015 syntax:
 import "./commands"
 import "./defaults"
+import "./index"
 
 // Alternatively you can use CommonJS syntax:
 // require("./commands")
 // require("./defaults")
+// require("./index")

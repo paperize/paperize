@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueAnalytics from 'vue-analytics'
+import VueAnalytics from 'vue-analytics' // Google Analytics
 
 Vue.use(VueRouter)
 
@@ -16,6 +16,7 @@ const routes = [
 
 var router = new VueRouter({ routes })
 
+// Only track pageviews in production builds
 if(process.env.NODE_ENV === 'production') {
   Vue.use(VueAnalytics, {
     id: 'UA-48330981-5',
