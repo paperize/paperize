@@ -47,7 +47,6 @@ let store = new Vuex.Store({
     },
 
     loggedInAs (context, { idToken }) {
-      console.log('loggedInAs', idToken)
       let profile = persistence.loadProfile(idToken)
 
       let commitProfile = function() {
@@ -61,14 +60,12 @@ let store = new Vuex.Store({
             console.error("Error fetching profile for:", idToken)
             console.error(error.message)
           } else {
-            console.log("Profile fetched from Auth0")
             profile = fetchedProfile
             profile.avatarSrc = profile.picture
             commitProfile()
           }
         })
       } else {
-        console.log("Profile fetched from localStorage")
         commitProfile()
       }
     }
@@ -79,13 +76,11 @@ let idToken = persistence.loadToken()
 
 if(idToken) {
   // Log in with a persisted token
-  console.log("Logging in from localStorage")
   store.dispatch("loggedInAs", { idToken })
 
 } else {
   // Log in with Auth0
   auth.on("authenticated", ({ idToken }) => {
-    console.log("Logging in from Auth0")
     store.dispatch("loggedInAs", { idToken })
   })
 }

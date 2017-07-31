@@ -1,6 +1,5 @@
 <template lang="pug">
 .grid-container
-  title-bar
   .grid-x
     .small-12.cell
       h2 Welcome to New Paperize!
@@ -10,18 +9,6 @@
         em Sign in above and we'll get started playing with games and their components.
 </template>
 
-<script>
+<script></script>
 
-  import TitleBar from '../TitleBar.vue'
-
-  export default {
-    components: {
-      "title-bar": TitleBar
-    }
-  }
-
-</script>
-
-<style>
-
-</style>
+<style></style>
