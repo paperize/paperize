@@ -23,6 +23,8 @@ describe "Game Manager page", ->
     it.only "lets me create a new game", ->
       cy.contains("New Game").click()
 
+      cy.contains("Create a New Game")
+
     it "lets me load an example game"
 
     context "with existing games", ->

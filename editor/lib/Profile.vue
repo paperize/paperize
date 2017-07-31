@@ -16,7 +16,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .avatar {
     max-width: 40px;
     max-height: 40px;
