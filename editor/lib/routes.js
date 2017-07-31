@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueAnalytics from 'vue-analytics'
+
 Vue.use(VueRouter)
 
 import Splash      from './pages/Splash.vue'
@@ -13,5 +15,12 @@ const routes = [
 ]
 
 var router = new VueRouter({ routes })
+
+if(process.env.NODE_ENV === 'production') {
+  Vue.use(VueAnalytics, {
+    id: 'UA-48330981-5',
+    router
+  })
+}
 
 export default router

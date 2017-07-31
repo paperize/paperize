@@ -8,6 +8,7 @@
     "start-webpack": "webpack --watch",
     "start-server": "http-server build",
     "test": "NODE_ENV=test npm start",
+    "build": "NODE_ENV=production webpack",
     "deploy": "coffee deploy.coffee"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
@@ -42,6 +43,7 @@
     "event-emitter": "^0.3.4",
     "jwt-decode": "^2.2.0",
     "vue": "^2.4.1",
+    "vue-analytics": "^4.1.3",
     "vue-loader": "^11.1.3",
     "vue-router": "^2.3.0",
     "vuex": "^2.3.1"
