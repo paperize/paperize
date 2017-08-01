@@ -4,6 +4,6 @@ export default {
   },
 
   destroyed () {
-    $(this.$el).foundation().destroy()
+    $(this.$el).foundation("destroy")
   },
 }
