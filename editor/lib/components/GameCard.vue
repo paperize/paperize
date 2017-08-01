@@ -1,5 +1,5 @@
 <template lang="pug">
-.card.small-6.medium-4.large-3.cell
+.game.card.small-6.medium-4.large-3.cell(:id="`game-${ game.id }`")
   .card-divider
     h4 {{ game.title }}
 
