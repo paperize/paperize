@@ -1,0 +1,35 @@
+{
+  "loveLetter": {
+    "id": "love-letter",
+    "title": "Love Letter",
+    "description": "Chaotic microgame of forbidden royal romance.",
+    "ageRange": "6+",
+    "playerCount": "2-4",
+    "playTime": "5-45 minutes",
+    "components": [
+      
+    ]
+  },
+  "carcassone": {
+    "id": "carcassone",
+    "title": "Carcassonne",
+    "description": "The original medium-weight tile-layer.",
+    "ageRange": "8+",
+    "playerCount": "2-6",
+    "playTime": "20-120 minutes",
+    "components": [
+      
+    ]
+  },
+  "pandemic": {
+    "id": "pandemic",
+    "title": "Pandemic",
+    "description": "Cooperative game of save the world.",
+    "ageRange": "12+",
+    "playerCount": "2-6",
+    "playTime": "45 - 150 minutes",
+    "components": [
+      
+    ]
+  }
+}

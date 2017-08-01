@@ -32,6 +32,23 @@ Cypress.addParentCommand "login", ->
 
   log.snapshot().end()
 
+Cypress.addParentCommand "loadGameFixtures", () ->
+  cy.fixture("games").then (games) ->
+    cy.setGames(Cypress._.values(games))
+
+Cypress.addParentCommand "setGames", (games) ->
+  log = Cypress.Log.command
+    name: "setGames"
+    message: ["#{games.length} games"]
+
+  persistenceItem = JSON.parse(localStorage.getItem("persistence"))
+  throw new Error("No persistence detected. Did you remember to `cy.login()` first?") unless persistenceItem
+
+  persistenceItem[GOOGLE_STYLE_PAYLOAD.sub].games = games
+  localStorage.setItem("persistence", JSON.stringify(persistenceItem))
+
+  log.snapshot().end()
+
 Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
   cy.wrap(inputTextPairs).then (selectorsAndText) ->
     for key in Object.keys selectorsAndText
