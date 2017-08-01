@@ -1,62 +1,42 @@
 <template lang="pug">
-div(v-if="!authenticated")
-  p
-    | You are not logged in.
-    a(v-on:click="login") Click here to log in now.
+.grid-container
+  .grid-x(v-if="!authenticated")
+    p
+      | You are not logged in.
+      a(v-on:click="login") Click here to log in now.
 
-div(v-else)
-  h2 Game Manager
+  .grid-x.grid-margin-x(v-else)
+    .small-12.cell
+      h2 Game Manager
 
-  .card(style="width: 300px;" v-for="game in games")
-    .card-divider
-      h4 {{ game.title }}
+      ul.menu
+        li
+          a(data-open="new-game-modal") Load Example
+        li
+          a(data-open="new-game-modal") New Game
 
-    img(v-bind:src="game.coverArt")
+    game-card(v-for="game in games" :key="game.id" :game="game")
 
-    .card-section
-      h4 This is a card.
-      p It has an easy to override visual style, and is appropriately subdued.
-
-  a(data-open="new-game-modal") New Game
-
-  .reveal#new-game-modal(data-reveal)
-    h1 Create a New Game
-    hr
-
-    form(method="post" v-on:submit.prevent="submitForm")
-      label(for="game-title") Title
-      input(id="game-title" name="title" v-model="game.title")
-
-      label(for="game-description") Description
-      textarea(id="game-description" name="description" v-model="game.description")
-
-      label(for="game-player-count") Player Count
-      input(id="game-player-count" name="player-count" v-model="game.playerCount")
-
-      label(for="game-age-range") Age Range
-      input(id="game-age-range" name="age-range" v-model="game.ageRange")
-
-      label(for="game-play-time") Play Time
-      input(id="game-play-time" name="play-time" v-model="game.playTime")
-
-      input(type="submit" value="Create Game")
-
-    button.close-button(aria-label="Close modal" type="button" data-close)
-      span(aria-hidden="true") &times;
+    game-form#new-game-modal(:game="newGame" @submitted="resetNewGame")
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
   import { mapState, mapActions } from 'vuex'
-
   import Game from '../models/game'
+  import GameCard from '../components/GameCard.vue'
+  import GameForm from '../components/GameForm.vue'
+
+  let gameFactory = () => Game.factory()
 
   export default {
-    mixins: [FoundationMixin],
+    components: {
+      "game-card": GameCard,
+      "game-form": GameForm
+    },
 
     data () {
       return {
-        game: Game.factory()
+        newGame: gameFactory()
       }
     },
 
@@ -67,13 +47,8 @@ div(v-else)
     methods: {
       ...mapActions(["login"]),
 
-      submitForm () {
-        // Add the game to the store
-        this.$store.commit("createGame", { game: this.game })
-        // Close the modal
-        $('#new-game-modal').foundation('close');
-        // Wipe the game
-        this.game = Game.factory(Game.EX_BILL)
+      resetNewGame () {
+        this.newGame = gameFactory()
       }
     }
   }
