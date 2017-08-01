@@ -31,3 +31,10 @@ Cypress.addParentCommand "login", ->
   localStorage.setItem 'persistence', JSON.stringify(persistenceItem)
 
   log.snapshot().end()
+
+Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
+  cy.wrap(inputTextPairs).then (selectorsAndText) ->
+    for key in Object.keys selectorsAndText
+      cy.get(key).type(selectorsAndText[key])
+
+    return null
