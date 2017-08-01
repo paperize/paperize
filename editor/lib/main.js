@@ -3,7 +3,7 @@ console.log("Loading Paperize Editor...")
 import Vue from 'vue'
 import store from './store'
 import router from './routes'
-import TitleBar from './TitleBar.vue'
+import TitleBar from './components/TitleBar.vue'
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false

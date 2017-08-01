@@ -1,10 +1,9 @@
-<template>
-  <div>
-    <span v-bind:class="{ active: authenticated }">{{ profile.name }}</span>
-    <img alt="avatar" class="avatar" v-bind:src="profile.avatarSrc" v-bind:class="{ active: authenticated }">
-    <button type="submit" v-on:click="login()" v-bind:class="{ active: !authenticated }">Sign In</button>
-    <button type="submit" v-on:click="logout()" v-bind:class="{ active: authenticated }">Sign Out</button>
-  </div>
+<template lang="pug">
+div
+  span(v-bind:class="{ active: authenticated }") {{ profile.name }}
+  img(alt="avatar" class="avatar" v-bind:src="profile.avatarSrc" v-bind:class="{ active: authenticated }")
+  button(type="submit" v-on:click="login()" v-bind:class="{ active: !authenticated }") Sign In
+  button(type="submit" v-on:click="logout()" v-bind:class="{ active: authenticated }") Sign Out
 </template>
 
 <script>
