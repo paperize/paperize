@@ -46,6 +46,10 @@ let store = new Vuex.Store({
 
     createGame (state, { game }) {
       state.games.push(game)
+    },
+
+    deleteGame (state, { game }) {
+      state.games.splice(state.games.indexOf(game), 1)
     }
   },
 

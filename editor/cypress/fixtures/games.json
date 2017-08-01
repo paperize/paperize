@@ -10,8 +10,8 @@
       
     ]
   },
-  "carcassone": {
-    "id": "carcassone",
+  "carcassonne": {
+    "id": "carcassonne",
     "title": "Carcassonne",
     "description": "The original medium-weight tile-layer.",
     "ageRange": "8+",

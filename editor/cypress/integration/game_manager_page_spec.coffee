@@ -52,7 +52,7 @@ describe "Game Manager page", ->
 
       it "lets me load an example game"
 
-    context.only "with existing games", ->
+    context "with existing games", ->
       beforeEach ->
         cy.loadGameFixtures()
         cy.visit("/#/games")
@@ -61,10 +61,15 @@ describe "Game Manager page", ->
         cy.get(".game").its("length").should("eq", 3)
 
       it "lets me edit a game", ->
-        cy.get(".game")
+        cy.get("#game-carcassonne")
           .contains("Edit")
           .click()
 
-        cy.url().should("match", /games\/love-letter/)
+        cy.url().should("match", /games\/carcassonne/)
 
-      it "lets me delete an existing game"
+      it "lets me delete an existing game", ->
+        cy.get("#game-carcassonne")
+          .contains("Delete")
+          .click()
+
+        cy.get("game-carcassonne").should("not.exist")

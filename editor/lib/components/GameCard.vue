@@ -19,6 +19,7 @@
         dd {{ game.playerCount }}
 
     router-link.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
+    a.button.alert(@click="deleteGame") Delete
 </template>
 
 <script>
@@ -26,6 +27,12 @@
     props: {
       game: {
         required: true
+      }
+    },
+
+    methods: {
+      deleteGame () {
+        this.$store.commit("deleteGame", { game: this.game })
       }
     }
   }
