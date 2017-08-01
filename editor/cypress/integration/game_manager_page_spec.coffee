@@ -35,6 +35,10 @@ describe "Game Manager page", ->
       cy.get("input[type=submit]").click()
 
       cy.contains "Love Letter"
+      cy.contains "The instant classic"
+      cy.contains "2-4"
+      cy.contains "6+"
+      cy.contains "5-45 minutes"
 
     it "lets me create 3 games", ->
       cy.wrap(["Love Letter", "Carcassonne", "Pandemic"]).each (title) ->
@@ -42,6 +46,7 @@ describe "Game Manager page", ->
         cy.get("input[name=title]").invoke("val").should("eq", "")
         cy.get("input[name=title]").type(title)
         cy.get("input[type=submit]").click()
+        cy.contains(title)
 
     it "lets me load an example game"
 

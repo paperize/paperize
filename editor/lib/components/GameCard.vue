@@ -1,13 +1,22 @@
 <template lang="pug">
 .card.small-6.medium-4.large-3.cell
   .card-divider
-    h4 {{ this.game.title }}
+    h4 {{ game.title }}
 
   img(v-bind:src="game.coverArt")
 
   .card-section
-    h4 This is a card.
-    p It has an easy to override visual style, and is appropriately subdued.
+    p {{ game.description }}
+    dl.grid-x
+      .small-4.cell
+        dt Ages:
+        dd {{ game.ageRange }}
+      .small-4.cell
+        dt Play Time:
+        dd {{ game.playTime }}
+      .small-4.cell
+        dt Players:
+        dd {{ game.playerCount }}
 </template>
 
 <script>
@@ -19,3 +28,9 @@
     }
   }
 </script>
+
+<style scoped>
+  dd {
+    font-size: .8em;
+  }
+</style>

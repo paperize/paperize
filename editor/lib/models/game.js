@@ -5,9 +5,9 @@ const DEFAULT_GAME = {
   id:          -1,
   title:       "",
   coverArt:    "",
-  playerCount: '2-6',
-  playTime:    '30-90 minutes',
-  ageRange:    '8+',
+  playerCount: "",
+  playTime:    "",
+  ageRange:    "",
   components:  [ ]
 }
 
