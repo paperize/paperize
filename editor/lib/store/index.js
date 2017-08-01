@@ -40,6 +40,10 @@ let store = new Vuex.Store({
       persistence.saveState(state)
     },
 
+    setGames (state, { games }) {
+      state.games = games
+    },
+
     createGame (state, { game }) {
       state.games.push(game)
     }
@@ -51,7 +55,10 @@ let store = new Vuex.Store({
     },
 
     loggedInAs (context, { idToken }) {
+      let games = persistence.loadGames(idToken)
       let profile = persistence.loadProfile(idToken)
+
+      context.commit("setGames", { games })
 
       let commitProfile = function() {
         context.commit("authenticateAs", { idToken, profile })
