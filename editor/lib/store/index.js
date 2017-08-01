@@ -38,6 +38,10 @@ let store = new Vuex.Store({
       state.profile.avatarSrc = payload.profile.avatarSrc
 
       persistence.saveState(state)
+    },
+
+    createGame (state, { game }) {
+      state.games.push(game)
     }
   },
 
