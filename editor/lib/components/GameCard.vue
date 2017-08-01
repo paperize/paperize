@@ -17,6 +17,8 @@
       .small-4.cell
         dt Players:
         dd {{ game.playerCount }}
+
+    router-link.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
 </template>
 
 <script>

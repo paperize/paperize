@@ -1,7 +1,5 @@
 <template lang="pug">
 div
-  title-bar
-
   .row
     .columns.small-6
       h1 {{ game.title }}
@@ -12,7 +10,7 @@ div
         .columns.small-4
           dl
             dt Players
-            dd {{ game.players }}
+            dd {{ game.playerCount }}
         .columns.small-4
           dl
             dt Play Time
@@ -20,7 +18,7 @@ div
         .columns.small-4
           dl
             dt Ages
-            dd {{ game.ages }}
+            dd {{ game.ageRange }}
 
   hr
 
@@ -52,52 +50,17 @@ div
 
 <script>
 
-  import TitleBar from '../TitleBar.vue'
-  // import GameRepo from '../game.js'
-
-  let game = {}
-  let activeComponentId = null
-
   export default {
     props: ['gameId'],
     data: () => {
       return {
-        game: { title: 'what'},
-        activeComponentId
+        game: { title: 'what', components: [ ]}
       }
     },
     components: {
-      "title-bar": TitleBar
+      // "title-bar": TitleBar
     },
-    created () { // View first created (callback)
-      this.refreshGame()
-    },
-    watch: { // Route changed
-      '$route': 'refreshGame'
-    },
-    methods: {
-      selectComponent: (component) => {
-        activeComponentId = component.id
-      },
-      checkActiveComponent: (component) => {
-        activeComponentId == component.id
-      },
-      refreshGame () {
-        this.game = {}
-        this.loading = true
-
-        GameRepo.find(this.$route.params.gameId)
-
-        .then((game) => {
-          this.loading = false
-          this.game = game
-        })
-
-        .catch((err) =>{
-          this.error = err.toString()
-        })
-      }
-    }
+    methods: { }
 
   }
 </script>
