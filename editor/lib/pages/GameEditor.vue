@@ -52,14 +52,12 @@ div
 
   export default {
     props: ['gameId'],
-    data: () => {
+    data () {
       return {
-        game: { title: 'what', components: [ ]}
+        game: this.$store.state.selectedGame
       }
     },
-    components: {
-      // "title-bar": TitleBar
-    },
+    components: { },
     methods: { }
 
   }

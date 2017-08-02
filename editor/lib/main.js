@@ -13,7 +13,7 @@ if(process.env.NODE_ENV == 'test') {
 }
 
 let startApp = () => {
-  // Create an application
+  // Top-level Vue component
   const app = new Vue({
     router, store,
     components: {
@@ -21,7 +21,7 @@ let startApp = () => {
     },
     // Render the TitleBar outside the router view
     render: (h) => { return h("div", [h("title-bar"), h("router-view")]); }
-    // Mount it here
+    // Mount it here in the index.html
   }).$mount('#paperize-app')
 }
 

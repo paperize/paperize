@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import uuid from 'uuid/v4'
 
+import { find } from 'lodash'
+
 import persistence from './local_store_persistence'
 import auth from '../auth'
 import router from '../routes'
@@ -58,6 +60,10 @@ let store = new Vuex.Store({
       state.games.splice(state.games.indexOf(game), 1)
 
       persistence.saveState(state)
+    },
+
+    setSelectedGame (state, { gameId }) {
+      state.selectedGame = find(state.games, { id: gameId})
     }
   },
 
