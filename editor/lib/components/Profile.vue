@@ -1,36 +1,39 @@
 <template lang="pug">
-div
-  span(v-bind:class="{ active: authenticated }") {{ profile.name }}
-  img(alt="avatar" class="avatar" v-bind:src="profile.avatarSrc" v-bind:class="{ active: authenticated }")
-  button(type="submit" v-on:click="login()" v-bind:class="{ active: !authenticated }") Sign In
-  button(type="submit" v-on:click="logout()" v-bind:class="{ active: authenticated }") Sign Out
+li(v-if="authenticated")
+  a.avatar
+    img(alt="avatar" :src="profile.avatarSrc")
+  ul.menu
+    li.name {{ profile.name }}
+    li
+      a(@click="logout()") Sign Out
+li(v-else)
+  a(@click="login()") Sign In
 </template>
 
 <script>
   import { mapState, mapMutations, mapActions } from 'vuex'
+  import FoundationMixin from '../mixins/foundation'
 
   export default {
+    mixins: [FoundationMixin],
     computed: mapState(['authenticated', 'profile']),
     methods: { ...mapMutations(['logout']), ...mapActions(['login']) }
   }
 </script>
 
 <style scoped>
-  .avatar {
+  .menu.dropdown .avatar {
+    padding: 0;
+  }
+
+  .name {
+    padding: .7rem 1rem;
+    font-weight: bold;
+  }
+
+  .avatar img {
     max-width: 40px;
     max-height: 40px;
     border-radius: 50px;
-  }
-
-  button {
-    cursor: pointer;
-  }
-
-  button, .avatar {
-    display: none;
-  }
-
-  .active {
-    display: block;
   }
 </style>

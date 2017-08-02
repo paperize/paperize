@@ -18,8 +18,11 @@
         dt Players:
         dd {{ game.playerCount }}
 
-    router-link.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
-    a.button.alert(@click="deleteGame") Delete
+    ul.menu
+      li
+        router-link.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
+      li
+        a.button.alert(@click="deleteGame") Delete
 </template>
 
 <script>
