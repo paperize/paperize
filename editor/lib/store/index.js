@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import uuid from 'uuid/v4'
 
 import persistence from './local_store_persistence'
 import auth from '../auth'
@@ -42,14 +43,21 @@ let store = new Vuex.Store({
 
     setGames (state, { games }) {
       state.games = games
+
+      persistence.saveState(state)
     },
 
     createGame (state, { game }) {
+      game.id = uuid()
       state.games.push(game)
+
+      persistence.saveState(state)
     },
 
     deleteGame (state, { game }) {
       state.games.splice(state.games.indexOf(game), 1)
+
+      persistence.saveState(state)
     }
   },
 
@@ -59,7 +67,7 @@ let store = new Vuex.Store({
     },
 
     loggedInAs (context, { idToken }) {
-      let games = persistence.loadGames(idToken)
+      let games = persistence.loadGames(idToken) || []
       let profile = persistence.loadProfile(idToken)
 
       context.commit("setGames", { games })
