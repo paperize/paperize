@@ -12,7 +12,7 @@
     "clean": "rm -rf build",
     "build": "webpack",
     "deploy": "coffee deploy.coffee",
-    "release": "NODE_ENV=production npm run clean && npm run build && npm run deploy"
+    "release": "npm run clean && NODE_ENV=production npm run build -- -p && npm run deploy"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
   "license": "ISC",

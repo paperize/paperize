@@ -1,4 +1,6 @@
-console.log("Loading Paperize Editor...")
+if(process.env.NODE_ENV !== "production") {
+  console.log("Loading Paperize Editor with environment:", process.env.NODE_ENV)
+}
 
 import Vue from 'vue'
 import store from './store'
