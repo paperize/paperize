@@ -8,6 +8,7 @@ li(v-if="authenticated")
       a(@click="logout()") Sign Out
 li(v-else)
   a(@click="login()") Sign In
+  ul.menu
 </template>
 
 <script>
@@ -16,6 +17,7 @@ li(v-else)
 
   export default {
     mixins: [FoundationMixin],
+    updated () { $(this.$el).foundation() },
     computed: mapState(['authenticated', 'profile']),
     methods: { ...mapMutations(['logout']), ...mapActions(['login']) }
   }
