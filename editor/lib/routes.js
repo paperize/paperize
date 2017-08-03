@@ -11,21 +11,53 @@ import GameManager from './pages/GameManager.vue'
 import GameEditor  from './pages/GameEditor.vue'
 
 const routes = [
-  { path: '/',              name: 'splash',      component: Splash,      props: true },
-  { path: '/games',         name: 'gameManager', component: GameManager, props: true },
-  { path: '/games/:gameId',
-    name: 'gameEditor',
+  {
+    path:      '/',
+    name:      'splash',
+    component: Splash,
+    props:     true
+  }, {
+    path:      '/games',
+    name:      'gameManager',
+    component: GameManager,
+    props:     true,
+    meta:      { requiresAuth: true }
+  }, { 
+    path:      '/games/:gameId',
+    name:      'gameEditor',
     component: GameEditor,
-    props: true,
-    beforeEnter: (to, from, next) => {
-      console.log('route beforeEnter', to.params)
-      store.commit("setSelectedGame", { gameId: to.params.gameId })
+    props:     true,
+    meta:      { requiresAuth: true },
+    beforeEnter(to, from, next) {
+      store.dispatch("setSelectedGame", { gameId: to.params.gameId })
       next()
     }
   }
 ]
 
 var router = new VueRouter({ routes })
+
+// Authentication hook based on meta fields
+router.beforeEach((to, from, next) => {
+  // If auth is required...
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    // ...and we're not authed...
+    if(!store.state.authenticated) {
+      // ...redirect to the splash page...
+      next({ name: 'splash' })
+    } else {
+      // ...but if we are authed, continue.
+      next()
+    }
+  // Otherwise, we're required NOT to be authed, but we are...
+  } else if(store.state.authenticated) {
+    // ...redirect to the user home page...
+    next({ name: 'gameManager' })
+  } else {
+    // ...otherwise continue.
+    next()
+  }
+})
 
 // Only track pageviews in production builds
 if(process.env.NODE_ENV === 'production') {

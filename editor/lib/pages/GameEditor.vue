@@ -1,5 +1,7 @@
 <template lang="pug">
-div
+div(v-if="!game")
+  p no game selected
+div(v-else)
   .row
     .columns.small-6
       h1 {{ game.title }}
@@ -49,14 +51,11 @@ div
 </template>
 
 <script>
+  import { mapState } from 'vuex'
 
   export default {
     props: ['gameId'],
-    data () {
-      return {
-        game: this.$store.state.selectedGame
-      }
-    },
+    computed: { ...mapState({ game: 'selectedGame' }) },
     components: { },
     methods: { }
 

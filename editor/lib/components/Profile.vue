@@ -19,7 +19,13 @@ li(v-else)
     mixins: [FoundationMixin],
     updated () { $(this.$el).foundation() },
     computed: mapState(['authenticated', 'profile']),
-    methods: { ...mapMutations(['logout']), ...mapActions(['login']) }
+    methods: {
+      ...mapActions(['login']),
+      logout() {
+        this.$store.commit("logout")
+        this.$router.push({ name: 'splash' })
+      }
+    }
   }
 </script>
 

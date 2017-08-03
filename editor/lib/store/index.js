@@ -6,7 +6,6 @@ import { find } from 'lodash'
 
 import persistence from './local_store_persistence'
 import auth from '../auth'
-import router from '../routes'
 
 Vue.use(Vuex)
 
@@ -17,7 +16,8 @@ const EMPTY_STATE = {
     name: '',
     avatarSrc: ''
   },
-  games: []
+  games: [],
+  selectedGame: null
 }
 
 let store = new Vuex.Store({
@@ -31,7 +31,6 @@ let store = new Vuex.Store({
       state.profile.avatarSrc = ''
 
       persistence.saveState(state)
-      router.push({ name: 'splash' })
     },
 
     authenticateAs (state, payload) {
@@ -63,7 +62,12 @@ let store = new Vuex.Store({
     },
 
     setSelectedGame (state, { gameId }) {
-      state.selectedGame = find(state.games, { id: gameId})
+      let foundGame = find(state.games, { id: gameId })
+      if(!foundGame) {
+        throw new Error(`No game found with id: ${gameId}`)
+      }
+
+      state.selectedGame = foundGame
     }
   },
 
@@ -80,7 +84,6 @@ let store = new Vuex.Store({
 
       let commitProfile = function() {
         context.commit("authenticateAs", { idToken, profile })
-        router.push({ name: 'gameManager' })
       }
 
       if(!profile) {
@@ -97,6 +100,10 @@ let store = new Vuex.Store({
       } else {
         commitProfile()
       }
+    },
+
+    setSelectedGame(context, { gameId }) {
+      context.commit("setSelectedGame", { gameId })
     }
   }
 })
@@ -104,9 +111,7 @@ let store = new Vuex.Store({
 let idToken = persistence.loadToken()
 
 if(idToken) {
-  // Log in with a persisted token
   store.dispatch("loggedInAs", { idToken })
-
 } else {
   // Log in with Auth0
   auth.on("authenticated", ({ idToken }) => {
