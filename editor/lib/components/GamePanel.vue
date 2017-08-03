@@ -6,6 +6,10 @@
 
   .small-6.cell
     .grid-x
+      .small-12.cell
+        ul.menu
+          li
+            a(@click="deleteGame(game)") Delete Game
       .small-4.cell
         dl
           dt Players
@@ -22,6 +26,13 @@
 
 <script>
   export default {
-    props: ["game"]
+    props: ["game"],
+
+    methods: {
+      deleteGame(game) {
+        this.$store.commit("deleteGame", { game })
+        this.$router.push({ name: "gameManager" })
+      }
+    }
   }
 </script>

@@ -49,6 +49,10 @@ Cypress.addParentCommand "setGames", (games) ->
 
   log.snapshot().end()
 
+Cypress.addParentCommand "visitFixtureGame", (fixtureKey) ->
+  cy.fixture("games").its("#{fixtureKey}.id").then (gameId) ->
+    cy.visit("/#/games/#{gameId}")
+
 Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
   cy.wrap(inputTextPairs).then (selectorsAndText) ->
     for key in Object.keys selectorsAndText

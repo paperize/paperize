@@ -72,4 +72,4 @@ describe "Game Manager page", ->
           .contains("Delete")
           .click()
 
-        cy.get("game-carcassonne").should("not.exist")
+        cy.get("#game-carcassonne").should("not.exist")
