@@ -3,4 +3,4 @@ describe "Splash Page", ->
     cy.visit("/")
 
   it "has a nice title", ->
-    cy.contains("Welcome to New Paperize!")
+    cy.contains("Welcome to Paperize!")

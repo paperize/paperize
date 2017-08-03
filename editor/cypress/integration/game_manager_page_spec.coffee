@@ -3,14 +3,7 @@ describe "Game Manager page", ->
     it "shows a message about logging in", ->
       cy.visit("/#/games")
 
-      cy.window().then (win) ->
-        cy.stub(win.lock, "show")
-
-      cy.contains("You are not logged in.")
-      cy.contains("log in").click()
-
-      cy.window().then (win) ->
-        expect(win.lock.show).to.be.called
+      cy.url().should("match", /#\/$/)
 
   context "logged in", ->
     beforeEach ->
@@ -34,7 +27,7 @@ describe "Game Manager page", ->
           "input[name=age-range]":      "6+"
           "input[name=play-time]":      "5-45 minutes"
 
-        cy.get("input[type=submit]").click()
+        cy.get("button[type=submit]").click()
 
         cy.contains "Love Letter"
         cy.contains "The instant classic"
@@ -47,7 +40,7 @@ describe "Game Manager page", ->
           cy.contains("New Game").click()
           cy.get("input[name=title]").invoke("val").should("eq", "")
           cy.get("input[name=title]").type(title)
-          cy.get("input[type=submit]").click()
+          cy.get("button[type=submit]").click()
           cy.contains(title)
 
       it "lets me load an example game"

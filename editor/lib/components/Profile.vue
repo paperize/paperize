@@ -1,12 +1,12 @@
 <template lang="pug">
-li(v-if="authenticated")
+li.authenticated(v-if="authenticated")
   a.avatar
     img(alt="avatar" :src="profile.avatarSrc")
   ul.menu
     li.name {{ profile.name }}
     li
       a(@click="logout()") Sign Out
-li(v-else)
+li.unauthenticated(v-else)
   a(@click="login()") Sign In
   ul.menu
 </template>

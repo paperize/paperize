@@ -3,31 +3,26 @@ describe "Profile component", ->
     beforeEach ->
       cy.visit("/")
 
-    it "'Sign In' link is active", ->
-      cy.contains("Sign In").should("have.class", "active")
-
-    it "'Sign Out' link is not active", ->
-      cy.contains("Sign Out").should("not.have.class", "active")
+    it "we see .unauthenticated elements", ->
+      cy.get(".unauthenticated")
+      cy.get(".authenticated").should('not.exist')
 
   context "with login", ->
     beforeEach ->
       cy.login()
       cy.visit("/")
 
-    it "'Sign In' link is not active", ->
-      cy.contains("Sign In").should("not.have.class", "active")
+    it "we see .authenticated elements", ->
+      cy.get(".authenticated")
+      cy.get(".unauthenticated").should('not.exist')
 
-    it "'Sign Out' link is active and profile info is visible", ->
-      cy.contains("Sign Out").should("have.class", "active")
+    it "profile info is visible", ->
+      cy.get('.avatar img').then ($avatarImg) ->
+        expect($avatarImg.attr('src')).to.eq 'http://placehold.it/20/20'
 
-      cy.contains("Avid Gamer").should("have.class", 'active')
-
-      cy.get('.avatar')
-        .should("have.class", 'active')
-        .then ($avatarImg) ->
-          expect($avatarImg.attr('src')).to.eq 'http://placehold.it/20/20'
+      cy.get('.name').contains "Avid Gamer"
 
     it "logs out when 'Sign Out' is clicked", ->
-      cy.contains("Sign Out").click()
-      cy.contains("Sign In").should("have.class", "active")
-      cy.contains("Sign Out").should("not.have.class", "active")
+      cy.get(".authenticated .menu a").click(force: true)
+      cy.get(".unauthenticated")
+      cy.get(".authenticated").should('not.exist')
