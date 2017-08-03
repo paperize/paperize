@@ -12,7 +12,8 @@ div(v-if="!game")
 
     .small-9.cell
       .active-component
-        h2 Active Component
+        h2(v-if="activeComponent") {{ activeComponent.title }}
+        h2(v-else) No Component Selected
 </template>
 
 <script>
@@ -23,7 +24,7 @@ div(v-if="!game")
 
   export default {
     props: ['gameId'],
-    computed: { ...mapState({ game: 'selectedGame' }) },
+    computed: { ...mapState({ game: 'selectedGame', activeComponent: 'activeComponent' }) },
     components: {
       "game-panel":      GamePanel,
       "component-panel": ComponentPanel

@@ -8,23 +8,26 @@
         a New
 
     .grid-x
-      .small-12.medium-6
-        .card
+      .small-12.medium-8
+        .card.component-card(v-for="component in components" @click="setActive(component)")
           .card-divider
-            p Artifact Deck
+            p {{ component.title }}
 
-          img(src="http://loremflickr.com/80/60/card,game/all")
+          img(src="http://fillmurray.com/80/60")
 
           .card-section
             p 98 Cards
-
-    ul
-      li(v-for="component in components") {{ component.title }} {{ component.type }}
 </template>
 
 <script>
   export default {
-    props: ["components"]
+    props: ["components"],
+
+    methods: {
+      setActive(component) {
+        this.$store.commit("setActiveComponent", { component })
+      }
+    }
   }
 </script>
 

@@ -7,7 +7,18 @@
     "playerCount": "2-4",
     "playTime": "5-45 minutes",
     "components": [
-      
+      {
+        "type": "Deck",
+        "title": "Character Deck"
+      },
+      {
+        "type": "Manual",
+        "title": "Instruction Book"
+      },
+      {
+        "type": "Cubes",
+        "title": "Point Cubes"
+      }
     ]
   },
   "carcassonne": {

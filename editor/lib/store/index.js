@@ -17,7 +17,8 @@ const EMPTY_STATE = {
     avatarSrc: ''
   },
   games: [],
-  selectedGame: {}
+  selectedGame: null,
+  activeComponent: null
 }
 
 let store = new Vuex.Store({
@@ -79,6 +80,15 @@ let store = new Vuex.Store({
       }
 
       state.selectedGame = foundGame
+    },
+
+    setActiveComponent(state, { component }) {
+      let foundComponent = find(state.selectedGame.components, component)
+      if(!foundComponent) {
+        throw new Error(`No component found: ${component}`)
+      }
+
+      state.activeComponent = component
     }
   },
 
