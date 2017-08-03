@@ -1,51 +1,16 @@
 <template lang="pug">
 div(v-if="!game")
   p no game selected
-div(v-else)
-  .row
-    .columns.small-6
-      h1 {{ game.title }}
-      span {{ game.description }}
-
-    .columns.small-6
-      .row
-        .columns.small-4
-          dl
-            dt Players
-            dd {{ game.playerCount }}
-        .columns.small-4
-          dl
-            dt Play Time
-            dd {{ game.playTime }}
-        .columns.small-4
-          dl
-            dt Ages
-            dd {{ game.ageRange }}
+.grid-container(v-else)
+  game-panel(:game="game")
 
   hr
 
-  .row
-    .columns.small-3
-      h2 Components
+  .grid-x.grid-padding.x
+    .small-3.cell
+      component-panel(:components="game.components")
 
-      ul
-        li(v-for="component in game.components") {{ component.title }} {{ component.type }}
-
-    .columns.small-9
-      .sources
-        .menu-centered
-          ul.menu
-            li.menu-item
-              a Images
-            li.menu-item
-              a Icons
-            li.menu-item
-              a Fonts
-            li.menu-item
-              a Spreadsheets
-
-      hr
-
+    .small-9.cell
       .active-component
         h2 Active Component
 </template>
@@ -53,10 +18,16 @@ div(v-else)
 <script>
   import { mapState } from 'vuex'
 
+  import GamePanel from '../components/GamePanel.vue'
+  import ComponentPanel from '../components/ComponentPanel.vue'
+
   export default {
     props: ['gameId'],
     computed: { ...mapState({ game: 'selectedGame' }) },
-    components: { },
+    components: {
+      "game-panel":      GamePanel,
+      "component-panel": ComponentPanel
+    },
     methods: { }
 
   }
