@@ -1,6 +1,6 @@
 <template lang="pug">
 .reveal(data-reveal)
-  h1 Create a New Game
+  h1 {{ mode === 'edit' ? 'Edit a' : 'Create a New' }} Game
   hr
 
   form(method="post" v-on:submit.prevent="submitForm")
@@ -8,31 +8,31 @@
       .small-4.cell
         label(for="game-title") Title:
       .small-8.cell
-        input(type="text" id="game-title" name="title" v-model="game.title")
+        input(type="text" id="game-title" name="title" v-model="gameClone.title")
 
       .small-4.cell
         label(for="game-description") Description:
       .small-8.cell
-        textarea(id="game-description" name="description" v-model="game.description")
+        textarea(id="game-description" name="description" v-model="gameClone.description")
 
       .small-4.cell
         label(for="game-player-count") Player Count:
       .small-8.cell
-        input(type="text" id="game-player-count" name="player-count" v-model="game.playerCount")
+        input(type="text" id="game-player-count" name="player-count" v-model="gameClone.playerCount")
 
       .small-4.cell
         label(for="game-age-range") Age Range:
       .small-8.cell
-        input(type="text" id="game-age-range" name="age-range" v-model="game.ageRange")
+        input(type="text" id="game-age-range" name="age-range" v-model="gameClone.ageRange")
 
       .small-4.cell
         label(for="game-play-time") Play Time:
       .small-8.cell
-        input(type="text" id="game-play-time" name="play-time" v-model="game.playTime")
+        input(type="text" id="game-play-time" name="play-time" v-model="gameClone.playTime")
 
 
     button.button.alert(type="button" @click="closeModal") Cancel
-    button.button.success(type="submit") Create Game
+    button.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
 
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")
@@ -46,15 +46,30 @@
     mixins: [FoundationMixin],
 
     props: {
+      mode: {
+        default: 'edit',
+        type: String,
+        validator: (mode) => mode == 'edit' || mode == 'create'
+      },
       game: {
         required: true
       }
     },
 
+    data() {
+      return {
+        gameClone: { ...this.game }
+      }
+    },
+
     methods: {
       submitForm () {
-        // Add the game to the store
-        this.$store.commit("createGame", { game: this.game })
+        // Add or update the game in the store
+        if(this.mode === 'edit') {
+          this.$store.commit("updateGame", { game: this.gameClone })
+        } else if(this.mode === 'create') {
+          this.$store.commit("createGame", { game: this.gameClone })
+        }
         // Close the modal
         this.closeModal()
         // Alert our parents we've submitted

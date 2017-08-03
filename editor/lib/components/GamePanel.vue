@@ -10,6 +10,8 @@
         ul.menu
           li
             a(@click="deleteGame(game)") Delete Game
+          li
+            a(data-open="edit-game-modal") Edit Game
       .small-4.cell
         dl
           dt Players
@@ -22,11 +24,18 @@
         dl
           dt Ages
           dd {{ game.ageRange }}
+  game-form#edit-game-modal(mode="edit" :game="game")
 </template>
 
 <script>
+  import GameForm from '../components/GameForm.vue'
+
   export default {
     props: ["game"],
+
+    components: {
+      'game-form': GameForm
+    },
 
     methods: {
       deleteGame(game) {

@@ -17,7 +17,7 @@ const EMPTY_STATE = {
     avatarSrc: ''
   },
   games: [],
-  selectedGame: null
+  selectedGame: {}
 }
 
 let store = new Vuex.Store({
@@ -51,6 +51,17 @@ let store = new Vuex.Store({
     createGame (state, { game }) {
       game.id = uuid()
       state.games.push(game)
+
+      persistence.saveState(state)
+    },
+
+    updateGame(state, { game: newGame }) {
+      let foundGame = find(state.games, { id: newGame.id })
+      if(foundGame === newGame){
+        throw new Error("Game to update is same object in store!")
+      }
+      // Overwrites properties of found with new
+      Object.assign(foundGame, newGame)
 
       persistence.saveState(state)
     },

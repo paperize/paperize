@@ -19,7 +19,7 @@
       .grid-x.grid-margin-x
         game-card(v-for="game in games" :key="game.id" :game="game")
 
-    game-form#new-game-modal(:game="newGame" @submitted="resetNewGame")
+    game-form#new-game-modal(mode='create' :game="newGame" @submitted="resetNewGame")
 </template>
 
 <script>
