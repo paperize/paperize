@@ -55,6 +55,7 @@ let store = new Vuex.Store({
     createGame (state, { game }) {
       game.id = uuid()
       state.games.push(game)
+      state.selectedGame = game
 
       persistence.saveState(state)
     },
