@@ -86,13 +86,31 @@ let store = new Vuex.Store({
       state.selectedGame = foundGame
     },
 
+    createComponent(state, { component }) {
+      component.id = uuid()
+      state.selectedGame.components.push(component)
+
+      persistence.saveState(state)
+    },
+
+    updateComponent(state, { component: newComponent }) {
+      let foundComponent = find(state.selectedGame.components, { id: newComponent.id })
+      if(foundComponent === newComponent){
+        throw new Error("Component to update is same object in store!")
+      }
+      // Overwrites properties of found with new
+      Object.assign(foundComponent, newComponent)
+
+      persistence.saveState(state)
+    },
+
     setActiveComponent(state, { component }) {
-      let foundComponent = find(state.selectedGame.components, component)
+      let foundComponent = find(state.selectedGame.components, { id: component.id })
       if(!foundComponent) {
         throw new Error(`No component found: ${component}`)
       }
 
-      state.activeComponent = component
+      state.activeComponent = foundComponent
     }
   },
 
