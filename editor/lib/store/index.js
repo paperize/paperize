@@ -22,6 +22,9 @@ const EMPTY_STATE = {
 }
 
 let store = new Vuex.Store({
+  // Throw errors if state is touched outside of mutations
+  strict: process.env.NODE_ENV !== 'production',
+
   state: EMPTY_STATE,
 
   mutations: {
