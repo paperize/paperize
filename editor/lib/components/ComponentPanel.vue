@@ -1,32 +1,27 @@
 <template lang="pug">
 .component-panel.grid-y
+  component-form#new-component-form(mode='create')
   .small-12.cell
     h2 Components
 
     ul.menu
       li
-        a New
+        a(data-open="new-component-form") New Component
 
     .grid-x
-      .small-12.medium-8
-        .card.component-card(v-for="component in components" @click="setActive(component)")
-          .card-divider
-            p {{ component.title }}
-
-          img(src="http://fillmurray.com/80/60")
-
-          .card-section
-            p 98 Cards
+      component-card(v-for="component in components" :key="component.id" :component="component")
 </template>
 
 <script>
+  import ComponentForm from './ComponentForm.vue'
+  import ComponentCard from './ComponentCard.vue'
+
   export default {
     props: ["components"],
 
-    methods: {
-      setActive(component) {
-        this.$store.commit("setActiveComponent", { component })
-      }
+    components: {
+      "component-form": ComponentForm,
+      "component-card": ComponentCard
     }
   }
 </script>
