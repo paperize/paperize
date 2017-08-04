@@ -76,11 +76,14 @@
           this.$store.commit("updateGame", { game: this.gameClone })
         } else if(this.mode === 'create') {
           this.$store.commit("createGame", { game: this.gameClone })
+          this.$router.push({ name: "gameEditor", params: { gameId: this.gameClone.id }})
         }
         // Close the modal
         this.closeModal()
         // Alert our parents we've submitted
         this.$emit("submitted")
+        // Reset the model
+        this.gameClone = { ...this.game }
       },
 
       closeModal () {

@@ -29,6 +29,8 @@ describe "Game Manager page", ->
 
         cy.get("button[type=submit]").click()
 
+        cy.url().should("match", /games\/.+$/)
+
         cy.contains "Love Letter"
         cy.contains "The instant classic"
         cy.contains "2-4"
@@ -42,6 +44,8 @@ describe "Game Manager page", ->
           cy.get("input[name=title]").type(title)
           cy.get("button[type=submit]").click()
           cy.contains(title)
+
+          cy.visit("/#/games")
 
       it "lets me load an example game"
 
