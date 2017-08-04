@@ -8,14 +8,17 @@
     "playTime": "5-45 minutes",
     "components": [
       {
+        "id": "character-deck",
         "type": "Deck",
         "title": "Character Deck"
       },
       {
+        "id": "instruction-book",
         "type": "Manual",
         "title": "Instruction Book"
       },
       {
+        "id": "point-cubes",
         "type": "Cubes",
         "title": "Point Cubes"
       }
