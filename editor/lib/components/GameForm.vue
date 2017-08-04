@@ -1,6 +1,6 @@
 <template lang="pug">
 .reveal(data-reveal)
-  h1 {{ mode === 'edit' ? 'Edit a' : 'Create a New' }} Game
+  h1 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
   hr
 
   form(method="post" v-on:submit.prevent="submitForm")
@@ -41,6 +41,7 @@
 
 <script>
   import FoundationMixin from '../mixins/foundation'
+  import Game from '../models/game'
 
   export default {
     mixins: [FoundationMixin],
@@ -59,7 +60,7 @@
         validator: (mode) => mode == 'edit' || mode == 'create'
       },
       game: {
-        required: true
+        default: Game.factory
       }
     },
 

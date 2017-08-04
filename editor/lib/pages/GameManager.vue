@@ -19,27 +19,18 @@
       .grid-x.grid-margin-x
         game-card(v-for="game in games" :key="game.id" :game="game")
 
-    game-form#new-game-modal(mode='create' :game="newGame")
+    game-form#new-game-modal(mode='create')
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import Game from '../models/game'
   import GameCard from '../components/GameCard.vue'
   import GameForm from '../components/GameForm.vue'
-
-  let gameFactory = () => Game.factory()
 
   export default {
     components: {
       "game-card": GameCard,
       "game-form": GameForm
-    },
-
-    data () {
-      return {
-        newGame: gameFactory()
-      }
     },
 
     computed: {
