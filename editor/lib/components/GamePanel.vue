@@ -1,8 +1,8 @@
 <template lang="pug">
 .game-panel.grid-x.grid-padding.x
   .small-6.cell
-    h1 {{ game.title }}
-    span {{ game.description }}
+    h1 {{ game.title || "[No title]" }}
+    span {{ game.description || "[No description]"  }}
 
   .small-6.cell
     .grid-x
@@ -15,15 +15,15 @@
       .small-4.cell
         dl
           dt Players
-          dd {{ game.playerCount }}
+          dd {{ game.playerCount || "[Not set]"  }}
       .small-4.cell
         dl
           dt Play Time
-          dd {{ game.playTime }}
+          dd {{ game.playTime || "[Not set]"  }}
       .small-4.cell
         dl
           dt Ages
-          dd {{ game.ageRange }}
+          dd {{ game.ageRange || "[Not set]"  }}
   game-form#edit-game-modal(mode="edit" :game="game")
 </template>
 

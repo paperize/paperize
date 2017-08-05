@@ -12,7 +12,7 @@ div(v-if="!game")
 
     .small-9.cell
       .active-component
-        h2(v-if="activeComponent") {{ activeComponent.title }}
+        h2(v-if="activeComponent") {{ activeComponent.title || "[Component title not set]"   }}
         h2(v-else) No Component Selected
 </template>
 
