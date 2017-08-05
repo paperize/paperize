@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run start-webpack\" \"npm run start-server\"",
     "start-webpack": "webpack --watch",
     "start-server": "http-server build",
-    "cypress-record": "cypress run; cp cypress/videos/*.mp4 build/releases/7-4-17.mp4",
+    "cypress-record": "cypress run; cp cypress/videos/*.mp4 build/releases/8-4-17.mp4",
     "test": "NODE_ENV=test npm start",
     "ci": "NODE_ENV=test concurrently --kill-others \"npm run start-server\" \"cypress run\" ",
     "clean": "rm -rf build",
