@@ -104,6 +104,14 @@ let store = new Vuex.Store({
       persistence.saveState(state)
     },
 
+    deleteComponent(state, { component }) {
+      state.selectedGame.components.splice(state.selectedGame.components.indexOf(component), 1)
+      if(state.activeComponent.id == component.id){
+        state.activeComponent = null
+      }
+      persistence.saveState(state)
+    },
+
     setActiveComponent(state, { component }) {
       let foundComponent = find(state.selectedGame.components, { id: component.id })
       if(!foundComponent) {

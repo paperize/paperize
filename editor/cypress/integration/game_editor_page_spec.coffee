@@ -62,5 +62,11 @@ describe "Game Editor page", ->
       cy.contains("Deck")
       cy.contains("Instruction Manual")
 
+    it "lets me delete a component", ->
+      cy.contains("Instruction Book").click()
+
+      cy.get('.component.active').contains("Delete").click()
+
+      cy.contains("Instruction Book").should("not.exist")
+
     it "lets me print a component"
-    it "lets me delete a component"
