@@ -1,16 +1,16 @@
 <template lang="pug">
 .grid-container
   .grid-x
-    .small-12.medium-5.large-5.cell
+    .small-12.medium-5.cell
       h2 Welcome to Paperize!
       hr
 
       p
         em Sign in above to get started playing with games and their components.
 
-    .large-2.cell
+    .medium-1.cell
 
-    .small-12.medium-6.large-5.cell
+    .small-12.medium-6.cell
       h2 Roadmap:
 
       vue-embed(id="gist" :options="{ emoji: true }")
