@@ -1,5 +1,5 @@
 <template lang="pug">
-.component.card.small-10.small-offset-1.medium-6.small-offset-3.cell(:class="{ active: isActiveComponent() }" @click="setActive")
+.component.card.small-10.small-offset-1.medium-6.medium-offset-3.cell(:class="{ active: isActiveComponent() }" @click="setActive")
   component-form(:id="editFormId" mode='edit' :component="component")
   .card-divider
     p.title {{ component.title || "[No title]" }}
