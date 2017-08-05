@@ -19,8 +19,8 @@
           option(value="booklet") Booklet or Manual
           option(value="custom") Custom Component
 
-    button.button.alert(type="button" @click="closeModal") Cancel
-    button.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Component
+    button.small.button.alert(type="button" @click="closeModal") Cancel
+    button.small.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Component
 
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")

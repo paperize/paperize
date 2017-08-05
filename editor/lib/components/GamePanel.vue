@@ -9,9 +9,9 @@
       .small-12.cell
         ul.menu
           li
-            a(@click="deleteGame(game)") Delete Game
-          li
             a(data-open="edit-game-modal") Edit Game
+          li
+            a(@click="deleteGame(game)") Delete Game
       .small-4.cell
         dl
           dt Players

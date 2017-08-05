@@ -31,8 +31,8 @@
         input(type="text" id="game-play-time" name="play-time" v-model="gameClone.playTime")
 
 
-    button.button.alert(type="button" @click="closeModal") Cancel
-    button.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
+    button.button.small.alert(type="button" @click="closeModal") Cancel
+    button.button.small.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
 
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")

@@ -1,28 +1,28 @@
 <template lang="pug">
 .game.card.small-6.medium-4.large-3.cell(:id="`game-${ game.id }`")
   .card-divider
-    h4 {{ game.title }}
+    h4 {{ game.title || "[No title]" }}
 
   img(v-bind:src="game.coverArt")
 
   .card-section
-    p {{ game.description }}
+    p {{ game.description || "[No description set.]" }}
     dl.grid-x
       .small-4.cell
         dt Ages:
-        dd {{ game.ageRange }}
+        dd {{ game.ageRange || "[Not set.]" }}
       .small-4.cell
         dt Play Time:
-        dd {{ game.playTime }}
+        dd {{ game.playTime || "[Not set.]" }}
       .small-4.cell
         dt Players:
-        dd {{ game.playerCount }}
+        dd {{ game.playerCount || "[Not set.]" }}
 
     ul.menu
       li
-        router-link.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
+        router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
       li
-        a.button.alert(@click="deleteGame") Delete
+        a.small.button.alert(@click="deleteGame") Delete
 </template>
 
 <script>
