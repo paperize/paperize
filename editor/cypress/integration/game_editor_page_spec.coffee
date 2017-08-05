@@ -15,8 +15,8 @@ describe "Game Editor page", ->
     it "lets me edit the game and updates the vitals", ->
       cy.contains("Edit Game").click()
 
-      cy.get("input[name=title]").clear().type("Munchkin Love Letter")
-      cy.get("button[type=submit]").click()
+      cy.get(".game-form input[name=title]").clear().type("Munchkin Love Letter")
+      cy.get(".game-form button[type=submit]").click()
 
       cy.contains("Munchkin Love Letter")
 
@@ -27,7 +27,7 @@ describe "Game Editor page", ->
 
   context "the ComponentPanel and ComponentForm", ->
     it "lists components", ->
-      cy.get('.component-card').its("length").should('eq', 3)
+      cy.get('.component').its("length").should('eq', 3)
 
       cy.contains("Character Deck")
       cy.contains("Instruction Book")
@@ -40,8 +40,27 @@ describe "Game Editor page", ->
       cy.contains("Point Cubes").click()
       cy.get('.active-component').contains("Point Cubes")
 
+    it "lets me add a component", ->
+      cy.contains("New Component").click()
+      cy.contains("Add a Component")
 
-    it "lets me add a component"
-    it "lets me edit a component"
+      cy.typeIntoSelectors "input#component-title-new": 'Random Encounters'
+      cy.get('select#component-type-new').select('deck')
+      cy.contains("Create Component").click()
+
+      cy.contains("Random Encounters")
+
+    it "lets me edit a component", ->
+      cy.contains("Instruction Book").click()
+
+      cy.get('.component.active').contains("Edit").click()
+
+      cy.get("input#component-title-instruction-book").clear().type('Instruction Manual')
+      cy.get('select#component-type-instruction-book').select('deck')
+      cy.get('#edit-component-form-instruction-book').contains("Edit Component").click()
+
+      cy.contains("Deck")
+      cy.contains("Instruction Manual")
+
     it "lets me print a component"
     it "lets me delete a component"

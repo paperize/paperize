@@ -21,7 +21,7 @@ describe "Game Manager page", ->
         cy.contains "Create a New Game"
 
         cy.typeIntoSelectors
-          "input[name=title]":          "Love Letter"
+          "input#game-title":           "Love Letter"
           "textarea[name=description]": "The instant classic microgame from Seiji Kanai."
           "input[name=player-count]":   "2-4"
           "input[name=age-range]":      "6+"

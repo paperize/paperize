@@ -1,5 +1,5 @@
 <template lang="pug">
-.reveal(data-reveal)
+.reveal.game-form(data-reveal)
   h1 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
   hr
 

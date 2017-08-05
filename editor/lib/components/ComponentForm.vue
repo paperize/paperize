@@ -1,19 +1,19 @@
 <template lang="pug">
-.reveal(data-reveal)
+.reveal.component-form(data-reveal)
   h1 {{ mode === 'edit' ? `Edit ${component.title}` : 'Add a Component' }}
   hr
 
   form(method="post" v-on:submit.prevent="submitForm")
     .grid-x.grid-margin-x
       .small-4.cell
-        label(for="component-title") Title:
+        label(:for="`component-title-${component.id}`") Title:
       .small-8.cell
-        input(type="text" id="component-title" name="title" v-model="componentClone.title")
+        input(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
 
       .small-4.cell
-        label(for="component-type") Type:
+        label(:for="`component-type-${component.id}`") Type:
       .small-8.cell
-        select(id="component-type" name="type" v-model="componentClone.type")
+        select(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
           option(value="deck") Deck
           option(value="tile-stack") Stack of Tiles
           option(value="booklet") Booklet or Manual

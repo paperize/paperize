@@ -2,7 +2,7 @@
 import { process, withinXofY, around } from './factory'
 
 const DEFAULT_COMPONENT = {
-  id:          -1,
+  id:          "new",
   title:       ""
 }
 
