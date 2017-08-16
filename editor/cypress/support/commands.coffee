@@ -1,31 +1,25 @@
 # You can read more about custom commands here:
 # https://on.cypress.io/api/commands
 
-GOOGLE_STYLE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkF2aWQgR2FtZXIiLCJwaWN0dXJlIjoiaHR0cDovL3BsYWNlaG9sZC5pdC8yMC8yMCJ9.-XxTrb815_LOwALFw84NV8YusXxROyKdfVMikINH5Pc"
-GOOGLE_STYLE_PAYLOAD =
-  sub: "1234567890"
+ID_TOKEN = "avid_gamer@example.com"
+PROFILE =
   name: "Avid Gamer"
-  picture: "http://placehold.it/20/20"
+  avatarSrc: "http://placehold.it/20/20"
+  email: ID_TOKEN
 
 Cypress.addParentCommand "login", ->
-  email    = email or "joe@example.com"
-  password = password or "foobar"
-
   log = Cypress.Log.command
     name: "login"
-    message: [GOOGLE_STYLE_PAYLOAD.name]
+    message: [PROFILE.name]
     consoleProps: ->
-      id: GOOGLE_STYLE_PAYLOAD.sub
-      name: GOOGLE_STYLE_PAYLOAD.name
-      jwt: GOOGLE_STYLE_JWT
+      id: ID_TOKEN
+      name: PROFILE.name
 
-  localStorage.setItem('id_token', GOOGLE_STYLE_JWT)
+  localStorage.setItem('id_token', ID_TOKEN)
 
   persistenceItem = {}
-  persistenceItem[GOOGLE_STYLE_PAYLOAD.sub] =
-    profile:
-      name: 'Avid Gamer',
-      avatarSrc: 'http://placehold.it/20/20'
+  persistenceItem[ID_TOKEN] =
+    profile: PROFILE
     games: []
 
   localStorage.setItem 'persistence', JSON.stringify(persistenceItem)
@@ -44,7 +38,7 @@ Cypress.addParentCommand "setGames", (games) ->
   persistenceItem = JSON.parse(localStorage.getItem("persistence"))
   throw new Error("No persistence detected. Did you remember to `cy.login()` first?") unless persistenceItem
 
-  persistenceItem[GOOGLE_STYLE_PAYLOAD.sub].games = games
+  persistenceItem[ID_TOKEN].games = games
   localStorage.setItem("persistence", JSON.stringify(persistenceItem))
 
   log.snapshot().end()
