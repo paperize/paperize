@@ -14,16 +14,41 @@ li.unauthenticated(v-else)
 <script>
   import { mapState, mapMutations, mapActions } from 'vuex'
   import FoundationMixin from '../mixins/foundation'
+  import auth from '../auth'
 
   export default {
     mixins: [FoundationMixin],
-    updated () { $(this.$el).foundation() },
+    updated() { $(this.$el).foundation() },
     computed: mapState(['authenticated', 'profile']),
     methods: {
-      ...mapActions(['login']),
+      login() {
+        let store = this.$store
+        auth.getAuth2((auth2) => {
+          auth2.signIn().then(
+            (googleUser) => {
+              store.commit("authenticateAs", { idToken: googleUser.getBasicProfile().getEmail() })
+
+              store.commit("setProfile", { profile: {
+                  name:      googleUser.getBasicProfile().getName(),
+                  email:     googleUser.getBasicProfile().getEmail(),
+                  avatarSrc: googleUser.getBasicProfile().getImageUrl()
+                }
+              })
+
+
+            },
+
+            (error) => {
+              console.error("Sign in Error:", error)
+            })
+        })
+      },
+
       logout() {
         this.$store.commit("logout")
         this.$router.push({ name: 'splash' })
+
+        auth.getAuth2((auth2) => { auth2.signOut() })
       }
     }
   }
