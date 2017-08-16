@@ -5,13 +5,11 @@ import uuid from 'uuid/v4'
 import { find } from 'lodash'
 
 import persistence from './local_store_persistence'
-import lock from '../auth'
 
 Vue.use(Vuex)
 
 const EMPTY_STATE = {
   idToken: null,
-  accessToken: null,
   authenticated: false,
   profile: {
     name: '',
@@ -30,18 +28,23 @@ let store = new Vuex.Store({
 
   mutations: {
     logout (state) {
-      state.idToken = null
       state.authenticated = false
+      state.idToken = null
       state.profile.name = ''
       state.profile.avatarSrc = ''
 
       persistence.saveState(state)
     },
 
-    authenticateAs (state, { idToken, accessToken, profile }) {
-      state.idToken = idToken
-      state.accessToken = accessToken
+    authenticateAs (state, { idToken }) {
       state.authenticated = true
+      state.idToken = idToken
+
+      persistence.saveState(state)
+    },
+
+    setProfile(state, { profile }) {
+      state.profile = state.profile || {}
       state.profile.name = profile.name
       state.profile.avatarSrc = profile.avatarSrc
 
@@ -129,35 +132,16 @@ let store = new Vuex.Store({
   },
 
   actions: {
-    login () {
-      lock.promptForLogin()
-    },
+    loadStateFromDB (context, { idToken }) {
+      console.log("Logging in ID:", idToken)
 
-    loggedInAs (context, { accessToken, idToken, idTokenPayload }) {
-      let userId = idTokenPayload.sub
-
-      console.log("Accepting JWT:", idToken)
-      console.log("JWT Payload:", idTokenPayload)
-      console.log("User ID:", userId)
+      let profile = persistence.loadProfile(idToken) || {}
+      context.commit("setProfile", { profile })
 
       let games = persistence.loadGames(idToken) || []
       context.commit("setGames", { games })
 
-      lock.getUserInfo(accessToken, (error, userInfo) => {
-        if(error) {
-          console.error("Error fetching profile for:", userId)
-          console.error(error.message)
-        } else {
-          console.log("User Info:", userInfo)
-          let googleToken = userInfo.access_token
-          let profile = {
-            avatarSrc: userInfo.picture,
-            name:      userInfo.name
-          }
-          context.commit("authenticateAs", { idToken, accessToken, profile })
-          context.commit("setGoogleToken", { token: googleToken })
-        }
-      })
+      context.commit("authenticateAs", { idToken })
     },
 
     setSelectedGame(context, { gameId }) {
@@ -166,17 +150,12 @@ let store = new Vuex.Store({
   }
 })
 
-import decode from 'jwt-decode'
-let { idToken, accessToken } = persistence.loadTokens()
+let idToken = persistence.loadIdToken()
 
-if(idToken && accessToken) {
-  store.dispatch("loggedInAs", { idToken, accessToken, idTokenPayload: decode(idToken) })
+if(idToken) {
+  store.dispatch("loadStateFromDB", { idToken })
 } else {
-  // Log in with Auth0
-  lock.on("authenticated", (authResult) => {
-    console.log("Auth Response:", authResult)
-    store.dispatch("loggedInAs", authResult)
-  })
+  //
 }
 
 export default store

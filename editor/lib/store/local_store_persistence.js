@@ -1,14 +1,13 @@
 // LocalStore persistence layer for the vuex store
-import jwtDecode from 'jwt-decode'
-
 const ID_TOKEN_KEY = 'id_token'
-const ACCESS_TOKEN_KEY = 'access_token'
 const DATABASE_KEY = 'persistence'
 
 export default {
   tokenToRecordId(idToken) {
     // parse the JWT for a globally unique user id
-    return jwtDecode(idToken).sub
+    // return jwtDecode(idToken).sub
+    // no transform
+    return idToken
   },
 
   getLocalDB() {
@@ -22,16 +21,6 @@ export default {
   loadIdToken() {
     // fetch the JWT from storage
     return localStorage.getItem(ID_TOKEN_KEY)
-  },
-
-  loadAccessToken() {
-    // fetch the JWT from storage
-    return localStorage.getItem(ACCESS_TOKEN_KEY)
-  },
-
-  loadTokens() {
-    // fetch the JWT from storage
-    return { idToken: this.loadIdToken(), accessToken: this.loadAccessToken() }
   },
 
   loadRecordId() {
@@ -57,13 +46,11 @@ export default {
     return record
   },
 
-  saveState({ idToken, accessToken, profile, games }) {
-    if(!idToken || !accessToken) {
+  saveState({ idToken, profile, games }) {
+    if(!idToken) {
       localStorage.removeItem(ID_TOKEN_KEY)
-      localStorage.removeItem(ACCESS_TOKEN_KEY)
     } else {
       localStorage.setItem(ID_TOKEN_KEY, idToken)
-      localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
 
       let recordId = this.tokenToRecordId(idToken)
       let localDB = this.getLocalDB()
