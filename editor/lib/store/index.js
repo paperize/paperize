@@ -132,7 +132,7 @@ let store = new Vuex.Store({
   },
 
   actions: {
-    loadStateFromDB (context, { idToken }) {
+    loadStateFromDB(context, { idToken }) {
       console.log("Logging in ID:", idToken)
 
       let profile = persistence.loadProfile(idToken) || {}
