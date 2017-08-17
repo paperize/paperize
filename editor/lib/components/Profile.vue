@@ -15,11 +15,9 @@ ul.menu.unauthenticated(v-else)
 
 <script>
   import { mapState, mapMutations, mapActions } from 'vuex'
-  import FoundationMixin from '../mixins/foundation'
   import auth from '../auth'
 
   export default {
-    mixins: [FoundationMixin],
     updated() {
       try {
         $(this.$el).foundation("destroy")
@@ -30,6 +28,7 @@ ul.menu.unauthenticated(v-else)
     methods: {
       login() {
         let store = this.$store
+        let router = this.$router
         auth.getAuth2((auth2) => {
           auth2.signIn().then(
             (googleUser) => {
@@ -44,6 +43,7 @@ ul.menu.unauthenticated(v-else)
               })
 
 
+              router.push({ name: 'gameManager' })
             },
 
             (error) => {
