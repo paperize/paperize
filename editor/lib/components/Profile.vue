@@ -63,6 +63,10 @@ ul.menu.unauthenticated(v-else)
 </script>
 
 <style scoped>
+  .dropdown.menu > li.is-dropdown-submenu-parent > a::after {
+    display: none;
+  }
+
   .menu.dropdown .avatar {
     padding: 0;
   }
