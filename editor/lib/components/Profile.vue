@@ -1,14 +1,16 @@
 <template lang="pug">
-li.authenticated(v-if="authenticated")
-  a.avatar
-    img(alt="avatar" :src="profile.avatarSrc")
-  ul.menu
-    li.name {{ profile.name }}
-    li
-      a(@click="logout()") Sign Out
-li.unauthenticated(v-else)
-  a(@click="login()") Sign In
-  ul.menu
+ul.menu.dropdown.authenticated(v-if="authenticated" data-dropdown-menu)
+  li
+    a.avatar
+      img(alt="avatar" :src="profile.avatarSrc")
+    ul.menu
+      li.name {{ profile.name }}
+      li
+        a(@click="logout()") Sign Out
+
+ul.menu.unauthenticated(v-else)
+  li
+    a(@click='login()') Sign In
 </template>
 
 <script>
@@ -18,7 +20,12 @@ li.unauthenticated(v-else)
 
   export default {
     mixins: [FoundationMixin],
-    updated() { $(this.$el).foundation() },
+    updated() {
+      try {
+        $(this.$el).foundation("destroy")
+      } catch(error) {}
+      $(this.$el).foundation()
+    },
     computed: mapState(['authenticated', 'profile']),
     methods: {
       login() {
@@ -26,7 +33,8 @@ li.unauthenticated(v-else)
         auth.getAuth2((auth2) => {
           auth2.signIn().then(
             (googleUser) => {
-              store.commit("authenticateAs", { idToken: googleUser.getBasicProfile().getEmail() })
+              let idToken = googleUser.getBasicProfile().getEmail()
+              store.dispatch("loadStateFromDB", { idToken })
 
               store.commit("setProfile", { profile: {
                   name:      googleUser.getBasicProfile().getName(),
