@@ -8,8 +8,7 @@
             router-link(:to="{ name: homeLink }")
               strong Paperize.io
           li.build-status
-            a(target="_blank" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Current Status: Alpha 1
-          li
+            a(target="_blank" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 1
       .top-bar-right
         profile-component
 </template>
