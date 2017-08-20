@@ -35,6 +35,10 @@ export default {
     return this.loadPersisted("games", idToken)
   },
 
+  loadSources(idToken) {
+    return this.loadPersisted("sources", idToken)
+  },
+
   loadPersisted(recordName, idToken) {
     // get a record ID
     let recordId = this.tokenToRecordId(idToken)
@@ -46,7 +50,7 @@ export default {
     return record
   },
 
-  saveState({ idToken, profile, games }) {
+  saveState({ idToken, profile, games, sources }) {
     if(!idToken) {
       localStorage.removeItem(ID_TOKEN_KEY)
     } else {
@@ -61,6 +65,7 @@ export default {
 
       localDB[recordId].profile = profile
       localDB[recordId].games = games
+      localDB[recordId].sources = sources
 
       this.setLocalDB(localDB)
     }

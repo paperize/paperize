@@ -50,7 +50,12 @@ describe "Component Source manager", ->
         .contains("Browse Google Sheets")
 
   context "with existing sources but none selected", ->
-    it "2 lists the sources i've already imported"
+    it.only "lists the sources i've already imported", ->
+      cy.get("#source-manager").within ->
+        cy.contains("Love Letter V3")
+        cy.contains("Carcassonne V1")
+        cy.contains("Pandemic V2")
+
     it "3 allows me to select a source"
     it "allows me to delete a source"
 

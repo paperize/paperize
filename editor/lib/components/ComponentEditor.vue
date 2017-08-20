@@ -5,7 +5,11 @@ div
     #source-manager.small-4
       h5 Source Manager
 
-      p You have no sources.
+      p(v-if="sources.length == 0")
+        | You have no sources.
+      ul(v-else)
+        li(v-for="source in sources") {{ source.name }}
+
 
       a.button(data-open="source-paste-form") Paste a Link
 
@@ -25,10 +29,14 @@ div
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import SourcePasteForm from './SourcePasteForm.vue'
 
   export default {
     props: ["component"],
+
+    computed: { ...mapState(["sources"]) },
+
     components: {
       'source-paste-form': SourcePasteForm
     }

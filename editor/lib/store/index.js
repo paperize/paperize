@@ -16,6 +16,7 @@ const EMPTY_STATE = {
     avatarSrc: ''
   },
   games: [],
+  sources: [],
   selectedGame: null,
   activeComponent: null
 }
@@ -57,6 +58,12 @@ let store = new Vuex.Store({
 
     setGames (state, { games }) {
       state.games = games
+
+      persistence.saveState(state)
+    },
+
+    setSources (state, { sources }) {
+      state.sources = sources
 
       persistence.saveState(state)
     },
@@ -140,6 +147,9 @@ let store = new Vuex.Store({
 
       let games = persistence.loadGames(idToken) || []
       context.commit("setGames", { games })
+
+      let sources = persistence.loadSources(idToken) || []
+      context.commit("setSources", { sources })
 
       context.commit("authenticateAs", { idToken })
     },

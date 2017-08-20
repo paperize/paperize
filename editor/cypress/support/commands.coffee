@@ -51,6 +51,7 @@ Cypress.addParentCommand "visitFixtureGame", (fixtureKey) ->
 Cypress.addParentCommand "loginAndVisitGame", (fixtureKey) ->
   cy.login()
   cy.persistFixtures("games")
+  cy.persistFixtures("sources")
   cy.visitFixtureGame(fixtureKey)
 
 Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
