@@ -25,10 +25,23 @@ describe "Component Source manager", ->
         cy.get("#source-paste-form")
             .should("not.be.visible")
 
-      context "when i submit something", ->
+      context "when i submit something invalid", ->
         beforeEach ->
           cy.get("input[name='source-paste']")
               .type("abcd1234")
+
+          cy.get("#source-paste-form")
+              .find(".button.success")
+                .click()
+
+        it.only "shows a good error message", ->
+          cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
+
+      context "when i submit something valid", ->
+        # TODO: mock the google sheet fetcher
+        beforeEach ->
+          cy.get("input[name='source-paste']")
+              .type("the mocked id")
 
           cy.get("#source-paste-form")
               .find(".button.success")
@@ -39,11 +52,7 @@ describe "Component Source manager", ->
               .should("not.be.visible")
 
         it "i see i have the new source selected", ->
-          cy.contains("Source: abcd1234")
-
-      # adds the source to the DB
-      # fetches the first version of its data
-      # selects that source for this Component
+          cy.contains("Source: Love Letter V2")
 
     it "invites me to browse my GDrive for Sheets to import", ->
       cy.get("#source-manager")
@@ -56,7 +65,7 @@ describe "Component Source manager", ->
         cy.contains("Carcassonne V1")
         cy.contains("Pandemic V2")
 
-    it.only "3 allows me to select a source", ->
+    it "3 allows me to select a source", ->
       cy.get("#source-manager")
         .contains("Love Letter V3")
         .click()
