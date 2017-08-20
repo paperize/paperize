@@ -1,8 +1,6 @@
 describe "Game Editor page", ->
   beforeEach ->
-    cy.login()
-    cy.loadGameFixtures()
-    cy.visitFixtureGame("loveLetter")
+    cy.loginAndVisitGame("loveLetter")
 
   context "the GamePanel and GameForm", ->
     it "shows the game's vitals", ->

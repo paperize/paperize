@@ -3,9 +3,9 @@
 
 ID_TOKEN = "avid_gamer@example.com"
 PROFILE =
-  name: "Avid Gamer"
+  name:      "Avid Gamer"
   avatarSrc: "http://placehold.it/20/20"
-  email: ID_TOKEN
+  email:     ID_TOKEN
 
 Cypress.addParentCommand "login", ->
   log = Cypress.Log.command
@@ -46,6 +46,11 @@ Cypress.addParentCommand "setGames", (games) ->
 Cypress.addParentCommand "visitFixtureGame", (fixtureKey) ->
   cy.fixture("games").its("#{fixtureKey}.id").then (gameId) ->
     cy.visit("/#/games/#{gameId}")
+
+Cypress.addParentCommand "loginAndVisitGame", (fixtureKey) ->
+  cy.login()
+  cy.loadGameFixtures()
+  cy.visitFixtureGame(fixtureKey)
 
 Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
   cy.wrap(inputTextPairs).then (selectorsAndText) ->
