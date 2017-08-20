@@ -12,7 +12,7 @@ div(v-if="!game")
 
     .small-9.cell
       .active-component
-        h2(v-if="activeComponent") {{ activeComponent.title || "[Component title not set]"   }}
+        component-editor(v-if="activeComponent" :component="activeComponent")
         h2(v-else) No Component Selected
 </template>
 
@@ -21,16 +21,17 @@ div(v-if="!game")
 
   import GamePanel from '../components/GamePanel.vue'
   import ComponentPanel from '../components/ComponentPanel.vue'
+  import ComponentEditor from '../components/ComponentEditor.vue'
 
   export default {
     props: ['gameId'],
     computed: { ...mapState({ game: 'selectedGame', activeComponent: 'activeComponent' }) },
     components: {
-      "game-panel":      GamePanel,
-      "component-panel": ComponentPanel
+      "game-panel":       GamePanel,
+      "component-panel":  ComponentPanel,
+      "component-editor": ComponentEditor
     },
     methods: { }
-
   }
 </script>
 

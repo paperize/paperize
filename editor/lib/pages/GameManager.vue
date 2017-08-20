@@ -11,7 +11,7 @@
 
       ul.menu
         li
-          a(data-open="new-game-modal") Load Example
+          a Load Example
         li
           a(data-open="new-game-modal") New Game
 

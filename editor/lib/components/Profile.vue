@@ -42,7 +42,6 @@ ul.menu.unauthenticated(v-else)
                 }
               })
 
-
               router.push({ name: 'gameManager' })
             },
 
