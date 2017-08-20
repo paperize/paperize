@@ -15,7 +15,7 @@ div
       .reveal#source-explorer(data-reveal)
         h2 Browse Your Google Sheets
 
-        //- p Paste a Google Sheets link or ID here:
+        p Loading your Sheets...
 
     #transform-manager.small-4
       h5 Transform Manager
@@ -25,11 +25,9 @@ div
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
   import SourcePasteForm from './SourcePasteForm.vue'
 
   export default {
-    mixins: [FoundationMixin],
     props: ["component"],
     components: {
       'source-paste-form': SourcePasteForm

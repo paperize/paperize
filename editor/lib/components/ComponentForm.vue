@@ -14,7 +14,7 @@
         label(:for="`component-type-${component.id}`") Type:
       .small-8.cell
         select(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
-          option(value="deck") Deck
+          option(value="deck") Deck of Cards
           option(value="tile-stack") Stack of Tiles
           option(value="booklet") Booklet or Manual
           option(value="custom") Custom Component
@@ -29,14 +29,11 @@
 
 <script>
   import FoundationMixin from '../mixins/foundation'
+  import RevealMixin from '../mixins/reveal'
   import Component from '../models/component'
 
   export default {
-    mixins: [FoundationMixin],
-
-    destroyed() {
-      $(this.$el).remove()
-    },
+    mixins: [ RevealMixin, FoundationMixin ],
 
     props: {
       mode: {
@@ -71,10 +68,6 @@
         // Reset the model
         this.componentClone = { ...this.component }
       },
-
-      closeModal () {
-        $(this.$el).foundation('close')
-      }
     }
   }
 </script>

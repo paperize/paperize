@@ -11,13 +11,17 @@
       a.button.alert(@click="closeModal()") Cancel
     li
       a.button.success(@click="importSourceViaPaste()") Import
+
+  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+    span(aria-hidden="true") &times;
 </template>
 
 <script>
+  import FoundationMixin from '../mixins/foundation'
   import RevealMixin from '../mixins/reveal'
 
   export default {
-    mixins: [ RevealMixin ],
+    mixins: [ RevealMixin, FoundationMixin ],
 
     methods: {
       importSourceViaPaste() {

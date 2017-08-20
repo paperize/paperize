@@ -41,17 +41,11 @@
 
 <script>
   import FoundationMixin from '../mixins/foundation'
+  import RevealMixin from '../mixins/reveal'
   import Game from '../models/game'
 
   export default {
-    mixins: [FoundationMixin],
-
-    // The way Foundation's Reveal works, it moves the dom element up to be a
-    // direct child of <body>, removing Vue's ability to remove it cleanly upon
-    // destroy. Add a little extra love here to see that the job is really done!
-    destroyed() {
-      $(this.$el).remove()
-    },
+    mixins: [ RevealMixin, FoundationMixin ],
 
     props: {
       mode: {
