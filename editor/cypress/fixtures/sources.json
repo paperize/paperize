@@ -2,7 +2,44 @@
   "loveLetter": {
     "id": "love-letter-source",
     "name": "Love Letter V3",
-    "lastViewed": "1/1/2010"
+    "lastViewed": "1/1/2010",
+    "properties": [
+      "Name",
+      "Rank",
+      "Image",
+      "Rule",
+      "Quantity"
+    ],
+    "items": [
+      {
+        "Name": "Guard",
+        "Rank": "8",
+        "Image": "",
+        "Rule": "I forget",
+        "Quantity": 5
+      },
+      {
+        "Name": "Knight",
+        "Rank": "5",
+        "Image": "",
+        "Rule": "Stabby",
+        "Quantity": 3
+      },
+      {
+        "Name": "Vizier",
+        "Rank": "2",
+        "Image": "",
+        "Rule": "Totally scheming",
+        "Quantity": 1
+      },
+      {
+        "Name": "Princess",
+        "Rank": "1",
+        "Image": "",
+        "Rule": "Hold on!",
+        "Quantity": 1
+      }
+    ]
   },
   "carcassonne": {
     "id": "carcassonne-source",

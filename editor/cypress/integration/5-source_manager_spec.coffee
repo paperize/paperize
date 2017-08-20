@@ -50,15 +50,36 @@ describe "Component Source manager", ->
         .contains("Browse Google Sheets")
 
   context "with existing sources but none selected", ->
-    it.only "lists the sources i've already imported", ->
+    it "lists the sources i've already imported", ->
       cy.get("#source-manager").within ->
         cy.contains("Love Letter V3")
         cy.contains("Carcassonne V1")
         cy.contains("Pandemic V2")
 
-    it "3 allows me to select a source"
+    it.only "3 allows me to select a source", ->
+      cy.get("#source-manager")
+        .contains("Love Letter V3")
+        .click()
+
+      cy.get("#source-manager")
+        .contains("Source: Love Letter V3")
+
     it "allows me to delete a source"
 
   context "with a source selected", ->
-    it "shows me the exposed properties in a nice way"
+    beforeEach ->
+      cy.get("#source-manager")
+        .contains("Love Letter V3")
+        .click()
+
+    it "shows me the exposed properties in a nice way", ->
+      cy.get("#source-manager").within ->
+        cy.get("dt").its("length").should("eq", 4)
+        cy.contains("Property Name:")
+        cy.contains("Name")
+        cy.contains("Rank")
+        cy.contains("Image")
+        cy.contains("Rule")
+
+
     it "allows me to deselect that source"

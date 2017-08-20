@@ -18,7 +18,8 @@ const EMPTY_STATE = {
   games: [],
   sources: [],
   selectedGame: null,
-  activeComponent: null
+  activeComponent: null,
+  activeSource: null
 }
 
 let store = new Vuex.Store({
@@ -135,6 +136,15 @@ let store = new Vuex.Store({
       }
 
       state.activeComponent = foundComponent
+    },
+
+    setActiveSource(state, { source }) {
+      let foundSource = find(state.sources, { id: source.id })
+      if(!foundSource) {
+        throw new Error(`No component source found: ${source}`)
+      }
+
+      state.activeSource = foundSource
     }
   },
 
