@@ -51,7 +51,7 @@ describe "Game Manager page", ->
 
     context "with existing games", ->
       beforeEach ->
-        cy.loadGameFixtures()
+        cy.persistFixtures("games")
         cy.visit("/#/games")
 
       it "lists my games", ->

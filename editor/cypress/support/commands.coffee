@@ -21,24 +21,25 @@ Cypress.addParentCommand "login", ->
   persistenceItem[ID_TOKEN] =
     profile: PROFILE
     games: []
+    sources: []
 
   localStorage.setItem 'persistence', JSON.stringify(persistenceItem)
 
   log.snapshot().end()
 
-Cypress.addParentCommand "loadGameFixtures", () ->
-  cy.fixture("games").then (games) ->
-    cy.setGames(Cypress._.values(games))
+Cypress.addParentCommand "persistFixtures", (fixtureName) ->
+  cy.fixture(fixtureName).then (games) ->
+    cy.persist(fixtureName, Cypress._.values(games))
 
-Cypress.addParentCommand "setGames", (games) ->
+Cypress.addParentCommand "persist", (key, collection=[]) ->
   log = Cypress.Log.command
-    name: "setGames"
-    message: ["#{games.length} games"]
+    name: "persist"
+    message: ["#{collection.length} #{key}s"]
 
   persistenceItem = JSON.parse(localStorage.getItem("persistence"))
   throw new Error("No persistence detected. Did you remember to `cy.login()` first?") unless persistenceItem
 
-  persistenceItem[ID_TOKEN].games = games
+  persistenceItem[ID_TOKEN][key] = collection
   localStorage.setItem("persistence", JSON.stringify(persistenceItem))
 
   log.snapshot().end()
@@ -49,7 +50,7 @@ Cypress.addParentCommand "visitFixtureGame", (fixtureKey) ->
 
 Cypress.addParentCommand "loginAndVisitGame", (fixtureKey) ->
   cy.login()
-  cy.loadGameFixtures()
+  cy.persistFixtures("games")
   cy.visitFixtureGame(fixtureKey)
 
 Cypress.addParentCommand "typeIntoSelectors", (inputTextPairs) ->
