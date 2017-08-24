@@ -4,15 +4,16 @@
 
   p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
 
-  label
-    | Paste a Google Sheets link or ID here:
-    input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+  form(@submit.prevent="importSourceViaPaste()")
+    label
+      | Paste a Google Sheets link or ID here:
+      input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
-  ul.menu
-    li
-      a.button.alert(@click="closeModal()") Cancel
-    li
-      a.button.success(@click="importSourceViaPaste()") Import
+    ul.menu
+      li
+        a.button.alert(@click="closeModal()") Cancel
+      li
+        input.button.success(type="submit" value="Import")
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")
     span(aria-hidden="true") &times;
@@ -21,10 +22,7 @@
 <script>
   import FoundationMixin from '../mixins/foundation'
   import RevealMixin from '../mixins/reveal'
-
-  // Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
-  const GOOGLE_ID_REGEX = /[-\w]{25,}/
-  let matchGoogleId = (url) => { url.match(GOOGLE_ID_REGEX) }
+  import googleSheets from '../google_sheets'
 
   export default {
     mixins: [ RevealMixin, FoundationMixin ],
@@ -38,33 +36,37 @@
 
     methods: {
       importSourceViaPaste() {
+        let self = this
         // TODO: set a spinner
-        // grab the pasted value
-        console.log("Pasted:", this.pastedSource)
-        // match and extract the sheet id portion
-        let googleId = matchGoogleId(this.pastedSource)
-        console.log("Matched:", googleId)
-        // error out from id parse failure
-        if(!googleId){
-          // TODO: remove spinner
-          // communicate an error
-          this.errorWithPaste = `No Google Sheet ID detected in "${this.pastedSource}"`
-          return
-        }
         // fetch vitals from google
-        googleSheets.fetchSheetById(googleId)
+        googleSheets.fetchSheetById(this.pastedSource)
           .then(function(googleSheet) {
-            // insert into vuex store
-            // call setActiveSource mutation
+            console.log(googleSheet)
+            console.log(googleSheet.name)
+            console.log(googleSheet.id)
+            console.log(googleSheet.data)
+            // TODO: insert into vuex store
+            // TODO: call setActiveSource mutation
 
-            this.closeModal()
+            self.closeModal()
           })
 
-          .catch(Error, function() {
-            // error out from sheet fetch failure
-            // TODO: remove spinner
-            // TODO: communicate an error
+          .catch(googleSheets.BadIdError, function(badIdError) {
+            console.log("rejected with bad id")
+            self.errorWithPaste = `No Google Sheet ID detected in "${self.pastedSource}"`
           })
+
+          .catch(googleSheets.NotFoundError, (nfError) => {
+            console.log("rejected with not found", nfError)
+            self.errorWithPaste = `No Google Sheet found for ID: "${nfError.googleId}"`
+          })
+
+          // .catch(Error, function(error) {
+          //   console.log("rejected otherwise", error)
+          //   // error out from sheet fetch failure
+          //   // TODO: remove spinner
+          //   // TODO: communicate an error
+          // })
       },
     }
   }

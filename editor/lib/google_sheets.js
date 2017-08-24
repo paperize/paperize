@@ -1,53 +1,63 @@
 import Promise from 'bluebird'
 import auth from './auth'
 
-let user = auth.user
+// Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
+const GOOGLE_ID_REGEX = /[-\w]{25,}/
+let matchGoogleId = (url) => url.match(GOOGLE_ID_REGEX)
 
-const CLIENT_ID      = "991093846081-9fps02e3ijk98hpetv0jvpjqm195as2m.apps.googleusercontent.com"
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const SCOPES         = "https://www.googleapis.com/auth/spreadsheets";
+let BadIdError = function() {}
+BadIdError.prototype = Object.create(Error.prototype);
 
-let getSheetsAPI = (token) => {
-  return new Promise((resolve, reject) => {
-    if(gapi.client) {
-      resolve(gapi.client)
-    } else {
-      gapi.load('client:auth2', () => {
-        return gapi.client.init({
-          discoveryDocs: DISCOVERY_DOCS,
-          clientId:      CLIENT_ID,
-          scope:         SCOPES,
-        })
+let NotFoundError = function(googleId) {
+  this.googleId = googleId
+  return this
+}
+NotFoundError.prototype = Object.create(Error.prototype);
 
-        .then(() => {
-          gapi.client.setToken({access_token: token})
-          resolve(gapi.client)
+let api = {
+  BadIdError, NotFoundError,
+
+  fetchSheetById(sheetId) {
+    return new Promise((resolve, reject) => {
+      let googleId = matchGoogleId(sheetId)
+      // error out from id parse failure
+      if(!googleId){
+        reject(new BadIdError())
+        return
+      }
+
+      auth.getClient((client) => {
+        return client.drive.files.get({
+          fileId: googleId
+        }).then((driveResponse) => {
+          // sheet exists, fetch its name
+          let driveResult = driveResponse.result
+          console.log("fetched file")
+          console.log(driveResult)
+          return client.sheets.spreadsheets.values.get({
+            spreadsheetId: googleId,
+            range: 'Sheet1' // TODO: Can't rely on this in reality
+          }).then((sheetsResponse) => {
+            let sheetsResult = sheetsResponse.result
+            console.log("fetched sheet")
+            console.log(sheetsResult)
+            // resolve with the sheet metadata and data
+            resolve({
+              id:   driveResult.id,
+              name: driveResult.name,
+              data: sheetsResult
+            })
+          })
+        }, (error) => {
+          if(error.status == 404) {
+            reject(new NotFoundError(googleId))
+          } else {
+            reject(error)
+          }
         })
       })
-    }
-  })
+    })
+  }
 }
 
-let loadSheet = function(token, sheetId, range) {
-  getSheetsAPI(token).then((api) => {
-    api.sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: range,
-    }).then(function(response) {
-      let range = response.result;
-      if (range.values.length > 0) {
-        for (let i = 0; i < range.values.length; i++) {
-          var row = range.values[i];
-          // work with row
-          console.log(row)
-        }
-      } else {
-        console.log('-')
-      }
-    }, function(response) {
-      console.log("Error:", response.result.error.message)
-    });
-  })
-}
-
-export default { loadSheet }
+export default api
