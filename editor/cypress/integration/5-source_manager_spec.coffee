@@ -9,6 +9,14 @@ describe "Component Source manager", ->
         .contains("You have no sources.")
 
     describe "invites me to paste in a source URL or ID to import", ->
+      submitPaste = (paste) ->
+        cy.get("input[name='source-paste']")
+            .type(paste)
+
+        cy.get("#source-paste-form")
+            .find(".button.success")
+              .click()
+
       beforeEach ->
         cy.get("#source-manager")
           .contains("Paste a Link")
@@ -25,20 +33,28 @@ describe "Component Source manager", ->
         cy.get("#source-paste-form")
             .should("not.be.visible")
 
-      context "when i submit something invalid", ->
-        beforeEach ->
-          cy.get("input[name='source-paste']")
-              .type("abcd1234")
+      it "errors when ID can't be parsed", ->
+        submitPaste("abcd1234")
 
-          cy.get("#source-paste-form")
-              .find(".button.success")
-                .click()
+        cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
 
-        it.only "shows a good error message", ->
-          cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
+      it.only "errors when google sheet can't be fetched", ->
+        cy.window().its("auth").then (auth) ->
+          cy.stub(auth, 'getClient').callsArgWith(0, {
+            sheets: {
+              spreadsheets: {
+                values: {
+                  get: -> throw new Error("YES!")
+                }
+              }
+            }
+          })
+
+        submitPaste("xxxxxxxxxxxxxxxxxxxxxxxxx")
+
+        cy.contains("Error: Unable to fetch Google Sheet with ID: \"abcd1234\"")
 
       context "when i submit something valid", ->
-        # TODO: mock the google sheet fetcher
         beforeEach ->
           cy.get("input[name='source-paste']")
               .type("the mocked id")
