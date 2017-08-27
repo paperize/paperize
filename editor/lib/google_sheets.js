@@ -32,15 +32,11 @@ let api = {
         }).then((driveResponse) => {
           // sheet exists, fetch its name
           let driveResult = driveResponse.result
-          console.log("fetched file")
-          console.log(driveResult)
           return client.sheets.spreadsheets.values.get({
             spreadsheetId: googleId,
             range: 'Sheet1' // TODO: Can't rely on this in reality
           }).then((sheetsResponse) => {
             let sheetsResult = sheetsResponse.result
-            console.log("fetched sheet")
-            console.log(sheetsResult)
             // resolve with the sheet metadata and data
             resolve({
               id:   driveResult.id,
@@ -58,6 +54,10 @@ let api = {
       })
     })
   }
+}
+
+if(process.env.NODE_ENV == 'test'){
+  window.googleSheets = api
 }
 
 export default api

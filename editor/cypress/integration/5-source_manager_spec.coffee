@@ -1,9 +1,11 @@
 describe "Component Source manager", ->
-  beforeEach ->
-    cy.loginAndVisitGame("loveLetter")
-    cy.get(".component").first().click()
-
   context "with no sources imported", ->
+    beforeEach ->
+      cy.login()
+      cy.persistFixtures("games")
+      cy.visitFixtureGame("loveLetter")
+      cy.get(".component").first().click()
+
     it "says so", ->
       cy.get("#source-manager")
         .contains("You have no sources.")
@@ -38,7 +40,7 @@ describe "Component Source manager", ->
 
         cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
 
-      it.only "errors when google sheet can't be fetched", ->
+      it "errors when google sheet can't be fetched", ->
         cy.window().its("auth").then (auth) ->
           cy.stub(auth, 'getClient').callsArgWith(0, {
             sheets: {
@@ -47,15 +49,26 @@ describe "Component Source manager", ->
                   get: -> throw new Error("YES!")
                 }
               }
+            },
+            drive: {
+              files: {
+                get: ->
+                  then: (callback, errback) ->
+                    errback({ status: 404 })
+              }
             }
           })
 
         submitPaste("xxxxxxxxxxxxxxxxxxxxxxxxx")
 
-        cy.contains("Error: Unable to fetch Google Sheet with ID: \"abcd1234\"")
+        cy.contains("Error: No Google Sheet found for ID: \"xxxxxxxxxxxxxxxxxxxxxxxxx\"")
 
       context "when i submit something valid", ->
         beforeEach ->
+          cy.fixture("sources").its("loveLetter").then (loveLetter) ->
+            cy.window().its("googleSheets").then (googleSheets) ->
+              cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
+
           cy.get("input[name='source-paste']")
               .type("the mocked id")
 
@@ -68,43 +81,56 @@ describe "Component Source manager", ->
               .should("not.be.visible")
 
         it "i see i have the new source selected", ->
-          cy.contains("Source: Love Letter V2")
+          cy.contains("Source: Love Letter Revisited")
 
     it "invites me to browse my GDrive for Sheets to import", ->
       cy.get("#source-manager")
         .contains("Browse Google Sheets")
 
-  context "with existing sources but none selected", ->
-    it "lists the sources i've already imported", ->
-      cy.get("#source-manager").within ->
-        cy.contains("Love Letter V3")
-        cy.contains("Carcassonne V1")
-        cy.contains("Pandemic V2")
-
-    it "3 allows me to select a source", ->
-      cy.get("#source-manager")
-        .contains("Love Letter V3")
-        .click()
-
-      cy.get("#source-manager")
-        .contains("Source: Love Letter V3")
-
-    it "allows me to delete a source"
-
-  context "with a source selected", ->
+  context "with existing sources", ->
     beforeEach ->
-      cy.get("#source-manager")
-        .contains("Love Letter V3")
-        .click()
+      cy.loginAndVisitGame("loveLetter")
+      cy.get(".component").first().click()
 
-    it "shows me the exposed properties in a nice way", ->
-      cy.get("#source-manager").within ->
-        cy.get("dt").its("length").should("eq", 4)
-        cy.contains("Property Name:")
-        cy.contains("Name")
-        cy.contains("Rank")
-        cy.contains("Image")
-        cy.contains("Rule")
+    describe "no source selected", ->
+      it "lists the sources i've already imported", ->
+        cy.get("#source-manager").within ->
+          cy.contains("Select a Source:")
+          cy.contains("Love Letter Revisited")
+          cy.contains("Carcassonne V1")
+          cy.contains("Pandemic V2")
 
+      it "allows me to select a source", ->
+        cy.get("#source-manager")
+          .contains("Love Letter Revisited")
+          .click()
 
-    it "allows me to deselect that source"
+        cy.get("#source-manager")
+          .contains("Source: Love Letter Revisited")
+
+      it "allows me to delete a source"
+
+    describe "with a source selected", ->
+      beforeEach ->
+        cy.get("#source-manager")
+          .contains("Love Letter Revisited")
+          .click()
+
+      it "shows me the exposed properties in a nice way", ->
+        cy.get("#source-manager").within ->
+          cy.get("li").its("length").should("eq", 5)
+          cy.contains("Properties:")
+          cy.contains("Quantity")
+          cy.contains("Name")
+          cy.contains("Guard, Priest, Baron")
+          cy.contains("Rank")
+          cy.contains("Image")
+          cy.contains("Rule")
+
+      it "allows me to deselect that source", ->
+        cy.get("#source-manager")
+          .contains("Change source")
+          .click()
+
+        cy.get("#source-manager")
+          .contains("Select a Source:")

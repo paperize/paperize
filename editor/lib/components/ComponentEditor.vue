@@ -9,22 +9,25 @@ div
       hr
 
       div(v-if="activeSource")
+        a(@click="unsetSource") Change source
         p Source: {{ activeSource.name }}
 
         p Properties:
 
         ul
-          li(v-for="property in activeSource.properties")
+          li(v-for="property in activeSourceProperties")
             strong {{ property }}
 
-            p Examples: {{ propertyExamples(property) }}
+            p Examples: {{ activeSourcePropertyExamples(property).join(', ') }}
 
       div(v-else)
         p(v-if="sources.length == 0")
           | You have no sources.
-        ul(v-else)
-          li(v-for="source in sources")
-            a(@click="setActiveSource({ source })") {{ source.name }}
+        div(v-else)
+          p Select a Source:
+          ul
+            li(v-for="source in sources")
+              a(@click="setActiveSource({ source })") {{ source.name }}
 
 
         a.button(data-open="source-paste-form") Paste a Link
@@ -48,24 +51,22 @@ div
 
 <script>
   import { chain } from 'lodash'
-  import { mapMutations, mapState } from 'vuex'
+  import { mapState, mapGetters, mapMutations, } from 'vuex'
   import SourcePasteForm from './SourcePasteForm.vue'
 
   export default {
     props: ["component"],
 
-    computed: { ...mapState(["sources", "activeSource"]) },
+    computed: {
+      ...mapState(["sources", "activeSource"]),
+      ...mapGetters(["activeSourceProperties", "activeSourcePropertyExamples"])
+    },
 
     methods: {
       ...mapMutations(["setActiveSource"]),
 
-      propertyExamples(property) {
-        // get lodash rowdy
-        return chain(this.$store.state.activeSource.items)
-          .slice(0, 3)
-          .map(property)
-        .value()
-
+      unsetSource() {
+        this.$store.commit("unsetSource", { component: this.component })
       }
     },
 

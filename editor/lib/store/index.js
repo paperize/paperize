@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import uuid from 'uuid/v4'
 
-import { find } from 'lodash'
+import { find, chain } from 'lodash'
 
 import persistence from './local_store_persistence'
 
@@ -27,6 +27,20 @@ let store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
 
   state: EMPTY_STATE,
+
+  getters: {
+    activeSourceProperties: (state) => state.activeSource.data.values[0],
+
+    activeSourcePropertyExamples: (state, getters) => (propertyName) => {
+      let propertyIndex = getters.activeSourceProperties.indexOf(propertyName)
+
+      return chain(state.activeSource.data.values)
+        .map((row) => row[propertyIndex])
+        .compact()
+        .slice(1, 4)
+      .value()
+    }
+  },
 
   mutations: {
     logout (state) {
@@ -70,7 +84,7 @@ let store = new Vuex.Store({
     },
 
     createGame (state, { game }) {
-      game.id = uuid()
+      game.id = game.id || uuid()
       state.games.push(game)
       state.selectedGame = game
 
@@ -104,7 +118,7 @@ let store = new Vuex.Store({
     },
 
     createComponent(state, { component }) {
-      component.id = uuid()
+      component.id = component.id || uuid()
       state.selectedGame.components.push(component)
 
       persistence.saveState(state)
@@ -138,6 +152,12 @@ let store = new Vuex.Store({
       state.activeComponent = foundComponent
     },
 
+    createSource(state, { source }) {
+      source.id = source.id || uuid()
+      state.sources.push(source)
+      state.activeSource = source
+    },
+
     setActiveSource(state, { source }) {
       let foundSource = find(state.sources, { id: source.id })
       if(!foundSource) {
@@ -145,6 +165,10 @@ let store = new Vuex.Store({
       }
 
       state.activeSource = foundSource
+    },
+
+    unsetSource(state, { component }) {
+      state.activeSource = null
     }
   },
 

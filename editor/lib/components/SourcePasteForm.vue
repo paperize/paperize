@@ -41,32 +41,28 @@
         // fetch vitals from google
         googleSheets.fetchSheetById(this.pastedSource)
           .then(function(googleSheet) {
-            console.log(googleSheet)
-            console.log(googleSheet.name)
-            console.log(googleSheet.id)
-            console.log(googleSheet.data)
-            // TODO: insert into vuex store
-            // TODO: call setActiveSource mutation
+            // insert into vuex store and select
+            self.$store.commit("createSource", { source: googleSheet })
 
             self.closeModal()
           })
 
           .catch(googleSheets.BadIdError, function(badIdError) {
+            // TODO: remove spinner
             console.log("rejected with bad id")
             self.errorWithPaste = `No Google Sheet ID detected in "${self.pastedSource}"`
           })
 
           .catch(googleSheets.NotFoundError, (nfError) => {
+            // TODO: remove spinner
             console.log("rejected with not found", nfError)
             self.errorWithPaste = `No Google Sheet found for ID: "${nfError.googleId}"`
           })
 
-          // .catch(Error, function(error) {
-          //   console.log("rejected otherwise", error)
-          //   // error out from sheet fetch failure
-          //   // TODO: remove spinner
-          //   // TODO: communicate an error
-          // })
+          .catch(Error, function(error) {
+            // TODO: remove spinner
+            console.log("rejected otherwise", error)
+          })
       },
     }
   }
