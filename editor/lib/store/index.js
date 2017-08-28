@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import uuid from 'uuid/v4'
 
-import { find, chain } from 'lodash'
+import { find, chain, truncate } from 'lodash'
 
 import persistence from './local_store_persistence'
 
@@ -18,8 +18,7 @@ const EMPTY_STATE = {
   games: [],
   sources: [],
   selectedGame: null,
-  activeComponent: null,
-  activeSource: null
+  activeComponent: null
 }
 
 let store = new Vuex.Store({
@@ -29,15 +28,36 @@ let store = new Vuex.Store({
   state: EMPTY_STATE,
 
   getters: {
-    activeSourceProperties: (state) => state.activeSource.data.values[0],
+    findComponent: (state) => (component) => {
+      let foundComponent = find(state.selectedGame.components, { id: component.id })
+      if(!foundComponent) {
+        throw new Error(`No component found: ${component}`)
+      }
+
+      return foundComponent
+    },
+
+    findSource: (state) => (source) => {
+      let foundSource = find(state.sources, { id: source.id })
+      if(!foundSource) {
+        throw new Error(`No component source found: ${source}`)
+      }
+
+      return foundSource
+    },
+
+    activeSource: (state) => (state.activeComponent || { }).source,
+    activeSourceProperties: (state, getters) => (((getters.activeSource || { }).data || {}).values || [])[0],
 
     activeSourcePropertyExamples: (state, getters) => (propertyName) => {
       let propertyIndex = getters.activeSourceProperties.indexOf(propertyName)
 
-      return chain(state.activeSource.data.values)
+      return chain(getters.activeSource.data.values)
         .map((row) => row[propertyIndex])
         .compact()
         .slice(1, 4)
+        .map((content) => truncate(content, { length: 24, separator: /,? +/ }))
+        .join(', ')
       .value()
     }
   },
@@ -155,20 +175,23 @@ let store = new Vuex.Store({
     createSource(state, { source }) {
       source.id = source.id || uuid()
       state.sources.push(source)
-      state.activeSource = source
+
+      persistence.saveState(state)
     },
 
-    setActiveSource(state, { source }) {
-      let foundSource = find(state.sources, { id: source.id })
-      if(!foundSource) {
-        throw new Error(`No component source found: ${source}`)
-      }
+    setComponentSource(state, { component, source }) {
+      Vue.set(component, "source", source)
+      persistence.saveState(state)
+    },
 
-      state.activeSource = foundSource
+    setActiveComponentSource(state, { source }) {
+      Vue.set(state.activeComponent, "source", source)
+      persistence.saveState(state)
     },
 
     unsetSource(state, { component }) {
-      state.activeSource = null
+      state.activeComponent.source = null
+      persistence.saveState(state)
     }
   },
 
@@ -190,7 +213,19 @@ let store = new Vuex.Store({
 
     setSelectedGame(context, { gameId }) {
       context.commit("setSelectedGame", { gameId })
-    }
+    },
+
+    addAndSelectSource({ commit }, { source }) {
+      commit("createSource", { source })
+      commit("setActiveComponentSource", { source })
+    },
+
+    setComponentSource({ state, commit, getters }, { component, source }) {
+      component = getters.findComponent(component)
+      source = getters.findSource(source)
+
+      commit("setComponentSource", { component, source })
+    },
   }
 })
 

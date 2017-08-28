@@ -42,7 +42,7 @@
         googleSheets.fetchSheetById(this.pastedSource)
           .then(function(googleSheet) {
             // insert into vuex store and select
-            self.$store.commit("createSource", { source: googleSheet })
+            self.$store.dispatch("addAndSelectSource", { source: googleSheet })
 
             self.closeModal()
           })
