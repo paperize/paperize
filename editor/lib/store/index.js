@@ -38,6 +38,7 @@ let store = new Vuex.Store({
     },
 
     findSource: (state) => (source) => {
+      if(!source || !source.id ) { return null }
       let foundSource = find(state.sources, { id: source.id })
       if(!foundSource) {
         throw new Error(`No component source found: ${source}`)
@@ -47,7 +48,20 @@ let store = new Vuex.Store({
     },
 
     activeSource: (state) => (state.activeComponent || { }).source,
-    activeSourceProperties: (state, getters) => (((getters.activeSource || { }).data || {}).values || [])[0],
+    sourceProperties: (state, getters) => (source) => {
+      source = getters.findSource(source)
+      let theProperties = (((source || { }).data || { }).values || [])[0]
+
+      return theProperties
+    },
+
+    activeSourceProperties: (state, getters) => {
+      if(getters.activeSource) {
+        return getters.sourceProperties(getters.activeSource)
+      } else {
+        return null
+      }
+    },
 
     activeSourcePropertyExamples: (state, getters) => (propertyName) => {
       let propertyIndex = getters.activeSourceProperties.indexOf(propertyName)

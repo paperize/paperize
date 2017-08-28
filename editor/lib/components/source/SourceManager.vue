@@ -9,13 +9,13 @@
 
     p Properties:
 
-    ul
-      li(v-for="property in activeSourceProperties")
-        strong {{ property }}
-
-        p
-          | e.g.:
-          em  {{ activeSourcePropertyExamples(property) }}
+    table.source-properties(v-if="component.source")
+      thead
+        th Name:
+        th E.g.:
+      tr(v-for="property in sourceProperties(component.source)")
+        td.property-name(title="Property Name") {{ property }}
+        td.property-examples {{ activeSourcePropertyExamples(property) }}
 
   div(v-else)
     p(v-if="sources.length == 0")
@@ -47,7 +47,7 @@ export default {
 
   computed: {
     ...mapState(["sources"]),
-    ...mapGetters(["activeSource", "activeSourceProperties", "activeSourcePropertyExamples"]),
+    ...mapGetters(["activeSource", "sourceProperties", "activeSourcePropertyExamples"]),
   },
 
   methods: {
@@ -60,3 +60,19 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .source-properties li {
+    border-bottom: 2px solid gray;
+  }
+
+  .property-name {
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  .property-examples {
+    font-size: 1em;
+    font-style: italic;
+  }
+</style>

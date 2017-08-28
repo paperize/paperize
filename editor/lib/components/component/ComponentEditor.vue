@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  h2 Editing: {{ component.title || "[component title not set]" }}
+  h4 Editing: {{ component.title || "[component title not set]" }}
   hr
 
   .grid-x
@@ -11,9 +11,30 @@ div
       h5 Transform Manager
       hr
 
+      p Transforms:
+      table(v-if="source")
+        thead
+          th Name:
+          th Type:
+        tr(v-for="property in sourceProperties(source)")
+          td Expose("{{ property }}")
+          td Raw
+
     #template-manager.small-4
       h5 Template Manager
       hr
+
+      div(v-if="source")
+        p Item Previews:
+
+        p(v-for="property in sourceProperties(source)") {{ property }}
+
+        ul.menu.horizontal
+          li
+            a &lt;&lt;
+          li Item xx / yy
+          li
+            a &gt;&gt;
 </template>
 
 <script>
@@ -22,6 +43,11 @@ div
 
   export default {
     props: ["component"],
+
+    computed: {
+      ...mapGetters(["sourceProperties"]),
+      source() { return this.component.source }
+    },
 
     components: {
       'source-manager': SourceManager

@@ -2,7 +2,7 @@
 .component-panel.grid-y
   component-form#new-component-form(mode='create')
   .small-12.cell
-    h2 Components
+    h4 Components
 
     ul.menu
       li
@@ -27,7 +27,4 @@
 </script>
 
 <style>
-  .component-panel {
-    border-right: solid black 1px;
-  }
 </style>

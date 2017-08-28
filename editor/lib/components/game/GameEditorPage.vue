@@ -7,10 +7,10 @@ div(v-if="!game")
   hr
 
   .grid-x.grid-padding.x
-    .small-3.cell
+    .small-2.cell
       component-panel(:components="game.components")
 
-    .small-9.cell
+    .small-10.cell
       .active-component
         component-editor(v-if="activeComponent" :component="activeComponent")
         h2(v-else) No Component Selected
