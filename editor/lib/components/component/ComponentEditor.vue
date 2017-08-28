@@ -20,26 +20,14 @@ div
           td Expose("{{ property }}")
           td Raw
 
-    #template-manager.small-4
-      h5 Template Manager
-      hr
-
-      div(v-if="source")
-        p Item Previews:
-
-        p(v-for="property in sourceProperties(source)") {{ property }}
-
-        ul.menu.horizontal
-          li
-            a &lt;&lt;
-          li Item xx / yy
-          li
-            a &gt;&gt;
+    .small-4
+      template-manager(:component="component")
 </template>
 
 <script>
   import { mapState, mapGetters, mapMutations, mapActions, } from 'vuex'
   import SourceManager from '../source/SourceManager.vue'
+  import TemplateManager from '../template/TemplateManager.vue'
 
   export default {
     props: ["component"],
@@ -50,7 +38,8 @@ div
     },
 
     components: {
-      'source-manager': SourceManager
+      'source-manager': SourceManager,
+      'template-manager': TemplateManager
     }
   }
 </script>
