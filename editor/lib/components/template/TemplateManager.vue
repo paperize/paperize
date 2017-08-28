@@ -1,5 +1,5 @@
 <template lang="pug">
-#template-manager.small-4
+#template-manager
   h5 Template Manager
   hr
 
