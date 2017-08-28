@@ -20,9 +20,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
-  import RevealMixin from '../mixins/reveal'
-  import googleSheets from '../google_sheets'
+  import FoundationMixin from '../../mixins/foundation'
+  import RevealMixin from '../../mixins/reveal'
+  import googleSheets from '../../google_sheets'
 
   export default {
     mixins: [ RevealMixin, FoundationMixin ],

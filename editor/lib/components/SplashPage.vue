@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import VueEmbed from '../components/VueEmbed.vue'
+  import VueEmbed from './shared/VueEmbed.vue'
 
   export default {
     components: {

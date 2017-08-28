@@ -19,9 +19,9 @@ div(v-if="!game")
 <script>
   import { mapState } from 'vuex'
 
-  import GamePanel from '../components/GamePanel.vue'
-  import ComponentPanel from '../components/ComponentPanel.vue'
-  import ComponentEditor from '../components/ComponentEditor.vue'
+  import GamePanel from './GamePanel.vue'
+  import ComponentPanel from '../component/ComponentPanel.vue'
+  import ComponentEditor from '../component/ComponentEditor.vue'
 
   export default {
     props: ['gameId'],

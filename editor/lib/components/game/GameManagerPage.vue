@@ -24,8 +24,8 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import GameCard from '../components/GameCard.vue'
-  import GameForm from '../components/GameForm.vue'
+  import GameCard from './GameCard.vue'
+  import GameForm from './GameForm.vue'
 
   export default {
     components: {

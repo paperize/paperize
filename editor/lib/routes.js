@@ -6,9 +6,9 @@ import store from './store'
 
 Vue.use(VueRouter)
 
-import Splash      from './pages/Splash.vue'
-import GameManager from './pages/GameManager.vue'
-import GameEditor  from './pages/GameEditor.vue'
+import Splash      from './components/SplashPage.vue'
+import GameManager from './components/game/GameManagerPage.vue'
+import GameEditor  from './components/game/GameEditorPage.vue'
 
 const routes = [
   {
@@ -22,7 +22,7 @@ const routes = [
     component: GameManager,
     props:     true,
     meta:      { requiresAuth: true }
-  }, { 
+  }, {
     path:      '/games/:gameId',
     name:      'gameEditor',
     component: GameEditor,

@@ -5,7 +5,7 @@ if(process.env.NODE_ENV !== "production") {
 import Vue from 'vue'
 import store from './store'
 import router from './routes'
-import TitleBar from './components/TitleBar.vue'
+import TitleBar from './components/sitewide/TitleBar.vue'
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false

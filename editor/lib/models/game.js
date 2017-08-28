@@ -2,7 +2,7 @@
 import { process, withinXofY, around } from './factory'
 
 const DEFAULT_GAME = {
-  id:          -1,
+  id:          null,
   title:       "",
   coverArt:    "",
   playerCount: "",

@@ -5,7 +5,7 @@ div
 
   .grid-x
     .small-4
-      component-source-manager(:component="component")
+      source-manager(:component="component")
 
     #transform-manager.small-4
       h5 Transform Manager
@@ -18,13 +18,13 @@ div
 
 <script>
   import { mapState, mapGetters, mapMutations, mapActions, } from 'vuex'
-  import ComponentSourceManager from './ComponentSourceManager.vue'
+  import SourceManager from '../source/SourceManager.vue'
 
   export default {
     props: ["component"],
 
     components: {
-      'component-source-manager': ComponentSourceManager
+      'source-manager': SourceManager
     }
   }
 </script>

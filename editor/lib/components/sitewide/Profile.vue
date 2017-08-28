@@ -15,7 +15,7 @@ ul.menu.unauthenticated(v-else)
 
 <script>
   import { mapState, mapMutations, mapActions } from 'vuex'
-  import auth from '../auth'
+  import auth from '../../auth'
 
   export default {
     updated() {

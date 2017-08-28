@@ -28,9 +28,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
-  import RevealMixin from '../mixins/reveal'
-  import Component from '../models/component'
+  import FoundationMixin from '../../mixins/foundation'
+  import RevealMixin from '../../mixins/reveal'
+  import Component from '../../models/component'
 
   export default {
     mixins: [ RevealMixin, FoundationMixin ],

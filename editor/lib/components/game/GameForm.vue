@@ -40,9 +40,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
-  import RevealMixin from '../mixins/reveal'
-  import Game from '../models/game'
+  import FoundationMixin from '../../mixins/foundation'
+  import RevealMixin from '../../mixins/reveal'
+  import Game from '../../models/game'
 
   export default {
     mixins: [ RevealMixin, FoundationMixin ],

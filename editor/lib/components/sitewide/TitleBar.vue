@@ -15,7 +15,7 @@
 
 <script>
   import Profile from './Profile.vue'
-  import FoundationMixin from '../mixins/foundation'
+  import FoundationMixin from '../../mixins/foundation'
 
   export default {
     mixins: [FoundationMixin],

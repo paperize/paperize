@@ -3,7 +3,7 @@
   h5 Source Manager
   hr
 
-  div(v-if="activeSource")
+  div(v-if="component.source")
     a(@click="unsetSource({ component })") Change source
     p Source: {{ activeSource.name }}
 

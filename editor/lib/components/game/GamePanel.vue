@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import GameForm from '../components/GameForm.vue'
+  import GameForm from './GameForm.vue'
 
   export default {
     props: ["game"],
