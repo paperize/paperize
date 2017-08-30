@@ -1,11 +1,9 @@
 <template lang="pug">
 #template-manager
-  h5 Template Manager
+  h5 Template: Raw Source Viewer
   hr
 
   div(v-if="component.source")
-    p Item Previews:
-
     p(v-for="property in currentItem")
       strong {{ property.key }}:
       |  {{ property.value }}
@@ -17,6 +15,8 @@
         | Item {{ currentItemIndex }} / {{ totalItems }}
       li
         a(@click="nextItem") &gt;&gt;
+
+  p(v-else) Select a Source...
 </template>
 
 <script>

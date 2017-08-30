@@ -1,16 +1,17 @@
 <template lang="pug">
 #transform-manager
-  h5 Transform Manager
+  h5 Transforms
   hr
 
-  p Transforms:
   table(v-if="source")
     thead
-      th Name:
+      th Transform Name:
       th Type:
     tr(v-for="property in sourceProperties(source)")
       td Expose("{{ property }}")
       td Raw
+
+  p(v-else) Select a Source...
 </template>
 
 <script>

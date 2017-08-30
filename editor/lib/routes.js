@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueAnalytics from 'vue-analytics' // Google Analytics
 
 import store from './store'
 
@@ -59,12 +58,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-// Only track pageviews in production builds
+// Things to enable in production
 if(process.env.NODE_ENV === 'production') {
-  Vue.use(VueAnalytics, {
-    id: 'UA-48330981-5',
-    router
-  })
+
 }
 
 export default router
