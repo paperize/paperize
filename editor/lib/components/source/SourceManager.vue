@@ -1,15 +1,22 @@
 <template lang="pug">
 #source-manager
-  h5(v-if="activeSource")
-    | Source: {{ activeSource.name }}
-    a.small(@click="unsetSource({ component })")  edit
-  h5(v-else) Select a Source:
+  .grid-x(v-if="activeSource")
+    .small-1.cell
+      a.unset-source(@click="unsetSource({ component })") &times;
+
+    .small-11.cell
+      h5.truncate "{{ activeSource.name }}"
+
+  .grid-x(v-else)
+    .small-12
+      h5.truncate Select a Source:
+
   hr
 
   div(v-if="component.source")
     table.source-properties(v-if="component.source")
       thead
-        th Property Name:
+        th Property Name
       tr(v-for="property in sourceProperties(component.source)")
         td.property-name(title="Property Name") {{ property }}
 
@@ -56,6 +63,10 @@ export default {
 </script>
 
 <style scoped>
+  .unset-source {
+    font-weight: bold;
+  }
+
   .source-properties li {
     border-bottom: 2px solid gray;
   }

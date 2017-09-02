@@ -45,6 +45,10 @@ describe "Component Source manager", ->
           cy.stub(auth, 'getClient').callsArgWith(0, {
             sheets: {
               spreadsheets: {
+                get: ->
+                  then: (callback, errback) ->
+                    errback({ status: 404 })
+
                 values: {
                   get: -> throw new Error("YES!")
                 }
@@ -81,7 +85,7 @@ describe "Component Source manager", ->
               .should("not.be.visible")
 
         it "i see i have the new source selected", ->
-          cy.contains("Source: Love Letter Revisited")
+          cy.contains('"Love Letter Revisited"')
 
     it "invites me to browse my GDrive for Sheets to import", ->
       cy.get("#source-manager")
@@ -106,7 +110,7 @@ describe "Component Source manager", ->
           .click()
 
         cy.get("#source-manager")
-          .contains("Source: Love Letter Revisited")
+          .contains('"Love Letter Revisited"')
 
       it "allows me to delete a source"
 
@@ -118,18 +122,16 @@ describe "Component Source manager", ->
 
       it "shows me the exposed properties in a nice way", ->
         cy.get("#source-manager").within ->
-          cy.get("li").its("length").should("eq", 5)
-          cy.contains("Properties:")
+          cy.get(".property-name").its("length").should("eq", 5)
           cy.contains("Quantity")
           cy.contains("Name")
-          cy.contains("Guard, Priest, Baron")
           cy.contains("Rank")
           cy.contains("Image")
           cy.contains("Rule")
 
       it "allows me to deselect that source", ->
         cy.get("#source-manager")
-          .contains("Change source")
+          .find(".unset-source")
           .click()
 
         cy.get("#source-manager")

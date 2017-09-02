@@ -29,3 +29,11 @@ div
     }
   }
 </script>
+
+<style>
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

@@ -1,12 +1,16 @@
 <template lang="pug">
 #template-manager
-  h5 Template: Raw Source Viewer
+  .grid-x
+    .small-12
+      h5.truncate Template: "Raw Source Viewer"
+
   hr
 
   div(v-if="component.source")
-    p(v-for="property in currentItem")
-      strong {{ property.key }}:
-      |  {{ property.value }}
+    .card
+      .card-section(v-for="property in currentItem")
+        strong {{ property.key }}:
+        |  {{ property.value }}
 
     ul.menu.horizontal
       li

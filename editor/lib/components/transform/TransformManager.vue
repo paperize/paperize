@@ -1,12 +1,15 @@
 <template lang="pug">
 #transform-manager
-  h5 Transforms
+  .grid-x
+    .small-12
+      h5.truncate Transforms
+
   hr
 
   table(v-if="source")
     thead
-      th Transform Name:
-      th Type:
+      th Transform Name
+      th Type
     tr(v-for="property in sourceProperties(source)")
       td Expose("{{ property }}")
       td Raw
