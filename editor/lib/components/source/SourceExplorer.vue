@@ -2,11 +2,16 @@
 .reveal#source-explorer(data-reveal)
   h2 Browse Your Google Sheets
 
-  a.button(@click="fetchSheetListing") Fetch Sheet Listing...
+  a.button(v-if="fetchedSheets.length == 0" @click="fetchSheetListing") Fetch Sheet Listing...
 
-  ul
-    li(v-for="sheet in fetchedSheets")
-      a(@click="importSourceViaSelection(sheet)" :title="sheet.id") {{ sheet.name }}
+  div(v-else)
+    p
+      strong Select a Sheet to Import or Refresh:
+
+    ul.menu.dropdown
+      li(v-for="sheet in fetchedSheets")
+        | {{ sheet.name }}
+        a(@click="importSourceViaSelection(sheet)" :title="sheet.id") Add
 </template>
 
 <script>
