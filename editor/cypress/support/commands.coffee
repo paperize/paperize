@@ -45,8 +45,10 @@ Cypress.addParentCommand "persist", (key, collection=[]) ->
   log.snapshot().end()
 
 Cypress.addParentCommand "visitFixtureGame", (fixtureKey) ->
-  cy.fixture("games").its("#{fixtureKey}.id").then (gameId) ->
-    cy.visit("/#/games/#{gameId}")
+  cy.fixture("games").then (gamesFixture) ->
+    gameId = gamesFixture[fixtureKey].id
+    componentId = gamesFixture[fixtureKey].components[0].id
+    cy.visit("/#/games/#{gameId}/components/#{componentId}")
 
 Cypress.addParentCommand "loginAndVisitGame", (fixtureKey) ->
   cy.login()

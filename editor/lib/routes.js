@@ -31,6 +31,17 @@ const routes = [
       store.dispatch("setSelectedGame", { gameId: to.params.gameId })
       next()
     }
+  }, {
+    path:      '/games/:gameId/components/:componentId',
+    name:      'componentEditor',
+    component: GameEditor,
+    props:     true,
+    meta:      { requiresAuth: true },
+    beforeEnter(to, from, next) {
+      store.dispatch("setSelectedGame", { gameId: to.params.gameId })
+      store.commit("setActiveComponent", { component: { id: to.params.componentId } })
+      next()
+    }
   }
 ]
 

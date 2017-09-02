@@ -31,8 +31,10 @@ describe "Game Editor page", ->
       cy.contains("Instruction Book")
       cy.contains("Point Cubes")
 
+    it "defaults to the first component", ->
+      cy.get('.active-component').contains("Character Deck")
+
     it "lets me select a component", ->
-      cy.get('.active-component').contains("No Component Selected")
       cy.contains("Instruction Book").click()
       cy.get('.active-component').contains("Instruction Book")
       cy.contains("Point Cubes").click()

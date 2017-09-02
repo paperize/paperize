@@ -4,7 +4,6 @@ describe "Component Source manager", ->
       cy.login()
       cy.persistFixtures("games")
       cy.visitFixtureGame("loveLetter")
-      cy.get(".component").first().click()
 
     it "says so", ->
       cy.get("#source-manager")
@@ -94,7 +93,6 @@ describe "Component Source manager", ->
   context "with existing sources", ->
     beforeEach ->
       cy.loginAndVisitGame("loveLetter")
-      cy.get(".component").first().click()
 
     describe "no source selected", ->
       it "lists the sources i've already imported", ->
