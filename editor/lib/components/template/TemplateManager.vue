@@ -1,26 +1,27 @@
 <template lang="pug">
 #template-manager
   .grid-x
-    .small-12
-      h5.truncate Template: "Raw Source Viewer"
+    .small-1.cell
+      a.unset-source(@click="unsetSource({ component })") &times;
 
-  hr
+    .small-11.cell
+      h5.truncate "Raw Source Viewer"
 
-  div(v-if="component.source")
-    .card
-      .card-section(v-for="property in currentItem")
-        strong {{ property.key }}:
-        |  {{ property.value }}
+    .small-10.small-offset-1(v-if="component.source")
+      .card
+        .card-section(v-for="property in currentItem")
+          strong {{ property.key }}:
+          |  {{ property.value }}
 
-    ul.menu.horizontal
-      li
-        a(@click="previousItem") &lt;&lt;
-      li
-        | Item {{ currentItemIndex }} / {{ totalItems }}
-      li
-        a(@click="nextItem") &gt;&gt;
+      ul.menu.horizontal
+        li
+          a(@click="previousItem") &lt;&lt;
+        li
+          | Item {{ currentItemIndex }} / {{ totalItems }}
+        li
+          a(@click="nextItem") &gt;&gt;
 
-  p(v-else) Select a Source...
+    p(v-else) Select a Source...
 </template>
 
 <script>

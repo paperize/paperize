@@ -11,8 +11,6 @@
     .small-12
       h5.truncate Select a Source:
 
-  hr
-
   div(v-if="component.source")
     table.source-properties(v-if="component.source")
       thead

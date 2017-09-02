@@ -4,8 +4,6 @@
     .small-12
       h5.truncate Transforms
 
-  hr
-
   table(v-if="source")
     thead
       th Transform Name
