@@ -8,10 +8,10 @@
     p
       strong Select a Sheet to Import or Refresh:
 
-    ul.menu.dropdown
+    ul.menu.vertical
       li(v-for="sheet in fetchedSheets")
-        | {{ sheet.name }}
-        a(@click="importSourceViaSelection(sheet)" :title="sheet.id") Add
+        a(@click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Add)
+        a(@click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Refresh)
 </template>
 
 <script>
