@@ -68,7 +68,7 @@
       submitForm () {
         // Add or update the game in the store
         if(this.mode === 'edit') {
-          this.$store.commit("updateGame", { game: this.gameClone })
+          this.$store.dispatch("updateGame", { game: this.gameClone })
         } else if(this.mode === 'create') {
           this.$store.commit("createGame", { game: this.gameClone })
           this.$router.push({ name: "gameEditor", params: { gameId: this.gameClone.id }})

@@ -4,9 +4,20 @@ import uuid from 'uuid/v4'
 
 import { find, chain, truncate } from 'lodash'
 
+import games from './games'
+
 import persistence from './local_store_persistence'
 
 Vue.use(Vuex)
+
+const PersistToLocalStore = store => {
+  // called when the store is initialized
+  store.subscribe((mutation, state) => {
+    persistence.saveState(state)
+    // called after every mutation.
+    // The mutation comes in the format of `{ type, payload }`.
+  })
+}
 
 const EMPTY_STATE = {
   idToken: null,
@@ -15,7 +26,7 @@ const EMPTY_STATE = {
     name: '',
     avatarSrc: ''
   },
-  games: [],
+  // games: [],
   sources: [],
   selectedGame: null,
   activeComponent: null
@@ -25,7 +36,13 @@ let store = new Vuex.Store({
   // Throw errors if state is touched outside of mutations
   strict: process.env.NODE_ENV !== 'production',
 
+  plugins: [PersistToLocalStore],
+
   state: EMPTY_STATE,
+
+  modules: {
+    games: games
+  },
 
   getters: {
     findComponent: (state) => (component) => {
@@ -82,68 +99,25 @@ let store = new Vuex.Store({
       state.idToken = null
       state.profile.name = ''
       state.profile.avatarSrc = ''
-
-      persistence.saveState(state)
     },
 
     authenticateAs (state, { idToken }) {
       state.authenticated = true
       state.idToken = idToken
-
-      persistence.saveState(state)
     },
 
     setProfile(state, { profile }) {
       state.profile = state.profile || {}
       state.profile.name = profile.name
       state.profile.avatarSrc = profile.avatarSrc
-
-      persistence.saveState(state)
-    },
-
-    setGoogleToken(state, { token }) {
-      state.googleToken = token
-    },
-
-    setGames (state, { games }) {
-      state.games = games
-
-      persistence.saveState(state)
     },
 
     setSources (state, { sources }) {
       state.sources = sources
-
-      persistence.saveState(state)
-    },
-
-    createGame (state, { game }) {
-      game.id = game.id || uuid()
-      state.games.push(game)
-      state.selectedGame = game
-
-      persistence.saveState(state)
-    },
-
-    updateGame(state, { game: newGame }) {
-      let foundGame = find(state.games, { id: newGame.id })
-      if(foundGame === newGame){
-        throw new Error("Game to update is same object in store!")
-      }
-      // Overwrites properties of found with new
-      Object.assign(foundGame, newGame)
-
-      persistence.saveState(state)
-    },
-
-    deleteGame (state, { game }) {
-      state.games.splice(state.games.indexOf(game), 1)
-
-      persistence.saveState(state)
     },
 
     setSelectedGame (state, { gameId }) {
-      let foundGame = find(state.games, { id: gameId })
+      let foundGame = find(state.games.games, { id: gameId })
       if(!foundGame) {
         throw new Error(`No game found with id: ${gameId}`)
       }
@@ -154,8 +128,6 @@ let store = new Vuex.Store({
     createComponent(state, { component }) {
       component.id = component.id || uuid()
       state.selectedGame.components.push(component)
-
-      persistence.saveState(state)
     },
 
     updateComponent(state, { component: newComponent }) {
@@ -165,8 +137,6 @@ let store = new Vuex.Store({
       }
       // Overwrites properties of found with new
       Object.assign(foundComponent, newComponent)
-
-      persistence.saveState(state)
     },
 
     deleteComponent(state, { component }) {
@@ -174,7 +144,6 @@ let store = new Vuex.Store({
       if(state.activeComponent.id == component.id){
         state.activeComponent = null
       }
-      persistence.saveState(state)
     },
 
     setActiveComponent(state, { component }) {
@@ -189,23 +158,18 @@ let store = new Vuex.Store({
     createSource(state, { source }) {
       source.id = source.id || uuid()
       state.sources.push(source)
-
-      persistence.saveState(state)
     },
 
     setComponentSource(state, { component, source }) {
       Vue.set(component, "source", source)
-      persistence.saveState(state)
     },
 
     setActiveComponentSource(state, { source }) {
       Vue.set(state.activeComponent, "source", source)
-      persistence.saveState(state)
     },
 
     unsetSource(state, { component }) {
       state.activeComponent.source = null
-      persistence.saveState(state)
     }
   },
 

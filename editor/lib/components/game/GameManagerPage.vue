@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import { mapState, mapGetters, mapActions } from 'vuex'
   import GameCard from './GameCard.vue'
   import GameForm from './GameForm.vue'
 
@@ -34,7 +34,8 @@
     },
 
     computed: {
-      ...mapState(["authenticated", "games"])
+      ...mapState(["authenticated"]),
+      ...mapGetters(["games"])
     },
 
     methods: {

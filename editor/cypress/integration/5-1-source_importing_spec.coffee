@@ -98,7 +98,7 @@ describe "Importing Sources", ->
         cy.contains("Browse Your Google Sheets")
         cy.get('a.button').contains("Fetch Sheet Listing...")
 
-    describe.only "clicking 'fetch'", ->
+    describe "clicking 'fetch'", ->
       beforeEach ->
         cy.contains("Fetch Sheet Listing...")
             .click()
