@@ -5,6 +5,7 @@ import uuid from 'uuid/v4'
 import { find, chain, truncate } from 'lodash'
 
 import games from './games'
+import components from './components'
 
 import persistence from './local_store_persistence'
 
@@ -41,19 +42,12 @@ let store = new Vuex.Store({
   state: EMPTY_STATE,
 
   modules: {
-    games: games
+    games:      games,
+    components: components
   },
 
   getters: {
-    findComponent: (state) => (component) => {
-      let foundComponent = find(state.selectedGame.components, { id: component.id })
-      if(!foundComponent) {
-        throw new Error(`No component found: ${component}`)
-      }
-
-      return foundComponent
-    },
-
+    activeGame: (state) => state.selectedGame,
     findSource: (state) => (source) => {
       if(!source || !source.id ) { return null }
       let foundSource = find(state.sources, { id: source.id })
@@ -125,27 +119,6 @@ let store = new Vuex.Store({
       state.selectedGame = foundGame
     },
 
-    createComponent(state, { component }) {
-      component.id = component.id || uuid()
-      state.selectedGame.components.push(component)
-    },
-
-    updateComponent(state, { component: newComponent }) {
-      let foundComponent = find(state.selectedGame.components, { id: newComponent.id })
-      if(foundComponent === newComponent){
-        throw new Error("Component to update is same object in store!")
-      }
-      // Overwrites properties of found with new
-      Object.assign(foundComponent, newComponent)
-    },
-
-    deleteComponent(state, { component }) {
-      state.selectedGame.components.splice(state.selectedGame.components.indexOf(component), 1)
-      if(state.activeComponent.id == component.id){
-        state.activeComponent = null
-      }
-    },
-
     setActiveComponent(state, { component }) {
       let foundComponent = find(state.selectedGame.components, { id: component.id })
       if(!foundComponent) {
@@ -153,6 +126,10 @@ let store = new Vuex.Store({
       }
 
       state.activeComponent = foundComponent
+    },
+
+    clearActiveComponent(state) {
+      state.activeComponent = null
     },
 
     createSource(state, { source }) {
@@ -198,12 +175,6 @@ let store = new Vuex.Store({
       commit("setActiveComponentSource", { source })
     },
 
-    setComponentSource({ state, commit, getters }, { component, source }) {
-      component = getters.findComponent(component)
-      source = getters.findSource(source)
-
-      commit("setComponentSource", { component, source })
-    },
   }
 })
 

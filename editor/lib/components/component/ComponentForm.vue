@@ -57,9 +57,9 @@
       submitForm() {
         // Add or update the component in the store
         if(this.mode === 'edit') {
-          this.$store.commit("updateComponent", { component: this.componentClone })
+          this.$store.dispatch("updateComponent", { component: this.componentClone })
         } else if(this.mode === 'create') {
-          this.$store.commit("createComponent", { component: this.componentClone })
+          this.$store.dispatch("createComponent", { component: this.componentClone })
         }
         // Close the modal
         this.closeModal()
