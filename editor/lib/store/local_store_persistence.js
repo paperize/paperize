@@ -64,8 +64,8 @@ export default {
       }
 
       localDB[recordId].profile = profile
-      localDB[recordId].games = games.games
-      localDB[recordId].sources = sources
+      localDB[recordId].games   = games.games
+      localDB[recordId].sources = sources.sources
 
       this.setLocalDB(localDB)
     }

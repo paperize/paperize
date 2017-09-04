@@ -2,7 +2,7 @@
 #source-manager
   .grid-x(v-if="activeSource")
     .small-1.cell
-      a.unset-source(@click="unsetSource({ component })") &times;
+      a.unset-source(@click="unsetComponentSource({ component })") &times;
 
     .small-11.cell
       h5.truncate "{{ activeSource.name }}"
@@ -44,13 +44,12 @@ export default {
   props: ["component"],
 
   computed: {
-    ...mapState(["sources"]),
-    ...mapGetters(["activeSource", "sourceProperties", "activeSourcePropertyExamples"]),
+    ...mapGetters(["sources", "activeSource", "sourceProperties", "activeSourcePropertyExamples"]),
   },
 
   methods: {
     ...mapActions(["setComponentSource"]),
-    ...mapMutations(["unsetSource"])
+    ...mapMutations(["unsetComponentSource"])
   },
 
   components: {

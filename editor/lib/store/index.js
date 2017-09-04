@@ -6,17 +6,15 @@ import { find, chain, truncate } from 'lodash'
 
 import games from './games'
 import components from './components'
+import sources from './sources'
 
 import persistence from './local_store_persistence'
 
 Vue.use(Vuex)
 
 const PersistToLocalStore = store => {
-  // called when the store is initialized
   store.subscribe((mutation, state) => {
     persistence.saveState(state)
-    // called after every mutation.
-    // The mutation comes in the format of `{ type, payload }`.
   })
 }
 
@@ -28,7 +26,7 @@ const EMPTY_STATE = {
     avatarSrc: ''
   },
   // games: [],
-  sources: [],
+  // sources: [],
   selectedGame: null,
   activeComponent: null
 }
@@ -41,30 +39,12 @@ let store = new Vuex.Store({
 
   state: EMPTY_STATE,
 
-  modules: {
-    games:      games,
-    components: components
-  },
+  modules: { games, components, sources },
 
   getters: {
     activeGame: (state) => state.selectedGame,
-    findSource: (state) => (source) => {
-      if(!source || !source.id ) { return null }
-      let foundSource = find(state.sources, { id: source.id })
-      if(!foundSource) {
-        throw new Error(`No component source found: ${source}`)
-      }
-
-      return foundSource
-    },
 
     activeSource: (state) => (state.activeComponent || { }).source,
-    sourceProperties: (state, getters) => (source) => {
-      source = getters.findSource(source)
-      let theProperties = (((source || { }).data || { }).values || [])[0]
-
-      return theProperties
-    },
 
     activeSourceProperties: (state, getters) => {
       if(getters.activeSource) {
@@ -106,10 +86,6 @@ let store = new Vuex.Store({
       state.profile.avatarSrc = profile.avatarSrc
     },
 
-    setSources (state, { sources }) {
-      state.sources = sources
-    },
-
     setSelectedGame (state, { gameId }) {
       let foundGame = find(state.games.games, { id: gameId })
       if(!foundGame) {
@@ -132,22 +108,6 @@ let store = new Vuex.Store({
       state.activeComponent = null
     },
 
-    createSource(state, { source }) {
-      source.id = source.id || uuid()
-      state.sources.push(source)
-    },
-
-    setComponentSource(state, { component, source }) {
-      Vue.set(component, "source", source)
-    },
-
-    setActiveComponentSource(state, { source }) {
-      Vue.set(state.activeComponent, "source", source)
-    },
-
-    unsetSource(state, { component }) {
-      state.activeComponent.source = null
-    }
   },
 
   actions: {
@@ -168,11 +128,6 @@ let store = new Vuex.Store({
 
     setSelectedGame(context, { gameId }) {
       context.commit("setSelectedGame", { gameId })
-    },
-
-    addAndSelectSource({ commit }, { source }) {
-      commit("createSource", { source })
-      commit("setActiveComponentSource", { source })
     },
 
   }

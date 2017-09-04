@@ -42,8 +42,7 @@
         googleSheets.fetchSheetById(this.pastedSource)
           .then(function(googleSheet) {
             // insert into vuex store and select
-            self.$store.dispatch("addAndSelectSource", { source: googleSheet })
-
+            self.$store.dispatch("addAndSelectSource", { source: googleSheet })            
             self.closeModal()
           })
 
@@ -59,9 +58,10 @@
             self.errorWithPaste = `No Google Sheet found for ID: "${nfError.googleId}"`
           })
 
-          .catch(Error, function(error) {
+          .catch(function(error) {
             // TODO: remove spinner
             console.log("rejected otherwise", error)
+            throw error
           })
       },
     }
