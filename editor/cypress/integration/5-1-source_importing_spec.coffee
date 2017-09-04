@@ -5,12 +5,6 @@ describe "Importing Sources", ->
     cy.persistFixtures("sources")
     cy.visitFixtureGame("loveLetter")
 
-    # stub Google API calls in this test
-    cy.fixture("sources").its("loveLetter").then (loveLetter) ->
-      cy.window().its("googleSheets").then (googleSheets) ->
-        cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([loveLetter]))
-        cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
-
   context "by pasting a Google Sheet URL or ID", ->
     submitPaste = (paste) ->
       cy.get("input[name='source-paste']")
@@ -70,6 +64,11 @@ describe "Importing Sources", ->
 
     describe "when i submit something valid", ->
       beforeEach ->
+        cy.fixture("sources").its("loveLetter").then (loveLetter) ->
+          cy.window().its("googleSheets").then (googleSheets) ->
+            cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([loveLetter]))
+            cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
+
         cy.get("input[name='source-paste']")
             .type("the mocked id")
 
@@ -85,6 +84,14 @@ describe "Importing Sources", ->
         cy.contains('"Love Letter Revisited"')
 
   context "by browsing my Google Sheets", ->
+    beforeEach ->
+      # stub Google API calls in this test
+      cy.fixture("sources").its("loveLetter").then (loveLetter) ->
+        cy.window().its("googleSheets").then (googleSheets) ->
+          cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([loveLetter]))
+          cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
+
+
     beforeEach ->
       cy.get("#source-manager")
         .contains("Browse Google Sheets")
