@@ -9,7 +9,7 @@ const SourcesModule = {
 
   getters: {
     sources: state => state.sources,
-    findSource: (state) => (source) => {
+    findSource: state => source => {
       if(!source || !source.id ) { return null }
       let foundSource = find(state.sources, { id: source.id })
       if(!foundSource) {
@@ -19,12 +19,37 @@ const SourcesModule = {
       return foundSource
     },
 
-    sourceProperties: (state, getters) => (source) => {
+    sourceProperties: (state, getters) => source => {
       source = getters.findSource(source)
       let theProperties = (((source || { }).data || { }).values || [])[0]
 
       return theProperties
     },
+
+    sourcePropertyExamples: () => (source, propertyName) => {
+      let propertyIndex = sourceProperties(source).indexOf(propertyName) // getters.activeSourceProperties.indexOf(propertyName)
+
+      return chain(source.data.values)
+        .map((row) => row[propertyIndex])
+        .compact()
+        .slice(1, 4)
+        .map((content) => truncate(content, { length: 24, separator: /,? +/ }))
+        .join(', ')
+      .value()
+    },
+
+    activeSource: (state, getters) => (getters.activeComponent || { }).source,
+
+    activeSourceProperties: (state, getters) => {
+      return getters.activeSource &&
+        getters.sourceProperties(getters.activeSource)
+    },
+
+    activeSourcePropertyExamples: (state, getters) => (propertyName) => {
+      return getters.activeSource &&
+        getters.sourcePropertyExamples(getters.activeSource, propertyName) ||
+        []
+    }
   },
 
   mutations: {

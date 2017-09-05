@@ -31,29 +31,7 @@ let store = new Vuex.Store({
 
   modules: { user, games, components, sources },
 
-  getters: {
-    activeSource: (state, getters) => (getters.activeComponent || { }).source,
-
-    activeSourceProperties: (state, getters) => {
-      if(getters.activeSource) {
-        return getters.sourceProperties(getters.activeSource)
-      } else {
-        return null
-      }
-    },
-
-    activeSourcePropertyExamples: (state, getters) => (propertyName) => {
-      let propertyIndex = getters.activeSourceProperties.indexOf(propertyName)
-
-      return chain(getters.activeSource.data.values)
-        .map((row) => row[propertyIndex])
-        .compact()
-        .slice(1, 4)
-        .map((content) => truncate(content, { length: 24, separator: /,? +/ }))
-        .join(', ')
-      .value()
-    }
-  },
+  getters: { },
 
   mutations: { },
 
