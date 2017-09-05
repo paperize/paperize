@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapGetters } from 'vuex'
   import ComponentForm from './ComponentForm.vue'
 
   export default {
@@ -32,7 +32,7 @@
     },
 
     computed: {
-      ...mapState(["activeComponent"]),
+      ...mapGetters(["activeComponent"]),
 
       editFormId() {
         return `edit-component-form-${this.component.id}`
@@ -44,7 +44,7 @@
         if(this.isActiveComponent()) {
           return
         }
-        this.$store.commit("setActiveComponent", { component: this.component })
+        this.$store.dispatch("setActiveComponent", { component: this.component })
       },
 
       isActiveComponent() {

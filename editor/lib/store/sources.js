@@ -52,8 +52,8 @@ const SourcesModule = {
       dispatch("setActiveComponentSource", { source })
     },
 
-    setActiveComponentSource({ commit, rootState }, { source }) {
-      commit("setComponentSource", { component: rootState.activeComponent, source })
+    setActiveComponentSource({ commit, getters }, { source }) {
+      commit("setComponentSource", { component: getters.activeComponent, source })
     },
   }
 }

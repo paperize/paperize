@@ -1,10 +1,10 @@
 <template lang="pug">
-ul.menu.dropdown.authenticated(v-if="authenticated" data-dropdown-menu)
+ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
   li
     a.avatar
-      img(alt="avatar" :src="profile.avatarSrc")
+      img(alt="avatar" :src="user.avatarSrc")
     ul.menu
-      li.name {{ profile.name }}
+      li.name {{ user.name }}
       li
         a(@click="logout()") Sign Out
 
@@ -24,7 +24,7 @@ ul.menu.unauthenticated(v-else)
       } catch(error) {}
       $(this.$el).foundation()
     },
-    computed: mapState(['authenticated', 'profile']),
+    computed: mapState(['user']),
     methods: {
       login() {
         let store = this.$store

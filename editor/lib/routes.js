@@ -28,7 +28,7 @@ const routes = [
     props:     true,
     meta:      { requiresAuth: true },
     beforeEnter(to, from, next) {
-      store.dispatch("setSelectedGame", { gameId: to.params.gameId })
+      store.dispatch("setActiveGame", { gameId: to.params.gameId })
       next()
     }
   }, {
@@ -38,8 +38,8 @@ const routes = [
     props:     true,
     meta:      { requiresAuth: true },
     beforeEnter(to, from, next) {
-      store.dispatch("setSelectedGame", { gameId: to.params.gameId })
-      store.commit("setActiveComponent", { component: { id: to.params.componentId } })
+      store.dispatch("setActiveGame", { gameId: to.params.gameId })
+      store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
       next()
     }
   }
@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
   // If auth is required...
   if(to.matched.some(record => record.meta.requiresAuth)) {
     // ...and we're not authed...
-    if(!store.state.authenticated) {
+    if(!store.state.user.authenticated) {
       // ...redirect to the splash page...
       next({ name: 'splash' })
     } else {
@@ -60,7 +60,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   // Otherwise, we're required NOT to be authed, but we are...
-  } else if(store.state.authenticated) {
+} else if(store.state.user.authenticated) {
     // ...redirect to the user home page...
     next({ name: 'gameManager' })
   } else {

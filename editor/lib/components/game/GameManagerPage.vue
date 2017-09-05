@@ -1,6 +1,6 @@
 <template lang="pug">
 .grid-container
-  .grid-x(v-if="!authenticated")
+  .grid-x(v-if="!user.authenticated")
     p
       | You are not logged in.
       a(v-on:click="login") Click here to log in now.
@@ -34,7 +34,7 @@
     },
 
     computed: {
-      ...mapState(["authenticated"]),
+      ...mapState(["user"]),
       ...mapGetters(["games"])
     },
 

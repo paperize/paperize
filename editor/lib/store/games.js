@@ -3,13 +3,15 @@ import uuid from 'uuid/v4'
 
 const GamesModule = {
   state: {
-    games: []
+    games: [],
+    activeGame: null
   },
 
   getters: {
-    games: (state) => state.games,
+    games: state => state.games,
+    activeGame: state => state.activeGame,
 
-    findGame: (state) => (id) => {
+    findGame: state => id => {
       let foundGame = find(state.games, { id })
       if(!foundGame){
         throw new Error(`No game found with id: ${ game.id }`)
@@ -37,6 +39,10 @@ const GamesModule = {
     deleteGame(state, { game }) {
       state.games.splice(state.games.indexOf(game), 1)
     },
+
+    setActiveGame (state, { game }) {
+      state.activeGame = game
+    },
   },
 
   actions: {
@@ -44,7 +50,12 @@ const GamesModule = {
       let gameToUpdate = getters.findGame(game.id)
 
       commit("updateGame", { gameToUpdate, gameToCopy: game })
-    }
+    },
+
+    setActiveGame({ commit, getters }, { gameId }) {
+      let game = getters.findGame(gameId)
+      commit("setActiveGame", { game })
+    },
   }
 }
 

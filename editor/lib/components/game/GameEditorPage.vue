@@ -17,7 +17,7 @@ div(v-if="!game")
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
 
   import GamePanel from './GamePanel.vue'
   import ComponentPanel from '../component/ComponentPanel.vue'
@@ -25,12 +25,20 @@ div(v-if="!game")
 
   export default {
     props: ['gameId'],
-    computed: { ...mapState({ game: 'selectedGame', activeComponent: 'activeComponent' }) },
+
+    computed: {
+      ...mapGetters({
+        activeComponent: 'activeComponent',
+        game: 'activeGame'
+      })
+    },
+
     components: {
       "game-panel":       GamePanel,
       "component-panel":  ComponentPanel,
       "component-editor": ComponentEditor
     },
+
     methods: { }
   }
 </script>

@@ -4,6 +4,7 @@ import uuid from 'uuid/v4'
 
 import { find, chain, truncate } from 'lodash'
 
+import user from './user'
 import games from './games'
 import components from './components'
 import sources from './sources'
@@ -18,18 +19,7 @@ const PersistToLocalStore = store => {
   })
 }
 
-const EMPTY_STATE = {
-  idToken: null,
-  authenticated: false,
-  profile: {
-    name: '',
-    avatarSrc: ''
-  },
-  // games: [],
-  // sources: [],
-  selectedGame: null,
-  activeComponent: null
-}
+const EMPTY_STATE = { }
 
 let store = new Vuex.Store({
   // Throw errors if state is touched outside of mutations
@@ -39,12 +29,10 @@ let store = new Vuex.Store({
 
   state: EMPTY_STATE,
 
-  modules: { games, components, sources },
+  modules: { user, games, components, sources },
 
   getters: {
-    activeGame: (state) => state.selectedGame,
-
-    activeSource: (state) => (state.activeComponent || { }).source,
+    activeSource: (state, getters) => (getters.activeComponent || { }).source,
 
     activeSourceProperties: (state, getters) => {
       if(getters.activeSource) {
@@ -67,48 +55,7 @@ let store = new Vuex.Store({
     }
   },
 
-  mutations: {
-    logout (state) {
-      state.authenticated = false
-      state.idToken = null
-      state.profile.name = ''
-      state.profile.avatarSrc = ''
-    },
-
-    authenticateAs (state, { idToken }) {
-      state.authenticated = true
-      state.idToken = idToken
-    },
-
-    setProfile(state, { profile }) {
-      state.profile = state.profile || {}
-      state.profile.name = profile.name
-      state.profile.avatarSrc = profile.avatarSrc
-    },
-
-    setSelectedGame (state, { gameId }) {
-      let foundGame = find(state.games.games, { id: gameId })
-      if(!foundGame) {
-        throw new Error(`No game found with id: ${gameId}`)
-      }
-
-      state.selectedGame = foundGame
-    },
-
-    setActiveComponent(state, { component }) {
-      let foundComponent = find(state.selectedGame.components, { id: component.id })
-      if(!foundComponent) {
-        throw new Error(`No component found: ${component}`)
-      }
-
-      state.activeComponent = foundComponent
-    },
-
-    clearActiveComponent(state) {
-      state.activeComponent = null
-    },
-
-  },
+  mutations: { },
 
   actions: {
     loadStateFromDB(context, { idToken }) {
@@ -125,11 +72,6 @@ let store = new Vuex.Store({
 
       context.commit("authenticateAs", { idToken })
     },
-
-    setSelectedGame(context, { gameId }) {
-      context.commit("setSelectedGame", { gameId })
-    },
-
   }
 })
 
