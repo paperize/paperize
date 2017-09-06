@@ -14,7 +14,7 @@ const GamesModule = {
     findGame: state => id => {
       let foundGame = find(state.games, { id })
       if(!foundGame){
-        throw new Error(`No game found with id: ${ game.id }`)
+        throw new Error(`No game found with id: ${ id }`)
       } else {
         return foundGame
       }

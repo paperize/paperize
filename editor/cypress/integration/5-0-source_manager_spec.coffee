@@ -1,17 +1,27 @@
 describe "Component Source manager", ->
-  context "with no sources imported", ->
-    beforeEach ->
-      cy.login()
-      cy.persistFixtures("games")
-      cy.visitFixtureGame("loveLetter")
+  beforeEach ->
+    cy.visit('/')
+    cy.vuexAndFixtures().then ({ vuex, fixtures: { users, games } }) ->
+      allGames = Object.values(games)
+      loveLetter = games['loveLetter']
+      firstComponent = loveLetter.components[0]
 
-    it "says so", ->
-      cy.get("#source-manager")
-        .contains("You have no sources.")
+      vuex.dispatch("become", users[0])
+      vuex.commit("setGames", { games: allGames })
+      vuex.dispatch("setActiveGame", { gameId: loveLetter.id })
+      vuex.dispatch("setActiveComponent", { component: firstComponent })
+
+    .visitActiveGameAndComponent()
+
+  it "prompts me to create a source", ->
+    cy.get("#source-manager")
+      .contains("You have no sources.")
 
   context "with existing sources", ->
     beforeEach ->
-      cy.loginAndVisitGame("loveLetter")
+      cy.vuexAndFixtures().then ({ vuex, fixtures: { sources } }) ->
+        allSources = Object.values(sources)
+        vuex.commit("setSources", { sources: allSources })
 
     describe "no source selected", ->
       it "lists the sources i've already imported", ->
@@ -29,7 +39,8 @@ describe "Component Source manager", ->
         cy.get("#source-manager")
           .contains('"Love Letter Revisited"')
 
-      it "allows me to delete a source"
+      it "allows me to delete a source", ->
+
 
     describe "with a source selected", ->
       beforeEach ->

@@ -25,9 +25,20 @@ const UsersModule = {
       state.name = profile.name
       state.avatarSrc = profile.avatarSrc
     },
+
+    become(state, user) {
+      state.authenticated = true
+      state.idToken       = user.idToken
+      state.name          = user.name
+      state.avatarSrc     = user.avatarSrc
+    },
   },
 
-  actions: { }
+  actions: {
+    become({ commit }, user) {
+      commit("become", user)
+    }
+  }
 }
 
 export default UsersModule

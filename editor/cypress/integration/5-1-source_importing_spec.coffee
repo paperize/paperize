@@ -1,9 +1,6 @@
 describe "Importing Sources", ->
   beforeEach ->
-    cy.login()
-    cy.persistFixtures("games")
-    cy.persistFixtures("sources")
-    cy.visitFixtureGame("loveLetter")
+    cy.loginAndEditGame()
 
   context "by pasting a Google Sheet URL or ID", ->
     submitPaste = (paste) ->

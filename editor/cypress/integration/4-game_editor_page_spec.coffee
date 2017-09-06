@@ -1,6 +1,6 @@
 describe "Game Editor page", ->
   beforeEach ->
-    cy.loginAndVisitGame("loveLetter")
+    cy.loginAndEditGame()
 
   context "the GamePanel and GameForm", ->
     it "shows the game's vitals", ->
