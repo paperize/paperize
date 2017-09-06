@@ -4,8 +4,6 @@
   .card-divider
     p.title {{ component.title || "[No title]" }}
 
-  //- img(src="http://fillmurray.com/80/60")
-
   .card-section
     p {{ component.type || "[No type]" }}
 
