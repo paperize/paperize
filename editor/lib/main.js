@@ -10,6 +10,8 @@ import TitleBar from './components/sitewide/TitleBar.vue'
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
+
+  window.paperize = { store }
 }
 
 let startApp = () => {
