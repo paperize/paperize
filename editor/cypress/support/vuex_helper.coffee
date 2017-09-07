@@ -19,9 +19,9 @@ toReturn = null
 afterEach -> toReturn = null
 
 # grab the vuex store and all fixtures for fast-and-easy state fixturing!
-Cypress.addParentCommand "vuexAndFixtures", ->
+Cypress.addParentCommand "vuexAndFixtures", (callback) ->
   if toReturn
-    cy.chain().wrap(toReturn)
+    cy.wrap(toReturn).then(callback)
   else
     toReturn = {}
 
@@ -33,13 +33,14 @@ Cypress.addParentCommand "vuexAndFixtures", ->
       .then (allFixtures) ->
         toReturn.fixtures = allFixtures
       .wrap(toReturn)
+      .then(callback)
 
 Cypress.addParentCommand "visitActiveGameAndComponent", ->
   cy.chain().vuex().then (vuex) ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
 Cypress.addParentCommand "loginAndEditGame", ->
-  cy.vuexAndFixtures().then ({ vuex, fixtures: { users, games } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
     allGames = Object.values(games)
     loveLetter = games['loveLetter']
     firstComponent = loveLetter.components[0]
@@ -52,13 +53,13 @@ Cypress.addParentCommand "loginAndEditGame", ->
   .visitActiveGameAndComponent()
 
 Cypress.addParentCommand "login", ->
-  cy.vuexAndFixtures().then ({ vuex, fixtures: { users } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { users } }) ->
     vuex.dispatch("become", users[0])
 
 Cypress.addParentCommand "loadGamesIntoVuex", ->
-  cy.vuexAndFixtures().then ({ vuex, fixtures: { games } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { games } }) ->
     vuex.commit("setGames", { games: Object.values(games) })
 
 Cypress.addParentCommand "loadSourcesIntoVuex", ->
-  cy.vuexAndFixtures().then ({ vuex, fixtures: { sources } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { sources } }) ->
     vuex.commit("setSources", { sources: Object.values(sources) })

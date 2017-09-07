@@ -9,11 +9,14 @@ const SourcesModule = {
 
   getters: {
     sources: state => state.sources,
+
     findSource: state => source => {
       if(!source || !source.id ) { return null }
       let foundSource = find(state.sources, { id: source.id })
       if(!foundSource) {
-        throw new Error(`No component source found: ${source}`)
+        let notFoundError = new Error(`No component source found with id: ${source.id}`)
+        notFoundError.code = 'NOT_FOUND'
+        throw notFoundError
       }
 
       return foundSource

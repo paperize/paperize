@@ -73,7 +73,7 @@
   },
   "carcassonne": {
     "id": "carcassonne-source",
-    "name": "Carcassonne V1",
+    "name": "Carcassonne",
     "data": {
       "majorDimension": "ROWS",
       "range": "Sheet1!A1:AA1000",

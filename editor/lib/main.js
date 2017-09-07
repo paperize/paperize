@@ -1,5 +1,5 @@
 if(process.env.NODE_ENV !== "production") {
-  console.log("Loading Paperize Editor with environment:", process.env.NODE_ENV)
+  console.log("Paperize Editor:", process.env.NODE_ENV)
 }
 
 import Vue from 'vue'

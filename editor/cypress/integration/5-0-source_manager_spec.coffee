@@ -1,6 +1,6 @@
 describe "Component Source manager", ->
   beforeEach ->
-    cy.vuexAndFixtures().then ({ vuex, fixtures: { users, games } }) ->
+    cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
       allGames = Object.values(games)
       loveLetter = games['loveLetter']
       firstComponent = loveLetter.components[0]
@@ -25,7 +25,7 @@ describe "Component Source manager", ->
         cy.get("#source-manager").within ->
           cy.contains("Select a Source:")
           cy.contains("Love Letter Revisited")
-          cy.contains("Carcassonne V1")
+          cy.contains("Carcassonne")
           cy.contains("Pandemic V2")
 
       it "allows me to select a source", ->

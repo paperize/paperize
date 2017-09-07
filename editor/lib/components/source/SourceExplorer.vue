@@ -10,8 +10,8 @@
 
     ul.menu.vertical
       li(v-for="sheet in fetchedSheets")
-        a(@click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Add)
-        a(@click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Refresh)
+        a(v-if="sourceExists(sheet)" @click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Refresh)
+        a(v-else @click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Add)
 </template>
 
 <script>
@@ -29,6 +29,20 @@
     },
 
     methods: {
+      sourceExists(source) {
+        let found = true
+        try {
+          this.$store.getters.findSource(source)
+        } catch(error) {
+          if(error.code === 'NOT_FOUND'){
+            found = false
+          } else {
+            throw error
+          }
+        }
+        return found
+      },
+
       fetchSheetListing() {
         let self = this
         // TODO: set a spinner

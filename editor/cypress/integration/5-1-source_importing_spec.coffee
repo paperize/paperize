@@ -83,10 +83,10 @@ describe "Importing Sources", ->
   context "by browsing my Google Sheets", ->
     beforeEach ->
       # stub Google API calls in this test
-      cy.fixture("sources").its("loveLetter").then (loveLetter) ->
+      cy.fixture("sources").then (sources) ->
         cy.window().its("googleSheets").then (googleSheets) ->
-          cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([loveLetter]))
-          cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
+          cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([sources.loveLetter, sources.carcassonne]))
+          cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(sources.loveLetter))
 
 
     beforeEach ->
@@ -110,12 +110,16 @@ describe "Importing Sources", ->
       it "hides the call-to-action and shows a spinner", ->
         cy.contains("Fetch Sheet Listing...").should("not.be.visible")
 
-      it "hides the spinner and fills a menu based on the google response", ->
-        cy.get("#source-explorer").within ->
-          cy.contains("Love Letter Revisited")
+      it "hides the spinner"
 
-      it "if an item's id is unknown, it can be added"
-      it "if an item's id is known, it can be refreshed"
+      it "lists new sources with Add and existing sources with Refresh", ->
+        cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
+          vuex.commit("setSources", { sources: [sources.carcassonne] })
+
+        cy.get("#source-explorer").within ->
+          cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Carcassonne (Refresh)")
+
 
   context "refreshing the active source", ->
     it "nice call to action"
