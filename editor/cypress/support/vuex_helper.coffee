@@ -58,3 +58,7 @@ Cypress.addParentCommand "login", ->
 Cypress.addParentCommand "loadGamesIntoVuex", ->
   cy.vuexAndFixtures().then ({ vuex, fixtures: { games } }) ->
     vuex.commit("setGames", { games: Object.values(games) })
+
+Cypress.addParentCommand "loadSourcesIntoVuex", ->
+  cy.vuexAndFixtures().then ({ vuex, fixtures: { sources } }) ->
+    vuex.commit("setSources", { sources: Object.values(sources) })

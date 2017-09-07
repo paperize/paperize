@@ -62,6 +62,10 @@ const SourcesModule = {
       state.sources.push(source)
     },
 
+    deleteSource(state, { source }) {
+      state.sources.splice(state.sources.indexOf(source), 1)
+    },
+
     setComponentSource(state, { component, source }) {
       Vue.set(component, "source", source)
     },

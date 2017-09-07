@@ -1,6 +1,5 @@
 describe "Component Source manager", ->
   beforeEach ->
-    cy.visit('/')
     cy.vuexAndFixtures().then ({ vuex, fixtures: { users, games } }) ->
       allGames = Object.values(games)
       loveLetter = games['loveLetter']
@@ -19,9 +18,7 @@ describe "Component Source manager", ->
 
   context "with existing sources", ->
     beforeEach ->
-      cy.vuexAndFixtures().then ({ vuex, fixtures: { sources } }) ->
-        allSources = Object.values(sources)
-        vuex.commit("setSources", { sources: allSources })
+      cy.loadSourcesIntoVuex()
 
     describe "no source selected", ->
       it "lists the sources i've already imported", ->
@@ -40,7 +37,10 @@ describe "Component Source manager", ->
           .contains('"Love Letter Revisited"')
 
       it "allows me to delete a source", ->
-
+        cy.get("#source-manager")
+          .find('a.delete-source')
+          .first()
+          .click()
 
     describe "with a source selected", ->
       beforeEach ->

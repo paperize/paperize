@@ -25,7 +25,8 @@
     div(v-else)
       ul
         li(v-for="source in sources")
-          a(@click="setComponentSource({ component, source })") {{ source.name }}
+          a.delete-source(@click="deleteSource({ source })") &times;
+          a.select-source(@click="setComponentSource({ component, source })")  {{ source.name }}
 
 
     a.button(data-open="source-paste-form") Paste a Link
@@ -48,8 +49,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setComponentSource"]),
-    ...mapMutations(["unsetComponentSource"])
+    ...mapMutations(["unsetComponentSource", "deleteSource"]),
+    ...mapActions(["setComponentSource"])
   },
 
   components: {
