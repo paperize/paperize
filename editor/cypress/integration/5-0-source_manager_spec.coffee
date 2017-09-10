@@ -57,6 +57,10 @@ describe "Component Source manager", ->
           cy.contains("Image")
           cy.contains("Rule")
 
+      it "allows me to refresh that source", ->
+        cy.get("#source-manager")
+          .contains("refresh")
+
       it "allows me to deselect that source", ->
         cy.get("#source-manager")
           .find(".unset-source")

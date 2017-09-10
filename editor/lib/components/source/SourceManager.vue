@@ -4,8 +4,11 @@
     .small-1.cell
       a.unset-source(@click="unsetComponentSource({ component })") &times;
 
-    .small-11.cell
+    .small-9.cell
       h5.truncate "{{ activeSource.name }}"
+
+    .small-2.cell
+      a(@click="refreshSource(activeSource)") refresh
 
   .grid-x(v-else)
     .small-12
@@ -50,7 +53,7 @@ export default {
 
   methods: {
     ...mapMutations(["unsetComponentSource", "deleteSource"]),
-    ...mapActions(["setComponentSource"])
+    ...mapActions(["setComponentSource", "refreshSource"])
   },
 
   components: {

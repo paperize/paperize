@@ -2,6 +2,8 @@ import Vue from 'vue'
 import { find } from 'lodash'
 import uuid from 'uuid/v4'
 
+import googleSheets from '../google_sheets'
+
 const SourcesModule = {
   state: {
     sources: []
@@ -65,6 +67,10 @@ const SourcesModule = {
       state.sources.push(source)
     },
 
+    overwriteSource(state, { existingSource, newSource }) {
+      Object.assign(existingSource, newSource)
+    },
+
     deleteSource(state, { source }) {
       state.sources.splice(state.sources.indexOf(source), 1)
     },
@@ -87,6 +93,15 @@ const SourcesModule = {
     setActiveComponentSource({ commit, getters }, { source }) {
       commit("setComponentSource", { component: getters.activeComponent, source })
     },
+
+    refreshSource({ commit, getters }, existingSource) {
+      existingSource = getters.findSource(existingSource)
+
+      googleSheets.fetchSheetById(existingSource.id[0])
+        .then((newSource) => {
+          commit("overwriteSource", { existingSource, newSource })
+        })
+    }
   }
 }
 

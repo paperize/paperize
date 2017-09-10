@@ -122,7 +122,29 @@ describe "Importing Sources", ->
 
 
   context "refreshing the active source", ->
-    it "nice call to action"
+    beforeEach ->
+      # stub Google API calls in this test
+      cy.fixture("sources").then (sources) ->
+        cy.window().its("googleSheets").then (googleSheets) ->
+          llV2 = sources.loveLetter
+          llV2.name = "Love Letter V2"
+          cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(llV2))
+
+      cy.loadSourcesIntoVuex()
+
+      cy.get("#source-manager")
+        .contains("Love Letter Revisited")
+        .click()
+
     it "prompts with diff before overwrite"
-    it "overwrites the data if accepted"
+
+    it "overwrites the data if accepted", ->
+      cy.get("#source-manager").within ->
+        cy.contains("refresh")
+          .click(force: true)
+
+        # new version has been loaded
+        cy.contains("Love Letter V2")
+
+
     it "leaves the data if declined"
