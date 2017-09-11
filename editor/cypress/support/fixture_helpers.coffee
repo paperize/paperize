@@ -1,13 +1,13 @@
 # shorthand for loading more than one fixture at once
-Cypress.addParentCommand "fixtures", (fixtureNames) ->
+Cypress.Commands.add "fixtures", (fixtureNames) ->
   fixtures = {}
 
-  cy.chain().wrap(fixtureNames).each (fixtureName) ->
-    cy.chain().fixture(fixtureName).then (fixture) ->
+  cy.wrap(fixtureNames).each (fixtureName) ->
+    cy.fixture(fixtureName).then (fixture) ->
       fixtures[fixtureName] = fixture
   .then ->
-    return cy.chain().wrap(fixtures)
+    return cy.wrap(fixtures)
 
 # shorthand for loading all fixtures
-Cypress.addParentCommand "allFixtures", ->
-  cy.chain().fixtures(["users", "games", "sources"])
+Cypress.Commands.add "allFixtures", ->
+  cy.fixtures(["users", "games", "sources"])

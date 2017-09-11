@@ -3,11 +3,11 @@ vuexCache = null
 afterEach -> vuexCache = null
 
 # grab the vuex store from the app under test
-Cypress.addParentCommand "vuex", ->
+Cypress.Commands.add "vuex", ->
   if vuexCache
-    cy.chain().wrap(vuexCache)
+    cy.wrap(vuexCache)
   else
-    cy.chain()
+    cy
       .visit('/')
       .window()
         .its("paperize.store")
@@ -19,13 +19,13 @@ toReturn = null
 afterEach -> toReturn = null
 
 # grab the vuex store and all fixtures for fast-and-easy state fixturing!
-Cypress.addParentCommand "vuexAndFixtures", (callback) ->
+Cypress.Commands.add "vuexAndFixtures", (callback) ->
   if toReturn
     cy.wrap(toReturn).then(callback)
   else
     toReturn = {}
 
-    cy.chain()
+    cy
       .vuex()
       .then (vuex) ->
         toReturn.vuex = vuex
@@ -35,13 +35,13 @@ Cypress.addParentCommand "vuexAndFixtures", (callback) ->
       .wrap(toReturn)
       .then(callback)
 
-Cypress.addParentCommand "visitActiveGameAndComponent", ->
-  cy.chain().vuex().then (vuex) ->
+Cypress.Commands.add "visitActiveGameAndComponent", ->
+  cy.vuex().then (vuex) ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
-Cypress.addParentCommand "loginAndEditGame", ->
+Cypress.Commands.add "loginAndEditGame", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
-    allGames = Object.values(games)
+    allGames = Cypress._.values(games)
     loveLetter = games['loveLetter']
     firstComponent = loveLetter.components[0]
 
@@ -52,14 +52,14 @@ Cypress.addParentCommand "loginAndEditGame", ->
 
   .visitActiveGameAndComponent()
 
-Cypress.addParentCommand "login", ->
+Cypress.Commands.add "login", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { users } }) ->
     vuex.dispatch("become", users[0])
 
-Cypress.addParentCommand "loadGamesIntoVuex", ->
+Cypress.Commands.add "loadGamesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { games } }) ->
-    vuex.commit("setGames", { games: Object.values(games) })
+    vuex.commit("setGames", { games: Cypress._.values(games) })
 
-Cypress.addParentCommand "loadSourcesIntoVuex", ->
+Cypress.Commands.add "loadSourcesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { sources } }) ->
-    vuex.commit("setSources", { sources: Object.values(sources) })
+    vuex.commit("setSources", { sources: Cypress._.values(sources) })

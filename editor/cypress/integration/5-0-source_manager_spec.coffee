@@ -1,7 +1,7 @@
 describe "Component Source manager", ->
   beforeEach ->
     cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
-      allGames = Object.values(games)
+      allGames = Cypress._.values(games)
       loveLetter = games['loveLetter']
       firstComponent = loveLetter.components[0]
 
