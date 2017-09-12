@@ -15,6 +15,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import FoundationMixin from '../../mixins/foundation'
   import RevealMixin from '../../mixins/reveal'
   import googleSheets from '../../google_sheets'
@@ -28,21 +29,9 @@
       }
     },
 
-    methods: {
-      sourceExists(source) {
-        let found = true
-        try {
-          this.$store.getters.findSource(source)
-        } catch(error) {
-          if(error.code === 'NOT_FOUND'){
-            found = false
-          } else {
-            throw error
-          }
-        }
-        return found
-      },
+    computed: { ...mapGetters(["sourceExists"]) },
 
+    methods: {
       fetchSheetListing() {
         let self = this
         // TODO: set a spinner

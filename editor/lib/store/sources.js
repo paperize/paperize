@@ -24,6 +24,20 @@ const SourcesModule = {
       return foundSource
     },
 
+    sourceExists: (state, getters) => source => {
+      let found = true
+      try {
+        getters.findSource(source)
+      } catch(error) {
+        if(error.code === 'NOT_FOUND'){
+          found = false
+        } else {
+          throw error
+        }
+      }
+      return found
+    },
+
     sourceProperties: (state, getters) => source => {
       source = getters.findSource(source)
       let theProperties = (((source || { }).data || { }).values || [])[0]
