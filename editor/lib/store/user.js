@@ -1,3 +1,6 @@
+import router from '../routes'
+import auth from '../auth'
+
 const UsersModule = {
   state: {
     idToken: null,
@@ -16,16 +19,6 @@ const UsersModule = {
       state.avatarSrc = ''
     },
 
-    authenticateAs(state, { idToken }) {
-      state.authenticated = true
-      state.idToken = idToken
-    },
-
-    setProfile(state, { profile }) {
-      state.name = profile.name
-      state.avatarSrc = profile.avatarSrc
-    },
-
     become(state, user) {
       state.authenticated = true
       state.idToken       = user.idToken
@@ -37,6 +30,33 @@ const UsersModule = {
   actions: {
     become({ commit }, user) {
       commit("become", user)
+    },
+
+    login({ commit, dispatch }) {
+      auth.getAuth2((auth2) => {
+        auth2.signIn().then(
+          (googleUser) => {
+            commit("become", {
+              idToken:   googleUser.getBasicProfile().getEmail(),
+              name:      googleUser.getBasicProfile().getName(),
+              email:     googleUser.getBasicProfile().getEmail(),
+              avatarSrc: googleUser.getBasicProfile().getImageUrl()
+            })
+
+            router.push({ name: 'gameManager' })
+          },
+
+          (error) => {
+            console.error("Sign in Error:", error)
+          })
+      })
+    },
+
+    logout({ commit }) {
+      commit("logout")
+      router.push({ name: 'splash' })
+
+      auth.getAuth2(auth2 => auth2.signOut())
     }
   }
 }

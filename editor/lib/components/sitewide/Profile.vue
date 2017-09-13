@@ -26,44 +26,13 @@ ul.menu.unauthenticated(v-else)
     },
     computed: mapState(['user']),
     methods: {
+      ...mapActions(["login", "logout"]),
+
       renderAvatar() {
         return process.env.NODE_ENV != 'test' &&
           this.user.avatarSrc &&
           this.user.avatarSrc.length > 0
       },
-
-      login() {
-        let store = this.$store
-        let router = this.$router
-        auth.getAuth2((auth2) => {
-          auth2.signIn().then(
-            (googleUser) => {
-              // something that is unique to this user and never changes
-              let idToken = googleUser.getBasicProfile().getEmail()
-              store.dispatch("loadStateFromDB", { idToken })
-
-              store.commit("setProfile", { profile: {
-                  name:      googleUser.getBasicProfile().getName(),
-                  email:     googleUser.getBasicProfile().getEmail(),
-                  avatarSrc: googleUser.getBasicProfile().getImageUrl()
-                }
-              })
-
-              router.push({ name: 'gameManager' })
-            },
-
-            (error) => {
-              console.error("Sign in Error:", error)
-            })
-        })
-      },
-
-      logout() {
-        this.$store.commit("logout")
-        this.$router.push({ name: 'splash' })
-
-        auth.getAuth2((auth2) => { auth2.signOut() })
-      }
     }
   }
 </script>
