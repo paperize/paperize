@@ -18,6 +18,8 @@ NotFoundError.prototype = Object.create(Error.prototype);
 let api = {
   BadIdError, NotFoundError,
 
+  matchGoogleId,
+
   fetchSheets() {
     return new Promise((resolve, reject) => {
       auth.getClient((client) => {
