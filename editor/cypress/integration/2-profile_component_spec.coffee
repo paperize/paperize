@@ -16,8 +16,7 @@ describe "Profile component", ->
       cy.get(".unauthenticated").should('not.exist')
 
     it "profile info is visible", ->
-      cy.get('.avatar img').then ($avatarImg) ->
-        expect($avatarImg.attr('src')).to.eq 'http://example.com/example.jpg'
+      cy.get('.avatar')
 
       cy.get('.name').contains "Avid Gamer"
 
