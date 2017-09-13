@@ -36,13 +36,11 @@
 
     methods: {
       importSourceViaPaste() {
+        // not loving this fragrance...
         let self = this
-        // TODO: set a spinner
-        // fetch vitals from google
-        googleSheets.fetchSheetById(this.pastedSource)
-          .then(function(googleSheet) {
-            // insert into vuex store and select
-            self.$store.dispatch("addAndSelectSource", { source: googleSheet })            
+
+        this.$store.dispatch("createOrUpdateSourceById", this.pastedSource)
+          .then(function() {
             self.closeModal()
           })
 

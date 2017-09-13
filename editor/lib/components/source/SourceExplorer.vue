@@ -2,56 +2,36 @@
 .reveal#source-explorer(data-reveal)
   h2 Browse Your Google Sheets
 
-  a.button(v-if="fetchedSheets.length == 0" @click="fetchSheetListing") Fetch Sheet Listing...
+  a.button(v-if="remoteSources.length == 0" @click="fetchRemoteSources")
+    | Fetch Sheet Listing...
 
   div(v-else)
     p
       strong Select a Sheet to Import or Refresh:
 
     ul.menu.vertical
-      li(v-for="sheet in fetchedSheets")
-        a(v-if="sourceExists(sheet)" @click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Refresh)
-        a(v-else @click="importSourceViaSelection(sheet)" :title="sheet.id")  {{ sheet.name }} (Add)
+      li(v-for="source in remoteSources")
+        a(@click="importSource(source)" :title="source.id")
+          | {{ sourceImportLabel(source) }}
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import FoundationMixin from '../../mixins/foundation'
   import RevealMixin from '../../mixins/reveal'
-  import googleSheets from '../../google_sheets'
 
   export default {
     mixins: [ RevealMixin, FoundationMixin ],
 
-    data() {
-      return {
-        fetchedSheets: []
-      }
-    },
-
-    computed: { ...mapGetters(["sourceExists"]) },
+    computed: mapGetters(["sourceExists", "remoteSources"]),
 
     methods: {
-      fetchSheetListing() {
-        let self = this
-        // TODO: set a spinner
-        // fetch listing from google
-        googleSheets.fetchSheets()
-          .then(function(sheets) {
-            self.fetchedSheets = sheets
-          })
-      },
+      ...mapActions(["fetchRemoteSources", "importSource"]),
 
-      importSourceViaSelection(sheet) {
-        let self = this
-        // TODO: set a spinner
-        // fetch sheet from google
-        googleSheets.fetchSheetById(sheet.id)
-          .then((fetchedSheet) => {
-            self.$store.dispatch("addAndSelectSource", { source: fetchedSheet })
-
-            self.closeModal()
-          })
+      sourceImportLabel(source) {
+        let label = source.name
+        label += this.$store.getters.sourceExists(source) ? " (Refresh)" : " (Add)"
+        return label
       }
     }
   }

@@ -112,13 +112,18 @@ describe "Importing Sources", ->
 
       it "hides the spinner"
 
-      it "lists new sources with Add and existing sources with Refresh", ->
-        cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
-          vuex.commit("setSources", { sources: [sources.carcassonne] })
+      context "lists new sources", ->
+        beforeEach ->
+          cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
+            vuex.commit("setSources", { sources: [sources.carcassonne] })
 
-        cy.get("#source-explorer").within ->
-          cy.contains("Love Letter Revisited (Add)")
-          cy.contains("Carcassonne (Refresh)")
+        it "adds new sources", ->
+          cy.get("#source-explorer").within ->
+            cy.contains("Love Letter Revisited (Add)")
+
+        it "refreshes existing sources", ->
+          cy.get("#source-explorer").within ->
+            cy.contains("Carcassonne (Refresh)")
 
 
   context "refreshing the active source", ->

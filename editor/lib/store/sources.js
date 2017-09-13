@@ -6,11 +6,14 @@ import googleSheets from '../google_sheets'
 
 const SourcesModule = {
   state: {
-    sources: []
+    sources: [],
+    remoteSources: []
   },
 
   getters: {
     sources: state => state.sources,
+
+    remoteSources: state => state.remoteSources,
 
     findSource: state => source => {
       if(!source || !source.id ) { return null }
@@ -72,8 +75,12 @@ const SourcesModule = {
   },
 
   mutations: {
-    setSources (state, { sources }) {
+    setSources(state, { sources }) {
       state.sources = sources
+    },
+
+    setRemoteSources(state, sources) {
+      state.remoteSources = sources
     },
 
     createSource(state, { source }) {
@@ -99,22 +106,50 @@ const SourcesModule = {
   },
 
   actions: {
-    addAndSelectSource({ commit, dispatch }, { source }) {
-      commit("createSource", { source })
-      dispatch("setActiveComponentSource", { source })
-    },
-
-    setActiveComponentSource({ commit, getters }, { source }) {
+    setActiveComponentSource({ commit, getters }, source) {
+      source = getters.findSource(source)
       commit("setComponentSource", { component: getters.activeComponent, source })
     },
 
-    refreshSource({ commit, getters }, existingSource) {
-      existingSource = getters.findSource(existingSource)
-
-      googleSheets.fetchSheetById(existingSource.id[0])
-        .then((newSource) => {
-          commit("overwriteSource", { existingSource, newSource })
+    fetchRemoteSources({ commit }) {
+      // TODO: set a spinner
+      // fetch listing from google
+      googleSheets
+        .fetchSheets()
+        .then(function(sheets) {
+          commit("setRemoteSources", sheets)
         })
+    },
+
+    importSource({ dispatch }, source) {
+      dispatch("createOrUpdateSourceById", source.id)
+    },
+
+    createOrUpdateSourceById({ getters, dispatch }, sourceId) {
+      // fetch sheet from google
+      return googleSheets
+        .fetchSheetById(sourceId)
+        .then((fetchedSource) => {
+          // check if it's new or existing
+          if(getters.sourceExists(fetchedSource)) {
+            // if we already have it, refresh it
+            dispatch("refreshSource", { id: fetchedSource.id, newSource: fetchedSource })
+          } else {
+            // if we don't have it, add it
+            dispatch("addSource", fetchedSource)
+          }
+
+          dispatch("setActiveComponentSource", { id: fetchedSource.id })
+        })
+    },
+
+    addSource({ commit }, source) {
+      commit("createSource", { source })
+    },
+
+    refreshSource({ commit, getters }, { id, newSource }) {
+      let existingSource = getters.findSource({ id })
+      commit("overwriteSource", { existingSource, newSource })
     }
   }
 }

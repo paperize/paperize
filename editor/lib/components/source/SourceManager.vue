@@ -8,7 +8,7 @@
       h5.truncate "{{ activeSource.name }}"
 
     .small-2.cell
-      a(@click="refreshSource(activeSource)") refresh
+      a(@click="createOrUpdateSourceById(activeSource.id)") refresh
 
   .grid-x(v-else)
     .small-12
@@ -53,7 +53,7 @@ export default {
 
   methods: {
     ...mapMutations(["unsetComponentSource", "deleteSource"]),
-    ...mapActions(["setComponentSource", "refreshSource"])
+    ...mapActions(["setComponentSource", "createOrUpdateSourceById"])
   },
 
   components: {
