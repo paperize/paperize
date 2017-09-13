@@ -2,7 +2,7 @@
 ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
   li
     a.avatar
-      img(alt="avatar" :src="user.avatarSrc")
+      img(v-if="renderAvatar()" alt="avatar" :src="user.avatarSrc")
     ul.menu
       li.name {{ user.name }}
       li
@@ -26,12 +26,19 @@ ul.menu.unauthenticated(v-else)
     },
     computed: mapState(['user']),
     methods: {
+      renderAvatar() {
+        return process.env.NODE_ENV != 'test' &&
+          this.user.avatarSrc &&
+          this.user.avatarSrc.length > 0
+      },
+
       login() {
         let store = this.$store
         let router = this.$router
         auth.getAuth2((auth2) => {
           auth2.signIn().then(
             (googleUser) => {
+              // something that is unique to this user and never changes
               let idToken = googleUser.getBasicProfile().getEmail()
               store.dispatch("loadStateFromDB", { idToken })
 

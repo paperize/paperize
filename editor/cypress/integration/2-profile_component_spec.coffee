@@ -17,7 +17,7 @@ describe "Profile component", ->
 
     it "profile info is visible", ->
       cy.get('.avatar img').then ($avatarImg) ->
-        expect($avatarImg.attr('src')).to.eq 'http://fillmurray.com/200/200'
+        expect($avatarImg.attr('src')).to.eq 'http://example.com/example.jpg'
 
       cy.get('.name').contains "Avid Gamer"
 
