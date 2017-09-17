@@ -39,26 +39,23 @@ let store = new Vuex.Store({
     loadStateFromDB(context, { idToken }) {
       console.log("Logging in ID:", idToken)
 
-      let profile = persistence.loadProfile(idToken) || {}
-      context.commit("setProfile", { profile })
-
+      let user = persistence.loadUser(idToken) || {}
       let games = persistence.loadGames(idToken) || []
-      context.commit("setGames", { games })
-
       let sources = persistence.loadSources(idToken) || []
-      context.commit("setSources", { sources })
 
-      context.commit("authenticateAs", { idToken })
+      context.commit("become", user)
+      context.commit("setGames", games)
+      context.commit("setSources", sources)
     },
   }
 })
 
-// let idToken = persistence.loadIdToken()
-//
-// if(idToken) {
-//   store.dispatch("loadStateFromDB", { idToken })
-// } else {
-//   //
-// }
+let idToken = persistence.loadIdToken()
+
+if(idToken) {
+  store.dispatch("loadStateFromDB", { idToken })
+} else {
+  //
+}
 
 export default store

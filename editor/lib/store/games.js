@@ -22,14 +22,13 @@ const GamesModule = {
   },
 
   mutations: {
-    setGames(state, { games }) {
+    setGames(state, games) {
       state.games = games
     },
 
     createGame(state, { game }) {
       game.id = game.id || uuid()
       state.games.push(game)
-      // state.selectedGame = game
     },
 
     updateGame(state, { gameToUpdate, gameToCopy }) {

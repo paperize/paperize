@@ -46,7 +46,7 @@ Cypress.Commands.add "loginAndEditGame", ->
     firstComponent = loveLetter.components[0]
 
     vuex.dispatch("become", users[0])
-    vuex.commit("setGames", { games: allGames })
+    vuex.commit("setGames", allGames)
     vuex.dispatch("setActiveGame", { gameId: loveLetter.id })
     vuex.dispatch("setActiveComponent", { component: firstComponent })
 
@@ -58,8 +58,8 @@ Cypress.Commands.add "login", ->
 
 Cypress.Commands.add "loadGamesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { games } }) ->
-    vuex.commit("setGames", { games: Cypress._.values(games) })
+    vuex.commit("setGames", Cypress._.values(games))
 
 Cypress.Commands.add "loadSourcesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { sources } }) ->
-    vuex.commit("setSources", { sources: Cypress._.values(sources) })
+    vuex.commit("setSources", Cypress._.values(sources))

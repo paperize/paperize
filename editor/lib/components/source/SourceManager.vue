@@ -15,7 +15,7 @@
       h5.truncate Select a Source:
 
   div(v-if="component.source")
-    table.source-properties(v-if="component.source")
+    table.source-properties
       thead
         th Property Name
       tr(v-for="property in sourceProperties(component.source)")

@@ -40,10 +40,6 @@
         let self = this
 
         this.$store.dispatch("createOrUpdateSourceById", this.pastedSource)
-          .then(function() {
-            self.closeModal()
-          })
-
           .catch(googleSheets.BadIdError, function(badIdError) {
             // TODO: remove spinner
             console.log("rejected with bad id")

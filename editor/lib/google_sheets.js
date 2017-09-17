@@ -4,7 +4,10 @@ import auth from './auth'
 
 // Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
 const GOOGLE_ID_REGEX = /[-\w]{25,}/
-let matchGoogleId = (url) => url.match(GOOGLE_ID_REGEX)
+let matchGoogleId = (url) => {
+  let match = url.match(GOOGLE_ID_REGEX)
+  return match && match[0]
+}
 
 let BadIdError = function() {}
 BadIdError.prototype = Object.create(Error.prototype);

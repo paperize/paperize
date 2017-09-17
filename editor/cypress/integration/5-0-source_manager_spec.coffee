@@ -6,7 +6,7 @@ describe "Component Source manager", ->
       firstComponent = loveLetter.components[0]
 
       vuex.dispatch("become", users[0])
-      vuex.commit("setGames", { games: allGames })
+      vuex.commit("setGames", allGames)
       vuex.dispatch("setActiveGame", { gameId: loveLetter.id })
       vuex.dispatch("setActiveComponent", { component: firstComponent })
 

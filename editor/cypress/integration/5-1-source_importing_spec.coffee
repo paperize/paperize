@@ -115,7 +115,7 @@ describe "Importing Sources", ->
       context "lists new sources", ->
         beforeEach ->
           cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
-            vuex.commit("setSources", { sources: [sources.carcassonne] })
+            vuex.commit("setSources", [sources.carcassonne])
 
         it "adds new sources", ->
           cy.get("#source-explorer").within ->

@@ -75,7 +75,7 @@ const SourcesModule = {
   },
 
   mutations: {
-    setSources(state, { sources }) {
+    setSources(state, sources) {
       state.sources = sources
     },
 
