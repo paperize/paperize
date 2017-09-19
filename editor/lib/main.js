@@ -5,7 +5,9 @@ if(process.env.NODE_ENV !== "production") {
 import Vue from 'vue'
 import store from './store'
 import router from './routes'
-import TitleBar from './components/sitewide/TitleBar.vue'
+
+import VModal from 'vue-js-modal'
+Vue.use(VModal)
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
@@ -13,6 +15,8 @@ if(process.env.NODE_ENV == 'test') {
 
   window.paperize = { store }
 }
+
+import TitleBar from './components/sitewide/TitleBar.vue'
 
 let startApp = () => {
   // Top-level Vue component

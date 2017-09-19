@@ -43,6 +43,7 @@
     "semver": "^5.3.0",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "util-deprecate": "^1.0.2",
+    "vue-js-modal": "^1.2.11",
     "vue-template-compiler": "^2.4.1",
     "webpack": "^2.7.0",
     "webpack-dev-server": "^2.5.1"

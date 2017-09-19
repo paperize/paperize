@@ -13,13 +13,13 @@
         li
           a Load Example
         li
-          a(data-open="new-game-modal") New Game
+          a(@click="$modal.show('create-game-modal')") New Game
 
     .small-12.cell
       .grid-x.grid-margin-x
         game-card(v-for="game in games" :key="game.id" :game="game")
 
-    game-form#new-game-modal(mode='create')
+    game-form(mode="create")
 </template>
 
 <script>

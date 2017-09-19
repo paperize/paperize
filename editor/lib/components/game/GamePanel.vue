@@ -9,7 +9,7 @@
       .small-12.cell
         ul.menu
           li
-            a(data-open="edit-game-modal") Edit Game
+            a(@click="$modal.show('edit-game-modal')") Edit Game
           li
             a(@click="deleteGame(game)") Delete Game
       .small-4.cell
@@ -24,7 +24,7 @@
         dl
           dt Ages
           dd {{ game.ageRange || "[Not set]"  }}
-  game-form#edit-game-modal(mode="edit" :game="game")
+  game-form(mode="edit" :game="game")
 </template>
 
 <script>
