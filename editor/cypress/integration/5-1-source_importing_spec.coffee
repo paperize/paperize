@@ -32,6 +32,33 @@ describe "Importing Sources", ->
 
       cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
 
+    it.only "shows a spinner if google never responds", ->
+      cy.window().its("auth").then (auth) ->
+        cy.stub(auth, 'getClient').callsArgWith(0, {
+          sheets: {
+            spreadsheets: {
+              get: ->
+                then: (callback, errback) ->
+                  # never call back
+
+              values: {
+                get: -> # never call back
+              }
+            }
+          },
+          drive: {
+            files: {
+              get: ->
+                then: (callback, errback) ->
+                  # never call back
+            }
+          }
+        })
+
+      submitPaste("xxxxxxxxxxxxxxxxxxxxxxxxx")
+
+      cy.contains("Talking to Google...")
+
     it "errors when google sheet can't be fetched", ->
       cy.window().its("auth").then (auth) ->
         cy.stub(auth, 'getClient').callsArgWith(0, {
