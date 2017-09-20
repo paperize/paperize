@@ -57,7 +57,7 @@ describe "Game Editor page", ->
 
       cy.get("input#component-title-instruction-book").clear().type('Instruction Manual')
       cy.get('select#component-type-instruction-book').select('deck')
-      cy.get('#edit-component-form-instruction-book').contains("Edit Component").click()
+      cy.get('.component-form').contains("Edit Component").click()
 
       cy.contains("Deck")
       cy.contains("Instruction Manual")

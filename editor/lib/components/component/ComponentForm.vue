@@ -1,5 +1,5 @@
 <template lang="pug">
-.reveal.component-form(data-reveal)
+modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
   h1 {{ mode === 'edit' ? `Edit ${component.title}` : 'Add a Component' }}
   hr
 
@@ -28,13 +28,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../../mixins/foundation'
-  import RevealMixin from '../../mixins/reveal'
   import Component from '../../models/component'
 
   export default {
-    mixins: [ RevealMixin, FoundationMixin ],
-
     props: {
       mode: {
         default: 'edit',
@@ -53,6 +49,16 @@
       }
     },
 
+    computed: {
+      modalName() {
+        if(this.mode == 'create') {
+          return "create-component-modal"
+        } else if(this.mode == 'edit') {
+          return `edit-component-modal-${this.component.id}`
+        }
+      }
+    },
+
     methods: {
       submitForm() {
         // Add or update the component in the store
@@ -68,6 +74,10 @@
         // Reset the model
         this.componentClone = { ...this.component }
       },
+
+      closeModal() {
+        this.$modal.hide(this.modalName)
+      }
     }
   }
 </script>

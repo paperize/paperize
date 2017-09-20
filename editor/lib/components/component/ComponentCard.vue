@@ -1,6 +1,6 @@
 <template lang="pug">
 .component.card.small-10.small-offset-1.cell(:class="{ active: isActiveComponent() }" @click="setActive")
-  component-form(:id="editFormId" mode='edit' :component="component")
+  component-form(mode='edit' :component="component")
   .card-divider
     p.title {{ component.title || "[No title]" }}
 
@@ -9,7 +9,7 @@
 
     ul.menu
       li
-        a.button.small(:data-open="editFormId") Edit
+        a.button.small(@click="showEditModal") Edit
       li
         a.button.small.alert(@click.stop="deleteComponent") Delete
 </template>
@@ -29,15 +29,13 @@
       "component-form": ComponentForm
     },
 
-    computed: {
-      ...mapGetters(["activeComponent"]),
-
-      editFormId() {
-        return `edit-component-form-${this.component.id}`
-      }
-    },
+    computed: mapGetters(["activeComponent"]),
 
     methods: {
+      showEditModal() {
+        this.$modal.show(`edit-component-modal-${this.component.id}`)
+      },
+
       setActive() {
         if(this.isActiveComponent()) {
           return

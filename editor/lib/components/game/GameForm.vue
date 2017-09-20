@@ -63,7 +63,7 @@ modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true
     },
 
     methods: {
-      submitForm () {
+      submitForm() {
         // Add or update the game in the store
         if(this.mode === 'edit') {
           this.$store.dispatch("updateGame", { game: this.gameClone })
@@ -79,7 +79,7 @@ modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true
         this.gameClone = { ...this.game }
       },
 
-      closeModal () {
+      closeModal() {
         this.$modal.hide(this.modalName)
       }
     }
