@@ -7,7 +7,7 @@ describe "Importing Sources", ->
       cy.get("input[name='source-paste']")
           .type(paste)
 
-      cy.get("#source-paste-form")
+      cy.get("div[data-modal=source-paste-form]")
           .find(".button.success")
             .click()
 
@@ -16,15 +16,15 @@ describe "Importing Sources", ->
         .contains("Paste a Link")
           .click()
 
-      cy.get("#source-paste-form")
+      cy.get("div[data-modal=source-paste-form]")
           .should("be.visible")
 
     it "closes when i cancel", ->
-      cy.get("#source-paste-form")
+      cy.get("div[data-modal=source-paste-form]")
           .find(".button.alert")
             .click()
 
-      cy.get("#source-paste-form")
+      cy.get("div[data-modal=source-paste-form]")
           .should("not.be.visible")
 
     it "errors when ID can't be parsed", ->
@@ -69,12 +69,12 @@ describe "Importing Sources", ->
         cy.get("input[name='source-paste']")
             .type("the mocked id")
 
-        cy.get("#source-paste-form")
+        cy.get("div[data-modal=source-paste-form]")
             .find(".button.success")
               .click()
 
       it "closes", ->
-        cy.get("#source-paste-form")
+        cy.get("div[data-modal=source-paste-form]")
             .should("not.be.visible")
 
       it "i see i have the new source selected", ->
@@ -94,11 +94,11 @@ describe "Importing Sources", ->
         .contains("Browse Google Sheets")
           .click()
 
-      cy.get("#source-explorer")
+      cy.get("div[data-modal='source-explorer']")
           .should("be.visible")
 
     it "has a title and call-to-action", ->
-      cy.get("#source-explorer").within ->
+      cy.get("div[data-modal='source-explorer']").within ->
         cy.contains("Browse Your Google Sheets")
         cy.get('a.button').contains("Fetch Sheet Listing...")
 
@@ -118,11 +118,11 @@ describe "Importing Sources", ->
             vuex.commit("setSources", [sources.carcassonne])
 
         it "adds new sources", ->
-          cy.get("#source-explorer").within ->
+          cy.get("div[data-modal='source-explorer']").within ->
             cy.contains("Love Letter Revisited (Add)")
 
         it "refreshes existing sources", ->
-          cy.get("#source-explorer").within ->
+          cy.get("div[data-modal='source-explorer']").within ->
             cy.contains("Carcassonne (Refresh)")
 
 

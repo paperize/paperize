@@ -1,5 +1,5 @@
 <template lang="pug">
-.reveal#source-explorer(data-reveal)
+modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
   h2 Browse Your Google Sheets
 
   a.button(v-if="remoteSources.length == 0" @click="fetchRemoteSources")
@@ -13,16 +13,15 @@
       li(v-for="source in remoteSources")
         a(@click="importSource(source)" :title="source.id")
           | {{ sourceImportLabel(source) }}
+
+  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+    span(aria-hidden="true") &times;
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import FoundationMixin from '../../mixins/foundation'
-  import RevealMixin from '../../mixins/reveal'
 
   export default {
-    mixins: [ RevealMixin, FoundationMixin ],
-
     computed: mapGetters(["sourceExists", "remoteSources"]),
 
     methods: {
@@ -32,7 +31,12 @@
         let label = source.name
         label += this.$store.getters.sourceExists(source) ? " (Refresh)" : " (Add)"
         return label
+      },
+
+      closeModal() {
+        this.$modal.hide("source-explorer")
       }
+
     }
   }
 </script>

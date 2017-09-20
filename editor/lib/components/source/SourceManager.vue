@@ -32,10 +32,10 @@
           a.select-source(@click="setComponentSource({ component, source })")  {{ source.name }}
 
 
-    a.button(data-open="source-paste-form") Paste a Link
+    a.button(@click="$modal.show('source-paste-form')") Paste a Link
     source-paste-form
 
-    a.button(data-open="source-explorer") Browse Google Sheets
+    a.button(@click="$modal.show('source-explorer')") Browse Google Sheets
     source-explorer
 </template>
 

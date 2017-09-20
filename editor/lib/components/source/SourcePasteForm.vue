@@ -1,5 +1,5 @@
 <template lang="pug">
-.reveal#source-paste-form(data-reveal)
+modal(name="source-paste-form" height="auto" :pivotY="0.25" :scrollable="true")
   h2 Import a Google Sheet
 
   p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
@@ -20,13 +20,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../../mixins/foundation'
-  import RevealMixin from '../../mixins/reveal'
   import googleSheets from '../../google_sheets'
 
   export default {
-    mixins: [ RevealMixin, FoundationMixin ],
-
     data() {
       return {
         pastedSource: '',
@@ -58,6 +54,10 @@
             throw error
           })
       },
+
+      closeModal() {
+        this.$modal.hide("source-paste-form")
+      }
     }
   }
 </script>
