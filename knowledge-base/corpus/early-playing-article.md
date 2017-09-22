@@ -1,3 +1,56 @@
+# Paperize Has No Database
+
+Wherein we explore the idea a web application that DOESN'T send all of the end-user's data to the server, but rather leaves it in place where the application is running: on the user's machine.
+
+## Standard Web Apps
+
+Traditionally (for about the past 20 years), web applications of any scale have been "database-backed web applications". This class of software encompasses virtually every notable website we use: Google, Facebook, and Amazon certainly, but also the corporate portals we use in our day jobs, the smaller e-commerce platforms, and even creative endeavors such as Canva.
+
+Indeed, it is easy for one to assume that database-backed is the _only_ way to create a compelling and scalable web application. What else would the "server" be for in the "client-server" model of software that the web uses? Many clients talk to a single source of truth that makes sure everything is valid and safe and shares changes from any one client back out to other clients.
+
+So, what's the problem?
+
+## Problems with Databases
+
+Oh, there are problems. Big ones.
+
+### Technical Scalability
+
+You've got to scale this thing, for one! The more users you get, the more data you must store. The more your users use the product, the more data you must store. The more data you store, the slower our database gets.
+
+### Security
+
+If we've scaled up our database to handle a bajillion requests, we must be getting pretty popular! That means we're on the radar of the bad guys, who will now begin launching constant attacks on our bastion of juicy user data.
+
+### Team Scalability
+
+In order to get our database scaled up and protected, we've got to hire a lot of talent along the way! Database people and operations people and developers. And don't forget the managers, and the managers of managers.
+
+### Privacy (Moral Hazard)
+
+What if the bad guys are on the payroll? It sounds something like: "Let's make the product free so people will sign up in droves, then we'll make money by selling their data!"
+
+### Late Stage Capitalism
+
+Starting to stretch here, but this is the ultimate endgame where all the bad stuff happens. Now that there is so much money flowing through the organization, and so many people involved in the chain, the knives come out. Saving and making the next dollar becomes the only thing that matters. We end up with large entities which everyone must use that fail across the board: slow web applications with weak security run by a skeleton crew who infringe on their user's privacy as a matter of business as usual.
+
+Slippery slope? Read the news.
+
+## But How Can We Go Without?
+
+So we know there are problems with using a central data store, but is it really possible to do without? No one else seems to be doing this, how do we know it will work?
+
+First of all, I'm crazy. If "no one" else is doing something, I'm compelled to do it just to learn, and I'll admit that motivated my initial research into this idea. But I quickly found that it just wasn't true: there are lots of people doing this, people with their heads screwed on a lot tighter than me!
+
+Hoodie, PouchDB, WebSQL
+
+Lives in your browser instance.
+
+Use a remote data store to get replication the user owns.
+
+No team required to get scalability, security, privacy. And drastically reduced moral hazard!
+
+Let's build this thing.
 
 
 # Intro
