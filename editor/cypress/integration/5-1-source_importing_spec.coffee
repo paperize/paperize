@@ -112,10 +112,13 @@ describe "Importing Sources", ->
   context "by browsing my Google Sheets", ->
     beforeEach ->
       # stub Google API calls in this test
-      cy.fixture("sources").then (sources) ->
-        cy.window().its("googleSheets").then (googleSheets) ->
-          cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([sources.loveLetter, sources.carcassonne]))
-          cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(sources.loveLetter))
+      @fetchSheetsPromiseResolve = null
+      @fetchSheetsPromise = new Promise (resolve) =>
+        @fetchSheetsPromiseResolve = resolve
+      cy.fixture("sources").then (sources) =>
+        cy.window().its("googleSheets").then (googleSheets) =>
+          cy.stub(googleSheets, "fetchSheets").returns(@fetchSheetsPromise)
+          cy.stub(googleSheets, "fetchSheetById").resolves(sources.loveLetter)
 
 
     beforeEach ->
@@ -138,12 +141,18 @@ describe "Importing Sources", ->
 
       it "hides the call-to-action and shows a spinner", ->
         cy.contains("Fetch Sheet Listing...").should("not.be.visible")
+        cy.contains("Talking to Google...")
 
-      it "hides the spinner"
+      it "hides the spinner", ->
+        @fetchSheetsPromiseResolve([])
+        cy.contains("Talking to Google...").should("not.be.visible")
 
       context "lists new sources", ->
         beforeEach ->
           cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
+            # 2 come back from google
+            @fetchSheetsPromiseResolve([sources.loveLetter, sources.carcassonne])
+            # 1 is already in the store
             vuex.commit("setSources", [sources.carcassonne])
 
         it "adds new sources", ->

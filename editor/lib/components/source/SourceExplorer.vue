@@ -2,27 +2,33 @@
 modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
   h2 Browse Your Google Sheets
 
-  a.button(v-if="remoteSources.length == 0" @click="fetchRemoteSources")
-    | Fetch Sheet Listing...
+  spinner(v-if="showSpinner" message="Talking to Google...")
 
   div(v-else)
-    p
-      strong Select a Sheet to Import or Refresh:
+    a.button(v-if="remoteSources.length == 0" @click="fetchRemoteSources")
+      | Fetch Sheet Listing...
 
-    ul.menu.vertical
-      li(v-for="source in remoteSources")
-        a(@click="importSource(source)" :title="source.id")
-          | {{ sourceImportLabel(source) }}
+    div(v-else)
+      p
+        strong Select a Sheet to Import or Refresh:
 
-  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-    span(aria-hidden="true") &times;
+      ul.menu.vertical
+        li(v-for="source in remoteSources")
+          a(@click="importSource(source)" :title="source.id")
+            | {{ sourceImportLabel(source) }}
+
+    button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+      span(aria-hidden="true") &times;
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
+  import spinner from 'vue-simple-spinner'
 
   export default {
-    computed: mapGetters(["sourceExists", "remoteSources"]),
+    components: { spinner },
+
+    computed: mapGetters(["showSpinner", "sourceExists", "remoteSources"]),
 
     methods: {
       ...mapActions(["fetchRemoteSources", "importSource"]),

@@ -21,7 +21,7 @@ const GoogleModule = {
       commit("setShowSpinner", true)
       return googleSheets
         .fetchSheets()
-        .finally(() => commit("setShowSpinner", true))
+        .finally(() => commit("setShowSpinner", false))
     },
 
     fetchSheetById({ commit }, sourceId) {
