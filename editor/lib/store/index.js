@@ -8,6 +8,7 @@ import user from './user'
 import games from './games'
 import components from './components'
 import sources from './sources'
+import google from './google'
 
 import persistence from './local_store_persistence'
 
@@ -29,7 +30,7 @@ let store = new Vuex.Store({
 
   state: EMPTY_STATE,
 
-  modules: { user, games, components, sources },
+  modules: { user, games, components, sources, google },
 
   getters: { },
 

@@ -2,8 +2,6 @@ import Vue from 'vue'
 import { find } from 'lodash'
 import uuid from 'uuid/v4'
 
-import googleSheets from '../google_sheets'
-
 const SourcesModule = {
   state: {
     sources: [],
@@ -111,14 +109,10 @@ const SourcesModule = {
       commit("setComponentSource", { component: getters.activeComponent, source })
     },
 
-    fetchRemoteSources({ commit }) {
-      // TODO: set a spinner
+    fetchRemoteSources({ commit, dispatch }) {
       // fetch listing from google
-      googleSheets
-        .fetchSheets()
-        .then(function(sheets) {
-          commit("setRemoteSources", sheets)
-        })
+      dispatch("fetchSheets")
+        .then(sheets => commit("setRemoteSources", sheets))
     },
 
     importSource({ dispatch }, source) {
@@ -127,8 +121,7 @@ const SourcesModule = {
 
     createOrUpdateSourceById({ getters, dispatch }, sourceId) {
       // fetch sheet from google
-      return googleSheets
-        .fetchSheetById(sourceId)
+      return dispatch("fetchSheetById", sourceId)
         .then((fetchedSource) => {
           // check if it's new or existing
           if(getters.sourceExists(fetchedSource)) {

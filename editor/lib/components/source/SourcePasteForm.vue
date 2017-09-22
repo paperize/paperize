@@ -23,7 +23,7 @@ modal(name="source-paste-form" height="auto" :pivotY="0.25" :scrollable="true")
 </template>
 
 <script>
-  import googleSheets from '../../google_sheets'
+  import { mapGetters } from 'vuex'
   import spinner from 'vue-simple-spinner'
 
   export default {
@@ -32,37 +32,17 @@ modal(name="source-paste-form" height="auto" :pivotY="0.25" :scrollable="true")
     data() {
       return {
         pastedSource: '',
-        errorWithPaste: null,
-        showSpinner: false
+        errorWithPaste: null
       }
     },
 
+    computed: mapGetters(["showSpinner"]),
+
     methods: {
       importSourceViaPaste() {
-        // not loving this fragrance...
-        let self = this
-
-        self.showSpinner = true
-
         this.$store.dispatch("createOrUpdateSourceById", this.pastedSource)
-          .catch(googleSheets.BadIdError, function(badIdError) {
-            // TODO: remove spinner
-            self.showSpinner = false
-            console.log("rejected with bad id")
-            self.errorWithPaste = `No Google Sheet ID detected in "${self.pastedSource}"`
-          })
-
-          .catch(googleSheets.NotFoundError, (nfError) => {
-            // TODO: remove spinner
-            self.showSpinner = false
-            console.log("rejected with not found", nfError)
-            self.errorWithPaste = `No Google Sheet found for ID: "${nfError.googleId}"`
-          })
-
-          .catch(function(error) {
-            // TODO: remove spinner
-            self.showSpinner = false
-            console.log("rejected otherwise", error)
+          .catch((error) => {
+            this.errorWithPaste = error.message
             throw error
           })
       },

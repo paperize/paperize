@@ -9,10 +9,13 @@ let matchGoogleId = (url) => {
   return match && match[0]
 }
 
-let BadIdError = function() {}
+let BadIdError = function(sheetId) {
+  this.message = `No Google Sheet ID detected in "${sheetId}"`
+}
 BadIdError.prototype = Object.create(Error.prototype);
 
 let NotFoundError = function(googleId) {
+  this.message = `No Google Sheet found for ID: "${googleId}"`
   this.googleId = googleId
   return this
 }
@@ -65,7 +68,7 @@ let api = {
       let googleId = matchGoogleId(sheetId)
       // error out from id parse failure
       if(!googleId){
-        reject(new BadIdError())
+        reject(new BadIdError(sheetId))
         return
       }
 

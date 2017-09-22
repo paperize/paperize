@@ -1,3 +1,5 @@
+Promise = require('bluebird')
+
 describe "Importing Sources", ->
   beforeEach ->
     cy.loginAndEditGame()
@@ -32,7 +34,7 @@ describe "Importing Sources", ->
 
       cy.contains("Error: No Google Sheet ID detected in \"abcd1234\"")
 
-    it.only "shows a spinner if google never responds", ->
+    it "shows a spinner if google never responds", ->
       cy.window().its("auth").then (auth) ->
         cy.stub(auth, 'getClient').callsArgWith(0, {
           sheets: {
