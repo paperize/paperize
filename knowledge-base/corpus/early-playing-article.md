@@ -4,7 +4,7 @@ Wherein we explore the idea a web application that DOESN'T send all of the end-u
 
 ## Standard Web Apps
 
-Traditionally (for about the past 20 years), web applications of any scale have been "database-backed web applications". This class of software encompasses virtually every notable website we use: Google, Facebook, and Amazon certainly, but also the corporate portals we use in our day jobs, the smaller e-commerce platforms, and even creative endeavors such as Canva.
+Traditionally (for about the past 20 years), web applications of any scale have been "database-backed web applications". This class of software encompasses virtually every notable website we use: Google, Facebook, and Amazon certainly, but also the corporate portals we use in our day jobs, the smaller e-commerce platforms, and even creative endeavors such as Pinterest and Canva.
 
 Indeed, it is easy for one to assume that database-backed is the _only_ way to create a compelling and scalable web application. What else would the "server" be for in the "client-server" model of software that the web uses? Many clients talk to a single source of truth that makes sure everything is valid and safe and shares changes from any one client back out to other clients.
 
