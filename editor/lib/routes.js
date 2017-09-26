@@ -69,9 +69,13 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-// Things to enable in production
-if(process.env.NODE_ENV === 'production') {
-
-}
+// Auto-route on certain Store mutations
+store.subscribe((mutation, state) => {
+  if(mutation.type === 'become') {
+    router.push({ name: 'gameManager' })
+  } else if(mutation.type === 'logout') {
+    router.push({ name: 'splash' })
+  }
+})
 
 export default router

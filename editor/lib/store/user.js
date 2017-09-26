@@ -1,4 +1,3 @@
-// import router from '../routes'
 import auth from '../auth'
 
 const UsersModule = {
@@ -42,8 +41,6 @@ const UsersModule = {
               email:     googleUser.getBasicProfile().getEmail(),
               avatarSrc: googleUser.getBasicProfile().getImageUrl()
             })
-
-            // router.push({ name: 'gameManager' })
           },
 
           (error) => {
@@ -54,8 +51,6 @@ const UsersModule = {
 
     logout({ commit }) {
       commit("logout")
-      // router.push({ name: 'splash' })
-
       auth.getAuth2(auth2 => auth2.signOut())
     }
   }
