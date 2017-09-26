@@ -1,8 +1,10 @@
 // LocalStore persistence layer for the vuex store
+import store from './index'
+
 const ID_TOKEN_KEY = 'id_token'
 const DATABASE_KEY = 'persistence'
 
-export default {
+let api = {
   tokenToRecordId(idToken) {
     // parse the JWT for a globally unique user id
     // return jwtDecode(idToken).sub
@@ -72,5 +74,29 @@ export default {
 
       this.setLocalDB(localDB)
     }
+  },
+
+  loadStateFromDB(idToken) {
+    console.log("Logging in ID:", idToken)
+
+    let user = this.loadUser(idToken) || {}
+    let games = this.loadGames(idToken) || []
+    let sources = this.loadSources(idToken) || []
+
+    store.commit("become", user)
+    store.commit("setGames", games)
+    store.commit("setSources", sources)
   }
 }
+
+let idToken = api.loadIdToken()
+
+if(idToken) {
+  api.loadStateFromDB(idToken)
+}
+
+store.subscribe((mutation, state) => {
+  api.saveState(state)
+})
+
+export default api
