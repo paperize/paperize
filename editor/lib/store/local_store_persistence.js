@@ -77,8 +77,6 @@ let api = {
   },
 
   loadStateFromDB(idToken) {
-    console.log("Logging in ID:", idToken)
-
     let user = this.loadUser(idToken) || {}
     let games = this.loadGames(idToken) || []
     let sources = this.loadSources(idToken) || []
@@ -89,12 +87,14 @@ let api = {
   }
 }
 
+// Load existing persisted state if present
 let idToken = api.loadIdToken()
 
 if(idToken) {
   api.loadStateFromDB(idToken)
 }
 
+// Start listening and persist on change
 store.subscribe((mutation, state) => {
   api.saveState(state)
 })
