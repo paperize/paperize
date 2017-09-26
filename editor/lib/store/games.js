@@ -51,6 +51,11 @@ const GamesModule = {
       commit("updateGame", { gameToUpdate, gameToCopy: game })
     },
 
+    deleteGame({ commit }, { game }) {
+      commit("deleteGame", { game })
+      commit("clearActiveComponent")
+    },
+
     setActiveGame({ commit, getters }, { gameId }) {
       let game = getters.findGame(gameId)
       commit("setActiveGame", { game })

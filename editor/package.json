@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run start-webpack\" \"npm run start-server\"",
     "start-webpack": "webpack --watch",
     "start-server": "http-server build",
-    "test-unit": "NODE_ENV=test concurrently \"webpack --config webpack.test.config.js --watch\" \"mocha test/build/test.js --watch\"",
+    "test-unit": "NODE_ENV=test concurrently --kill-others \"webpack --config webpack.test.config.js --watch\" \"mocha test/build/test.js --watch\"",
     "cypress-record": "NODE_ENV=test concurrently --kill-others \"npm start\" \"cypress run\"",
     "test": "NODE_ENV=test concurrently --kill-others \"npm start\" \"cypress open\" ",
     "ci": "NODE_ENV=test concurrently --kill-others \"npm run start-server\" \"cypress run\" ",
