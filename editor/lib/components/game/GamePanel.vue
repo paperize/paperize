@@ -39,7 +39,7 @@
 
     methods: {
       deleteGame(game) {
-        this.$store.commit("deleteGame", { game })
+        this.$store.dispatch("deleteGame", { game })
         this.$router.push({ name: "gameManager" })
       }
     }
