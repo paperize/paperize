@@ -102,7 +102,7 @@ let api = {
   }
 }
 
-if(process.env.NODE_ENV == 'test'){
+if(process.env.NODE_ENV == 'test' && typeof window !== 'undefined') {
   window.googleSheets = api
 }
 

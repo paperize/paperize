@@ -50,13 +50,13 @@ let store = new Vuex.Store({
     },
   }
 })
-
-let idToken = persistence.loadIdToken()
-
-if(idToken) {
-  store.dispatch("loadStateFromDB", { idToken })
-} else {
-  //
-}
-
+//
+// let idToken = persistence.loadIdToken()
+//
+// if(idToken) {
+//   store.dispatch("loadStateFromDB", { idToken })
+// } else {
+//   //
+// }
+//
 export default store

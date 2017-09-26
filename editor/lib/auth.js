@@ -64,7 +64,7 @@ let getAuth2 = function(callback) {
 
 let api = { getClient, getAuth2 }
 
-if(process.env.NODE_ENV === 'test') {
+if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
 }
 
