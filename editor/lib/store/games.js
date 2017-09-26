@@ -39,9 +39,13 @@ const GamesModule = {
       state.games.splice(state.games.indexOf(game), 1)
     },
 
-    setActiveGame (state, { game }) {
+    setActiveGame(state, { game }) {
       state.activeGame = game
     },
+
+    clearActiveGame(state) {
+      state.activeGame = null
+    }
   },
 
   actions: {
@@ -60,6 +64,11 @@ const GamesModule = {
       let game = getters.findGame(gameId)
       commit("setActiveGame", { game })
     },
+
+    clearActiveGame({ commit }) {
+      commit("clearActiveGame")
+      commit("clearActiveComponent")
+    }
   }
 }
 

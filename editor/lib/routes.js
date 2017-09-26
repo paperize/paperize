@@ -20,7 +20,11 @@ const routes = [
     name:      'gameManager',
     component: GameManager,
     props:     true,
-    meta:      { requiresAuth: true }
+    meta:      { requiresAuth: true },
+    beforeEnter(to, from, next) {
+      store.dispatch("clearActiveGame")
+      next()
+    }
   }, {
     path:      '/games/:gameId',
     name:      'gameEditor',
