@@ -1,25 +1,25 @@
 <template lang="pug">
 modal(name="source-paste-form" height="auto" :pivotY="0.25" :scrollable="true")
-  h2 Import a Google Sheet
+  form(@submit.prevent="importSourceViaPaste()")
+    .grid-x.grid-padding-x
+      .small-12.cell
+        h2 Import a Google Sheet
 
-  spinner(v-if="showSpinner" message="Talking to Google...")
+      .small-12.cell(v-if="showSpinner")
+        spinner(message="Talking to Google...")
 
-  div(v-else)
-    p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
+      .small-12.cell(v-else)
+        p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
 
-    form(@submit.prevent="importSourceViaPaste()")
-      label
-        | Paste a Google Sheets link or ID here:
-        input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        label
+          | Paste a Google Sheets link or ID here:
+          input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
-      ul.menu
-        li
-          a.button.alert(@click="closeModal()") Cancel
-        li
-          input.button.success(type="submit" value="Import")
+        a.button.alert(@click="closeModal()") Cancel
+        input.button.success(type="submit" value="Import")
 
-    button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-      span(aria-hidden="true") &times;
+  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+    span(aria-hidden="true") &times;
 </template>
 
 <script>

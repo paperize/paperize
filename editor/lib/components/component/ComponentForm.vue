@@ -1,10 +1,11 @@
 <template lang="pug">
 modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
-  h1 {{ mode === 'edit' ? `Edit ${component.title}` : 'Add a Component' }}
-  hr
-
   form(method="post" v-on:submit.prevent="submitForm")
-    .grid-x.grid-margin-x
+    .grid-x.grid-padding-x
+      .small-12.cell
+        h1 {{ titleLabel }}
+        hr
+
       .small-4.cell
         label(:for="`component-title-${component.id}`") Title:
       .small-8.cell
@@ -19,8 +20,10 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
           option(value="booklet") Booklet or Manual
           option(value="custom") Custom Component
 
-    button.small.button.alert(type="button" @click="closeModal") Cancel
-    button.small.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Component
+      .small-4.cell
+        button.small.button.alert(type="button" @click="closeModal") Cancel
+      .small-8.cell
+        button.small.button.success(type="submit") {{ submitLabel }}
 
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")
@@ -45,7 +48,9 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
 
     data() {
       return {
-        componentClone: { ...this.component }
+        componentClone: { ...this.component },
+        submitLabel: this.mode === 'edit' ? 'Edit Component' : 'Create Component',
+        titleLabel: this.mode === 'edit' ? `Edit ${this.component.title}` : 'Add a Component'
       }
     },
 
