@@ -74,10 +74,10 @@ router.beforeEach((to, from, next) => {
 })
 
 // Auto-route on certain Store mutations
-store.subscribe((mutation, state) => {
-  if(mutation.type === 'become') {
+store.subscribe(({ type }, state) => {
+  if(type === 'become') {
     router.push({ name: 'gameManager' })
-  } else if(mutation.type === 'logout') {
+  } else if(type === 'logout') {
     router.push({ name: 'splash' })
   }
 })

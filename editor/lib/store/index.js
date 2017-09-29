@@ -14,7 +14,25 @@ let store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   // All state established inside modules
   state: { },
-  modules: { user, games, components, sources, google }
+  modules: { user, games, components, sources, google },
+  mutations: {
+    initializeStore(state, { user, games, sources }) {
+      state.user = user
+      state.games.games = games
+      state.sources.source = sources
+    },
+
+    resetStore(state) {
+      state.user = {
+        authenticated: false,
+        idToken: null,
+        name: '',
+        avatarSrc: ''
+      }
+      state.games.games = []
+      state.sources.source = []
+    }
+  }
 })
 
 export default store

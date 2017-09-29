@@ -49,8 +49,9 @@ const UsersModule = {
       })
     },
 
-    logout({ commit }) {
+    logout({ commit, dispatch }) {
       commit("logout")
+      commit("resetStore")
       auth.getAuth2(auth2 => auth2.signOut())
     }
   }

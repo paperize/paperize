@@ -53,6 +53,7 @@ let api = {
   },
 
   saveState(state) {
+    console.log("Saving state:", state)
     let { user, games, sources } = state
     if(!user.idToken) {
       localStorage.removeItem(ID_TOKEN_KEY)
@@ -81,9 +82,9 @@ let api = {
     let games = this.loadGames(idToken) || []
     let sources = this.loadSources(idToken) || []
 
-    store.commit("become", user)
-    store.commit("setGames", games)
-    store.commit("setSources", sources)
+    console.log("Loading state:", idToken, user, games, sources)
+
+    store.commit("initializeStore", { user, games, sources })
   }
 }
 
@@ -95,8 +96,11 @@ if(idToken) {
 }
 
 // Start listening and persist on change
-store.subscribe((mutation, state) => {
-  api.saveState(state)
+store.subscribe(({ type }, state) => {
+  console.log("Mutation type:", type)
+  if(type !== 'resetStore' && type !== 'initializeStore'){
+    api.saveState(state)
+  }
 })
 
 export default api
