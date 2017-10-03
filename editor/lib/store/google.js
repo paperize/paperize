@@ -1,4 +1,6 @@
+import Promise from 'bluebird'
 import Vue from 'vue'
+import auth from '../auth'
 import googleSheets from '../google_sheets'
 
 const GoogleModule = {
@@ -17,6 +19,21 @@ const GoogleModule = {
   },
 
   actions: {
+    googleLoginFlow({ commit }) {
+      return new Promise((resolve, reject) => {
+        auth.getAuth2((auth2) => {
+          auth2.signIn().then(
+            (googleUser) => { resolve(googleUser) },
+            (error) => { reject(error) }
+          )
+        })
+      })
+    },
+
+    googleLogout() {
+      auth.getAuth2(auth2 => auth2.signOut())
+    },
+
     fetchSheets({ commit }) {
       commit("setShowSpinner", true)
       return googleSheets

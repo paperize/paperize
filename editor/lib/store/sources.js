@@ -133,6 +133,7 @@ const SourcesModule = {
           }
 
           dispatch("setActiveComponentSource", { id: fetchedSource.id })
+          return null
         })
     },
 
