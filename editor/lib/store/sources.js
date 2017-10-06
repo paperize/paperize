@@ -41,7 +41,7 @@ const SourcesModule = {
 
     sourceProperties: (state, getters) => source => {
       source = getters.findSource(source)
-      let theProperties = (((source || { }).data || { }).values || [])[0]
+      let theProperties = (((source || { }).data || { }).values || [])[0] || []
 
       return theProperties
     },

@@ -4,13 +4,13 @@
     .small-12
       h5.truncate Transforms
 
-  table(v-if="source")
+  table(v-if="component")
     thead
       th Transform Name
       th Type
-    tr(v-for="property in sourceProperties(source)")
-      td Expose("{{ property }}")
-      td Raw
+    tr(v-for="transform in transforms(component)")
+      td {{ transform.name }}
+      td {{ transform.type }}
 
   p(v-else) Select a Source...
 </template>
@@ -22,8 +22,7 @@
     props: ["component"],
 
     computed: {
-      ...mapGetters(["sourceProperties"]),
-      source() { return this.component.source }
+      ...mapGetters(["transforms"])
     }
   }
 </script>
