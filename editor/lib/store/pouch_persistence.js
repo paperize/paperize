@@ -54,7 +54,6 @@ let api = {
 
   lastSave: Promise.resolve(),
   saveState(stateObject) {
-    console.log("saving state:", stateObject.user.idToken)
     // Bail if there's no user id in the state
     if(!(stateObject && stateObject.user && stateObject.user.idToken)) {
       // TODO: Proper validation
