@@ -91,7 +91,7 @@ let api = {
         })
         .catch((error) => { reject(error) })
     }).catch({status: 404}, (error) => {
-      return {}
+      return null
     })
   },
 
@@ -107,14 +107,21 @@ let api = {
       return this.openDatabase(state.user.idToken).then(() => {
         // load up the state from the new database
         return this.loadState().then((loadedState) => {
-          // the given user might have new stuff
-          loadedState.name      = state.user.name || loadedState.user.name
-          loadedState.avatarSrc = state.user.avatarSrc || loadedState.user.avatarSrc
-          // foist it onto the store
-          store.commit("resetState", loadedState)
+          // only update state if we found a record
+          if(loadedState) {
+            // the given user might have new stuff
+            loadedState.user.name      = state.user.name      || loadedState.user.name
+            loadedState.user.avatarSrc = state.user.avatarSrc || loadedState.user.avatarSrc
+            // foist it onto the store
+            store.commit("resetState", loadedState)
+            return null
+          } else {
+            // there's nothing in the db, so we actually need to persist now
+            return this.saveState(state)
+          }
+        }).then(() => {
+          // Once our database is copacetic, remember which db to open on refresh
           this.getLocalStorage().setItem(ID_TOKEN_KEY, state.user.idToken)
-
-          return Promise.resolve(null)
         })
       })
 
