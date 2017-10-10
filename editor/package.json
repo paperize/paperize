@@ -16,7 +16,7 @@
     "test-integration": "NODE_ENV=test concurrently --kill-others \"npm run server\" \"cypress run\" ",
     "clean": "rm -rf build",
     "finalize-prod": "coffee finalize.coffee",
-    "build-prod": "webpack -p",
+    "build-prod": "NODE_ENV=production webpack -p",
     "deploy-prod": "coffee deploy.coffee",
     "release": "npm run clean && npm run finalize-prod && npm run build-prod && npm run deploy-prod"
   },
