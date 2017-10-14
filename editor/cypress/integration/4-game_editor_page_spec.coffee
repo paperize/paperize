@@ -1,8 +1,6 @@
 describe "Game Editor page", ->
   beforeEach ->
-    cy.login()
-    cy.loadGameFixtures()
-    cy.visitFixtureGame("loveLetter")
+    cy.loginAndEditGame()
 
   context "the GamePanel and GameForm", ->
     it "shows the game's vitals", ->
@@ -33,8 +31,10 @@ describe "Game Editor page", ->
       cy.contains("Instruction Book")
       cy.contains("Point Cubes")
 
+    it "defaults to the first component", ->
+      cy.get('.active-component').contains("Character Deck")
+
     it "lets me select a component", ->
-      cy.get('.active-component').contains("No Component Selected")
       cy.contains("Instruction Book").click()
       cy.get('.active-component').contains("Instruction Book")
       cy.contains("Point Cubes").click()
@@ -57,7 +57,7 @@ describe "Game Editor page", ->
 
       cy.get("input#component-title-instruction-book").clear().type('Instruction Manual')
       cy.get('select#component-type-instruction-book').select('deck')
-      cy.get('#edit-component-form-instruction-book').contains("Edit Component").click()
+      cy.get('.component-form').contains("Edit Component").click()
 
       cy.contains("Deck")
       cy.contains("Instruction Manual")

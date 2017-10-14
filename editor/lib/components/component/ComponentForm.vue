@@ -1,10 +1,11 @@
 <template lang="pug">
-.reveal.component-form(data-reveal)
-  h1 {{ mode === 'edit' ? `Edit ${component.title}` : 'Add a Component' }}
-  hr
-
+modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
   form(method="post" v-on:submit.prevent="submitForm")
-    .grid-x.grid-margin-x
+    .grid-x.grid-padding-x
+      .small-12.cell
+        h1 {{ titleLabel }}
+        hr
+
       .small-4.cell
         label(:for="`component-title-${component.id}`") Title:
       .small-8.cell
@@ -14,13 +15,15 @@
         label(:for="`component-type-${component.id}`") Type:
       .small-8.cell
         select(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
-          option(value="deck") Deck
+          option(value="deck") Deck of Cards
           option(value="tile-stack") Stack of Tiles
           option(value="booklet") Booklet or Manual
           option(value="custom") Custom Component
 
-    button.small.button.alert(type="button" @click="closeModal") Cancel
-    button.small.button.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Component
+      .small-4.cell
+        button.small.button.alert(type="button" @click="closeModal") Cancel
+      .small-8.cell
+        button.small.button.success(type="submit") {{ submitLabel }}
 
 
   button.close-button(aria-label="Close modal" type="button" @click="closeModal")
@@ -28,16 +31,9 @@
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
-  import Component from '../models/component'
+  import Component from '../../models/component'
 
   export default {
-    mixins: [FoundationMixin],
-
-    destroyed() {
-      $(this.$el).remove()
-    },
-
     props: {
       mode: {
         default: 'edit',
@@ -52,7 +48,19 @@
 
     data() {
       return {
-        componentClone: { ...this.component }
+        componentClone: { ...this.component },
+        submitLabel: this.mode === 'edit' ? 'Edit Component' : 'Create Component',
+        titleLabel: this.mode === 'edit' ? `Edit ${this.component.title}` : 'Add a Component'
+      }
+    },
+
+    computed: {
+      modalName() {
+        if(this.mode == 'create') {
+          return "create-component-modal"
+        } else if(this.mode == 'edit') {
+          return `edit-component-modal-${this.component.id}`
+        }
       }
     },
 
@@ -60,9 +68,9 @@
       submitForm() {
         // Add or update the component in the store
         if(this.mode === 'edit') {
-          this.$store.commit("updateComponent", { component: this.componentClone })
+          this.$store.dispatch("updateComponent", { component: this.componentClone })
         } else if(this.mode === 'create') {
-          this.$store.commit("createComponent", { component: this.componentClone })
+          this.$store.dispatch("createComponent", { component: this.componentClone })
         }
         // Close the modal
         this.closeModal()
@@ -72,8 +80,8 @@
         this.componentClone = { ...this.component }
       },
 
-      closeModal () {
-        $(this.$el).foundation('close')
+      closeModal() {
+        this.$modal.hide(this.modalName)
       }
     }
   }

@@ -1,12 +1,12 @@
 <template lang="pug">
 .component-panel.grid-y
-  component-form#new-component-form(mode='create')
+  component-form(mode='create')
   .small-12.cell
-    h2 Components
+    h4 Components
 
     ul.menu
       li
-        a(data-open="new-component-form") New Component
+        a(@click="$modal.show('create-component-modal')") New Component
 
     .grid-x
       component-card(v-for="component in components" :key="component.id" :component="component")
@@ -27,7 +27,4 @@
 </script>
 
 <style>
-  .component-panel {
-    border-right: solid black 1px;
-  }
 </style>

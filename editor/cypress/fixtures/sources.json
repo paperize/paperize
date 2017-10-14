@@ -1,0 +1,100 @@
+{
+  "loveLetter": {
+    "id": "1UuBvFnNyeHpL7kq8b9J6N420-td9DFZ2GCcsvIdvxjU",
+    "name": "Love Letter Revisited",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          "Quantity",
+          "Rank",
+          "Name",
+          "Rule",
+          "Image"
+        ],
+        [
+          "5",
+          "1",
+          "Guard",
+          "Name a non-Guard card and choose another player. I…yer has this card, he or she is out of the round."
+        ],
+        [
+          "2",
+          "2",
+          "Priest",
+          "Look at another player's card.",
+          "https://c2.staticflickr.com/4/3504/4044503730_f05f290297_m.jpg"
+        ],
+        [
+          "2",
+          "3",
+          "Baron",
+          "You and another player secretly compare hands. The player with the lower value is out of the round.",
+          "https://c1.staticflickr.com/5/4033/5143584037_526f96244d_z.jpg"
+        ],
+        [
+          "2",
+          "4",
+          "Handmaid",
+          "Until your next turn, ignore all effects from other players' cards.",
+          "https://c3.staticflickr.com/3/2867/10513141654_661d7f951b.jpg"
+        ],
+        [
+          "2",
+          "5",
+          "Prince",
+          "Choose any player (including yourself) to discard his or her hand and draw a new card.",
+          "https://c4.staticflickr.com/4/3199/2417049275_42cba82e1a.jpg"
+        ],
+        [
+          "1",
+          "6",
+          "King",
+          "Trade hands with another player of your choice.",
+          "https://c2.staticflickr.com/2/1249/5115888573_1c5e582bb3_n.jpg"
+        ],
+        [
+          "2",
+          "7",
+          "Countess",
+          "If you have this card and the King or Prince in your hand, you must discard this card.",
+          "https://c4.staticflickr.com/4/3698/12312483175_ec36d9ea59.jpg"
+        ],
+        [
+          "1",
+          "8",
+          "Princess",
+          "If you discard this card, you are out of the round.",
+          "https://c1.staticflickr.com/1/40/121669444_2310b01f8c.jpg"
+        ]
+      ]
+    }
+  },
+  "carcassonne": {
+    "id": "carcassonne-source",
+    "name": "Carcassonne",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          
+        ]
+      ]
+    }
+  },
+  "pandemic": {
+    "id": "pandemic-source",
+    "name": "Pandemic V2",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          
+        ]
+      ]
+    }
+  }
+}

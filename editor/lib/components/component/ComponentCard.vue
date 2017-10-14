@@ -1,23 +1,21 @@
 <template lang="pug">
-.component.card.small-10.small-offset-1.medium-6.medium-offset-3.cell(:class="{ active: isActiveComponent() }" @click="setActive")
-  component-form(:id="editFormId" mode='edit' :component="component")
+.component.card.small-10.small-offset-1.cell(:class="{ active: isActiveComponent() }" @click="setActive")
+  component-form(mode='edit' :component="component")
   .card-divider
     p.title {{ component.title || "[No title]" }}
-
-  img(src="http://fillmurray.com/80/60")
 
   .card-section
     p {{ component.type || "[No type]" }}
 
     ul.menu
       li
-        a.button.small(:data-open="editFormId") Edit
+        a.button.small(@click="showEditModal") Edit
       li
         a.button.small.alert(@click.stop="deleteComponent") Delete
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapGetters } from 'vuex'
   import ComponentForm from './ComponentForm.vue'
 
   export default {
@@ -31,20 +29,18 @@
       "component-form": ComponentForm
     },
 
-    computed: {
-      ...mapState(["activeComponent"]),
-
-      editFormId() {
-        return `edit-component-form-${this.component.id}`
-      }
-    },
+    computed: mapGetters(["activeComponent"]),
 
     methods: {
+      showEditModal() {
+        this.$modal.show(`edit-component-modal-${this.component.id}`)
+      },
+
       setActive() {
         if(this.isActiveComponent()) {
           return
         }
-        this.$store.commit("setActiveComponent", { component: this.component })
+        this.$store.dispatch("setActiveComponent", { component: this.component })
       },
 
       isActiveComponent() {
@@ -52,7 +48,7 @@
       },
 
       deleteComponent() {
-        this.$store.commit("deleteComponent", { component: this.component })
+        this.$store.dispatch("deleteComponent", { component: this.component })
       }
     }
   }

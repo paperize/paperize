@@ -13,14 +13,18 @@
     .small-12.medium-6.cell
       h2 Roadmap:
 
-      vue-embed(id="gist" :options="{ emoji: true }")
-       p.gist https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45.js
+      vue-embed(v-if="notInTest" id="gist" :options="{ emoji: true }")
+        p.gist https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45.js
 </template>
 
 <script>
-  import VueEmbed from '../components/VueEmbed.vue'
+  import VueEmbed from './shared/VueEmbed.vue'
 
   export default {
+    computed: {
+      notInTest: () => process.env.NODE_ENV !== 'test'
+    },
+
     components: {
       "vue-embed": VueEmbed
     }

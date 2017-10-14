@@ -22,10 +22,12 @@
       li
         router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
       li
-        a.small.button.alert(@click="deleteGame") Delete
+        a.small.button.alert(@click="deleteGame({ game })") Delete
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   export default {
     props: {
       game: {
@@ -33,11 +35,7 @@
       }
     },
 
-    methods: {
-      deleteGame () {
-        this.$store.commit("deleteGame", { game: this.game })
-      }
-    }
+    methods: mapActions(["deleteGame"])
   }
 </script>
 

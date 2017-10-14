@@ -1,8 +1,8 @@
 describe "Game Manager page", ->
+
   context "when not logged in", ->
     it "shows a message about logging in", ->
       cy.visit("/#/games")
-
       cy.url().should("match", /#\/$/)
 
   context "logged in", ->
@@ -10,9 +10,6 @@ describe "Game Manager page", ->
       cy.login()
 
     context "with no games", ->
-      beforeEach ->
-        cy.visit("/#/games")
-
       it "says Game Manager", ->
         cy.contains "Game Manager"
 
@@ -51,8 +48,7 @@ describe "Game Manager page", ->
 
     context "with existing games", ->
       beforeEach ->
-        cy.loadGameFixtures()
-        cy.visit("/#/games")
+        cy.loadGamesIntoVuex()
 
       it "lists my games", ->
         cy.get(".game").its("length").should("eq", 3)

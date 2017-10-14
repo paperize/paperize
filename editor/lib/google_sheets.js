@@ -1,53 +1,109 @@
+import { map, pick } from 'lodash'
 import Promise from 'bluebird'
 import auth from './auth'
 
-let user = auth.user
+// Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
+const GOOGLE_ID_REGEX = /[-\w]{25,}/
+let matchGoogleId = (url) => {
+  let match = url.match(GOOGLE_ID_REGEX)
+  return match && match[0]
+}
 
-const CLIENT_ID      = "991093846081-9fps02e3ijk98hpetv0jvpjqm195as2m.apps.googleusercontent.com"
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const SCOPES         = "https://www.googleapis.com/auth/spreadsheets";
+let BadIdError = function(sheetId) {
+  this.message = `No Google Sheet ID detected in "${sheetId}"`
+}
+BadIdError.prototype = Object.create(Error.prototype);
 
-let getSheetsAPI = (token) => {
-  return new Promise((resolve, reject) => {
-    if(gapi.client) {
-      resolve(gapi.client)
-    } else {
-      gapi.load('client:auth2', () => {
-        return gapi.client.init({
-          discoveryDocs: DISCOVERY_DOCS,
-          clientId:      CLIENT_ID,
-          scope:         SCOPES,
-        })
+let NotFoundError = function(googleId) {
+  this.message = `No Google Sheet found for ID: "${googleId}"`
+  this.googleId = googleId
+  return this
+}
+NotFoundError.prototype = Object.create(Error.prototype);
 
-        .then(() => {
-          gapi.client.setToken({access_token: token})
-          resolve(gapi.client)
+let api = {
+  BadIdError, NotFoundError,
+
+  matchGoogleId,
+
+  fetchSheets() {
+    return new Promise((resolve, reject) => {
+      auth.getClient((client) => {
+        client.drive.files.list({
+          // Query for spreadsheets only
+          q: "mimeType='application/vnd.google-apps.spreadsheet'",
+          // Order them by most recent (seems to be most relevant)
+          orderBy: "recency desc"
+        }).then((driveResponse) => {
+          let driveResult = driveResponse.result
+          let fileIdsAndNames = map(driveResult.files, (file) => pick(file, [ "id", "name" ]) )
+          resolve(fileIdsAndNames)
+        }, (driveError) => {
+          reject(driveError)
         })
       })
-    }
-  })
-}
+    })
+  },
 
-let loadSheet = function(token, sheetId, range) {
-  getSheetsAPI(token).then((api) => {
-    api.sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: range,
-    }).then(function(response) {
-      let range = response.result;
-      if (range.values.length > 0) {
-        for (let i = 0; i < range.values.length; i++) {
-          var row = range.values[i];
-          // work with row
-          console.log(row)
-        }
-      } else {
-        console.log('-')
+  fetchSheetData(sheet) {
+    return new Promise((resolve, reject) => {
+      auth.getClient((client) => {
+        return client.sheets.spreadsheets.values.get({
+          spreadsheetId: sheet.id,
+          range:         'Sheet1' // TODO: Can't rely on this in reality
+        }).then((sheetsResponse) => {
+          let sheetsResult = sheetsResponse.result
+          // resolve with the sheet metadata and data
+          resolve({
+            ...sheet,
+            data: sheetsResult
+          })
+        })
+      })
+    })
+  },
+
+  fetchSheetById(sheetId) {
+    return new Promise((resolve, reject) => {
+      let googleId = matchGoogleId(sheetId)
+      // error out from id parse failure
+      if(!googleId){
+        reject(new BadIdError(sheetId))
+        return
       }
-    }, function(response) {
-      console.log("Error:", response.result.error.message)
-    });
-  })
+
+      auth.getClient((client) => {
+        return client.sheets.spreadsheets.get({
+          spreadsheetId: googleId
+        }).then(({ result }) => {
+          let spreadsheetName = result.properties.title
+          let sheetsNames = map(result.sheets, "properties.title")
+          return client.sheets.spreadsheets.values.get({
+            spreadsheetId: googleId,
+            range:         sheetsNames[0] // Entire first sheet
+          }).then((sheetsResponse) => {
+            let sheetsResult = sheetsResponse.result
+            // resolve with the sheet metadata and data
+            resolve({
+              id:   googleId,
+              name: spreadsheetName,
+              data: sheetsResult
+            })
+          })
+        }, (error) => {
+          if(error.status == 404) {
+            reject(new NotFoundError(googleId))
+          } else {
+            reject(error)
+          }
+        })
+      })
+    })
+  }
 }
 
-export default { loadSheet }
+if(process.env.NODE_ENV == 'test' && typeof window !== 'undefined') {
+  window.googleSheets = api
+}
+
+export default api

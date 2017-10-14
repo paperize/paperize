@@ -1,10 +1,10 @@
 <template lang="pug">
-.reveal.game-form(data-reveal)
-  h1 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
-  hr
-
+modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
   form(method="post" v-on:submit.prevent="submitForm")
-    .grid-x.grid-margin-x
+    .grid-x.grid-padding-x
+      .small-12.cell
+        h2 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
+
       .small-4.cell
         label(for="game-title") Title:
       .small-8.cell
@@ -30,29 +30,20 @@
       .small-8.cell
         input(type="text" id="game-play-time" name="play-time" v-model="gameClone.playTime")
 
+      .small-4.cell
+        button.button.small.alert(type="button" @click="closeModal") Cancel
+      .small-8.cell
+        button.button.small.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
 
-    button.button.small.alert(type="button" @click="closeModal") Cancel
-    button.button.small.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
 
-
-  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-    span(aria-hidden="true") &times;
+    button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+      span(aria-hidden="true") &times;
 </template>
 
 <script>
-  import FoundationMixin from '../mixins/foundation'
-  import Game from '../models/game'
+  import Game from '../../models/game'
 
   export default {
-    mixins: [FoundationMixin],
-
-    // The way Foundation's Reveal works, it moves the dom element up to be a
-    // direct child of <body>, removing Vue's ability to remove it cleanly upon
-    // destroy. Add a little extra love here to see that the job is really done!
-    destroyed() {
-      $(this.$el).remove()
-    },
-
     props: {
       mode: {
         default: 'edit',
@@ -66,15 +57,16 @@
 
     data() {
       return {
-        gameClone: { ...this.game }
+        gameClone: { ...this.game },
+        modalName: `${this.mode}-game-modal`
       }
     },
 
     methods: {
-      submitForm () {
+      submitForm() {
         // Add or update the game in the store
         if(this.mode === 'edit') {
-          this.$store.commit("updateGame", { game: this.gameClone })
+          this.$store.dispatch("updateGame", { game: this.gameClone })
         } else if(this.mode === 'create') {
           this.$store.commit("createGame", { game: this.gameClone })
           this.$router.push({ name: "gameEditor", params: { gameId: this.gameClone.id }})
@@ -87,14 +79,18 @@
         this.gameClone = { ...this.game }
       },
 
-      closeModal () {
-        $(this.$el).foundation('close')
+      closeModal() {
+        this.$modal.hide(this.modalName)
       }
     }
   }
 </script>
 
 <style scoped>
+  h2 {
+    text-decoration: underline;
+  }
+
   label {
     font-size: 1.25em;
     text-align: right;

@@ -1,45 +1,11 @@
 import Promise from 'bluebird'
 
 const CLIENT_ID      = "991093846081-9fps02e3ijk98hpetv0jvpjqm195as2m.apps.googleusercontent.com"
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"]
-const SCOPES         = "email https://www.googleapis.com/auth/spreadsheets"
-
-// // Lock
-// if(process.env['NODE_ENV'] === 'test') {
-//   Auth0Lock = function() {
-//     // short circuit getProfile in test
-//     return {
-//       getProfile(idToken, callback) {
-//         console.log("Profile requested for token:", idToken)
-//         callback(null, {
-//           nickname: 'Test User',
-//           picture: 'http://placehold.it/40/40'
-//         })
-//       },
-//
-//       show () { },
-//       on () { }
-//     }
-//   }
-// }
-//
-// let options = {
-//   auth: {
-//     params: {
-//       access_type: "offline" // Causes Google to provide a refresh token
-//     }
-//   }
-// }
-//
-// const lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN, options)
-//
-// lock.promptForLogin = () => {
-//   lock.show()
-// }
-//
-// if(process.env['NODE_ENV'] === 'test') {
-//   window.lock = lock
-// }
+const DISCOVERY_DOCS = [
+  "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", // Drive
+  "https://sheets.googleapis.com/$discovery/rest?version=v4"    // Sheets
+]
+const SCOPES         = "email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/spreadsheets"
 
 let clientLoadedPromise = null
 let ensureClientLoaded = function() {
@@ -96,4 +62,10 @@ let getAuth2 = function(callback) {
   })
 }
 
-export default { getClient, getAuth2 }
+let api = { getClient, getAuth2 }
+
+if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
+  window.auth = api
+}
+
+export default api

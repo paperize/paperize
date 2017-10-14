@@ -2,7 +2,7 @@
 import { process, withinXofY, around } from './factory'
 
 const DEFAULT_GAME = {
-  id:          -1,
+  id:          null,
   title:       "",
   coverArt:    "",
   playerCount: "",
@@ -14,7 +14,7 @@ const DEFAULT_GAME = {
 const EX_BILL = {
   id: 1000,
   title: "Zuul 1000",
-  coverArt: () => `http://www.fillmurray.com/${around(200)}/${around(100)}`,
+  coverArt: () => ``,
   playerCount: '2-5',
   playTime: () => `${around(30)} - ${around(90)} minutes`,
   ageRange: () => `${around(15)}+`,

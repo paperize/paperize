@@ -10,15 +10,13 @@ describe "Profile component", ->
   context "with login", ->
     beforeEach ->
       cy.login()
-      cy.visit("/")
 
     it "we see .authenticated elements", ->
       cy.get(".authenticated")
       cy.get(".unauthenticated").should('not.exist')
 
     it "profile info is visible", ->
-      cy.get('.avatar img').then ($avatarImg) ->
-        expect($avatarImg.attr('src')).to.eq 'http://placehold.it/20/20'
+      cy.get('.avatar')
 
       cy.get('.name').contains "Avid Gamer"
 

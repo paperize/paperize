@@ -1,16 +1,23 @@
 if(process.env.NODE_ENV !== "production") {
-  console.log("Loading Paperize Editor with environment:", process.env.NODE_ENV)
+  console.log("Paperize Editor:", process.env.NODE_ENV)
 }
 
 import Vue from 'vue'
 import store from './store'
+import persistence from './store/persistence'
 import router from './routes'
-import TitleBar from './components/TitleBar.vue'
+
+import VModal from 'vue-js-modal'
+Vue.use(VModal)
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
+
+  window.paperize = { store }
 }
+
+import TitleBar from './components/sitewide/TitleBar.vue'
 
 let startApp = () => {
   // Top-level Vue component

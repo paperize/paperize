@@ -9,7 +9,7 @@
       .small-12.cell
         ul.menu
           li
-            a(data-open="edit-game-modal") Edit Game
+            a(@click="$modal.show('edit-game-modal')") Edit Game
           li
             a(@click="deleteGame(game)") Delete Game
       .small-4.cell
@@ -24,11 +24,11 @@
         dl
           dt Ages
           dd {{ game.ageRange || "[Not set]"  }}
-  game-form#edit-game-modal(mode="edit" :game="game")
+  game-form(mode="edit" :game="game")
 </template>
 
 <script>
-  import GameForm from '../components/GameForm.vue'
+  import GameForm from './GameForm.vue'
 
   export default {
     props: ["game"],
@@ -39,7 +39,7 @@
 
     methods: {
       deleteGame(game) {
-        this.$store.commit("deleteGame", { game })
+        this.$store.dispatch("deleteGame", { game })
         this.$router.push({ name: "gameManager" })
       }
     }

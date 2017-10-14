@@ -1,8 +1,10 @@
 // LocalStore persistence layer for the vuex store
+import store from './index'
+
 const ID_TOKEN_KEY = 'id_token'
 const DATABASE_KEY = 'persistence'
 
-export default {
+let api = {
   tokenToRecordId(idToken) {
     // parse the JWT for a globally unique user id
     // return jwtDecode(idToken).sub
@@ -27,12 +29,16 @@ export default {
     return this.tokenToRecordId(this.loadToken())
   },
 
-  loadProfile(idToken) {
-    return this.loadPersisted("profile", idToken)
+  loadUser(idToken) {
+    return this.loadPersisted("user", idToken)
   },
 
   loadGames(idToken) {
     return this.loadPersisted("games", idToken)
+  },
+
+  loadSources(idToken) {
+    return this.loadPersisted("sources", idToken)
   },
 
   loadPersisted(recordName, idToken) {
@@ -46,23 +52,55 @@ export default {
     return record
   },
 
-  saveState({ idToken, profile, games }) {
-    if(!idToken) {
+  saveState(state) {
+    console.log("Saving state:", state)
+    let { user, games, sources } = state
+    if(!user.idToken) {
       localStorage.removeItem(ID_TOKEN_KEY)
     } else {
-      localStorage.setItem(ID_TOKEN_KEY, idToken)
+      games = games.games || []
+      sources = sources.sources || []
+      localStorage.setItem(ID_TOKEN_KEY, user.idToken)
 
-      let recordId = this.tokenToRecordId(idToken)
+      let recordId = this.tokenToRecordId(user.idToken)
       let localDB = this.getLocalDB()
 
       if(!localDB[recordId]) {
         localDB[recordId] = {}
       }
 
-      localDB[recordId].profile = profile
-      localDB[recordId].games = games
+      localDB[recordId].user    = user
+      localDB[recordId].games   = games
+      localDB[recordId].sources = sources
 
       this.setLocalDB(localDB)
     }
+  },
+
+  loadStateFromDB(idToken) {
+    let user = this.loadUser(idToken) || {}
+    let games = this.loadGames(idToken) || []
+    let sources = this.loadSources(idToken) || []
+
+    console.log("Loading state:", idToken, user, games, sources)
+
+    store.commit("initializeStore", { user, games, sources })
   }
 }
+
+// Load existing persisted state if present
+let idToken = api.loadIdToken()
+
+if(idToken) {
+  api.loadStateFromDB(idToken)
+}
+
+// Start listening and persist on change
+store.subscribe(({ type }, state) => {
+  console.log("Mutation type:", type)
+  if(type !== 'resetStore' && type !== 'initializeStore'){
+    api.saveState(state)
+  }
+})
+
+export default api
