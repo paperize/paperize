@@ -14,7 +14,7 @@
     "dev-mocha": "NODE_ENV=test concurrently --kill-others \"npm run webpack-mocha -- --watch\" \"npm run mocha -- --watch\"",
     "build-test-unit": "NODE_ENV=test npm run webpack-mocha",
     "test-unit": "npm run build-test-unit && npm run mocha",
-    "build-test-integration": "NODE_ENV=test npm run clean && webpack",
+    "build-test-integration": "npm run clean && NODE_ENV=test webpack",
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-unit && npm run test-integration",
     "create-video": "NODE_ENV=test npm run build-test && concurrently --kill-others \"npm run server\" \"cypress run --config videoRecording=true\"",
