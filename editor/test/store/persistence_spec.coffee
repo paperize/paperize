@@ -13,7 +13,7 @@ describe.only "Persistence", ->
           # open a different db and find empty
           p.openDatabase("xyz456.benji").then ->
             p.loadState().then (benjiState) ->
-              expect(benjiState).to.eql({ })
+              expect(benjiState).to.eql(null)
 
               p.closeDatabase().then ->
                 # reopen and find same
