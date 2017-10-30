@@ -17,10 +17,10 @@
     "build-test-integration": "npm run clean && NODE_ENV=test webpack",
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-unit && npm run test-integration",
-    "create-video": "NODE_ENV=test npm run build-test && concurrently --kill-others \"npm run server\" \"cypress run --config videoRecording=true\"",
+    "create-video": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --config videoRecording=true\"",
     "copy-video": "cp cypress/videos/* build/releases/10-14-17.mp4",
     "finalize-prod": "coffee finalize.coffee",
-    "build-prod": "NODE_ENV=production npm run clean && webpack -p",
+    "build-prod": "npm run clean && NODE_ENV=production webpack -p",
     "deploy-prod": "coffee deploy.coffee",
     "release": "npm run finalize-prod && npm run create-video && npm run build-prod && npm run copy-video && npm run deploy-prod"
   },
