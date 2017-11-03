@@ -8,10 +8,20 @@
       h5.truncate "Raw Source Viewer"
 
     .small-10.small-offset-1(v-if="component.source")
+      ul.menu.horizontal
+        li
+          a(@click="previousItem") &lt;&lt;
+        li
+          | Item {{ currentItemIndex }} / {{ totalItems }}
+        li
+          a(@click="nextItem") &gt;&gt;
+
       .card
         .card-section(v-for="property in currentItem")
           strong {{ property.key }}:
           |  {{ property.value }}
+
+      iframe(:src="pdfBlob" height="300")
 
       ul.menu.horizontal
         li
@@ -26,18 +36,28 @@
 
 <script>
   import _ from 'lodash'
+  import Promise from 'bluebird'
+  import jsPDF from 'jspdf'
 
   export default {
     props: ["component"],
 
     data() {
       return {
-        currentItemIndex: 1
+        currentItemIndex: 1,
+        pdfBlob: null
+      }
+    },
+
+    watch: {
+      currentItem() {
+        this.calculatePDFBlob()
       }
     },
 
     computed: {
       items() {
+        if(!this.source) { return [] }
         let propertyNames = this.source.data.values[0]
         return _(this.source.data.values).slice(1).map((row) => {
           let properties = []
@@ -69,6 +89,49 @@
 
       nextItem() {
         this.currentItemIndex = Math.min(this.currentItemIndex + 1, this.totalItems)
+      },
+
+      calculatePDFBlob() {
+        return new Promise((resolve, reject) => {
+          let doc = new jsPDF({ unit: 'in' })
+          doc.deletePage(1)
+          doc.addPage(2.5, 3.5)
+
+          let left = .25, top = 0
+          Promise.each(this.currentItem, (property) => {
+            top += .25
+            if(property.key == "Image") {
+              return this.toDataURL(property.value)
+
+              .then((imageDataURI) => {
+                return new Promise((resolve, reject) => {
+                  let image = new Image()
+                  image.onload = function() {
+                    doc.addImage(image, 'JPEG', left, top, 2, 2)
+                    resolve()
+                  }
+                  image.src = imageDataURI
+                })
+              })
+            } else {
+              doc.text(`${property.key}: ${property.value}`, left, top)
+            }
+          }).then(() => {
+            this.pdfBlob = doc.output('bloburi')
+          })
+        })
+      },
+
+      toDataURL(url) {
+        return fetch(url)
+
+        .then((response)=> {
+          return response.blob();
+        })
+
+        .then(blob=> {
+          return URL.createObjectURL(blob);
+        })
       }
     }
   }
