@@ -1,6 +1,8 @@
 <template lang="pug">
 ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
   li
+    a(@click="openImageLibrary") Images
+  li
     a.avatar
       img(alt="avatar" :src="avatarSrc")
     ul.menu
@@ -24,16 +26,16 @@ ul.menu.unauthenticated(v-else)
       } catch(error) {}
       $(this.$el).foundation()
     },
-    methods: {
-      ...mapActions(["login", "logout"]),
 
-      },
     computed: {
       ...mapState(['user']),
       avatarSrc() {
         return this.user.avatarSrc || "/images/blank-avatar.png"
       }
     },
+
+    methods: {
+      ...mapActions(["login", "logout", "openImageLibrary"]),
     }
   }
 </script>

@@ -1,5 +1,6 @@
 <template lang="pug">
 .grid-container
+  image-manager
   .grid-x
     .top-bar.small-12.cell
       .top-bar-left
@@ -15,12 +16,14 @@
 
 <script>
   import Profile from './Profile.vue'
+  import ImageManager from '../asset/ImageManager.vue'
   import FoundationMixin from '../../mixins/foundation'
 
   export default {
     mixins: [FoundationMixin],
     components: {
-      "profile-component": Profile
+      "profile-component": Profile,
+      "image-manager": ImageManager
     },
 
     computed: {

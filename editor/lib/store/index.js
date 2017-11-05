@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   sources:    sources.state,
   transforms: transforms.state,
   google:     google.state,
+  imageLibraryOpen: false
 }
 
 // Feeling hacky here, but having trouble with Observers contaminating my statics
@@ -33,6 +34,15 @@ let store = new Vuex.Store({
   mutations: {
     resetState(state, newState={}) {
       Object.assign(state, { ...newInitialState(), ...newState })
+    },
+
+    openImageLibrary(state) {
+      state.imageLibraryOpen = true
+    }
+  },
+  actions: {
+    openImageLibrary({ commit }) {
+      commit("openImageLibrary")
     }
   }
 })
