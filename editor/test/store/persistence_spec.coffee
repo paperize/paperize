@@ -1,11 +1,11 @@
-import { get } from 'lodash'
-import store from "../../lib/store"
-import p from "../../lib/store/persistence"
+{ get } = require('lodash')
+store = require("../../lib/store")
+p = require("../../lib/store/persistence")
 
 userFixture = require("../../cypress/fixtures/users")[0]
 gameFixture = require("../../cypress/fixtures/games").loveLetter
 
-describe.only "Persistence", ->
+describe "Persistence", ->
   it "works with multiple users", ->
     p.openDatabase("abc123.loren").then ->
       p.saveState({ user: { idToken: 'loren' } }).then ->

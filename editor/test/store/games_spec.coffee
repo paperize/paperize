@@ -1,4 +1,4 @@
-import store from "../../lib/store"
+store = require("../../lib/store")
 
 game = require("../../cypress/fixtures/games").loveLetter
 

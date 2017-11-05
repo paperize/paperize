@@ -1,4 +1,4 @@
-import store from "../../lib/store"
+store = require("../../lib/store")
 
 describe "User management", ->
   context "becoming a new user", ->
