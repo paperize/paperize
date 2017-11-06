@@ -5,6 +5,7 @@ if(process.env.NODE_ENV !== "production") {
 import Vue from 'vue'
 import store from './store'
 import persistence from './store/persistence'
+persistence.initializeAndWatchStore(store)
 import router from './routes'
 
 import VModal from 'vue-js-modal'

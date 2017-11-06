@@ -5,7 +5,9 @@
 // need to actually toy with custom Loaders to do it right.
 
 
-let pouchPersistence = {}
+let pouchPersistence = {
+  initializeAndWatchStore() { console.log("No persistence layer."); }
+}
 // Any environment except Cypress, load persistence layer
 if(process.env["NODE_ENV"] !== 'test' ||
   (process.env["NODE_ENV"] === 'test' && typeof window === 'undefined')) {
