@@ -4,5 +4,5 @@ describe "Transform Manager", ->
     cy.loadSourcesIntoVuex()
     cy.contains("Love Letter Revisited").click()
 
-  it.only "works", ->
+  it "works", ->
     cy.get('#transform-manager')

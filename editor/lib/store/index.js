@@ -6,6 +6,7 @@ import games      from './games'
 import components from './components'
 import sources    from './sources'
 import transforms from './transforms'
+import assets     from './assets'
 import google     from './google'
 
 Vue.use(Vuex)
@@ -16,8 +17,8 @@ const INITIAL_STATE = {
   components: components.state,
   sources:    sources.state,
   transforms: transforms.state,
+  assets:     assets.state,
   google:     google.state,
-  imageLibraryOpen: false
 }
 
 // Feeling hacky here, but having trouble with Observers contaminating my statics
@@ -30,19 +31,10 @@ let store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   // All state established inside modules
   state: newInitialState(),
-  modules: { user, games, components, sources, transforms, google },
+  modules: { user, games, components, sources, transforms, assets, google },
   mutations: {
     resetState(state, newState={}) {
       Object.assign(state, { ...newInitialState(), ...newState })
-    },
-
-    openImageLibrary(state) {
-      state.imageLibraryOpen = true
-    }
-  },
-  actions: {
-    openImageLibrary({ commit }) {
-      commit("openImageLibrary")
     }
   }
 })
