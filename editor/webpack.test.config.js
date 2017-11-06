@@ -12,6 +12,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({'NODE_ENV': 'test'})
   ],
   module: {
+    noParse: /\/leveldown\//,
     loaders: [
       {
         test: /\.js$/,
