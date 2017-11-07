@@ -1,16 +1,19 @@
 <template lang="pug">
 modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollable="true")
-  h1 Image Library
+  .grid-x.grid-padding-x
+    .small-12.cell
+      h1 Image Library
 
-  input(id="image-files-input" type="file" multiple @change="handleFiles")
+    .small-12.cell
+      input(id="image-files-input" type="file" multiple @change="handleFiles")
 
-  ul
-    li(v-for="image in images")
-      a(:title="image.id" @click="preview(image)") {{ image.name }}
+      ul
+        li(v-for="image in images")
+          a(:title="image.id" @click="preview(image)") {{ image.name }}
 
-  img(v-if="previewImage" :src="previewImage")
+      img(v-if="previewImage" :src="previewImage")
 
-  input(id="image-files-input" type="file" multiple @change="handleFiles")
+      input(id="image-files-input" type="file" multiple @change="handleFiles")
 </template>
 
 <script>
@@ -25,17 +28,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
       }
     },
 
-    computed: mapGetters(['imageLibraryOpen', 'images']),
-
-    watch: {
-      imageLibraryOpen(open) {
-        if(open){
-          this.$modal.show("Image Library")
-        } else {
-          this.$modal.hide("Image Library")
-        }
-      }
-    },
+    computed: mapGetters(['images']),
 
     methods: {
       preview(image) {

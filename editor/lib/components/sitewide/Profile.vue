@@ -1,7 +1,7 @@
 <template lang="pug">
 ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
   li
-    a(@click="openImageLibrary") Images
+    a(@click="$modal.show('Image Library')") Images
   li
     a.avatar
       img(alt="avatar" :src="avatarSrc")
@@ -35,7 +35,7 @@ ul.menu.unauthenticated(v-else)
     },
 
     methods: {
-      ...mapActions(["login", "logout", "openImageLibrary"]),
+      ...mapActions(["login", "logout"]),
     }
   }
 </script>

@@ -15,30 +15,20 @@ const IMAGE_MIME_CHECK = /^image\//
 
 const AssetsModule = {
   state: {
-    imageLibraryOpen: false,
     images: []
   },
 
   getters: {
-    imageLibraryOpen: state => state.imageLibraryOpen,
     images: state => state.images
   },
 
   mutations: {
-    openImageLibrary(state) {
-      state.imageLibraryOpen = true
-    },
-
     addImageReference(state, image) {
       state.images.push(image)
     }
   },
 
   actions: {
-    openImageLibrary({ commit }) {
-      commit("openImageLibrary")
-    },
-
     importImageFiles({ commit }, files) {
       let promises = chain(files)
         .filter(file => IMAGE_MIME_CHECK.test(file.type))
