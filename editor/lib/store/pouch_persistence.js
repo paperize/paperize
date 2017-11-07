@@ -126,6 +126,7 @@ let api = {
             loadedState.user.avatarSrc = state.user.avatarSrc || loadedState.user.avatarSrc
             // foist it onto the store
             store.commit("resetState", loadedState)
+            store.dispatch("setStoreReady")
             return null
           } else {
             // there's nothing in the db, so we actually need to persist now
