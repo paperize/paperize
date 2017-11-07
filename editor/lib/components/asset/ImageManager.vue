@@ -25,8 +25,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 
 <script>
   import { mapGetters } from 'vuex'
-  import { each } from 'lodash'
-  import persistence from '../../store/pouch_persistence'
+  import assetStore from '../../services/asset_store'
 
   import spinner from 'vue-simple-spinner'
 
@@ -44,7 +43,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 
     methods: {
       preview(image) {
-        persistence.db.get(image.id).then((imageAsset) => {
+        assetStore.getImage(image.id).then((imageAsset) => {
           this.previewImage = imageAsset.data
         })
       },

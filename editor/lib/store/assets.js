@@ -1,7 +1,7 @@
 import { chain } from 'lodash'
 import Promise from 'bluebird'
 import md5 from 'md5'
-import persistence from './pouch_persistence'
+import assetStore from '../services/asset_store'
 
 const getFileReader = function() {
   if(process.env.NODE_ENV == 'test' && typeof FileReader == 'undefined') {
@@ -46,7 +46,7 @@ const AssetsModule = {
           })
 
           .then((asset) => {
-            return persistence.db.put(asset)
+            return assetStore.putImage(asset)
 
             .then((response) => {
               commit('addImageReference', { name: asset.name, id: asset._id })
