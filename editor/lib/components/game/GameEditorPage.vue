@@ -37,9 +37,7 @@ div(v-if="!game")
       "game-panel":       GamePanel,
       "component-panel":  ComponentPanel,
       "component-editor": ComponentEditor
-    },
-
-    methods: { }
+    }
   }
 </script>
 
