@@ -37,10 +37,10 @@
       },
 
       setActive() {
-        if(this.isActiveComponent()) {
-          return
-        }
-        this.$store.dispatch("setActiveComponent", { component: this.component })
+        if(this.isActiveComponent()) { return }
+        let gameId = this.$store.getters.activeGame.id,
+            componentId = this.component.id
+        this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
       },
 
       isActiveComponent() {

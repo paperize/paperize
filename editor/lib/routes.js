@@ -31,25 +31,12 @@ const routes = [
     component: GameEditor,
     props:     true,
     meta:      { requiresAuth: true },
-    beforeEnter(to, from, next) {
-      store.dispatch("whenStoreReady").then(() => {
-        store.dispatch("setActiveGame", { gameId: to.params.gameId })
-        next()
-      })
-    }
   }, {
     path:      '/games/:gameId/components/:componentId',
     name:      'componentEditor',
     component: GameEditor,
     props:     true,
-    meta:      { requiresAuth: true },
-    beforeEnter(to, from, next) {
-      store.dispatch("whenStoreReady").then(() => {
-        store.dispatch("setActiveGame", { gameId: to.params.gameId })
-        store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
-        next()
-      })
-    }
+    meta:      { requiresAuth: true }
   }
 ]
 
@@ -68,11 +55,30 @@ router.beforeEach((to, from, next) => {
       next()
     }
   // Otherwise, we're required NOT to be authed, but we are...
-} else if(store.state.user.authenticated) {
+  } else if(store.state.user.authenticated) {
     // ...redirect to the user home page...
     next({ name: 'gameManager' })
   } else {
     // ...otherwise continue.
+    next()
+  }
+})
+
+// Per-route beforeEnter hooks aren't called if the component is re-used,
+// so just check if we're hitting those routes from here.
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.name == "gameEditor")) {
+    store.dispatch("whenStoreReady").then(() => {
+      store.dispatch("setActiveGame", { gameId: to.params.gameId })
+      next()
+    })
+  } else if(to.matched.some(record => record.name == "componentEditor")) {
+    store.dispatch("whenStoreReady").then(() => {
+      store.dispatch("setActiveGame", { gameId: to.params.gameId })
+      store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
+      next()
+    })
+  } else {
     next()
   }
 })
