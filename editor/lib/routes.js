@@ -32,8 +32,10 @@ const routes = [
     props:     true,
     meta:      { requiresAuth: true },
     beforeEnter(to, from, next) {
-      store.dispatch("setActiveGame", { gameId: to.params.gameId })
-      next()
+      store.dispatch("whenStoreReady").then(() => {
+        store.dispatch("setActiveGame", { gameId: to.params.gameId })
+        next()
+      })
     }
   }, {
     path:      '/games/:gameId/components/:componentId',
@@ -42,9 +44,11 @@ const routes = [
     props:     true,
     meta:      { requiresAuth: true },
     beforeEnter(to, from, next) {
-      store.dispatch("setActiveGame", { gameId: to.params.gameId })
-      store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
-      next()
+      store.dispatch("whenStoreReady").then(() => {
+        store.dispatch("setActiveGame", { gameId: to.params.gameId })
+        store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
+        next()
+      })
     }
   }
 ]
@@ -75,7 +79,7 @@ router.beforeEach((to, from, next) => {
 
 // Auto-route on certain Store mutations
 store.subscribe(({ type }, state) => {
-  if(type === 'become') {
+  if(type === 'become' && router.currentRoute.name === 'splash') {
     router.push({ name: 'gameManager' })
   } else if(type === 'logout') {
     router.push({ name: 'splash' })
