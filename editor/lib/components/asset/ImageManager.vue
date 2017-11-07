@@ -1,11 +1,11 @@
 <template lang="pug">
 modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollable="true")
-  .grid-x.grid-padding-x
+  .grid-x.grid-padding-x(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="handleFileDragAndDrop")
     .small-12.cell
       h1 Image Library
 
     .small-12.cell
-      input(id="image-files-input" type="file" multiple @change="handleFiles")
+      input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
       ul
         li(v-for="image in images")
@@ -13,7 +13,11 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 
       img(v-if="previewImage" :src="previewImage")
 
-      input(id="image-files-input" type="file" multiple @change="handleFiles")
+      input(id="image-files-input" type="file" multiple @change="handleFileInput")
+
+
+  button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Image Library')")
+    span(aria-hidden="true") &times;
 </template>
 
 <script>
@@ -37,13 +41,15 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
         })
       },
 
-      getFiles() {
-        return $('#image-files-input')[0].files
+      handleFileInput(changeEvent) {
+        // Extract files from a file input
+        let files = changeEvent.target.files
+        this.$store.dispatch('importImageFiles', files)
       },
 
-      handleFiles() {
-        let files = this.getFiles()
-
+      handleFileDragAndDrop(dropEvent) {
+        // Extract files from a drag-and-drop event
+        let files = dropEvent.dataTransfer.files
         this.$store.dispatch('importImageFiles', files)
       }
     }
