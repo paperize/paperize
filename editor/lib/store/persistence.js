@@ -6,7 +6,14 @@
 
 
 let pouchPersistence = {
-  initializeAndWatchStore() { console.log("No persistence layer."); }
+  initializeAndWatchStore(store) {
+    console.log("No persistence layer.")
+    store.subscribe(({ type }, state) => {
+      if(type === "become") {
+        store.dispatch("setStoreReady")
+      }
+    })
+  }
 }
 // Any environment except Cypress, load persistence layer
 if(process.env["NODE_ENV"] !== 'test' ||
