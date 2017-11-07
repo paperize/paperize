@@ -32,6 +32,7 @@ module.exports = {
     ])
   ],
   module: {
+    noParse: /\/file-api\//,
     loaders: [
       {
         test: /\.js$/,
