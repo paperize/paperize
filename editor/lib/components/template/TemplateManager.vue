@@ -17,11 +17,11 @@
           a(@click="nextItem") &gt;&gt;
 
       .card
-        .card-section(v-for="property in currentItem")
-          strong {{ property.key }}:
-          |  {{ property.value }}
+        //- .card-section(v-for="property in currentItem")
+        //-   strong {{ property.key }}:
+        //-   |  {{ property.value }}
 
-      iframe(:src="pdfBlob" height="300")
+        iframe(:src="pdfBlob")
 
       ul.menu.horizontal
         li
@@ -38,6 +38,7 @@
   import _ from 'lodash'
   import Promise from 'bluebird'
   import jsPDF from 'jspdf'
+  import persistence from '../../store/pouch_persistence'
 
   export default {
     props: ["component"],
@@ -97,23 +98,25 @@
           doc.deletePage(1)
           doc.addPage(2.5, 3.5)
 
-          let left = .25, top = 0
+          let left = .20, top = 0
           Promise.each(this.currentItem, (property) => {
-            top += .25
+            top += .20
             if(property.key == "Image") {
-              return this.toDataURL(property.value)
+              // return this.toDataURL(property.value)
+              return this.fetchDataByName(property.value)
 
               .then((imageDataURI) => {
                 return new Promise((resolve, reject) => {
                   let image = new Image()
                   image.onload = function() {
-                    doc.addImage(image, 'JPEG', left, top, 2, 2)
+                    doc.addImage(image, 'PNG', left, top, 2, 2)
                     resolve()
                   }
                   image.src = imageDataURI
                 })
               })
             } else {
+              doc.setFontSize(10)
               doc.text(`${property.key}: ${property.value}`, left, top)
             }
           }).then(() => {
@@ -122,15 +125,22 @@
         })
       },
 
+      fetchDataByName(name) {
+        let id = _.find(this.$store.state.assets.images, { name }).id
+        if(id) {
+          return persistence.db.get(id).then((asset) => asset.data)
+        }
+      },
+
       toDataURL(url) {
         return fetch(url)
 
         .then((response)=> {
-          return response.blob();
+          return response.blob()
         })
 
         .then(blob=> {
-          return URL.createObjectURL(blob);
+          return URL.createObjectURL(blob)
         })
       }
     }
