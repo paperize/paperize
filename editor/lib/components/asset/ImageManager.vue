@@ -4,7 +4,10 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
     .small-12.cell
       h1 Image Library
 
-    .small-12.cell
+    .small-12.cell(v-if="showImageSpinner")
+      spinner(message="Importing images...")
+
+    .small-12.cell(v-else)
       input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
       ul
@@ -25,10 +28,15 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
   import { each } from 'lodash'
   import persistence from '../../store/pouch_persistence'
 
+  import spinner from 'vue-simple-spinner'
+
   export default {
+    components: { spinner },
+
     data() {
       return {
-        previewImage: null
+        previewImage: null,
+        showImageSpinner: false
       }
     },
 
@@ -44,13 +52,19 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
       handleFileInput(changeEvent) {
         // Extract files from a file input
         let files = changeEvent.target.files
-        this.$store.dispatch('importImageFiles', files)
+        this.showImageSpinner = true
+        this.$store.dispatch('importImageFiles', files).finally(() => {
+          this.showImageSpinner = false
+        })
       },
 
       handleFileDragAndDrop(dropEvent) {
         // Extract files from a drag-and-drop event
         let files = dropEvent.dataTransfer.files
-        this.$store.dispatch('importImageFiles', files)
+        this.showImageSpinner = true
+        this.$store.dispatch('importImageFiles', files).finally(() => {
+          this.showImageSpinner = false
+        })
       }
     }
   }

@@ -20,7 +20,7 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
             a(@click="importSource(source)" :title="source.id")
               | {{ sourceImportLabel(source) }}
 
-    button.close-button(aria-label="Close modal" type="button" @click="closeModal")
+    button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('source-explorer')")
       span(aria-hidden="true") &times;
 </template>
 
@@ -40,12 +40,7 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
         let label = source.name
         label += this.$store.getters.sourceExists(source) ? " (Refresh)" : " (Add)"
         return label
-      },
-
-      closeModal() {
-        this.$modal.hide("source-explorer")
       }
-
     }
   }
 </script>
