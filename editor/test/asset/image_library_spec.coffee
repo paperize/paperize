@@ -3,7 +3,7 @@ import store from '../../lib/store'
 import persistence from '../../lib/store/pouch_persistence'
 persistence.openDatabase('test-database')
 
-describe.only 'Image library', ->
+describe 'Image library', ->
   context 'handles file uploads', ->
     it "takes a FileList, reads files, inserts into pouch", ->
       # Grab an actual file from the filesystem
