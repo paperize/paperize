@@ -16,7 +16,7 @@ const TransformsModule = {
     },
 
     activeTransforms: (state, getters) => {
-      return getters.transforms(getters.activeComponent)
+      return getters.activeComponent && getters.transforms(getters.activeComponent)
     }
   }
 }
