@@ -1,12 +1,15 @@
+import Promise from 'bluebird'
 import persistence from '../store/pouch_persistence'
 
 const api = {
   getImage(imageId) {
-    return persistence.db.get(imageId)
+    return Promise.try(() => { return persistence.db.get(imageId) })
   },
 
   putImage(imageAsset) {
-    return persistence.db.put(imageAsset)
+    return Promise.try(() => {
+      return persistence.db.put(imageAsset)
+    })
   }
 }
 

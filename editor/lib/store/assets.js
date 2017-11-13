@@ -45,13 +45,19 @@ const AssetsModule = {
             reader.readAsDataURL(file)
           })
 
-          .then((asset) => {
+          .tap((asset) => {
             return assetStore.putImage(asset)
 
+            // Successfully stored, put an entry in the index
             .then((response) => {
               commit('addImageReference', { name: asset.name, id: asset._id })
-              return asset
+              return null
             })
+          })
+
+          // Failed to store, say something
+          .catch({ status: 409 }, (error) => {
+            console.log(`Failed to upload "${file.name}": This asset is already in the store!`)
           })
         })
       .value()

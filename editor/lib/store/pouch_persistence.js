@@ -27,7 +27,6 @@ let api = {
     if(idToken) {
       store.dispatch("become", { idToken })
     }
-
   },
 
   getLocalStorage() {
