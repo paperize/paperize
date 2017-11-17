@@ -18,7 +18,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
             th Preview
         tbody
           tr(v-for="image in images")
-            td(v-if="editing[image.id]")
+            td(v-if="editing == image.id")
               .button.tiny(@click="stopEditing")
                 = "Accept"
             td(v-else)
@@ -26,8 +26,8 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
                 = "Edit "
                 i.fa.fa-pencil.fa-fw
 
-            td(v-if="editing[image.id]")
-              input(v-model="image.name")
+            td(v-if="editing == image.id")
+              inline-image-editor(:image="image" @next="editNextImage")
             td(v-else)
               a(:title="image.id")  {{ image.name }}
 
@@ -42,49 +42,49 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 </template>
 
 <script>
+  import { find, findIndex } from 'lodash'
   import { mapGetters } from 'vuex'
   import Promise from 'bluebird'
   import assetStore from '../../services/asset_store'
 
   import spinner from 'vue-simple-spinner'
+  import InlineImageEditor from './InlineImageEditor.vue'
 
   export default {
-    components: { spinner },
+    components: {
+      spinner,
+      'inline-image-editor': InlineImageEditor
+    },
 
     data() {
       return {
         showImageSpinner: false,
-        editing: {}
+        editing: null
       }
     },
 
     computed: {
       ...mapGetters(['images']),
-
-      // imageSources() {
-      //   Promise.map(this.images, (image) => {
-      //     return assetStore.getImage(image.id).then((imageAsset) => {
-      //       this.imageSourcesData[image.id] = imageAsset.data
-      //     })
-      //   })
-      //
-      //   return this.imageSourcesData
-      // }
     },
 
     methods: {
-      // preview(image) {
-      //   assetStore.getImage(image.id).then((imageAsset) => {
-      //     this.previewImage = imageAsset.data
-      //   })
-      // },
-
       editImage(image) {
-        this.editing = {}
-        this.editing[image.id] = true
+        this.editing = image.id
       },
 
-      stopEditing() { this.editing = {} },
+      editNextImage() {
+        // TODO: or previous image by checking for shift modifier
+        let currentImageIndex = findIndex(this.images, find(this.images, { id: this.editing }))
+        let nextImage = this.images[currentImageIndex+1]
+
+        if(nextImage) {
+          this.editImage(nextImage)
+        } else {
+          this.stopEditing()
+        }
+      },
+
+      stopEditing() { this.editing = null },
 
       handleFileInput(changeEvent) {
         // Extract files from a file input

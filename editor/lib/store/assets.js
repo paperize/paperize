@@ -32,6 +32,10 @@ const AssetsModule = {
   mutations: {
     addImageReference(state, image) {
       state.images.push(image)
+    },
+
+    updateImageName(state, { image, name }) {
+      image.name = name
     }
   },
 
