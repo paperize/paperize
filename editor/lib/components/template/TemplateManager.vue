@@ -36,9 +36,7 @@
 
 <script>
   import _ from 'lodash'
-  import Promise from 'bluebird'
-  import jsPDF from 'jspdf'
-  import persistence from '../../store/pouch_persistence'
+  import pdfRenderer from './template_examples'
 
   export default {
     props: ["component"],
@@ -93,54 +91,12 @@
       },
 
       calculatePDFBlob() {
-        return new Promise((resolve, reject) => {
-          let doc = new jsPDF({ unit: 'in' })
-          doc.deletePage(1)
-          doc.addPage(2.5, 3.5)
+        let game = this.$store.getters.activeGame
+        let component = this.$store.getters.activeComponent
+        let item = this.currentItem
 
-          let left = .20, top = 0
-          Promise.each(this.currentItem, (property) => {
-            top += .20
-            if(property.key == "Image") {
-              // return this.toDataURL(property.value)
-              return this.fetchDataByName(property.value)
-
-              .then((imageDataURI) => {
-                return new Promise((resolve, reject) => {
-                  let image = new Image()
-                  image.onload = function() {
-                    doc.addImage(image, 'PNG', left, top, 2, 2)
-                    resolve()
-                  }
-                  image.src = imageDataURI
-                })
-              })
-            } else {
-              doc.setFontSize(10)
-              doc.text(`${property.key}: ${property.value}`, left, top)
-            }
-          }).then(() => {
-            this.pdfBlob = doc.output('bloburi')
-          })
-        })
-      },
-
-      fetchDataByName(name) {
-        let id = _.find(this.$store.state.assets.images, { name }).id
-        if(id) {
-          return persistence.db.get(id).then((asset) => asset.data)
-        }
-      },
-
-      toDataURL(url) {
-        return fetch(url)
-
-        .then((response)=> {
-          return response.blob()
-        })
-
-        .then(blob=> {
-          return URL.createObjectURL(blob)
+        pdfRenderer.renderItemToPdf(game, component, item).then((pdfData) => {
+          this.pdfBlob = pdfData
         })
       }
     }
