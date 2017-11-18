@@ -1,4 +1,3 @@
-import { find } from 'lodash'
 import Promise from 'bluebird'
 import jsPDF from 'jspdf'
 import store from '../../store'
@@ -96,7 +95,6 @@ const api = {
               let image = new Image()
               image.onload = function() {
                 doc.addImage(image, 'PNG', left, top, 2, 2)
-                console.log('image got added')
                 resolve()
               }
               image.src = imageDataURI
