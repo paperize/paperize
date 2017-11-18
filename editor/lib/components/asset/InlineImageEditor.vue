@@ -1,5 +1,5 @@
 <template lang="pug">
-  input(v-model="imageName" type="text" @keydown.tab.stop.prevent="$emit('next')")
+  input(v-model="imageName" type="text" @keydown.shift.tab.stop.prevent="$emit('previous')" @keydown.tab.exact.stop.prevent="$emit('next')")
 </template>
 
 <script>

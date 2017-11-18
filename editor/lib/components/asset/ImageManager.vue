@@ -27,9 +27,9 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
                 i.fa.fa-pencil.fa-fw
 
             td(v-if="editing == image.id")
-              inline-image-editor(:image="image" @next="editNextImage")
+              inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
             td(v-else)
-              a(:title="image.id")  {{ image.name }}
+              a(:title="image.id" @click="editImage(image)")  {{ image.name }}
 
             td
               img(src="//fillmurray.com/80/80")
@@ -72,10 +72,10 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
         this.editing = image.id
       },
 
-      editNextImage() {
-        // TODO: or previous image by checking for shift modifier
+      editNextImage(next) {
         let currentImageIndex = findIndex(this.images, find(this.images, { id: this.editing }))
-        let nextImage = this.images[currentImageIndex+1]
+        let nextImageIndex = currentImageIndex + (next ? 1 : -1)
+        let nextImage = this.images[nextImageIndex]
 
         if(nextImage) {
           this.editImage(nextImage)
