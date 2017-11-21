@@ -16,6 +16,14 @@ const ComponentsModule = {
       }
 
       return foundComponent
+    },
+
+    getComponentItems: (state, getters) => component => {
+      if(!component.source) {
+        return []
+      } else {
+        return getters.getSourceItems(component.source)
+      }
     }
   },
 

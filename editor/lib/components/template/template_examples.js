@@ -3,12 +3,26 @@ import jsPDF from 'jspdf'
 import store from '../../store'
 
 // To get image data from our local store
-let fetchDataByName = function(name) {
-  return store.getters.findImageByName(name).then((asset) => asset.data)
+const fetchDataByName = function(name) {
+  return store.getters.findImageByName(name).then(asset => asset.data)
+}
+
+const fetchImageByName = function(name) {
+  return fetchDataByName(name)
+
+  .then((imageDataURI) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image()
+      image.onload = function() {
+        resolve(image)
+      }
+      image.src = imageDataURI
+    })
+  })
 }
 
 // To get CORS-enabled images from the web
-let toDataURL = function(url) {
+const toDataURL = function(url) {
   return fetch(url)
 
   .then(response => {
@@ -83,42 +97,10 @@ const api = {
   },
 
   renderItem(doc, game, component, item) {
-    return Promise.try(() => {
-      let left = .20, top = 0
-      return Promise.each(item, (property) => {
-        top += .20
-        if(property.key == "Image") {
-          return fetchDataByName(property.value)
-
-          .then((imageDataURI) => {
-            return new Promise((resolve, reject) => {
-              let image = new Image()
-              image.onload = function() {
-                doc.addImage(image, 'PNG', left, top, 2, 2)
-                resolve()
-              }
-              image.src = imageDataURI
-            })
-          })
-        } else {
-          doc.setFontSize(10)
-          doc.text(`${property.key}: ${property.value}`, left, top)
-
-          return null
-        }
-      })
-    })
-
-    // renderBackgroundTemplates()
-    // renderPerPropertyTemplates()
-    // renderForegroundTemplates()
-
-    // Do whatever you want here:
-    // - write to the pdf with the doc object
-    // - doc, game, items, item all in scope, all useful
-    // - item is what you're currently drawing
-    // - items is the whole collection item is a part of
-    // - game is the whole game
+    // get transforms for this component
+    const transforms = store.getters.getComponentTransforms(component)
+    // render each transform upon this item
+    return Promise.each(transforms, transform => transform.renderFunction(doc, game, component, item))
   },
 
   renderBackgroundTemplates() {

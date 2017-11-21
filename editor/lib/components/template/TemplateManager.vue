@@ -56,16 +56,7 @@
 
     computed: {
       items() {
-        if(!this.source) { return [] }
-        let propertyNames = this.source.data.values[0]
-        return _(this.source.data.values).slice(1).map((row) => {
-          let properties = []
-          for(let i = 0; i < row.length; i++) {
-            properties.push({ key: propertyNames[i], value: row[i] })
-          }
-
-          return properties
-        }).value()
+        return this.$store.getters.getComponentItems(this.component)
       },
 
       totalItems() {
@@ -102,3 +93,9 @@
     }
   }
 </script>
+
+<style>
+  iframe {
+    min-height: 400px;
+  }
+</style>

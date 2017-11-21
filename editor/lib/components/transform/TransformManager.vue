@@ -6,11 +6,11 @@
 
   table(v-if="component")
     thead
-      th Transform Name
-      th Type
-    tr(v-for="transform in transforms(component)")
-      td {{ transform.name }}
-      td {{ transform.type }}
+      th Order
+      th (x, y), (w, h)
+    tr(v-for="transform in getComponentTransforms(component)")
+      td {{ transform.renderOrder }}
+      td {{ `(${transform.dimensions.x}, ${transform.dimensions.y}), (${transform.dimensions.w}, ${transform.dimensions.h})` }}
 
   p(v-else) Select a Source...
 </template>
@@ -22,7 +22,7 @@
     props: ["component"],
 
     computed: {
-      ...mapGetters(["transforms"])
+      ...mapGetters(["getComponentTransforms"])
     }
   }
 </script>
