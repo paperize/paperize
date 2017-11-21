@@ -4,11 +4,12 @@
     .small-1.cell
       a.unset-source(@click="unsetComponentSource({ component })") &times;
 
-    .small-9.cell
+    .small-10.cell
       h5.truncate "{{ activeSource.name }}"
 
-    .small-2.cell
-      a(@click="createOrUpdateSourceById(activeSource.id)") refresh
+    .small-1.cell
+      a(@click="createOrUpdateSourceById(activeSource.id)")
+        i.fa.fa-refresh
 
   .grid-x(v-else)
     .small-12
@@ -17,9 +18,11 @@
   div(v-if="component.source")
     table.source-properties
       thead
-        th Property Name
-      tr(v-for="property in sourceProperties(component.source)")
-        td.property-name(title="Property Name") {{ property }}
+        tr
+          th Property Name
+      tbody
+        tr(v-for="property in sourceProperties(component.source)")
+          td.property-name(title="Property Name") {{ property }}
 
 
   div(v-else)
@@ -47,18 +50,30 @@ import SourceExplorer from './SourceExplorer.vue'
 export default {
   props: ["component"],
 
-  computed: {
-    ...mapGetters(["sources", "activeSource", "sourceProperties", "activeSourcePropertyExamples"]),
-  },
-
-  methods: {
-    ...mapMutations(["unsetComponentSource", "deleteSource"]),
-    ...mapActions(["setComponentSource", "createOrUpdateSourceById"])
-  },
-
   components: {
     'source-paste-form': SourcePasteForm,
     'source-explorer': SourceExplorer
+  },
+
+  computed: {
+    ...mapGetters([
+      "sources",
+      "activeSource",
+      "sourceProperties",
+      "activeSourcePropertyExamples"
+    ]),
+  },
+
+  methods: {
+    ...mapMutations([
+      "unsetComponentSource",
+      "deleteSource"
+    ]),
+
+    ...mapActions([
+      "setComponentSource",
+      "createOrUpdateSourceById"
+    ])
   }
 }
 </script>

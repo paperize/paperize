@@ -6,11 +6,13 @@
 
   table(v-if="component")
     thead
-      th Order
-      th (x, y), (w, h)
-    tr(v-for="transform in getComponentTransforms(component)")
-      td {{ transform.renderOrder }}
-      td {{ `(${transform.dimensions.x}, ${transform.dimensions.y}), (${transform.dimensions.w}, ${transform.dimensions.h})` }}
+      tr
+        th Order
+        th (x, y), (w, h)
+    tbody
+      tr(v-for="transform in getComponentTransforms(component)")
+        td {{ transform.renderOrder }}
+        td {{ `(${transform.dimensions.x}, ${transform.dimensions.y}), (${transform.dimensions.w}, ${transform.dimensions.h})` }}
 
   p(v-else) Select a Source...
 </template>
