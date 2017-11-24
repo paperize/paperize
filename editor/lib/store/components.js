@@ -36,6 +36,10 @@ const ComponentsModule = {
       Object.assign(componentToUpdate, componentToCopy)
     },
 
+    updateComponentPageSize(state, { component, pageSize }) {
+      component.pageSize = pageSize
+    },
+
     deleteGameComponent(state, { game, component }) {
       game.components.splice(game.components.indexOf(component), 1)
     },

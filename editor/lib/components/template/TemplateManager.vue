@@ -7,7 +7,17 @@
     .small-11.cell
       h5.truncate "Raw Source Viewer"
 
-    .small-10.small-offset-1(v-if="component.source")
+    .small-10.small-offset-1.cell(v-if="component.source")
+      .grid-x.grid-margin-x
+        .small-2.cell
+          label Width:
+        .small-4.cell
+          input(type="text" v-model="componentPageWidth")
+        .small-2.cell
+          label Height:
+        .small-4.cell
+          input(type="text" v-model="componentPageHeight")
+
       ul.menu.horizontal
         li
           a(@click="previousItem") &lt;&lt;
@@ -55,6 +65,22 @@
     },
 
     computed: {
+      componentPageWidth: {
+        get() { return this.component.pageSize.w },
+        set(newWidth) {
+          const newPageSize = { w: newWidth, h: this.component.pageSize.h }
+          this.$store.commit("updateComponentPageSize", { component: this.component, pageSize: newPageSize })
+        }
+      },
+
+      componentPageHeight: {
+        get() { return this.component.pageSize.h },
+        set(newHeight) {
+          const newPageSize = { w: this.component.pageSize.w, h: newHeight }
+          this.$store.commit("updateComponentPageSize", { component: this.component, pageSize: newPageSize })
+        }
+      },
+
       items() {
         return this.$store.getters.getComponentItems(this.component)
       },

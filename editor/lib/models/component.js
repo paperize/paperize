@@ -4,7 +4,11 @@ import { process, withinXofY, around } from './factory'
 const DEFAULT_COMPONENT = {
   id:          "new",
   title:       "",
-  transforms:  []
+  transforms:  [],
+  pageSize: {
+    w: 2.5,
+    h: 3.5
+  }
 }
 
 const EX_DECK = {

@@ -85,7 +85,7 @@ const api = {
     // game or template knows page settings?
     // template.pageArguments?
     // doc.apply('addPage', template.pageArguments)
-    doc.addPage(2.5, 3.5)
+    doc.addPage(component.pageSize.w, component.pageSize.h)
   },
 
   renderItem(doc, game, component, item) {
