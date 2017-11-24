@@ -1,5 +1,4 @@
-import Vue from 'vue'
-
+import { map, max } from 'lodash'
 /*
  * Transform Fields:
  * - render order
@@ -15,30 +14,59 @@ import Vue from 'vue'
  * - scoped doc object
  */
 
-const TransformsModule = {
-  state: {
+const DEFAULT_RENDER_FUNCTION = function(doc, game, component, item) {
+  doc.setFontSize(10)
+  doc.text("" + item[0].key + ":" + item[0].value, this.dimensions.x, this.dimensions.y)
+}.toString()
 
-  },
+const TransformsModule = {
+  state: { },
 
   getters: {
     getComponentTransforms: (state, getters) => component => {
-      return getters.sourceProperties(component.source).map((property) => {
-        return {
-          renderOrder: 1,
-          dimensions: { x: .05, y: .05, w: 100, h: 20 },
-          renderFunction(doc, game, component, item) {
-            console.log(`render ${item[0]}`)
+      return component.transforms
+    },
 
-            doc.setFontSize(10)
-            doc.text(`${item[0].key}: ${item[0].value}`, this.dimensions.x, this.dimensions.y)
-
-          }
-        }
-      })
+    getComponentNextTransformOrder: (state, getters) => component => {
+      let transforms = getters.getComponentTransforms(component)
+      return (max(map(transforms, "renderOrder")) + 1) || 1
     },
 
     activeTransforms: (state, getters) => {
       return getters.activeComponent && getters.getComponentTransforms(getters.activeComponent)
+    }
+  },
+
+  mutations: {
+    addTransform(state, { component, transform }) {
+      if(!component.transforms) {
+        component.transforms = []
+      }
+
+      component.transforms.push(transform)
+    },
+
+    updateTransformRenderFunction(state, { transform, renderFunction }) {
+      transform.renderFunction = renderFunction
+    }
+  },
+
+  actions: {
+    addTransform({ commit, getters }, component) {
+      const nextOrder = getters.getComponentNextTransformOrder(component)
+
+      let transform = {
+        renderOrder: nextOrder,
+        dimensions: { x: 1, y: 1, w: 1, h: 1 },
+        renderFunction: DEFAULT_RENDER_FUNCTION
+      }
+
+      commit("addTransform", { component, transform })
+    },
+
+    updateTransformRenderFunction({ commit }, { transform, renderFunction }) {
+      // TODO: validate/compile/test/check the function
+      commit("updateTransformRenderFunction", { transform, renderFunction })
     }
   }
 }

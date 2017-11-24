@@ -3,7 +3,8 @@ import { process, withinXofY, around } from './factory'
 
 const DEFAULT_COMPONENT = {
   id:          "new",
-  title:       ""
+  title:       "",
+  transforms:  []
 }
 
 const EX_DECK = {

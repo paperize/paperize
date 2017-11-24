@@ -58,7 +58,6 @@ const api = {
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-
     const components = this.sortComponents(game)
 
     return Promise.each(components, (component) => {
@@ -89,18 +88,17 @@ const api = {
     doc.addPage(2.5, 3.5)
   },
 
-  sortGameItems(game) {
-    // sort game items before iteration, affects printing order
-    // let items = game.items.sortBy('order')
-    // or default to simple iteration
-    return game.items
-  },
-
   renderItem(doc, game, component, item) {
     // get transforms for this component
     const transforms = store.getters.getComponentTransforms(component)
     // render each transform upon this item
-    return Promise.each(transforms, transform => transform.renderFunction(doc, game, component, item))
+    console.log(`Rendering ${transforms.length} layers...`)
+    return Promise.each(transforms, transform => {
+      let actualFunction
+      // Let the fires of hell erupt
+      eval("actualFunction = " + transform.renderFunction)
+      return actualFunction.call(transform, doc, game, component, item)
+    })
   },
 
   renderBackgroundTemplates() {
