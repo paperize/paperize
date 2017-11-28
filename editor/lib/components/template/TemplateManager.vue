@@ -59,6 +59,14 @@
     },
 
     watch: {
+      componentPageWidth() {
+        this.calculatePDFBlob()
+      },
+
+      componentPageHeight() {
+        this.calculatePDFBlob()
+      },
+
       currentItem() {
         this.calculatePDFBlob()
       }
