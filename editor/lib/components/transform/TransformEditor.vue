@@ -1,11 +1,11 @@
 <template lang="pug">
-modal(:name="`Transform ${transform.renderOrder}`" width="60%" height="80%")
+modal(:name="`Transform ${transform.renderOrder}`" width="60%" height="80%" @opened="enableAceEditor")
   .grid-x.grid-padding-x
     .small-12.cell
       h2 Editing Transform {{ transform.renderOrder }}
 
       label(for="render-function-editor") Render Function
-      textarea(id="render-function-editor" v-model="transformRenderFunction")
+      #render-function-editor(ref="renderFunctionEditor") {{ transformRenderFunction }}
 
       a.button.small(@click="updateTransform()") Update Transform
 </template>
@@ -24,13 +24,36 @@ modal(:name="`Transform ${transform.renderOrder}`" width="60%" height="80%")
           this.$store.dispatch('updateTransformRenderFunction', { transform: this.transform, renderFunction: newRenderFunction })
         }, 1000)
       }
+    },
+
+    methods: {
+      enableAceEditor() {
+        setTimeout(() => {
+          let editorEl = this.$refs["renderFunctionEditor"]
+          ace.config.set('basePath', '/js/vendor');
+          let editor = ace.edit(editorEl)
+          editor.setTheme("ace/theme/pastel_on_dark")
+          editor.getSession().setMode("ace/mode/javascript")
+          editor.getSession().on('change', (e) => {
+            this.transformRenderFunction = editor.getValue()
+          })
+        }, 100)
+      }
     }
   }
 </script>
 
 <style scoped>
-  textarea {
+  #render-function-editor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  /*textarea {
     font-family: monospace;
     height: 100%;
-  }
+  }*/
 </style>
