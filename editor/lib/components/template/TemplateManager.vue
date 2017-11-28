@@ -1,63 +1,63 @@
 <template lang="pug">
 #template-manager
-  .grid-x
+  .grid-x.grid-margin-x
     .small-12.cell
       h5.truncate PDF Preview
 
-    .small-10.small-offset-1.cell(v-if="component.source")
-      .grid-x.grid-margin-x
-        .small-12.cell
-          ul.menu.horizontal
-            li Page:
-            li
-              a(@click="setPageMode('preset')") Preset
-            li
-              a(@click="setPageMode('custom')") Custom
+    template(v-if="component.source")
+      .small-12.cell
+        ul.menu.horizontal
+          li Page:
+          li
+            a(@click="setPageMode('preset')") Preset
+          li
+            a(@click="setPageMode('custom')") Custom
 
-        template(v-if="pageMode === 'preset'")
-          .small-5.cell
-            label Format:
-            select(v-model="componentPageWidth")
-              option(v-for="pageFormat in pageFormats" :value="pageFormat")
-                | {{ capitalize(pageFormat.replace("-", " ")) }}
+      template(v-if="pageMode === 'preset'")
+        .small-5.cell
+          label Format:
+          select(v-model="componentPageWidth")
+            option(v-for="pageFormat in pageFormats" :value="pageFormat")
+              | {{ capitalize(pageFormat.replace("-", " ")) }}
 
-          .small-7.cell
-            label Orientation:
-            select(v-model="componentPageHeight")
-              option(value="portrait") Portrait
-              option(value="landscape") Landscape
+        .small-7.cell
+          label Orientation:
+          select(v-model="componentPageHeight")
+            option(value="portrait") Portrait
+            option(value="landscape") Landscape
 
-        template(v-else-if="pageMode === 'custom'")
-          .small-6.cell
-            label Width:
-            input(type="number" v-model="componentPageWidth")
+      template(v-else-if="pageMode === 'custom'")
+        .small-6.cell
+          label Width:
+          input(type="number" v-model="componentPageWidth")
 
-          .small-6.cell
-            label Height:
-            input(type="number" v-model="componentPageHeight")
+        .small-6.cell
+          label Height:
+          input(type="number" v-model="componentPageHeight")
 
-      hr
+      .small-12.cell
+        hr
 
-      ul.menu.horizontal
-        li
-          a(@click="previousItem") &lt;&lt;
-        li
-          | Item {{ currentItemIndex }} / {{ totalItems }}
-        li
-          a(@click="nextItem") &gt;&gt;
-        li
-          a.button.tiny(@click="$modal.show('Template Preview')") Show
+        ul.menu.horizontal
+          li
+            a(@click="previousItem") &lt;&lt;
+          li
+            | Item {{ currentItemIndex }} / {{ totalItems }}
+          li
+            a(@click="nextItem") &gt;&gt;
+          li
+            a.button.tiny(@click="$modal.show('Template Preview')") Show
 
-      .card
-        template-preview.inline-preview(:game="activeGame" :component="activeComponent" :item="currentItem")
+        .card
+          template-preview.inline-preview(:game="activeGame" :component="activeComponent" :item="currentItem")
 
-      ul.menu.horizontal
-        li
-          a(@click="previousItem") &lt;&lt;
-        li
-          | Item {{ currentItemIndex }} / {{ totalItems }}
-        li
-          a(@click="nextItem") &gt;&gt;
+        ul.menu.horizontal
+          li
+            a(@click="previousItem") &lt;&lt;
+          li
+            | Item {{ currentItemIndex }} / {{ totalItems }}
+          li
+            a(@click="nextItem") &gt;&gt;
 
       modal(name="Template Preview" width="90%" height="90%")
         template-preview.modal-preview(:game="activeGame" :component="activeComponent" :item="currentItem")

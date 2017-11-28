@@ -3,14 +3,14 @@ div
   h4 Editing: {{ component.title || "[component title not set]" }}
   hr
 
-  .grid-x
-    .small-4
+  .grid-x.grid-margin-x
+    .small-4.cell
       source-manager(:component="component")
 
-    .small-4
+    .small-4.cell
       transform-manager(:component="component")
 
-    .small-4
+    .small-4.cell
       template-manager(:component="component")
 </template>
 
