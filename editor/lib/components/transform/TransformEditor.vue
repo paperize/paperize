@@ -1,22 +1,25 @@
 <template lang="pug">
-modal(:name="`Transform ${transform.renderOrder}`" width="60%" height="80%" @opened="enableAceEditor")
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Editing Transform {{ transform.renderOrder }}
-
-      label(for="render-function-editor") Render Function
-      #render-function-editor(ref="renderFunctionEditor") {{ transformRenderFunction }}
-
-      a.button.small(@click="updateTransform()") Update Transform
+modal(:name="`Transform ${transform.renderOrder}`" width="95%" height="95%" @opened="enableAceEditor")
+  #render-function-editor(ref="renderFunctionEditor") {{ transformRenderFunction }}
+  template-preview#side-by-side-preview(:game="activeGame" :component="activeComponent" :item="getComponentItems(activeComponent)[0]")
 </template>
 
 <script>
   import { debounce } from 'lodash'
+  import { mapGetters } from 'vuex'
+
+  import TemplatePreview from '../template/TemplatePreview.vue'
 
   export default {
     props: ["transform"],
 
+    components: {
+      "template-preview": TemplatePreview
+    },
+
     computed: {
+      ...mapGetters(["activeGame", "activeComponent", "getComponentItems"]),
+
       transformRenderFunction: {
         get() { return this.transform.renderFunction },
 
@@ -47,13 +50,18 @@ modal(:name="`Transform ${transform.renderOrder}`" width="60%" height="80%" @ope
   #render-function-editor {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 50%;
     bottom: 0;
     left: 0;
   }
 
-  /*textarea {
-    font-family: monospace;
+  #side-by-side-preview {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 50%;
+    width: 50%;
     height: 100%;
-  }*/
+  }
 </style>

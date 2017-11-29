@@ -14,10 +14,9 @@ import { map, max } from 'lodash'
  * - scoped doc object
  */
 
-const DEFAULT_RENDER_FUNCTION = function(doc, game, component, item) {
-  doc.setFontSize(10)
-  doc.text("" + item[0].key + ":" + item[0].value, this.dimensions.x, this.dimensions.y)
-}.toString()
+const DEFAULT_RENDER_FUNCTION = `
+// function(doc, helpers, dimensions, game, component, item) {
+`
 
 const TransformsModule = {
   state: { },

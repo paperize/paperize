@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import jsPDF from 'jspdf'
 import store from '../../store'
+import _ from 'lodash'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
@@ -58,17 +59,17 @@ const api = {
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-    const components = this.sortComponents(game)
+    const components = game.components // this.sortComponents(game)
 
     return Promise.each(components, (component) => {
-      const items = sortItems(component)
+      const items = store.getters.getComponentItems(component)
 
       return Promise.each(items, (item) => {
-        addPage(doc, template, game)
-        return this.renderItem(doc, template, item, items, game)
+        this.addPage(doc, component)
+        return this.renderItem(doc, game, component, item)
       })
     }).then(() => {
-      return doc.output('bloburi')
+      return doc.save("game.pdf") //output('bloburi')
     })
   },
 
@@ -93,11 +94,27 @@ const api = {
     const transforms = store.getters.getComponentTransforms(component)
     // render each transform upon this item
     console.log(`Rendering ${transforms.length} layers...`)
+
+
+    let helpers = {
+      findProperty(key) {
+        return _.find(item, { key }).value
+      },
+
+      text(fontSize, text, x, y) {
+        doc.setFontSize(fontSize)
+        doc.text(text, x, y)
+      }
+    }
+
     return Promise.each(transforms, transform => {
       let actualFunction
       // Let the fires of hell erupt
-      eval("actualFunction = " + transform.renderFunction)
-      return actualFunction.call(transform, doc, game, component, item)
+      eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
+        ${transform.renderFunction}
+      }`)
+
+      return actualFunction(doc, helpers, transform.dimensions, game, component, item)
     })
   },
 
