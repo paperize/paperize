@@ -31,8 +31,8 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
             td(v-else)
               a(:title="image.id" @click="editImage(image)")  {{ image.name }}
 
-            td
-              img(src="//fillmurray.com/80/80")
+            td.preview
+              local-image(:imageId="image.id")
 
       input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
@@ -44,16 +44,16 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 <script>
   import { find, findIndex } from 'lodash'
   import { mapGetters } from 'vuex'
-  import Promise from 'bluebird'
-  import assetStore from '../../services/asset_store'
 
   import spinner from 'vue-simple-spinner'
   import InlineImageEditor from './InlineImageEditor.vue'
+  import LocalImage from './LocalImage.vue'
 
   export default {
     components: {
       spinner,
-      'inline-image-editor': InlineImageEditor
+      'inline-image-editor': InlineImageEditor,
+      'local-image': LocalImage
     },
 
     data() {
@@ -106,3 +106,10 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
     }
   }
 </script>
+
+<style>
+  .preview img {
+    max-width: 50px;
+    max-height: 50px;
+  }
+</style>
