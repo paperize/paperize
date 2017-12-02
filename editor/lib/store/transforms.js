@@ -1,4 +1,4 @@
-import { map, max } from 'lodash'
+import { map, max, forEach } from 'lodash'
 /*
  * Transform Fields:
  * - render order
@@ -47,6 +47,18 @@ const TransformsModule = {
 
     updateTransformRenderFunction(state, { transform, renderFunction }) {
       transform.renderFunction = renderFunction
+    },
+
+    deleteTransform(state, { component, transform }) {
+      const removedOrder = transform.renderOrder
+      // remove the transform in question
+      component.transforms.splice(component.transforms.indexOf(transform), 1)
+      // decrement the render order for transforms higher than the removed one
+      forEach(component.transforms, (transform) => {
+        if(transform.renderOrder > removedOrder) {
+          transform.renderOrder -= 1
+        }
+      })
     }
   },
 
@@ -66,6 +78,10 @@ const TransformsModule = {
     updateTransformRenderFunction({ commit }, { transform, renderFunction }) {
       // TODO: validate/compile/test/check the function
       commit("updateTransformRenderFunction", { transform, renderFunction })
+    },
+
+    deleteTransform({ commit }, { component, transform }) {
+      commit("deleteTransform", { component, transform })
     }
   }
 }

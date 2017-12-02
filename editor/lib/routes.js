@@ -84,11 +84,13 @@ router.beforeEach((to, from, next) => {
 })
 
 // Auto-route on certain Store mutations
-store.subscribe(({ type }, state) => {
+store.subscribe(({ type, payload }, state) => {
   if(type === 'become' && router.currentRoute.name === 'splash') {
     router.push({ name: 'gameManager' })
   } else if(type === 'logout') {
     router.push({ name: 'splash' })
+  } else if(type === 'createGameComponent') {
+    router.push({ name: 'componentEditor', params: { gameId: payload.game.id, componentId: payload.component.id } })
   }
 })
 

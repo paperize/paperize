@@ -11,18 +11,19 @@
   table(v-if="component")
     thead
       tr
-        th Ord
-        th Dims
+        th Order
+        th Type
         th
     tbody
       tr(v-for="transform in getComponentTransforms(component)")
         td {{ transform.renderOrder }}
-        td {{ `(${transform.dimensions.x}, ${transform.dimensions.y}), (${transform.dimensions.w}, ${transform.dimensions.h})` }}
+        td Code
         td
           a(@click="$modal.show(`Transform ${transform.renderOrder}`)")
-            i.fa.fa-code
-            = " "
             i.fa.fa-pencil
+          = " "
+          a(@click="deleteTransform({ component, transform })")
+            i.fa.fa-remove
 
           transform-editor(:transform="transform")
   p(v-else) Select a Source...
@@ -42,6 +43,6 @@
 
     computed: mapGetters(["getComponentTransforms"]),
 
-    methods: mapActions(["addTransform"])
+    methods: mapActions(["addTransform", "deleteTransform"])
   }
 </script>

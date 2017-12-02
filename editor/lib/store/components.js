@@ -60,7 +60,6 @@ const ComponentsModule = {
         component.id = uuid()
       }
       commit("createGameComponent", { game, component })
-      commit("setActiveComponent", { component })
     },
 
     updateComponent({commit, rootGetters, getters}, { component }) {

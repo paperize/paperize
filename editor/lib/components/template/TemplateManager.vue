@@ -60,7 +60,7 @@
             a(@click="nextItem") &gt;&gt;
 
       modal(name="Template Preview" width="90%" height="90%")
-        template-preview.modal-preview(:game="activeGame" :component="activeComponent" :item="currentItem")
+        template-preview.modal-preview(:game="activeGame" :component="activeComponent" :item="getComponentItems(component)[currentItemIndex]")
 
     p(v-else) Select a Source...
 </template>
@@ -92,7 +92,7 @@
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent"]),
+      ...mapGetters(["activeGame", "activeComponent", "getComponentItems"]),
 
       componentPageWidth: {
         get() { return this.component.pageSize.w },
@@ -111,7 +111,7 @@
       },
 
       items() {
-        return this.$store.getters.getComponentItems(this.component)
+        return this.getComponentItems(this.component)
       },
 
       totalItems() {

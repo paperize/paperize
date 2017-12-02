@@ -19,7 +19,7 @@
     table.source-properties
       thead
         tr
-          th Property Name
+          th Properties
       tbody
         tr(v-for="property in sourceProperties(component.source)")
           td.property-name(title="Property Name") {{ property }}
@@ -85,11 +85,6 @@ export default {
 
   .source-properties li {
     border-bottom: 2px solid gray;
-  }
-
-  .property-name {
-    font-size: 1em;
-    font-weight: bold;
   }
 
   .property-examples {
