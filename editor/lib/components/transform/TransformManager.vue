@@ -1,11 +1,11 @@
 <template lang="pug">
 #transform-manager
   .grid-x
-    .small-10
+    .small-10.cell
       h5.truncate Transforms
 
-    .small-2
-      a.button.tiny.success(@click="addTransform(component)")
+    .small-2.cell
+      a.success(@click="addTransform(component)")
         i.fa.fa-plus
 
   table(v-if="component")

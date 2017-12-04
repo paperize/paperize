@@ -1,21 +1,22 @@
 <template lang="pug">
 #source-manager
-  .grid-x(v-if="activeSource")
-    .small-1.cell
-      a.unset-source(@click="unsetComponentSource({ component })") &times;
+  .grid-x
+    template(v-if="activeSource")
+      .small-1.cell
+        a.unset-source(@click="unsetComponentSource({ component })") &times;
 
-    .small-10.cell
-      h5.truncate "{{ activeSource.name }}"
+      .small-10.cell
+        h5.truncate "{{ activeSource.name }}"
 
-    .small-1.cell
-      a(@click="createOrUpdateSourceById(activeSource.id)")
-        i.fa.fa-refresh
+      .small-1.cell
+        a(@click="createOrUpdateSourceById(activeSource.id)")
+          i.fa.fa-refresh
 
-  .grid-x(v-else)
-    .small-12
-      h5.truncate Select a Source:
+    template(v-else)
+      .small-12
+        h5.truncate Select a Source:
 
-  div(v-if="component.source")
+  template(v-if="component.source")
     table.source-properties
       thead
         tr
@@ -24,11 +25,10 @@
         tr(v-for="property in sourceProperties(component.source)")
           td.property-name(title="Property Name") {{ property }}
 
-
-  div(v-else)
-    p(v-if="sources.length == 0")
-      | You have no sources.
-    div(v-else)
+  template(v-else)
+    template(v-if="sources.length == 0")
+      p You have no sources.
+    template(v-else)
       ul
         li(v-for="source in sources")
           a.delete-source(@click="deleteSource({ source })") &times;
