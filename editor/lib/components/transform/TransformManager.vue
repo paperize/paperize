@@ -12,12 +12,14 @@
     thead
       tr
         th Order
+        th Name
         th Type
         th
     tbody
       tr(v-for="transform in getComponentTransforms(component)")
         td {{ transform.renderOrder }}
-        td Code
+        td {{ transform.name }}
+        td {{ transform.type }}
         td
           a(@click="$modal.show(`Transform ${transform.renderOrder}`)")
             i.fa.fa-pencil

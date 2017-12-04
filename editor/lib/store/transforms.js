@@ -14,6 +14,12 @@ import { map, max, forEach } from 'lodash'
  * - scoped doc object
  */
 
+const CODE = 'Code'
+const TEXT = 'Text'
+const IMAGE = 'Image'
+
+const TYPES = [ CODE, TEXT, IMAGE ]
+
 const DEFAULT_RENDER_FUNCTION = `
 // function(doc, helpers, dimensions, game, component, item) {
 `
@@ -67,8 +73,9 @@ const TransformsModule = {
       const nextOrder = getters.getComponentNextTransformOrder(component)
 
       let transform = {
+        name: `Trans: ${nextOrder}`,
+        type: CODE,
         renderOrder: nextOrder,
-        dimensions: { x: 1, y: 1, w: 1, h: 1 },
         renderFunction: DEFAULT_RENDER_FUNCTION
       }
 

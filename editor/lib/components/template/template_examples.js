@@ -98,7 +98,7 @@ const api = {
 
     let helpers = {
       findProperty(key) {
-        return _.find(item, { key }).value
+        return _.find(item, { key }).value || ""
       },
 
       text(fontSize, text, x, y) {
