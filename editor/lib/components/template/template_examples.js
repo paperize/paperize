@@ -45,17 +45,17 @@ const api = {
     })
   },
 
-  renderComponentToPdf(game, component) {
-    const doc = this.startNewDocument()
-    const items = this.sortItems(component)
-
-    return Promise.each(items, (item) => {
-      addPage(doc, template, game)
-      return this.renderItem(doc, template, item, items, game)
-    }).then(() => {
-      return doc.output('bloburi')
-    })
-  },
+  // renderComponentToPdf(game, component) {
+  //   const doc = this.startNewDocument()
+  //   const items = this.sortItems(component)
+  //
+  //   return Promise.each(items, (item) => {
+  //     addPage(doc, template, game)
+  //     return this.renderItem(doc, template, item, items, game)
+  //   }).then(() => {
+  //     return doc.output('bloburi')
+  //   })
+  // },
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
@@ -89,6 +89,10 @@ const api = {
     doc.addPage(component.pageSize.w, component.pageSize.h)
   },
 
+  restoreDocumentDefaults(doc) {
+    doc.setFontSize(16)
+  },
+
   renderItem(doc, game, component, item) {
     // get transforms for this component
     const transforms = store.getters.getComponentTransforms(component)
@@ -108,6 +112,7 @@ const api = {
     }
 
     return Promise.each(transforms, transform => {
+      this.restoreDocumentDefaults(doc)
       let actualFunction
       // Let the fires of hell erupt
       eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
