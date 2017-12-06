@@ -108,8 +108,16 @@ const api = {
       text(fontSize, text, x, y) {
         doc.setFontSize(fontSize)
         doc.text(text, x, y)
+      },
+
+      image(imageName, x, y) {
+        return fetchImageByName(imageName).then((image) => {
+          doc.addImage(image, x, y)
+        })
       }
     }
+
+    helpers.p = helpers.findProperty
 
     return Promise.each(transforms, transform => {
       this.restoreDocumentDefaults(doc)

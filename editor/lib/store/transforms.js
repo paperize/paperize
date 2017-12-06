@@ -55,6 +55,14 @@ const TransformsModule = {
       transform.renderFunction = renderFunction
     },
 
+    updateTransformName(state, { transform, name }) {
+      transform.name = name
+    },
+
+    setComponentTransforms(state, { component, transforms }) {
+      component.transforms = transforms
+    },
+
     deleteTransform(state, { component, transform }) {
       const removedOrder = transform.renderOrder
       // remove the transform in question
