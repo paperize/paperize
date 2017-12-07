@@ -6,7 +6,7 @@
       hr
 
       p
-        em Sign in above to get started playing with games and their components.
+        em Sign in above to create games, add components to them, connect a data source, and code up their PDF templates.
 
     .medium-1.cell
 
