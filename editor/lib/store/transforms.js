@@ -21,7 +21,21 @@ const IMAGE = 'Image'
 const TYPES = [ CODE, TEXT, IMAGE ]
 
 const DEFAULT_RENDER_FUNCTION = `
-// function(doc, helpers, dimensions, game, component, item) {
+// Common tasks, all measurements in inches
+// Official docs here: http://rawgit.com/MrRio/jsPDF/master/docs/
+
+// Fetch the "Strength" column for this Item from your data Source:
+// var strength = helpers.findProperty("Strength")
+
+// Set the font size to 12 points:
+// doc.fontSize(12)
+
+// Render "Text to render" an inch from the left and an inch from the top
+// doc.text("Text to render", 1, 1)
+
+// Insert the Image named "/my-game/my-image.jpg" at the top left corner
+// (must be last thing you do in a given Transform):
+// return helpers.image("/my-game/my-image.jpg", 0, 0)
 `
 
 const TransformsModule = {
