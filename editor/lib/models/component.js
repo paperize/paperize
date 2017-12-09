@@ -6,8 +6,8 @@ const DEFAULT_COMPONENT = {
   title:       "",
   transforms:  [],
   pageSize: {
-    w: 2.5,
-    h: 3.5
+    w: "a4",
+    h: "portrait"
   }
 }
 
