@@ -12,7 +12,7 @@ TARGET_BUCKET = 'beta.editor.paperize.io'
 
 # for each file in /build
 recursiveReaddir('./build').then (files) ->
-  # String the build dir from the path
+  # Strip the build dir from the path
   files = files.map (file) -> file.replace("build/", "")
   # Start uploading in parallel
   Promise.map files, uploadFileToS3, concurrency: 10

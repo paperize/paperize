@@ -28,7 +28,7 @@ const DEFAULT_RENDER_FUNCTION = `
 // var strength = helpers.findProperty("Strength")
 
 // Set the font size to 12 points:
-// doc.fontSize(12)
+// doc.setFontSize(12)
 
 // Render "Text to render" an inch from the left and an inch from the top
 // doc.text("Text to render", 1, 1)
