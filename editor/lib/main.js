@@ -3,9 +3,17 @@ if(process.env.NODE_ENV !== "production") {
 }
 
 import Vue from 'vue'
+// in-memory store
 import store from './store'
+// long-term store
 import persistence from './store/persistence'
+persistence.initializeAndWatchStore(store)
+// routing
 import router from './routes'
+
+// Vue extensions
+import AsyncComputed from 'vue-async-computed'
+Vue.use(AsyncComputed)
 
 import VModal from 'vue-js-modal'
 Vue.use(VModal)

@@ -1,5 +1,6 @@
 <template lang="pug">
 .grid-container
+  image-manager
   .grid-x
     .top-bar.small-12.cell
       .top-bar-left
@@ -8,19 +9,21 @@
             router-link(:to="{ name: homeLink }")
               strong Paperize.io
           li.build-status
-            a(target="_blank" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 2
+            a(target="_blank" title="Code Cowboy" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 3 "Code Cowboy"
       .top-bar-right
         profile-component
 </template>
 
 <script>
   import Profile from './Profile.vue'
+  import ImageManager from '../asset/ImageManager.vue'
   import FoundationMixin from '../../mixins/foundation'
 
   export default {
     mixins: [FoundationMixin],
     components: {
-      "profile-component": Profile
+      "profile-component": Profile,
+      "image-manager": ImageManager
     },
 
     computed: {

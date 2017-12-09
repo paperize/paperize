@@ -1,8 +1,10 @@
 <template lang="pug">
 ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
   li
+    a(@click="$modal.show('Image Library')") Images
+  li
     a.avatar
-      img(v-if="renderAvatar()" alt="avatar" :src="user.avatarSrc")
+      img(alt="avatar" :src="avatarSrc")
     ul.menu
       li.name {{ user.name }}
       li
@@ -14,7 +16,7 @@ ul.menu.unauthenticated(v-else)
 </template>
 
 <script>
-  import { mapState, mapMutations, mapActions } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import auth from '../../auth'
 
   export default {
@@ -24,15 +26,16 @@ ul.menu.unauthenticated(v-else)
       } catch(error) {}
       $(this.$el).foundation()
     },
-    computed: mapState(['user']),
+
+    computed: {
+      ...mapState(['user']),
+      avatarSrc() {
+        return this.user.avatarSrc || "/images/blank-avatar.png"
+      }
+    },
+
     methods: {
       ...mapActions(["login", "logout"]),
-
-      renderAvatar() {
-        return process.env.NODE_ENV != 'test' &&
-          this.user.avatarSrc &&
-          this.user.avatarSrc.length > 0
-      },
     }
   }
 </script>

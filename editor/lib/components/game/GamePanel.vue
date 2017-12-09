@@ -9,6 +9,8 @@
       .small-12.cell
         ul.menu
           li
+            a.button.tiny(@click="printGame()") Print Game
+          li
             a(@click="$modal.show('edit-game-modal')") Edit Game
           li
             a(@click="deleteGame(game)") Delete Game
@@ -28,6 +30,7 @@
 </template>
 
 <script>
+  import pdfRenderer from '../template/template_examples'
   import GameForm from './GameForm.vue'
 
   export default {
@@ -41,6 +44,10 @@
       deleteGame(game) {
         this.$store.dispatch("deleteGame", { game })
         this.$router.push({ name: "gameManager" })
+      },
+
+      printGame() {
+        pdfRenderer.renderGameToPdf(this.game)
       }
     }
   }

@@ -1,5 +1,4 @@
 import Promise from 'bluebird'
-import store from './index'
 
 import PouchDB from '../services/pouch'
 
@@ -17,6 +16,18 @@ const IGNORED_MUTATIONS = [
 
 let api = {
   db: null,
+  initializeAndWatchStore(store) {
+    store.subscribe(({ type }, state) => {
+      api.on(store, type, state)
+    })
+
+    // Load existing persisted state if present
+    let idToken = api.getLocalStorage().getItem(ID_TOKEN_KEY)
+
+    if(idToken) {
+      store.dispatch("become", { idToken })
+    }
+  },
 
   getLocalStorage() {
     if(typeof localStorage === 'undefined') {
@@ -95,7 +106,7 @@ let api = {
     })
   },
 
-  on(type, state) {
+  on(store, type, state) {
     if(IGNORED_MUTATIONS.includes(type)) {
       return Promise.resolve(null)
 
@@ -120,6 +131,7 @@ let api = {
             return this.saveState(state)
           }
         }).then(() => {
+          store.dispatch("setStoreReady")
           // Once our database is copacetic, remember which db to open on refresh
           this.getLocalStorage().setItem(ID_TOKEN_KEY, state.user.idToken)
         })
@@ -135,16 +147,6 @@ let api = {
   }
 }
 
-store.subscribe(({ type }, state) => {
-  api.on(type, state)
-})
-
-// Load existing persisted state if present
-let idToken = api.getLocalStorage().getItem(ID_TOKEN_KEY)
-
-if(idToken) {
-  store.dispatch("become", { idToken })
-}
 
 
 export default api

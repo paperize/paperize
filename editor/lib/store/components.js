@@ -16,6 +16,14 @@ const ComponentsModule = {
       }
 
       return foundComponent
+    },
+
+    getComponentItems: (state, getters) => component => {
+      if(!component.source) {
+        return []
+      } else {
+        return getters.getSourceItems(component.source)
+      }
     }
   },
 
@@ -26,6 +34,10 @@ const ComponentsModule = {
 
     updateComponent(state, { componentToUpdate, componentToCopy }) {
       Object.assign(componentToUpdate, componentToCopy)
+    },
+
+    updateComponentPageSize(state, { component, pageSize }) {
+      component.pageSize = pageSize
     },
 
     deleteGameComponent(state, { game, component }) {
@@ -48,7 +60,6 @@ const ComponentsModule = {
         component.id = uuid()
       }
       commit("createGameComponent", { game, component })
-      commit("setActiveComponent", { component })
     },
 
     updateComponent({commit, rootGetters, getters}, { component }) {

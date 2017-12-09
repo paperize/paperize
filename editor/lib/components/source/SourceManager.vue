@@ -1,31 +1,34 @@
 <template lang="pug">
 #source-manager
-  .grid-x(v-if="activeSource")
-    .small-1.cell
-      a.unset-source(@click="unsetComponentSource({ component })") &times;
+  .grid-x
+    template(v-if="activeSource")
+      .small-1.cell
+        a.unset-source(@click="unsetComponentSource({ component })") &times;
 
-    .small-9.cell
-      h5.truncate "{{ activeSource.name }}"
+      .small-10.cell
+        h5.truncate "{{ activeSource.name }}"
 
-    .small-2.cell
-      a(@click="createOrUpdateSourceById(activeSource.id)") refresh
+      .small-1.cell
+        a(@click="createOrUpdateSourceById(activeSource.id)")
+          i.fa.fa-refresh
 
-  .grid-x(v-else)
-    .small-12
-      h5.truncate Select a Source:
+    template(v-else)
+      .small-12
+        h5.truncate Select a Source:
 
-  div(v-if="component.source")
+  template(v-if="component.source")
     table.source-properties
       thead
-        th Property Name
-      tr(v-for="property in sourceProperties(component.source)")
-        td.property-name(title="Property Name") {{ property }}
+        tr
+          th Properties
+      tbody
+        tr(v-for="property in sourceProperties(component.source)")
+          td.property-name(title="Property Name") {{ property }}
 
-
-  div(v-else)
-    p(v-if="sources.length == 0")
-      | You have no sources.
-    div(v-else)
+  template(v-else)
+    template(v-if="sources.length == 0")
+      p You have no sources.
+    template(v-else)
       ul
         li(v-for="source in sources")
           a.delete-source(@click="deleteSource({ source })") &times;
@@ -47,18 +50,30 @@ import SourceExplorer from './SourceExplorer.vue'
 export default {
   props: ["component"],
 
-  computed: {
-    ...mapGetters(["sources", "activeSource", "sourceProperties", "activeSourcePropertyExamples"]),
-  },
-
-  methods: {
-    ...mapMutations(["unsetComponentSource", "deleteSource"]),
-    ...mapActions(["setComponentSource", "createOrUpdateSourceById"])
-  },
-
   components: {
     'source-paste-form': SourcePasteForm,
     'source-explorer': SourceExplorer
+  },
+
+  computed: {
+    ...mapGetters([
+      "sources",
+      "activeSource",
+      "sourceProperties",
+      "activeSourcePropertyExamples"
+    ]),
+  },
+
+  methods: {
+    ...mapMutations([
+      "unsetComponentSource",
+      "deleteSource"
+    ]),
+
+    ...mapActions([
+      "setComponentSource",
+      "createOrUpdateSourceById"
+    ])
   }
 }
 </script>
@@ -70,11 +85,6 @@ export default {
 
   .source-properties li {
     border-bottom: 2px solid gray;
-  }
-
-  .property-name {
-    font-size: 1em;
-    font-weight: bold;
   }
 
   .property-examples {

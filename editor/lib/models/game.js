@@ -4,6 +4,7 @@ import { process, withinXofY, around } from './factory'
 const DEFAULT_GAME = {
   id:          null,
   title:       "",
+  description: "",
   coverArt:    "",
   playerCount: "",
   playTime:    "",

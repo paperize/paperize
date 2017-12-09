@@ -12,6 +12,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({'NODE_ENV': 'test'})
   ],
   module: {
+    noParse: /\/leveldown\//,
     loaders: [
       {
         test: /\.js$/,
@@ -21,6 +22,10 @@ module.exports = {
         test: /\.coffee$/,
         exclude: /(node_modules)/,
         loader: 'coffee-loader'
+      }, {
+        test: /\.vue$/,
+        exclude: /(node_modules)/,
+        loader: 'vue-loader'
       }
     ]
   }

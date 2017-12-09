@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { find } from 'lodash'
+import { find, map, zipWith } from 'lodash'
 import uuid from 'uuid/v4'
 
 const SourcesModule = {
@@ -37,6 +37,17 @@ const SourcesModule = {
         }
       }
       return found
+    },
+
+    getSourceItems: (state, getters) => source => {
+      const propertyNames = getters.sourceProperties(source),
+        valuesWithoutHeader = source.data.values.slice(1)
+
+      return map(valuesWithoutHeader, (row) => {
+        return zipWith(propertyNames, row, (key, value) => {
+          return { key, value }
+        })
+      })
     },
 
     sourceProperties: (state, getters) => source => {

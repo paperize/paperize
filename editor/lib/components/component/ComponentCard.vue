@@ -2,7 +2,7 @@
 .component.card.small-10.small-offset-1.cell(:class="{ active: isActiveComponent() }" @click="setActive")
   component-form(mode='edit' :component="component")
   .card-divider
-    p.title {{ component.title || "[No title]" }}
+    p.title {{ component.title || "[No title]" }} ({{ totalItems }})
 
   .card-section
     p {{ component.type || "[No type]" }}
@@ -29,7 +29,12 @@
       "component-form": ComponentForm
     },
 
-    computed: mapGetters(["activeComponent"]),
+    computed: {
+      ...mapGetters(["activeComponent"]),
+      totalItems() {
+        return this.$store.getters.getComponentItems(this.component).length
+      }
+    },
 
     methods: {
       showEditModal() {
@@ -37,10 +42,10 @@
       },
 
       setActive() {
-        if(this.isActiveComponent()) {
-          return
-        }
-        this.$store.dispatch("setActiveComponent", { component: this.component })
+        if(this.isActiveComponent()) { return }
+        let gameId = this.$store.getters.activeGame.id,
+            componentId = this.component.id
+        this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
       },
 
       isActiveComponent() {
