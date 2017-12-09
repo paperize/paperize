@@ -183,7 +183,7 @@ describe "Importing Sources", ->
 
     it "overwrites the data if accepted", ->
       cy.get("#source-manager").within ->
-        cy.contains("refresh")
+        cy.get(".refresh")
           .click(force: true)
 
         # new version has been loaded

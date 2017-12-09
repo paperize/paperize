@@ -44,8 +44,8 @@ describe "Game Editor page", ->
       cy.contains("New Component").click()
       cy.contains("Add a Component")
 
-      cy.typeIntoSelectors "input#component-title-new": 'Random Encounters'
-      cy.get('select#component-type-new').select('deck')
+      cy.typeIntoSelectors "input.component-title-new": 'Random Encounters'
+      cy.get('select.component-type-new').select('deck')
       cy.contains("Create Component").click()
 
       cy.contains("Random Encounters")

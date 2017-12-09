@@ -59,7 +59,7 @@ describe "Component Source manager", ->
 
       it "allows me to refresh that source", ->
         cy.get("#source-manager")
-          .contains("refresh")
+          .get(".refresh")
 
       it "allows me to deselect that source", ->
         cy.get("#source-manager")

@@ -38,7 +38,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "core-util-is": "^1.0.2",
     "css-loader": "^0.26.2",
-    "cypress": "^1.0.3",
+    "cypress": "^1.1.4",
     "express": "^4.14.1",
     "file-api": "^0.10.4",
     "http-server": "^0.10.0",

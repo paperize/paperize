@@ -9,12 +9,12 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
       .small-4.cell
         label(:for="`component-title-${component.id}`") Title:
       .small-8.cell
-        input(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
+        input.component-title-new(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
 
       .small-4.cell
         label(:for="`component-type-${component.id}`") Type:
       .small-8.cell
-        select(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
+        select.component-type-new(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
           option(value="deck") Deck of Cards
           option(value="tile-stack") Stack of Tiles
           option(value="booklet") Booklet or Manual

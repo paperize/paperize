@@ -9,7 +9,7 @@
         h5.truncate "{{ activeSource.name }}"
 
       .small-1.cell
-        a(@click="createOrUpdateSourceById(activeSource.id)")
+        a.refresh(@click="createOrUpdateSourceById(activeSource.id)")
           i.fa.fa-refresh
 
     template(v-else)
