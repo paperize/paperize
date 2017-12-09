@@ -19,6 +19,7 @@
     "finalize-prod": "coffee finalize.coffee",
     "build-prod": "npm run clean && NODE_ENV=production webpack -p",
     "deploy-prod": "coffee deploy.coffee",
+    "bump-prod": "npm run build-prod && npm run deploy-prod",
     "release": "npm run finalize-prod && npm run create-video && npm run build-prod && npm run copy-video && npm run deploy-prod"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
