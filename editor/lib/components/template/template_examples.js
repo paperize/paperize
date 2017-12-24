@@ -101,6 +101,12 @@ const api = {
 
 
     let helpers = {
+      // Guide box
+      drawGuideBox(dimensions) {
+        doc.setLineWidth(.02)
+        doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h)
+      },
+
       findProperty(key) {
         return _.find(item, { key }).value || ""
       },
@@ -110,9 +116,67 @@ const api = {
         doc.text(text, x, y)
       },
 
-      image(imageName, x, y) {
-        return fetchImageByName(imageName).then((image) => {
-          doc.addImage(image, x, y)
+      textBox(text, boxDimensions, options) {
+        // helpers.drawGuideBox(boxDimensions)
+
+        // Line Height Formula: fontSize * lineHeight / ptsPerInch
+        let oneLineHeight = doc.internal.getFontSize() * 1.2 / 72,
+          finalX = boxDimensions.x,
+          finalY = boxDimensions.y + oneLineHeight
+
+        text = doc.splitTextToSize(text, boxDimensions.w)
+        doc.text(text, finalX, finalY, options.align)
+      },
+
+      imageBox(imageName, boxDimensions, options) {
+        // helpers.drawGuideBox(boxDimensions)
+        options = _.defaults(options, {
+          hAlign: "center",
+          vAlign: "top"
+        })
+        let boxRatio = boxDimensions.w / boxDimensions.h
+
+        return fetchImageByName(imageName).then((imageData) => {
+          let imageRatio = imageData.width / imageData.height,
+            finalX = boxDimensions.x,
+            finalY = boxDimensions.y,
+            finalW = boxDimensions.w,
+            finalH = boxDimensions.h
+
+          // TODO: Fill to Box
+
+          // Fit to Box
+          if(imageRatio > boxRatio) {
+            // Squeeze Height
+            finalH *= boxRatio/imageRatio
+
+            // Manage Vertical Alignment
+            if(options.vAlign == "middle") {
+              finalY += (boxDimensions.h - finalH)/2
+            } else if(options.vAlign == "bottom") {
+              finalY += boxDimensions.h - finalH
+            }
+
+          } else {
+            // Squeeze Width
+            finalW *= imageRatio/boxRatio
+
+            // Manage Horizontal Alignment
+            if(options.hAlign == "center") {
+              finalX += (boxDimensions.w - finalW)/2
+
+            } else if(options.hAlign == "right") {
+              finalX += (boxDimensions.w - finalW)
+            }
+          }
+
+          doc.addImage(
+            imageData,
+            finalX,
+            finalY,
+            finalW,
+            finalH
+          )
         })
       }
     }
