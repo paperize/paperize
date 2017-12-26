@@ -36,6 +36,10 @@ const AssetsModule = {
 
     updateImageName(state, { image, name }) {
       image.name = name
+    },
+
+    deleteImage(state, { image }) {
+      state.images.splice(state.images.indexOf(image), 1)
     }
   },
 
@@ -74,6 +78,10 @@ const AssetsModule = {
       .value()
 
       return Promise.all(promises)
+    },
+
+    deleteImage({ commit }, { image }) {
+      commit("deleteImage", { image })
     }
   }
 }
