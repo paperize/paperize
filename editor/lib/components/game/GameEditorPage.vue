@@ -4,8 +4,6 @@ div(v-if="!game")
 .grid-container(v-else)
   game-panel(:game="game")
 
-  hr
-
   .grid-x.grid-padding.x
     .small-2.cell
       component-panel(:components="game.components")
