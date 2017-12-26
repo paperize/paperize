@@ -10,7 +10,7 @@
       li
         router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
       li
-        a.small.button.alert(@click="deleteGame({ game })") Delete
+        a.small.button.alert(@click="confirmDeletion()") Delete
 </template>
 
 <script>
@@ -23,7 +23,28 @@
       }
     },
 
-    methods: mapActions(["deleteGame"])
+    methods: {
+      ...mapActions(["deleteGame"]),
+      confirmDeletion() {
+        this.$modal.show('dialog', {
+          title: 'Are you sure you want to delete this game?',
+          text: 'It has X components and will be lost forever.',
+          buttons: [
+            {
+              title: 'No',
+              default: true
+            },
+            {
+              title: 'Yes',
+              handler: () => {
+                this.deleteGame({ game: this.game })
+                this.$modal.hide('dialog')
+              }
+            }
+         ]
+        })
+      }
+    }
   }
 </script>
 

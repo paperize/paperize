@@ -30,7 +30,7 @@
               a(@click="$modal.show(`Transform ${transform.renderOrder}`)")
                 i.fa.fa-pencil
               = " "
-              a(@click="deleteTransform({ component, transform })")
+              a(@click="confirmDeletion(transform)")
                 i.fa.fa-remove
 
               transform-editor(:transform="transform")
@@ -105,7 +105,26 @@
       }
     },
 
-    methods: mapActions(["addTransform", "deleteTransform"])
+    methods: {
+      ...mapActions(["addTransform", "deleteTransform"]),
+      confirmDeletion(transform) {
+        this.$modal.show("dialog", {
+          title: `Are you sure you want to delete the layer: "${transform.name}"?`,
+          buttons: [
+            {
+              title: "No",
+              default: true
+            }, {
+              title: "Yes",
+              handler: () => {
+                this.deleteTransform({ component: this.component, transform })
+                this.$modal.hide("dialog")
+              }
+            }
+          ]
+        })
+      }
+    }
   }
 </script>
 

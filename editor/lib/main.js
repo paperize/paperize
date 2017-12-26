@@ -16,7 +16,7 @@ import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
 import VModal from 'vue-js-modal'
-Vue.use(VModal)
+Vue.use(VModal, { dialog: true })
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
@@ -35,7 +35,7 @@ let startApp = () => {
       "title-bar": TitleBar
     },
     // Render the TitleBar outside the router view
-    render: (h) => { return h("div", [h("title-bar"), h("router-view")]); }
+    render: (h) => { return h("div", [h("title-bar"), h("router-view"), h("v-dialog")]); }
     // Mount it here in the index.html
   }).$mount('#paperize-app')
 }
