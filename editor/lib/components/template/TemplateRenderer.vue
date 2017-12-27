@@ -16,3 +16,9 @@
   }
 
 </script>
+
+<style scoped>
+  iframe {
+    min-height: 400px;
+  }
+</style>

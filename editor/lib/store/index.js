@@ -6,7 +6,7 @@ import user       from './user'
 import games      from './games'
 import components from './components'
 import sources    from './sources'
-import transforms from './transforms'
+import templates  from './templates'
 import assets     from './assets'
 import google     from './google'
 import ui         from './ui'
@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   games:      games.state,
   components: components.state,
   sources:    sources.state,
-  transforms: transforms.state,
+  templates:  templates.state,
   assets:     assets.state,
   google:     google.state,
   ui:         ui.state,
@@ -40,7 +40,7 @@ let store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   // All state established inside modules
   state: newInitialState(),
-  modules: { user, games, components, sources, transforms, assets, google, ui },
+  modules: { user, games, components, sources, templates, assets, google, ui },
   mutations: {
     resetState(state, newState={}) {
       Object.assign(state, { ...newInitialState(), ...newState })

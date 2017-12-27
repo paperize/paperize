@@ -2,13 +2,14 @@
 import { process, withinXofY, around } from './factory'
 
 const DEFAULT_COMPONENT = {
-  id:          null,
-  title:       "",
-  transforms:  [],
-  pageSize: {
-    w: "a4",
-    h: "portrait"
-  }
+  id:       null,
+  title:    "",
+  template: null
+  // transforms:  [],
+  // pageSize: {
+  //   w: "a4",
+  //   h: "portrait"
+  // }
 }
 
 const EX_DECK = {

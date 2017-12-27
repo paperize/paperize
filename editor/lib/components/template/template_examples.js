@@ -86,7 +86,7 @@ const api = {
     // game or template knows page settings?
     // template.pageArguments?
     // doc.apply('addPage', template.pageArguments)
-    doc.addPage(component.pageSize.w, component.pageSize.h)
+    doc.addPage(component.template.size.w, component.template.size.h)
   },
 
   restoreDocumentDefaults(doc) {
@@ -95,9 +95,9 @@ const api = {
 
   renderItem(doc, game, component, item) {
     // get transforms for this component
-    const transforms = store.getters.getComponentTransforms(component)
+    const layers = component.template.layers
     // render each transform upon this item
-    console.log(`Rendering ${transforms.length} layers...`)
+    console.log(`Rendering ${layers.length} layers...`)
 
 
     let helpers = {
@@ -183,7 +183,7 @@ const api = {
 
     helpers.p = helpers.findProperty
 
-    return Promise.each(transforms, transform => {
+    return Promise.each(layers, transform => {
       this.restoreDocumentDefaults(doc)
       let actualFunction
       // Let the fires of hell erupt

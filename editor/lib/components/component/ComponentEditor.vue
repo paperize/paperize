@@ -20,11 +20,13 @@ div
               td.property-name(title="Property Name") {{ property }}
 
       template(v-else)
-        p This component does not have a data Source set.
+        p
+          strong This component does not have a data Source set.
+
         .grid-x.grid-margin-x
           .medium-auto.cell
           .medium-6.cell
-            a.button(@click="openSourceManager()") Set A Source...
+            a.button(@click="openSourceManager()") Set a Source...
           .medium-auto.cell
 
       modal(name="Source Manager" width="80%")
@@ -40,21 +42,37 @@ div
         |  Template
 
       template(v-if="component.template")
+        .grid-x
+          .auto.cell
+          .shrink.cell
+            a.button(@click="openTemplateManager()")
+              i.fa.fa-pencil
+              |  Edit
+          .auto.cell
+        .grid-x
+          .auto.cell
+          .shrink.cell
+            template-previewer.inline-preview(:game="activeGame" :component="activeComponent")
+          .auto.cell
+
       template(v-else)
-        p This component does not have a Template set.
-        .grid-x.grid-margin-x
-          .medium-auto.cell
-          .medium-6.cell
-            ul.menu.vertical
-              li
-                a.button(@click="openTemplateManager()") Load Template
-              li
-                a.button(@click="openTemplateManager()") Create Template
-          .medium-auto.cell
+        p
+          strong This component does not have a Template set.
 
-      modal(name="Template Manager" width="80%")
+        template(v-if="component.source")
+          .grid-x.grid-margin-x
+            .medium-auto.cell
+            .medium-6.cell
+              a.button(@click="openTemplateManager()") Set a Template...
+            .medium-auto.cell
+
+        template(v-else)
+          p
+            i.fa.fa-arrow-left
+            em  You need to set a data Source before you can get started with Templates.
+
+      modal(name="Template Manager" height="auto" width="80%" :pivotY=".15" :scrollable="true")
         template-manager(:component="component")
-
 
         button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Template Manager')")
           span(aria-hidden="true") &times;
@@ -64,16 +82,20 @@ div
   import { mapGetters } from 'vuex'
   import SourceManager from '../source/SourceManager.vue'
   import TemplateManager from '../template/TemplateManager.vue'
+  import TemplatePreviewer from '../template/TemplatePreviewer.vue'
 
   export default {
     props: ["component"],
 
     components: {
       'source-manager': SourceManager,
-      'template-manager': TemplateManager
+      'template-manager': TemplateManager,
+      'template-previewer': TemplatePreviewer
     },
 
-    computed: mapGetters(["sourceProperties"]),
+    computed: {
+      ...mapGetters(["activeGame", "activeComponent", "sourceProperties"]),
+    },
 
     methods: {
       openSourceManager() {
