@@ -45,9 +45,9 @@ const GamesModule = {
       commit("updateGame", { gameToUpdate, gameToCopy: game })
     },
 
-    deleteGame({ commit }, { game }) {
+    deleteGame({ commit, dispatch }, { game }) {
+      dispatch("clearActiveGame")
       commit("deleteGame", { game })
-      commit("clearActiveComponent")
     },
   }
 }

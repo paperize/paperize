@@ -8,16 +8,19 @@
       .small-12.cell
         ul.menu
           li
-            a.button.tiny(@click="printGame()") Print Game
+            a.button(@click="printGame()")
+              i.fa.fa-file-pdf-o
+              |  Print Game
           li
             a(@click="$modal.show('edit-game-modal')") Edit Game
           li
-            a(@click="deleteGame(game)") Delete Game
+            a(@click="confirmDeletion") Delete Game
 
   game-form(mode="edit" :game="game")
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   import pdfRenderer from '../template/template_examples'
   import GameForm from './GameForm.vue'
 
@@ -29,9 +32,25 @@
     },
 
     methods: {
-      deleteGame(game) {
-        this.$store.dispatch("deleteGame", { game })
-        this.$router.push({ name: "gameManager" })
+      ...mapActions(["deleteGame"]),
+      confirmDeletion() {
+        this.$modal.show('dialog', {
+          title: `Are you sure you want to delete the Game "${this.game.title}"?`,
+          text: `It has X Components and was last printed Y.`,
+          buttons: [
+            {
+              title: 'No',
+              default: true
+            },
+            {
+              title: 'Yes',
+              handler: () => {
+                this.deleteGame({ game: this.game })
+                this.$modal.hide('dialog')
+              }
+            }
+         ]
+        })
       },
 
       printGame() {

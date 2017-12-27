@@ -1,45 +1,77 @@
 <template lang="pug">
 #source-manager
-  .grid-x
-    template(v-if="activeSource")
-      .small-1.cell
-        a.unset-source(@click="unsetComponentSource({ component })") &times;
+  .grid-x.grid-padding-x
+    .small-12.cell
+      h2 Source Manager
 
-      .small-10.cell
-        h5.truncate "{{ activeSource.name }}"
+      hr
 
-      .small-1.cell
-        a.refresh(@click="createOrUpdateSourceById(activeSource.id)")
+    template(v-if="componentSource")
+      .shrink.cell
+        dl
+          dt Current Source:
+          dd {{ componentSource.name }}
+
+      .auto.cell
+        a.button.small.alert(@click="unsetComponentSource({ component })")
+          i.fa.fa-close
+          |  Change Now...
+
+      .small-12.cell
+        dl
+          dt From:
+          dd Google Spreadsheets
+
+      .shrink.cell
+        dl
+          dt Last Updated:
+          dd a few minutes ago
+
+      .auto.cell
+        a.button.small(@click="createOrUpdateSourceById(componentSource.id)")
           i.fa.fa-refresh
+          |  Refresh Now
 
     template(v-else)
-      .small-12
-        h5.truncate Select a Source:
+      .small-12.cell
+        strong You need to load a component source...
 
-  template(v-if="component.source")
-    table.source-properties
-      thead
-        tr
-          th Properties
-      tbody
-        tr(v-for="property in sourceProperties(component.source)")
-          td.property-name(title="Property Name") {{ property }}
+      .small-4.cell
+        p ...from Paperize examples?
 
-  template(v-else)
-    template(v-if="sources.length == 0")
-      p You have no sources.
-    template(v-else)
-      ul
-        li(v-for="source in sources")
-          a.delete-source(@click="deleteSource({ source })") &times;
-          a.select-source(@click="setComponentSource({ component, source })")  {{ source.name }}
+      .small-4.cell
+        p ...from your past sources?
 
+        template(v-if="sources.length == 0")
+          p You have not imported any sources.
 
-    a.button(@click="$modal.show('source-paste-form')") Paste a Link
-    source-paste-form
+        .grid-x(v-else)
+          template(v-for="source in sources")
+            .shrink.cell
+              ul.menu
+                li
+                  a.button.tiny.alert(@click="confirmDeletion(source)")
+                    i.fa.fa-close
+                li
+                  a.button.tiny.success(@click="setSource(source)")
+                    i.fa.fa-check
+            .small-8.cell
+              p {{ source.name }}
 
-    a.button(@click="$modal.show('source-explorer')") Browse Google Sheets
-    source-explorer
+      .small-4.cell
+        p ...from Google Sheets?
+        .grid-x
+          .auto.cell
+          .shrink.cell
+            a.button(@click="$modal.show('source-explorer')") Browse Google Sheets
+            source-explorer
+          .auto.cell
+        .grid-x
+          .auto.cell
+          .shrink.cell
+            a.button(@click="$modal.show('source-paste-form')") Paste a Link
+            source-paste-form
+          .auto.cell
 </template>
 
 <script>
@@ -58,10 +90,10 @@ export default {
   computed: {
     ...mapGetters([
       "sources",
-      "activeSource",
-      "sourceProperties",
-      "activeSourcePropertyExamples"
+      "sourceProperties"
     ]),
+
+    componentSource() { return this.component.source }
   },
 
   methods: {
@@ -73,22 +105,31 @@ export default {
     ...mapActions([
       "setComponentSource",
       "createOrUpdateSourceById"
-    ])
+    ]),
+
+    setSource(source) {
+      this.setComponentSource({ component: this.component, source })
+      this.$modal.hide("Source Manager")
+    },
+
+    confirmDeletion(source) {
+      this.$modal.show('dialog', {
+        title: `Are you sure you want to purge the source "${source.name}" from Paperize?`,
+        text: "It is in use in X components across Y games.",
+        buttons: [
+          {
+            title: "No",
+            default: true
+          }, {
+            title: "Yes",
+            handler: () => {
+              this.deleteSource({ source })
+              this.$modal.hide('dialog')
+            }
+          }
+        ]
+      })
+    }
   }
 }
 </script>
-
-<style scoped>
-  .unset-source {
-    font-weight: bold;
-  }
-
-  .source-properties li {
-    border-bottom: 2px solid gray;
-  }
-
-  .property-examples {
-    font-size: 1em;
-    font-style: italic;
-  }
-</style>

@@ -89,6 +89,8 @@ store.subscribe(({ type, payload }, state) => {
     router.push({ name: 'gameManager' })
   } else if(type === 'logout') {
     router.push({ name: 'splash' })
+  } else if(type === 'deleteGame') {
+    router.push({ name: 'gameManager' })
   } else if(type === 'createGameComponent') {
     router.push({ name: 'componentEditor', params: { gameId: payload.game.id, componentId: payload.component.id } })
   } else if(type === 'deleteGameComponent') {
