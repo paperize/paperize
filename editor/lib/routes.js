@@ -69,13 +69,13 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.name == "gameEditor")) {
     store.dispatch("whenStoreReady").then(() => {
-      store.dispatch("setActiveGame", { gameId: to.params.gameId })
+      store.dispatch("setActiveGame", to.params.gameId)
       next()
     })
   } else if(to.matched.some(record => record.name == "componentEditor")) {
     store.dispatch("whenStoreReady").then(() => {
-      store.dispatch("setActiveGame", { gameId: to.params.gameId })
-      store.dispatch("setActiveComponent", { component: { id: to.params.componentId } })
+      store.dispatch("setActiveGame", to.params.gameId)
+      store.dispatch("setActiveComponent", to.params.componentId)
       next()
     })
   } else {
@@ -92,7 +92,7 @@ store.subscribe(({ type, payload }, state) => {
   } else if(type === 'createGameComponent') {
     router.push({ name: 'componentEditor', params: { gameId: payload.game.id, componentId: payload.component.id } })
   } else if(type === 'deleteGameComponent') {
-    router.push({ name: 'gameEditor', params: { gameId: state.games.activeGame.id }})
+    router.push({ name: 'gameEditor', params: { gameId: state.ui.activeGameId }})
   }
 })
 

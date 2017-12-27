@@ -9,6 +9,7 @@ import sources    from './sources'
 import transforms from './transforms'
 import assets     from './assets'
 import google     from './google'
+import ui         from './ui'
 
 Vue.use(Vuex)
 
@@ -20,6 +21,7 @@ const INITIAL_STATE = {
   transforms: transforms.state,
   assets:     assets.state,
   google:     google.state,
+  ui:         ui.state,
 }
 
 // Feeling hacky here, but having trouble with Observers contaminating my statics
@@ -38,7 +40,7 @@ let store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   // All state established inside modules
   state: newInitialState(),
-  modules: { user, games, components, sources, transforms, assets, google },
+  modules: { user, games, components, sources, transforms, assets, google, ui },
   mutations: {
     resetState(state, newState={}) {
       Object.assign(state, { ...newInitialState(), ...newState })
