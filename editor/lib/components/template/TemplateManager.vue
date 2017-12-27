@@ -10,10 +10,12 @@ div(v-else)
     .small-4.cell
       h5 Create a new Template
       a.button(@click="createComponentTemplate(component)") Create
+
     .small-4.cell
       h5 Load a Paperize Template
       p
         em Coming soon...
+
     .small-4.cell
       h5 Copy another Template
       p

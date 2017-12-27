@@ -1,13 +1,16 @@
 <template lang="pug">
-#template-manager
-  .grid-x.grid-margin-x
-    .small-12.cell
-      h5.truncate PDF Preview
+.grid-x.grid-padding-x
+  .small-12.cell
+    h4 Template Editor
+    hr
 
-    template(v-if="component.source")
+  .small-4.cell
+    h5 Layers
+
+    .grid-x
       .small-12.cell
         ul.menu.horizontal
-          li Page:
+          li Size of Component:
           li
             a(@click="setPageMode('preset')") Preset
           li
@@ -35,28 +38,29 @@
           label Height:
           input(type="number" v-model="templateHeight")
 
-      .small-12.cell
-        hr
+    layer-manager(:template="component.template")
 
-        template-previewer.inline-preview(:game="activeGame" :component="activeComponent")
+  .small-4.cell
+    h5 Layer Config
+  .small-4.cell
+    h5 Preview
 
-      modal(name="Template Preview" width="90%" height="90%")
-        template-previewer.modal-preview(:game="activeGame" :component="activeComponent")
-
-    p(v-else) Select a Source...
+    template-previewer.inline-preview(:game="activeGame" :component="activeComponent")
 </template>
 
 <script>
   import _ from 'lodash'
   import { mapGetters } from 'vuex'
 
+  import LayerManager from './layer/LayerManager.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
 
   export default {
     props: ["component"],
 
     components: {
-      "template-previewer": TemplatePreviewer
+      "template-previewer": TemplatePreviewer,
+      "layer-manager": LayerManager
     },
 
     data() {
@@ -77,7 +81,7 @@
         get() { return this.component.template.size.w },
         set(newWidth) {
           const newSize = { w: newWidth, h: this.component.template.size.h }
-          this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
+          this.$store.commit("updateTemplateSize", { template: this.component.template, size: newSize })
         }
       },
 
@@ -85,7 +89,7 @@
         get() { return this.component.template.size.h },
         set(newHeight) {
           const newSize = { w: this.component.template.size.w, h: newHeight }
-          this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
+          this.$store.commit("updateTemplateSize", { template: this.component.template, size: newSize })
         }
       },
 
@@ -109,14 +113,3 @@
     }
   }
 </script>
-
-<style>
-  .modal-preview {
-    width: 100%;
-    height: 100%;
-  }
-
-  .inline-preview {
-    min-height: 400px;
-  }
-</style>

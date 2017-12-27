@@ -43,57 +43,52 @@ const TemplatesModule = {
   state: { },
 
   getters: {
-    // getComponentTransforms: (state, getters) => component => {
-    //   return component.transforms
-    // },
-    //
-    // getComponentNextTransformOrder: (state, getters) => component => {
-    //   let transforms = getters.getComponentTransforms(component)
-    //   return (max(map(transforms, "renderOrder")) + 1) || 1
-    // },
-    //
-    // activeTransforms: (state, getters) => {
-    //   return getters.activeComponent && getters.getComponentTransforms(getters.activeComponent)
-    // }
+    getTemplateLayers: (state, getters) => template => {
+      return template.layers
+    },
+
+    getTemplateNextLayerOrder: (state, getters) => template => {
+      let layers = getters.getTemplateLayers(template)
+      return (max(map(layers, "renderOrder")) + 1) || 1
+    },
   },
 
   mutations: {
-    // addTransform(state, { component, transform }) {
-    //   if(!component.transforms) {
-    //     component.transforms = []
-    //   }
-    //
-    //   component.transforms.push(transform)
-    // },
+    setComponentTemplate(state, { component, template }) {
+      Vue.set(component, "template", template)
+    },
+
+    addTemplateLayer(state, { template, layer }) {
+      template.layers.push(layer)
+    },
+
+    setTemplateLayers(state, { template, layers }) {
+      template.layers = layers
+    },
     //
     // updateTransformRenderFunction(state, { transform, renderFunction }) {
     //   transform.renderFunction = renderFunction
     // },
-    //
-    // updateTransformName(state, { transform, name }) {
-    //   transform.name = name
-    // },
-    //
-    setComponentTemplate(state, { component, template }) {
-      Vue.set(component, "template", template)
+
+    updateLayerName(state, { layer, name }) {
+      layer.name = name
     },
 
     updateTemplateSize(state, { template, size }) {
       template.size = size
     },
 
-    //
-    // deleteTransform(state, { component, transform }) {
-    //   const removedOrder = transform.renderOrder
-    //   // remove the transform in question
-    //   component.transforms.splice(component.transforms.indexOf(transform), 1)
-    //   // decrement the render order for transforms higher than the removed one
-    //   forEach(component.transforms, (transform) => {
-    //     if(transform.renderOrder > removedOrder) {
-    //       transform.renderOrder -= 1
-    //     }
-    //   })
-    // }
+    deleteTemplateLayer(state, { template, layer }) {
+      const removedOrder = layer.renderOrder
+      // remove the layer in question
+      template.layers.splice(template.layers.indexOf(layer), 1)
+      // decrement the render order for layers higher than the removed one
+      forEach(template.layers, (layer) => {
+        if(layer.renderOrder > removedOrder) {
+          layer.renderOrder -= 1
+        }
+      })
+    }
   },
 
   actions: {
@@ -103,28 +98,33 @@ const TemplatesModule = {
         size: { w: 2.5, h: 3.5 }
       }
       commit("setComponentTemplate", {component, template })
-    }
-    // addTransform({ commit, getters }, component) {
-    //   const nextOrder = getters.getComponentNextTransformOrder(component)
-    //
-    //   let transform = {
-    //     name: `Trans: ${nextOrder}`,
-    //     type: CODE,
-    //     renderOrder: nextOrder,
-    //     renderFunction: DEFAULT_RENDER_FUNCTION
-    //   }
-    //
-    //   commit("addTransform", { component, transform })
-    // },
+    },
+
+    addTemplateLayer({ commit, getters }, template) {
+      const nextOrder = getters.getTemplateNextLayerOrder(template)
+
+      let layer = {
+        name: `Layer ${nextOrder}`,
+        type: CODE,
+        renderOrder: nextOrder,
+        renderFunction: DEFAULT_RENDER_FUNCTION
+      }
+
+      commit("addTemplateLayer", { template, layer })
+    },
+
+    setTemplateLayers({ commit }, { template, layers }) {
+      commit("setTemplateLayers", { template, layers })
+    },
     //
     // updateTransformRenderFunction({ commit }, { transform, renderFunction }) {
     //   // TODO: validate/compile/test/check the function
     //   commit("updateTransformRenderFunction", { transform, renderFunction })
     // },
     //
-    // deleteTransform({ commit }, { component, transform }) {
-    //   commit("deleteTransform", { component, transform })
-    // }
+    deleteTemplateLayer({ commit }, { template, layer }) {
+      commit("deleteTemplateLayer", { template, layer })
+    }
   }
 }
 
