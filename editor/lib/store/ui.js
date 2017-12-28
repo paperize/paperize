@@ -4,6 +4,7 @@ const UIModule = {
   state: {
     activeGameId: null,
     activeComponentId: null,
+    activeLayerId: null
   },
 
   getters: {
@@ -18,6 +19,12 @@ const UIModule = {
         return rootGetters.findGameComponent(getters.activeGame, state.activeComponentId)
       }
     },
+
+    activeLayer(state, getters, rootState, rootGetters) {
+      if(state.activeLayerId) {
+        return rootGetters.findTemplateLayer(getters.activeComponent.template, state.activeLayerId)
+      }
+    }
   },
 
   mutations: {
@@ -35,6 +42,10 @@ const UIModule = {
 
     clearActiveComponent(state) {
       state.activeComponentId = null
+    },
+
+    setActiveLayer(state, { layer }) {
+      state.activeLayerId = layer.id
     }
   },
 

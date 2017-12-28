@@ -1,10 +1,14 @@
-import { map, max, forEach } from 'lodash'
+import { find, map, max, forEach, clone } from 'lodash'
 import Vue from 'vue'
+
+import uuid from 'uuid/v4'
 /*
- * Transform Fields:
+ * Layer Fields:
+ * - id
  * - render order
  * - dimensions: x, y, w, h
- * - function
+ * - type specific fields to be filled in form
+ * - function that leverages those fields
  *
  * Transform Parameters:
  * - source item inputs
@@ -15,11 +19,12 @@ import Vue from 'vue'
  * - scoped doc object
  */
 
-const CODE = 'Code'
-const TEXT = 'Text'
-const IMAGE = 'Image'
+const CODE = 'code'
+const TEXT = 'text'
+const IMAGE = 'image'
+const SHAPE = 'shape'
 
-const TYPES = [ CODE, TEXT, IMAGE ]
+const LAYER_TYPES = [ CODE, TEXT, IMAGE ]
 
 const DEFAULT_RENDER_FUNCTION = `
 // Common tasks, all measurements in inches
@@ -39,10 +44,41 @@ const DEFAULT_RENDER_FUNCTION = `
 // return helpers.image("/my-game/my-image.jpg", 0, 0)
 `
 
+const LAYER_DEFAULTS = {}
+LAYER_DEFAULTS[TEXT] =
+  {
+    name: `[Text]`,
+    type: TEXT,
+    renderOrder: 0,
+  }
+LAYER_DEFAULTS[IMAGE] =
+  {
+    name: `[Image]`,
+    type: IMAGE,
+    renderOrder: 0,
+  }
+LAYER_DEFAULTS[SHAPE] =
+  {
+    name: `[Shape]`,
+    type: SHAPE,
+    renderOrder: 0,
+  }
+LAYER_DEFAULTS[CODE] =
+  {
+    name: `[Code]`,
+    type: CODE,
+    renderOrder: 0,
+    renderFunction: DEFAULT_RENDER_FUNCTION
+  }
+
 const TemplatesModule = {
   state: { },
 
   getters: {
+    findTemplateLayer: (state, getters) => (template, layerId) => {
+      return find(template.layers, { id: layerId })
+    },
+
     getTemplateLayers: (state, getters) => template => {
       return template.layers
     },
@@ -65,10 +101,10 @@ const TemplatesModule = {
     setTemplateLayers(state, { template, layers }) {
       template.layers = layers
     },
-    //
-    // updateTransformRenderFunction(state, { transform, renderFunction }) {
-    //   transform.renderFunction = renderFunction
-    // },
+
+    updateLayerRenderFunction(state, { layer, renderFunction }) {
+      layer.renderFunction = renderFunction
+    },
 
     updateLayerName(state, { layer, name }) {
       layer.name = name
@@ -100,15 +136,18 @@ const TemplatesModule = {
       commit("setComponentTemplate", {component, template })
     },
 
-    addTemplateLayer({ commit, getters }, template) {
+    addTemplateLayer({ commit, getters }, { template, layerType }) {
       const nextOrder = getters.getTemplateNextLayerOrder(template)
 
-      let layer = {
-        name: `Layer ${nextOrder}`,
-        type: CODE,
-        renderOrder: nextOrder,
-        renderFunction: DEFAULT_RENDER_FUNCTION
+      let layer = LAYER_DEFAULTS[layerType]
+      if(!layer) {
+        throw new Error(`No Layer Type found matching "${layerType}"`)
       }
+      layer = clone(layer)
+      layer.id = uuid()
+      layer.name += ` ${nextOrder}`
+      layer.renderOrder = nextOrder
+      console.log(layer.renderFunction)
 
       commit("addTemplateLayer", { template, layer })
     },
@@ -116,12 +155,12 @@ const TemplatesModule = {
     setTemplateLayers({ commit }, { template, layers }) {
       commit("setTemplateLayers", { template, layers })
     },
-    //
-    // updateTransformRenderFunction({ commit }, { transform, renderFunction }) {
-    //   // TODO: validate/compile/test/check the function
-    //   commit("updateTransformRenderFunction", { transform, renderFunction })
-    // },
-    //
+
+    updateLayerRenderFunction({ commit }, { layer, renderFunction }) {
+      // TODO: validate/compile/test/check the function
+      commit("updateLayerRenderFunction", { layer, renderFunction })
+    },
+
     deleteTemplateLayer({ commit }, { template, layer }) {
       commit("deleteTemplateLayer", { template, layer })
     }

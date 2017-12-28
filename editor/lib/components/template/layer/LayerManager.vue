@@ -1,33 +1,40 @@
 <template lang="pug">
 .grid-x
-  a.success(@click="addTemplateLayer(template)")
-    i.fa.fa-plus
+  .auto.cell
+    h5 Layers
+  .shrink.cell
+    a.button.tiny.success(@click="selectNewLayerType()")
+      i.fa.fa-plus
+      |  New Layer
+
 
   .small-12.cell
-    table(v-if="template")
+    table
       draggable(v-model="templateLayers" element="tbody" :options="{ handle: '.drag' }")
-        tr(v-for="layer in templateLayers")
-          td.drag
-            i.fa.fa-bars
+        tr.layer(v-for="layer in templateLayers" @click="setActiveLayer({ layer })")
+          td.grid-x.grid-padding-x
+            .shrink.cell.drag
+              i.fa.fa-bars
 
-          td(v-if="editing != layer")
-            a(@click="editing = layer")
-              i.fa.fa-pencil
-            span(:title="layer.name")  {{ layer.name | truncate }}
+              = " "
 
-          td(v-else)
-            input(type="text" ref="editingInput" v-model="layerName" @blur="editing = null")
+              i.fa.fa-code(v-if="layer.type == 'code'" title="This is a Code Layer")
+              i.fa.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
+              i.fa.fa-circle(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
+              i.fa.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
+            //- .shrink.cell
 
-          td(title="This is a Code Layer")
-            i.fa.fa-code
+            .auto.cell
+              span(:title="layer.name")  {{ layer.name | truncate }}
 
-          td
-            //- edit code layer
-            //- a(@click="$modal.show(`Layer ${layer.renderOrder}`)")
-            //-   i.fa.fa-pencil
-            //- = " "
-            a(@click="confirmDeletion(layer)")
-              i.fa.fa-remove
+
+            .shrink.cell
+              //- edit code layer
+              //- a(@click="$modal.show(`Layer ${layer.renderOrder}`)")
+              //-   i.fa.fa-pencil
+              //- = " "
+              a(@click="confirmDeletion(layer)")
+                i.fa.fa-remove
 </template>
 
 <script>
@@ -38,9 +45,7 @@
   export default {
     props: ["template"],
 
-    components: {
-      draggable,
-    },
+    components: { draggable },
 
     filters: {
       truncate(string) {
@@ -58,7 +63,7 @@
     },
 
     computed: {
-      ...mapGetters(["getTemplateLayers"]),
+      ...mapGetters(["getTemplateLayers", "getActiveLayer"]),
 
       editing: {
         get() {
@@ -100,7 +105,44 @@
 
     methods: {
       ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setTemplateLayers"]),
-      ...mapMutations(["updateLayerName"]),
+      ...mapMutations(["updateLayerName", "setActiveLayer"]),
+
+      selectNewLayerType() {
+        this.$modal.show('dialog', {
+          title: "Add what type of Layer?",
+          buttons: [
+            {
+              title: "Cancel",
+              default: true
+            }, {
+              title: "Text",
+              handler: () => {
+                this.addTemplateLayer({ template: this.template, layerType: "text" })
+                this.$modal.hide("dialog")
+              }
+            }, {
+              title: "Image",
+              handler: () => {
+                this.addTemplateLayer({ template: this.template, layerType: "image" })
+                this.$modal.hide("dialog")
+              }
+            }, {
+              title: "Shape",
+              handler: () => {
+                this.addTemplateLayer({ template: this.template, layerType: "shape" })
+                this.$modal.hide("dialog")
+              }
+            }, {
+              title: "Code",
+              handler: () => {
+                this.addTemplateLayer({ template: this.template, layerType: "code" })
+                this.$modal.hide("dialog")
+              }
+            }
+          ]
+        })
+
+      },
 
       confirmDeletion(layer) {
         this.$modal.show("dialog", {
@@ -125,6 +167,11 @@
 
 <style>
   .drag {
+    color: gray;
     cursor: move;
+  }
+
+  .layer {
+    cursor: pointer;
   }
 </style>

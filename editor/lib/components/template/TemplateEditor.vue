@@ -5,14 +5,29 @@
     hr
 
   .small-4.cell
-    h5 Component Size
-    template-size-editor(:template="component.template")
+    template(v-if="editingSize")
+      h5
+        a(@click="editingSize = false")
+          i.fa.fa-pencil
+        |  Component Size
+      template-size-editor(:template="component.template")
 
-    h5 Layers
+    h5(v-else)
+      a(@click="editingSize = true")
+        i.fa.fa-pencil
+      |  Component Size {{ sizeLabel }}
+
+    hr
+
     layer-manager(:template="component.template")
 
   .small-4.cell
     h5 Layer Config
+
+    template(v-if="activeLayer")
+      layer-editor(:layer="activeLayer")
+    template(v-else)
+      p No Layer Selected
 
   .small-4.cell
     h5 Preview
@@ -24,6 +39,7 @@
   import { mapGetters } from 'vuex'
 
   import LayerManager from './layer/LayerManager.vue'
+  import LayerEditor from './layer/LayerEditor.vue'
   import TemplateSizeEditor from './TemplateSizeEditor.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
 
@@ -33,14 +49,18 @@
     components: {
       "template-previewer": TemplatePreviewer,
       "template-size-editor": TemplateSizeEditor,
-      "layer-manager": LayerManager
+      "layer-manager": LayerManager,
+      "layer-editor": LayerEditor
     },
 
     data() {
-      return { }
+      return {
+        editingSize: false,
+        sizeLabel: `(${this.component.template.size.w}in x ${this.component.template.size.h}in)`
+      }
     },
 
-    computed: mapGetters(["activeGame"]),
+    computed: mapGetters(["activeGame", "activeLayer"]),
 
     methods: { }
   }
