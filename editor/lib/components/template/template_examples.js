@@ -95,9 +95,9 @@ const api = {
 
   renderItem(doc, game, component, item) {
     // get transforms for this component
-    const layers = component.template.layers
+    let layers = store.getters.getTemplateLayers(component.template)
     // render each transform upon this item
-    console.log(`Rendering ${layers.length} layers...`)
+    console.log(`Rendering ${layers.length} layers...`, layers)
 
 
     let helpers = {
@@ -198,7 +198,7 @@ const api = {
       this.restoreDocumentDefaults(doc)
 
       // Early out if there's no lambda to eval
-      if(!layer.renderFunction) { return }
+      // if(!layer.renderFunction) { return }
 
       let actualFunction
       // Let the fires of hell erupt

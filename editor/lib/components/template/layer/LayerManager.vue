@@ -22,10 +22,9 @@
               i.fa.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
               i.fa.fa-circle(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
               i.fa.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
-            //- .shrink.cell
 
             .auto.cell
-              span(:title="layer.name")  {{ layer.name | truncate }}
+              span(:title="layer.name")  {{ layer.name | truncate }} ({{ layer.renderOrder }})
 
 
             .shrink.cell
@@ -81,7 +80,7 @@
 
       templateLayers: {
         get() {
-          return this.getTemplateLayers(this.template)
+          return this.getTemplateLayers(this.template) || []
         },
 
         set(newLayers) {

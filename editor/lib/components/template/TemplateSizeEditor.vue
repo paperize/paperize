@@ -23,15 +23,15 @@
   template(v-else-if="pageMode === 'custom'")
     .small-6.cell
       label Width:
-      input(type="number" v-model="templateWidth")
+      input(type="number" v-model.number="templateWidth")
 
     .small-6.cell
       label Height:
-      input(type="number" v-model="templateHeight")
+      input(type="number" v-model.number="templateHeight")
 </template>
 
 <script>
-  import { capitalize } from 'lodash'
+  import { capitalize, isString } from 'lodash'
   export default {
     props: ["template"],
 
@@ -50,7 +50,8 @@
       templateWidth: {
         get() { return this.template.size.w },
         set(newWidth) {
-          const newSize = { w: newWidth, h: this.template.size.h }
+          if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
+          const newSize = { ...this.template.size, w: newWidth  }
           this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
         }
       },
@@ -58,7 +59,8 @@
       templateHeight: {
         get() { return this.template.size.h },
         set(newHeight) {
-          const newSize = { w: this.template.size.w, h: newHeight }
+          if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
+          const newSize = { ...this.template.size, h: newHeight }
           this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
         }
       }

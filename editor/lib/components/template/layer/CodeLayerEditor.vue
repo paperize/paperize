@@ -25,7 +25,7 @@
         get() { return this.layer.renderFunction },
 
         set: debounce(function(newRenderFunction) {
-          this.$store.dispatch('updateLayerRenderFunction', { layer: this.layer, renderFunction: newRenderFunction })
+          this.$store.dispatch('setLayerRenderFunction', { layer: this.layer, renderFunction: newRenderFunction })
         }, 1000)
       }
     },

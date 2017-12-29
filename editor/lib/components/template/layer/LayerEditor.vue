@@ -14,23 +14,23 @@
       .auto.cell
         .input-group
           span.input-group-label X
-          input.input-group-field(type="number" v-model="layerDimensionX")
+          input.input-group-field(type="number" v-model.number="layerDimensionX")
 
       .auto.cell
         .input-group
           span.input-group-label Y
-          input.input-group-field(type="number" v-model="layerDimensionY")
+          input.input-group-field(type="number" v-model.number="layerDimensionY")
 
     .grid-x.grid-padding-x
       .auto.cell
         .input-group
           span.input-group-label W
-          input.input-group-field(type="number" v-model="layerDimensionW")
+          input.input-group-field(type="number" v-model.number="layerDimensionW")
 
       .auto.cell
         .input-group
           span.input-group-label H
-          input.input-group-field(type="number" v-model="layerDimensionH")
+          input.input-group-field(type="number" v-model.number="layerDimensionH")
 
   code-layer-editor(v-if="layer.type == 'code'" :layer="layer")
   text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer")
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import { isString } from 'lodash'
   import { mapActions } from 'vuex'
   import CodeLayerEditor from './CodeLayerEditor.vue'
   import TextLayerEditor from './TextLayerEditor.vue'
@@ -68,7 +69,9 @@
         get() { return this.layer.dimensions.x },
 
         set(newX) {
-          this.setLayerDimension({ layer: this.layer, dimension: 'x', value: newX })
+          if(isString(newX) || newX < 0) { newX = 0 }
+          const newDimensions = { ...this.layer.dimensions, x: newX }
+          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
         }
       },
 
@@ -76,7 +79,9 @@
         get() { return this.layer.dimensions.y },
 
         set(newY) {
-          this.setLayerDimension({ layer: this.layer, dimension: 'y', value: newY })
+          if(isString(newY) || newY < 0) { newY = 0 }
+          const newDimensions = { ...this.layer.dimensions, y: newY }
+          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
         }
       },
 
@@ -84,7 +89,9 @@
         get() { return this.layer.dimensions.w },
 
         set(newW) {
-          this.setLayerDimension({ layer: this.layer, dimension: 'w', value: newW })
+          if(isString(newW) || newW < 0) { newW = 0 }
+          const newDimensions = { ...this.layer.dimensions, w: newW }
+          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
         }
       },
 
@@ -92,11 +99,13 @@
         get() { return this.layer.dimensions.h },
 
         set(newH) {
-          this.setLayerDimension({ layer: this.layer, dimension: 'h', value: newH })
+          if(isString(newH) || newH < 0) { newH = 0 }
+          const newDimensions = { ...this.layer.dimensions, H: newH }
+          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
         }
       },
     },
 
-    methods: mapActions(["setLayerName", "setLayerDimension"])
+    methods: mapActions(["setLayerName", "setLayerDimensions"])
   }
 </script>

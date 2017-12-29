@@ -22,7 +22,7 @@ const UIModule = {
 
     activeLayer(state, getters, rootState, rootGetters) {
       if(state.activeLayerId) {
-        return rootGetters.findTemplateLayer(getters.activeComponent.template, state.activeLayerId)
+        return rootGetters.findLayer(state.activeLayerId)
       }
     }
   },
