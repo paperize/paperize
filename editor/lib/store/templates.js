@@ -26,12 +26,7 @@ const TemplatesModule = {
     },
 
     pushTemplateLayerId(state, { template, layerId }) {
-      console.log('pushing', layerId)
       template.layerIds.push(layerId)
-    },
-
-    setTemplateLayerOrder(state, { template, layers }) {
-      forEach(layers, (layer, index) => layer.renderOrder = index)
     },
 
     setTemplateLayerIds(state, { template, layerIds }) {
@@ -43,16 +38,8 @@ const TemplatesModule = {
     },
 
     deleteTemplateLayer(state, { template, layer, layersToDecrement }) {
-      // const removedOrder = layer.renderOrder
       // remove the layer in question
       template.layerIds.splice(template.layerIds.indexOf(layer.id), 1)
-      // decrement the render order for layers higher than the removed one
-      forEach(layersToDecrement, (layer) => {
-        console.log('decrementing', layer)
-        // if(layer.renderOrder > removedOrder) {
-          layer.renderOrder -= 1
-        // }
-      })
     }
   },
 
@@ -80,15 +67,11 @@ const TemplatesModule = {
       })
     },
 
-    setTemplateLayers({ commit }, { template, layers }) {
-      commit("setTemplateLayerOrder", { template, layers })
-    },
-
-    deleteTemplateLayer({ commit, getters }, { template, layer }) {
-      let layersToDecrement = filter(getters.getTemplateLayers(template), thisLayer => thisLayer.renderOrder > layer.renderOrder)
+    deleteTemplateLayer({ dispatch, commit, getters }, { template, layer }) {
       // Layers only exist in one template, so they get globally purged immediately
       commit("deleteLayer", layer)
-      commit("deleteTemplateLayer", { template, layer, layersToDecrement })
+      commit("deleteTemplateLayer", { template, layer })
+      dispatch("setLayersRenderOrder", getters.getTemplateLayers(template))
     }
   }
 }

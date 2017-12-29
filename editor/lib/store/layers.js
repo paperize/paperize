@@ -1,4 +1,4 @@
-import { clone, defaults } from 'lodash'
+import { forEach, clone, defaults } from 'lodash'
 
 import Vue from 'vue'
 import uuid from 'uuid/v4'
@@ -98,6 +98,10 @@ const LayersModule = {
     setLayerDimensions(state, { layer, dimensions }) {
       layer.dimensions = dimensions
     },
+
+    setLayersRenderOrder(state, layers) {
+      forEach(layers, (layer, index) => layer.renderOrder = index)
+    }
   },
 
   actions: {
@@ -129,6 +133,10 @@ const LayersModule = {
       // TODO: validate/compile/test/check the function
       commit("setLayerRenderFunction", { layer, renderFunction })
     },
+
+    setLayersRenderOrder({ commit }, layers) {
+      commit("setLayersRenderOrder", layers)
+    }
   },
 }
 

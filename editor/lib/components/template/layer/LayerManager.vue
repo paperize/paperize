@@ -84,10 +84,7 @@
         },
 
         set(newLayers) {
-          this.setTemplateLayers({
-            template: this.template,
-            layers: newLayers
-          })
+          this.setLayersRenderOrder(newLayers)
         }
       },
 
@@ -103,7 +100,7 @@
     },
 
     methods: {
-      ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setTemplateLayers"]),
+      ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setLayersRenderOrder"]),
       ...mapMutations(["updateLayerName", "setActiveLayer"]),
 
       selectNewLayerType() {
