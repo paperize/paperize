@@ -1,9 +1,11 @@
 <template lang="pug">
-p Text editor
+.text-layer-fields
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   export default {
-    props: []
+    props: ["layer"],
   }
 </script>

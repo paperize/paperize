@@ -24,7 +24,16 @@ const TEXT = 'text'
 const IMAGE = 'image'
 const SHAPE = 'shape'
 
-const LAYER_TYPES = [ CODE, TEXT, IMAGE ]
+const LAYER_TYPES = [ CODE, TEXT, IMAGE, SHAPE ]
+
+const SAME_AS_PARENT = "sameAsParent",
+  PERCENT_OF_PARENT = "percentOfParent",
+  OFFSET_FROM_PARENT = "offsetFromParent"
+
+const DIMENSION_OBJECT = {
+  mode: SAME_AS_PARENT,
+  x: 5, y: 5, w: 90, h: 90
+}
 
 const DEFAULT_RENDER_FUNCTION = `
 // Common tasks, all measurements in inches
@@ -47,27 +56,31 @@ const DEFAULT_RENDER_FUNCTION = `
 const LAYER_DEFAULTS = {}
 LAYER_DEFAULTS[TEXT] =
   {
-    name: `[Text]`,
-    type: TEXT,
+    name:        "[Text]",
+    type:        TEXT,
     renderOrder: 0,
+    dimensions:  DIMENSION_OBJECT,
   }
 LAYER_DEFAULTS[IMAGE] =
   {
-    name: `[Image]`,
-    type: IMAGE,
+    name:        "[Image]",
+    type:        IMAGE,
     renderOrder: 0,
+    dimensions:  DIMENSION_OBJECT,
   }
 LAYER_DEFAULTS[SHAPE] =
   {
-    name: `[Shape]`,
-    type: SHAPE,
+    name:        "[Shape]",
+    type:        SHAPE,
     renderOrder: 0,
+    dimensions:  DIMENSION_OBJECT,
   }
 LAYER_DEFAULTS[CODE] =
   {
-    name: `[Code]`,
-    type: CODE,
+    name:        "[Code]",
+    type:        CODE,
     renderOrder: 0,
+    dimensions:  DIMENSION_OBJECT,
     renderFunction: DEFAULT_RENDER_FUNCTION
   }
 
@@ -106,8 +119,14 @@ const TemplatesModule = {
       layer.renderFunction = renderFunction
     },
 
-    updateLayerName(state, { layer, name }) {
+    setLayerName(state, { layer, name }) {
       layer.name = name
+    },
+
+    setLayerDimension(state, { layer, dimension, value }) {
+      let newDim = layer.dimensions
+      newDim[dimension] = value
+      Vue.set(layer, "dimensions", newDim)
     },
 
     updateTemplateSize(state, { template, size }) {
@@ -154,6 +173,14 @@ const TemplatesModule = {
 
     setTemplateLayers({ commit }, { template, layers }) {
       commit("setTemplateLayers", { template, layers })
+    },
+
+    setLayerName({ commit }, { layer, name }) {
+      commit("setLayerName", { layer, name })
+    },
+
+    setLayerDimension({ commit }, { layer, dimension, value }) {
+      commit("setLayerDimension", { layer, dimension, value })
     },
 
     updateLayerRenderFunction({ commit }, { layer, renderFunction }) {
