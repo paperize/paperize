@@ -184,14 +184,15 @@ const api = {
     helpers.p = helpers.findProperty
 
     return Promise.each(layers, layer => {
+      let layerDimensions = store.getters.getLayerDimensions(layer)
       // Draw a helper rectangle
       // TODO: draw based on dimensions.mode
       doc.setLineWidth(.005)
       doc.rect(
-        layer.dimensions.x*.01*component.template.size.w,
-        layer.dimensions.y*.01*component.template.size.h,
-        layer.dimensions.w*.01*component.template.size.w,
-        layer.dimensions.h*.01*component.template.size.h
+        layerDimensions.x*.01*component.template.size.w,
+        layerDimensions.y*.01*component.template.size.h,
+        layerDimensions.w*.01*component.template.size.w,
+        layerDimensions.h*.01*component.template.size.h
       )
 
       // Always revert to defaults
@@ -206,7 +207,7 @@ const api = {
         ${layer.renderFunction}
       }`)
 
-      return actualFunction(doc, helpers, layer.dimensions, game, component, item)
+      return actualFunction(doc, helpers, layerDimensions, game, component, item)
     })
   },
 

@@ -8,7 +8,7 @@
       input(id="layer-name" type="text" v-model="layerName")
 
   fieldset.fieldset
-    legend Dimensions {{ layer.dimensions.mode }}
+    legend Dimensions {{ layerDimensions.mode }}
 
     .grid-x.grid-padding-x
       .auto.cell
@@ -39,12 +39,14 @@
 </template>
 
 <script>
-  import { isString } from 'lodash'
-  import { mapActions } from 'vuex'
+  import { isString, debounce } from 'lodash'
+  import { mapGetters, mapActions } from 'vuex'
   import CodeLayerEditor from './CodeLayerEditor.vue'
   import TextLayerEditor from './TextLayerEditor.vue'
   import ImageLayerEditor from './ImageLayerEditor.vue'
   import ShapeLayerEditor from './ShapeLayerEditor.vue'
+
+  const INPUT_DELAY_MS = 200
 
   export default {
     props: ["layer"],
@@ -57,6 +59,10 @@
     },
 
     computed: {
+      ...mapGetters(["getLayerDimensions"]),
+
+      layerDimensions() { return this.getLayerDimensions(this.layer) },
+
       layerName: {
         get() { return this.layer.name },
 
@@ -66,46 +72,48 @@
       },
 
       layerDimensionX: {
-        get() { return this.layer.dimensions.x },
+        get() { return this.layerDimensions.x },
 
         set(newX) {
           if(isString(newX) || newX < 0) { newX = 0 }
-          const newDimensions = { ...this.layer.dimensions, x: newX }
-          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
+          this.setDimensionsSlowly({ ...this.layerDimensions, x: newX })
         }
       },
 
       layerDimensionY: {
-        get() { return this.layer.dimensions.y },
+        get() { return this.layerDimensions.y },
 
         set(newY) {
           if(isString(newY) || newY < 0) { newY = 0 }
-          const newDimensions = { ...this.layer.dimensions, y: newY }
-          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
+          this.setDimensionsSlowly({ ...this.layerDimensions, y: newY })
         }
       },
 
       layerDimensionW: {
-        get() { return this.layer.dimensions.w },
+        get() { return this.layerDimensions.w },
 
         set(newW) {
           if(isString(newW) || newW < 0) { newW = 0 }
-          const newDimensions = { ...this.layer.dimensions, w: newW }
-          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
+          this.setDimensionsSlowly({ ...this.layerDimensions, w: newW })
         }
       },
 
       layerDimensionH: {
-        get() { return this.layer.dimensions.h },
+        get() { return this.layerDimensions.h },
 
         set(newH) {
           if(isString(newH) || newH < 0) { newH = 0 }
-          const newDimensions = { ...this.layer.dimensions, H: newH }
-          this.setLayerDimensions({ layer: this.layer, dimensions: newDimensions })
+          this.setDimensionsSlowly({ ...this.layerDimensions, h: newH })
         }
       },
     },
 
-    methods: mapActions(["setLayerName", "setLayerDimensions"])
+    methods: {
+      ...mapActions(["setLayerName", "setLayerDimensions", "setDimensions"]),
+
+      setDimensionsSlowly: debounce(function(dimensions) {
+        this.setDimensions(dimensions)
+      }, INPUT_DELAY_MS)
+    }
   }
 </script>

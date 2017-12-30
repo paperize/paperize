@@ -71,7 +71,7 @@ div
             i.fa.fa-arrow-left
             em  You need to set a data Source before you can get started with Templates.
 
-      modal(name="Template Manager" height="auto" width="80%" :pivotY=".15" :scrollable="true")
+      modal(name="Template Manager" height="auto" width="98%" :pivotY=".15" :scrollable="true")
         template-manager(:component="component")
 
         button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Template Manager')")

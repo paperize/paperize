@@ -2,9 +2,10 @@ import { find } from 'lodash'
 
 const UIModule = {
   state: {
-    activeGameId: null,
-    activeComponentId: null,
-    activeLayerId: null
+    activeGameId:       null,
+    activeComponentId:  null,
+    activeLayerId:      null,
+    activeDimensionsId: null
   },
 
   getters: {
@@ -24,6 +25,10 @@ const UIModule = {
       if(state.activeLayerId) {
         return rootGetters.findLayer(state.activeLayerId)
       }
+    },
+
+    activeDimensions(state, getters, rootState, rootGetters) {
+      return rootGetters.findDimensions(state.activeDimensionsId)
     }
   },
 
@@ -46,6 +51,7 @@ const UIModule = {
 
     setActiveLayer(state, { layer }) {
       state.activeLayerId = layer.id
+      state.activeDimensionsId = layer.dimensionsId
     }
   },
 

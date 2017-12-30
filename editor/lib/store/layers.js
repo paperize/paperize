@@ -10,15 +10,6 @@ const SHAPE = 'shape'
 
 const LAYER_TYPES = [ CODE, TEXT, IMAGE, SHAPE ]
 
-const SAME_AS_PARENT = "sameAsParent",
-  PERCENT_OF_PARENT = "percentOfParent",
-  OFFSET_FROM_PARENT = "offsetFromParent"
-
-const DIMENSION_OBJECT = {
-  mode: SAME_AS_PARENT,
-  x: 5, y: 5, w: 90, h: 90
-}
-
 const DEFAULT_RENDER_FUNCTION = `
 // Common tasks, all measurements in inches
 // Official docs here: http://rawgit.com/MrRio/jsPDF/master/docs/
@@ -40,31 +31,31 @@ const DEFAULT_RENDER_FUNCTION = `
 const LAYER_DEFAULTS = {}
 LAYER_DEFAULTS[TEXT] =
   {
-    name:        "[Text]",
-    type:        TEXT,
-    renderOrder: 0,
-    dimensions:  DIMENSION_OBJECT,
+    name:         "[Text]",
+    type:         TEXT,
+    renderOrder:  0,
+    dimensionsId: null
   }
 LAYER_DEFAULTS[IMAGE] =
   {
-    name:        "[Image]",
-    type:        IMAGE,
-    renderOrder: 0,
-    dimensions:  DIMENSION_OBJECT,
+    name:         "[Image]",
+    type:         IMAGE,
+    renderOrder:  0,
+    dimensionsId: null
   }
 LAYER_DEFAULTS[SHAPE] =
   {
-    name:        "[Shape]",
-    type:        SHAPE,
-    renderOrder: 0,
-    dimensions:  DIMENSION_OBJECT,
+    name:         "[Shape]",
+    type:         SHAPE,
+    renderOrder:  0,
+    dimensionsId: null
   }
 LAYER_DEFAULTS[CODE] =
   {
-    name:        "[Code]",
-    type:        CODE,
-    renderOrder: 0,
-    dimensions:  DIMENSION_OBJECT,
+    name:         "[Code]",
+    type:         CODE,
+    renderOrder:  0,
+    dimensionsId: null
     renderFunction: DEFAULT_RENDER_FUNCTION
   }
 
@@ -76,6 +67,7 @@ const LayersModule = {
   getters: {
     findLayer: state => layerId => state.layers[layerId],
     findLayers: state => layerIds => layerIds.map(layerId => state.layers[layerId]),
+    getLayerDimensions: (_, __, ___, rootGetters) => layer => rootGetters.findDimensions(layer.dimensionsId)
   },
 
   mutations: {
@@ -96,7 +88,7 @@ const LayersModule = {
     },
 
     setLayerDimensions(state, { layer, dimensions }) {
-      layer.dimensions = dimensions
+      layer.dimensionsId = dimensions.id
     },
 
     setLayersRenderOrder(state, layers) {
@@ -105,20 +97,24 @@ const LayersModule = {
   },
 
   actions: {
-    createLayer({ commit }, layerObject={}) {
+    createLayer({ dispatch, commit }, layerObject={}) {
       let { type } = layerObject,
           layer = { ...LAYER_DEFAULTS[type], ...layerObject }
 
-      // early out if we didn't actually find a layer of the requested type
+      // early out: invalid layer type
       if(!layer) {
         throw new Error(`No Layer Type found matching "${layerType}"`)
       }
 
-      layer.id = uuid()
-      // clone it up and commit it, returns the ID
-      commit("createLayer", clone(layer))
+      return dispatch("createDimensions").then((dimensionsId) => {
+        layer.id = uuid()
+        layer.dimensionsId = dimensionsId
+        // clone it up and commit it, returns the ID
+        commit("createLayer", clone(layer))
 
-      return layer.id
+        return layer.id
+      })
+
     },
 
     setLayerName({ commit }, { layer, name }) {
