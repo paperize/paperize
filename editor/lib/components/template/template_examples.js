@@ -91,6 +91,9 @@ const api = {
 
   restoreDocumentDefaults(doc) {
     doc.setFontSize(16)
+    doc.setLineWidth(.02)
+    doc.setDrawColor(0)
+    doc.setFillColor(0)
   },
 
   renderItem(doc, game, component, item) {
@@ -101,14 +104,21 @@ const api = {
 
 
     let helpers = {
-      // Guide box
-      drawGuideBox(dimensions) {
-        doc.setLineWidth(.02)
-        doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h)
-      },
-
       findProperty(key) {
         return _.find(item, { key }).value || ""
+      },
+
+      percentOfParent(dimensions, parent) {
+        return {
+          x: dimensions.x*.01*parent.w,
+          y: dimensions.y*.01*parent.h,
+          w: dimensions.w*.01*parent.w,
+          h: dimensions.h*.01*parent.h,
+        }
+      },
+
+      easyRect(dimensions, size, mode="S") {
+        doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, mode)
       },
 
       text(fontSize, text, x, y) {
@@ -117,6 +127,7 @@ const api = {
       },
 
       textBox(text, boxDimensions, options) {
+        options = _.defaults(options, {})
         // helpers.drawGuideBox(boxDimensions)
 
         // Line Height Formula: fontSize * lineHeight / ptsPerInch
@@ -184,30 +195,44 @@ const api = {
     helpers.p = helpers.findProperty
 
     return Promise.each(layers, layer => {
-      let layerDimensions = store.getters.getLayerDimensions(layer)
-      // Draw a helper rectangle
-      // TODO: draw based on dimensions.mode
-      doc.setLineWidth(.005)
-      doc.rect(
-        layerDimensions.x*.01*component.template.size.w,
-        layerDimensions.y*.01*component.template.size.h,
-        layerDimensions.w*.01*component.template.size.w,
-        layerDimensions.h*.01*component.template.size.h
-      )
+      let layerDimensions = helpers.percentOfParent(store.getters.getLayerDimensions(layer), component.template.size)
 
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
 
-      // Early out if there's no lambda to eval
-      // if(!layer.renderFunction) { return }
+      // Draw a helper rectangle
+      // TODO: draw based on dimensions.mode
+      doc.setLineWidth(.005)
+      helpers.easyRect(layerDimensions)
 
-      let actualFunction
-      // Let the fires of hell erupt
-      eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
-        ${layer.renderFunction}
-      }`)
+      if(layer.type == "code" && layer.renderFunction) {
+        let actualFunction
+        // Let the fires of hell erupt
+        eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
+          ${layer.renderFunction}
+        }`)
+        return actualFunction(doc, helpers, layerDimensions, game, component, item)
 
-      return actualFunction(doc, helpers, layerDimensions, game, component, item)
+      } else if(layer.type == "shape") {
+        doc.setFillColor(Math.random()*255, Math.random()*255, Math.random()*255)
+        doc.setDrawColor(Math.random()*255, Math.random()*255, Math.random()*255)
+        doc.setLineWidth(.25)
+        helpers.easyRect(layerDimensions, "DF")
+
+      } else if(layer.type == "text") {
+        doc.setFontSize(8)
+
+        let propertyText = _.reduce(item, (text, itemPair) => {
+          text += `${itemPair.key}: ${itemPair.value}\n`
+          return text
+        }, "")
+        helpers.textBox(propertyText, layerDimensions, {})
+
+      } else if(layer.type == "image") {
+        let imagePromise = helpers.imageBox("blank-avatar.png", layerDimensions, {})
+        console.log(imagePromise)
+        return imagePromise
+      }
     })
   },
 

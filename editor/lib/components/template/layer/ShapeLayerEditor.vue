@@ -4,6 +4,6 @@ p Shape editor
 
 <script>
   export default {
-    props: []
+    props: ["layer"]
   }
 </script>
