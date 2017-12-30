@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import { debounce } from 'lodash'
+  import { debounce, reduce } from 'lodash'
   import { mapGetters } from 'vuex'
   import pdfRenderer from './template_examples'
 
@@ -12,18 +12,30 @@
   export default {
     props: ["game", "component", "item"],
 
+    mounted() { this.renderPDF() },
+
     data() {
       return {
         pdfBlob: null
       }
     },
 
-    computed: mapGetters(["activeDimensions"]),
+    computed: {
+      ...mapGetters(["activeDimensions"]),
+
+      templateLayers() {
+        return this.$store.getters.getTemplateLayers(this.component.template)
+      }
+    },
 
     watch: {
-      activeDimensions() {
-        this.renderPDF()
-      }
+      // Props
+      game: "renderPDF",
+      component: "renderPDF",
+      item: "renderPDF",
+      // Computed
+      activeDimensions: "renderPDF",
+      templateLayers: "renderPDF",
     },
 
     methods: {
@@ -31,7 +43,7 @@
         pdfRenderer.renderItemToPdf(this.game, this.component, this.item).then((pdf) => {
           this.pdfBlob = pdf
         })
-      }, RENDER_DELAY_MS)
+      }, RENDER_DELAY_MS, { leading: true })
     }
   }
 

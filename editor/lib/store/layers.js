@@ -55,7 +55,7 @@ LAYER_DEFAULTS[CODE] =
     name:         "[Code]",
     type:         CODE,
     renderOrder:  0,
-    dimensionsId: null
+    dimensionsId: null,
     renderFunction: DEFAULT_RENDER_FUNCTION
   }
 

@@ -52,7 +52,7 @@ div
         .grid-x
           .auto.cell
           .shrink.cell
-            template-previewer.inline-preview(:game="activeGame" :component="activeComponent")
+            template-previewer.inline-preview(v-if="!editingTemplate" :game="activeGame" :component="activeComponent")
           .auto.cell
 
       template(v-else)
@@ -74,7 +74,7 @@ div
       modal(name="Template Manager" height="auto" width="98%" :pivotY=".15" :scrollable="true")
         template-manager(:component="component")
 
-        button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Template Manager')")
+        button.close-button(aria-label="Close modal" type="button" @click="closeTemplateManager")
           span(aria-hidden="true") &times;
 </template>
 
@@ -93,6 +93,13 @@ div
       'template-previewer': TemplatePreviewer
     },
 
+    data() {
+      return {
+        // TODO: fix this required preview-hiding behavior due to multiple previewers
+        editingTemplate: false
+      }
+    },
+
     computed: {
       ...mapGetters(["activeGame", "activeComponent", "sourceProperties"]),
     },
@@ -104,7 +111,13 @@ div
 
       openTemplateManager() {
         this.$modal.show('Template Manager')
+        this.editingTemplate = true
       },
+
+      closeTemplateManager() {
+        this.$modal.hide('Template Manager')
+        this.editingTemplate = false
+      }
     }
   }
 </script>
