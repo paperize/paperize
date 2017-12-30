@@ -229,9 +229,7 @@ const api = {
         helpers.textBox(propertyText, layerDimensions, {})
 
       } else if(layer.type == "image") {
-        let imagePromise = helpers.imageBox("blank-avatar.png", layerDimensions, {})
-        console.log(imagePromise)
-        return imagePromise
+        return helpers.imageBox("blank-avatar.png", layerDimensions, {})
       }
     })
   },
