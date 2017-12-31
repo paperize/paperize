@@ -117,8 +117,10 @@ const api = {
         }
       },
 
-      easyRect(dimensions, size, mode="S") {
+      // easy to render a rect given dimensions
+      easyRect(dimensions, mode="S") {
         doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, mode)
+        // doc.roundedRect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, .1, .1, mode)
       },
 
       text(fontSize, text, x, y) {
@@ -214,10 +216,25 @@ const api = {
         return actualFunction(doc, helpers, layerDimensions, game, component, item)
 
       } else if(layer.type == "shape") {
-        doc.setFillColor(Math.random()*255, Math.random()*255, Math.random()*255)
-        doc.setDrawColor(Math.random()*255, Math.random()*255, Math.random()*255)
-        doc.setLineWidth(.25)
-        helpers.easyRect(layerDimensions, "DF")
+        // extract RGB255 from hex
+        let redFillComponent = parseInt(`${layer.fillColor[1]}${layer.fillColor[2]}`, 16),
+          greenFillComponent = parseInt(`${layer.fillColor[3]}${layer.fillColor[4]}`, 16),
+          blueFillComponent  = parseInt(`${layer.fillColor[5]}${layer.fillColor[6]}`, 16),
+          redStrokeComponent = parseInt(`${layer.strokeColor[1]}${layer.strokeColor[2]}`, 16),
+          greenStrokeComponent = parseInt(`${layer.strokeColor[3]}${layer.strokeColor[4]}`, 16),
+          blueStrokeComponent  = parseInt(`${layer.strokeColor[5]}${layer.strokeColor[6]}`, 16)
+
+        doc.setFillColor(redFillComponent, greenFillComponent, blueFillComponent)
+        doc.setDrawColor(redStrokeComponent, greenStrokeComponent, blueStrokeComponent)
+        doc.setLineWidth(layer.strokeWidth)
+
+        if(layer.strokePresent && layer.fillPresent) {
+          helpers.easyRect(layerDimensions, "DF")
+        } else if(layer.strokePresent) {
+          helpers.easyRect(layerDimensions, "S")
+        } else if(layer.fillPresent) {
+          helpers.easyRect(layerDimensions, "F")
+        }
 
       } else if(layer.type == "text") {
         doc.setFontSize(8)

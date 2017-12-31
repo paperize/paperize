@@ -21,7 +21,13 @@
     },
 
     computed: {
-      ...mapGetters(["activeDimensions"]),
+      ...mapGetters(["activeDimensions", "activeLayer"]),
+
+      layerStrokePresent() { return this.activeLayer.strokePresent },
+      layerStrokeWidth() { return this.activeLayer.strokeWidth },
+      layerStrokeColor() { return this.activeLayer.strokeColor },
+      layerFillPresent() { return this.activeLayer.fillPresent },
+      layerFillColor() { return this.activeLayer.fillColor },
 
       templateLayers() {
         return this.$store.getters.getTemplateLayers(this.component.template)
@@ -36,6 +42,12 @@
       // Computed
       activeDimensions: "renderPDF",
       templateLayers: "renderPDF",
+      activeLayer: "renderPDF",
+      layerStrokePresent: "renderPDF",
+      layerStrokeWidth: "renderPDF",
+      layerStrokeColor: "renderPDF",
+      layerFillPresent: "renderPDF",
+      layerFillColor: "renderPDF",
     },
 
     methods: {

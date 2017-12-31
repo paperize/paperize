@@ -1,4 +1,4 @@
-import { forEach, clone, defaults } from 'lodash'
+import { forEach, isNil, clone, defaults } from 'lodash'
 
 import Vue from 'vue'
 import uuid from 'uuid/v4'
@@ -45,10 +45,15 @@ LAYER_DEFAULTS[IMAGE] =
   }
 LAYER_DEFAULTS[SHAPE] =
   {
-    name:         "[Shape]",
-    type:         SHAPE,
-    renderOrder:  0,
-    dimensionsId: null
+    name:          "[Shape]",
+    type:          SHAPE,
+    renderOrder:   0,
+    dimensionsId:  null,
+    strokePresent: true,
+    strokeWidth:   0.1,
+    strokeColor:   "#000000",
+    fillPresent:   false,
+    fillColor:     "#000000",
   }
 LAYER_DEFAULTS[CODE] =
   {
@@ -79,6 +84,16 @@ const LayersModule = {
       delete state.layers[layer.id]
     },
 
+    updateLayer(state, { layer, keyValueObject }) {
+      forEach(keyValueObject, (value, key) => {
+        if(!isNil(layer[key])) {
+          layer[key] = value
+        } else {
+          throw new Error(`No mass assignment of non-existent keys: ${key}`)
+        }
+      })
+    },
+
     setLayerRenderFunction(state, { layer, renderFunction }) {
       layer.renderFunction = renderFunction
     },
@@ -93,7 +108,19 @@ const LayersModule = {
 
     setLayersRenderOrder(state, layers) {
       forEach(layers, (layer, index) => layer.renderOrder = index)
-    }
+    },
+
+    setLayerStrokeWidth(state, {layer, strokeWidth }) {
+      layer.strokeWidth = strokeWidth
+    },
+
+    setLayerStrokeColor(state, {layer, strokeColor }) {
+      layer.strokeColor = strokeColor
+    },
+
+    setLayerFillColor(state, {layer, fillColor }) {
+      layer.fillColor = fillColor
+    },
   },
 
   actions: {
@@ -117,6 +144,10 @@ const LayersModule = {
 
     },
 
+    updateLayer({ commit }, { layer, keyValueObject }) {
+      commit("updateLayer", { layer, keyValueObject })
+    },
+
     setLayerName({ commit }, { layer, name }) {
       commit("setLayerName", { layer, name })
     },
@@ -132,7 +163,19 @@ const LayersModule = {
 
     setLayersRenderOrder({ commit }, layers) {
       commit("setLayersRenderOrder", layers)
-    }
+    },
+
+    setLayerStrokeWidth({ commit }, { layer, strokeWidth }) {
+      commit("setLayerStrokeWidth", { layer, strokeWidth })
+    },
+
+    setLayerStrokeColor({ commit }, { layer, strokeColor }) {
+      commit("setLayerStrokeColor", { layer, strokeColor })
+    },
+
+    setLayerFillColor({ commit }, { layer, fillColor }) {
+      commit("setLayerFillColor", { layer, fillColor })
+    },
   },
 }
 
