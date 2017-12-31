@@ -8,7 +8,7 @@
       input(id="layer-name" type="text" v-model="layerName")
 
   fieldset.fieldset
-    legend Dimensions {{ layerDimensions.mode }}
+    legend Dimensions
 
     .grid-x.grid-padding-x
       .auto.cell

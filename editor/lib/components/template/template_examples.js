@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
-  return store.getters.findImageByName(name).then(asset => asset.data)
+  return Promise.try(() => store.getters.findImageByName(name).then(asset => asset.data))
 }
 
 const fetchImageByName = function(name) {
@@ -105,7 +105,13 @@ const api = {
 
     let helpers = {
       findProperty(key) {
-        return _.find(item, { key }).value || ""
+        const property = _.find(item, { key })
+        if(property) {
+          return property.value
+        } else {
+          console.error(`No property found by key: ${key}`)
+          return ""
+        }
       },
 
       percentOfParent(dimensions, parent) {
@@ -144,8 +150,8 @@ const api = {
       imageBox(imageName, boxDimensions, options) {
         // helpers.drawGuideBox(boxDimensions)
         options = _.defaults(options, {
-          hAlign: "center",
-          vAlign: "top"
+          horizontalAlignment: "center",
+          verticalAlignment: "top"
         })
         let boxRatio = boxDimensions.w / boxDimensions.h
 
@@ -164,9 +170,9 @@ const api = {
             finalH *= boxRatio/imageRatio
 
             // Manage Vertical Alignment
-            if(options.vAlign == "middle") {
+            if(options.verticalAlignment == "middle") {
               finalY += (boxDimensions.h - finalH)/2
-            } else if(options.vAlign == "bottom") {
+            } else if(options.verticalAlignment == "bottom") {
               finalY += boxDimensions.h - finalH
             }
 
@@ -175,10 +181,10 @@ const api = {
             finalW *= imageRatio/boxRatio
 
             // Manage Horizontal Alignment
-            if(options.hAlign == "center") {
+            if(options.horizontalAlignment == "center") {
               finalX += (boxDimensions.w - finalW)/2
 
-            } else if(options.hAlign == "right") {
+            } else if(options.horizontalAlignment == "right") {
               finalX += (boxDimensions.w - finalW)
             }
           }
@@ -246,7 +252,18 @@ const api = {
         helpers.textBox(propertyText, layerDimensions, {})
 
       } else if(layer.type == "image") {
-        return helpers.imageBox("blank-avatar.png", layerDimensions, {})
+        let imageName = "",
+          { horizontalAlignment, verticalAlignment } = layer
+
+        if(layer.imageNameStatic) {
+          imageName = layer.imageName
+        } else {
+          imageName = `${layer.imageNamePrefix}${helpers.p(layer.imageNameProperty)}${layer.imageNameSuffix}`
+        }
+
+        return helpers.imageBox(imageName, layerDimensions, { horizontalAlignment, verticalAlignment }).catch(() => {
+            console.error(`Failed to add image named "${imageName}"`)
+          })
       }
     })
   },

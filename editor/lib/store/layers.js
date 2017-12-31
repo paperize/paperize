@@ -1,4 +1,4 @@
-import { forEach, isNil, clone, defaults } from 'lodash'
+import { forEach, isUndefined, clone, defaults } from 'lodash'
 
 import Vue from 'vue'
 import uuid from 'uuid/v4'
@@ -38,10 +38,17 @@ LAYER_DEFAULTS[TEXT] =
   }
 LAYER_DEFAULTS[IMAGE] =
   {
-    name:         "[Image]",
-    type:         IMAGE,
-    renderOrder:  0,
-    dimensionsId: null
+    name:                "[Image]",
+    type:                IMAGE,
+    renderOrder:         0,
+    dimensionsId:        null,
+    imageNameStatic:     true,
+    imageName:           null,
+    imageNamePrefix:     "",
+    imageNameProperty:   null,
+    imageNameSuffix:     "",
+    horizontalAlignment: "center",
+    verticalAlignment:   "middle"
   }
 LAYER_DEFAULTS[SHAPE] =
   {
@@ -86,7 +93,7 @@ const LayersModule = {
 
     updateLayer(state, { layer, keyValueObject }) {
       forEach(keyValueObject, (value, key) => {
-        if(!isNil(layer[key])) {
+        if(!isUndefined(layer[key])) {
           layer[key] = value
         } else {
           throw new Error(`No mass assignment of non-existent keys: ${key}`)

@@ -35,51 +35,18 @@ div
 
 <script>
   import { mapActions } from 'vuex'
+  import { computedVModelUpdateAll } from '../../../store/component_helper'
 
   export default {
     props: ["layer"],
 
-    computed: {
-      strokePresent: {
-        get() { return this.layer.strokePresent },
-
-        set(strokePresent) {
-          this.updateLayer({ layer: this.layer, keyValueObject: { strokePresent }})
-        }
-      },
-
-      strokeWidth: {
-        get() { return this.layer.strokeWidth },
-
-        set(strokeWidth) {
-          this.updateLayer({ layer: this.layer, keyValueObject: { strokeWidth }})
-        }
-      },
-
-      strokeColor: {
-        get() { return this.layer.strokeColor },
-
-        set(strokeColor) {
-          this.updateLayer({ layer: this.layer, keyValueObject: { strokeColor }})
-        }
-      },
-
-      fillPresent: {
-        get() { return this.layer.fillPresent },
-
-        set(fillPresent) {
-          this.updateLayer({ layer: this.layer, keyValueObject: { fillPresent }})
-        }
-      },
-
-      fillColor: {
-        get() { return this.layer.fillColor },
-
-        set(fillColor) {
-          this.updateLayer({ layer: this.layer, keyValueObject: { fillColor }})
-        }
-      },
-    },
+    computed: computedVModelUpdateAll("layer", "updateLayer", [
+      "strokePresent",
+      "strokeWidth",
+      "strokeColor",
+      "fillPresent",
+      "fillColor"
+    ]),
 
     methods: mapActions(["updateLayer"])
   }

@@ -29,6 +29,14 @@
       layerFillPresent() { return this.activeLayer.fillPresent },
       layerFillColor() { return this.activeLayer.fillColor },
 
+      layerImageNameStatic() { return this.activeLayer.imageNameStatic },
+      layerImageName() { return this.activeLayer.imageName },
+      layerImageNamePrefix() { return this.activeLayer.imageNamePrefix },
+      layerImageNameProperty() { return this.activeLayer.imageNameProperty },
+      layerImageNameSuffix() { return this.activeLayer.imageNameSuffix },
+      layerHorizontalAlignment() { return this.activeLayer.horizontalAlignment },
+      layerVerticalAlignment() { return this.activeLayer.verticalAlignment },
+
       templateLayers() {
         return this.$store.getters.getTemplateLayers(this.component.template)
       }
@@ -48,6 +56,13 @@
       layerStrokeColor: "renderPDF",
       layerFillPresent: "renderPDF",
       layerFillColor: "renderPDF",
+      layerImageNameStatic: "renderPDF",
+      layerImageName: "renderPDF",
+      layerImageNamePrefix: "renderPDF",
+      layerImageNameProperty: "renderPDF",
+      layerImageNameSuffix: "renderPDF",
+      layerHorizontalAlignment: "renderPDF",
+      layerVerticalAlignment: "renderPDF",
     },
 
     methods: {
