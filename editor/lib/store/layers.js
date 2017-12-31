@@ -109,18 +109,6 @@ const LayersModule = {
     setLayersRenderOrder(state, layers) {
       forEach(layers, (layer, index) => layer.renderOrder = index)
     },
-
-    setLayerStrokeWidth(state, {layer, strokeWidth }) {
-      layer.strokeWidth = strokeWidth
-    },
-
-    setLayerStrokeColor(state, {layer, strokeColor }) {
-      layer.strokeColor = strokeColor
-    },
-
-    setLayerFillColor(state, {layer, fillColor }) {
-      layer.fillColor = fillColor
-    },
   },
 
   actions: {
@@ -163,18 +151,6 @@ const LayersModule = {
 
     setLayersRenderOrder({ commit }, layers) {
       commit("setLayersRenderOrder", layers)
-    },
-
-    setLayerStrokeWidth({ commit }, { layer, strokeWidth }) {
-      commit("setLayerStrokeWidth", { layer, strokeWidth })
-    },
-
-    setLayerStrokeColor({ commit }, { layer, strokeColor }) {
-      commit("setLayerStrokeColor", { layer, strokeColor })
-    },
-
-    setLayerFillColor({ commit }, { layer, fillColor }) {
-      commit("setLayerFillColor", { layer, fillColor })
     },
   },
 }

@@ -41,9 +41,7 @@ div
 
     computed: {
       strokePresent: {
-        get() {
-          return this.layer.strokePresent
-        },
+        get() { return this.layer.strokePresent },
 
         set(strokePresent) {
           this.updateLayer({ layer: this.layer, keyValueObject: { strokePresent }})
@@ -51,29 +49,23 @@ div
       },
 
       strokeWidth: {
-        get() {
-          return this.layer.strokeWidth
-        },
+        get() { return this.layer.strokeWidth },
 
-        set(newWidth) {
-          this.setLayerStrokeWidth({ layer: this.layer, strokeWidth: newWidth })
+        set(strokeWidth) {
+          this.updateLayer({ layer: this.layer, keyValueObject: { strokeWidth }})
         }
       },
 
       strokeColor: {
-        get() {
-          return this.layer.strokeColor
-        },
+        get() { return this.layer.strokeColor },
 
-        set(newColor) {
-          this.setLayerStrokeColor({ layer: this.layer, strokeColor: newColor })
+        set(strokeColor) {
+          this.updateLayer({ layer: this.layer, keyValueObject: { strokeColor }})
         }
       },
 
       fillPresent: {
-        get() {
-          return this.layer.fillPresent
-        },
+        get() { return this.layer.fillPresent },
 
         set(fillPresent) {
           this.updateLayer({ layer: this.layer, keyValueObject: { fillPresent }})
@@ -81,16 +73,14 @@ div
       },
 
       fillColor: {
-        get() {
-          return this.layer.fillColor
-        },
+        get() { return this.layer.fillColor },
 
-        set(newColor) {
-          this.setLayerFillColor({ layer: this.layer, fillColor: newColor })
+        set(fillColor) {
+          this.updateLayer({ layer: this.layer, keyValueObject: { fillColor }})
         }
       },
     },
 
-    methods: mapActions(["setLayerStrokeWidth", "setLayerStrokeColor", "setLayerFillColor", "updateLayer"])
+    methods: mapActions(["updateLayer"])
   }
 </script>
