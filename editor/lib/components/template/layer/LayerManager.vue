@@ -11,7 +11,7 @@
   .small-12.cell
     table
       draggable(v-model="templateLayers" element="tbody" :options="{ handle: '.drag' }")
-        tr.layer(v-for="layer in templateLayers" @click="setActiveLayer({ layer })")
+        tr.layer(v-for="layer in templateLayers" @click="setActiveLayer({ layer })" :class="{ 'active-layer': isActive(layer) }")
           td.grid-x.grid-padding-x
             .shrink.cell.drag
               i.fa.fa-bars
@@ -24,7 +24,7 @@
               i.fa.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
 
             .auto.cell
-              span(:title="layer.name")  {{ layer.name | truncate }} ({{ layer.renderOrder }})
+              span(:title="layer.name")  {{ layer.name | truncate }}
 
             .shrink.cell
               a(@click="confirmDeletion(layer)")
@@ -57,7 +57,7 @@
     },
 
     computed: {
-      ...mapGetters(["getTemplateLayers", "getActiveLayer"]),
+      ...mapGetters(["getTemplateLayers", "activeLayer"]),
 
       editing: {
         get() {
@@ -88,7 +88,18 @@
       ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setLayersRenderOrder"]),
       ...mapMutations(["setActiveLayer"]),
 
+      isActive(layer) {
+        return this.activeLayer.id === layer.id
+      },
+
       selectNewLayerType() {
+        const handlerFunction = (layerType) => {
+          return () => {
+            this.addTemplateLayer({ template: this.template, layerType })
+            this.$modal.hide("dialog")
+          }
+        }
+
         this.$modal.show('dialog', {
           title: "Add what type of Layer?",
           buttons: [
@@ -97,28 +108,16 @@
               default: true
             }, {
               title: "Text",
-              handler: () => {
-                this.addTemplateLayer({ template: this.template, layerType: "text" })
-                this.$modal.hide("dialog")
-              }
+              handler: handlerFunction("text")
             }, {
               title: "Image",
-              handler: () => {
-                this.addTemplateLayer({ template: this.template, layerType: "image" })
-                this.$modal.hide("dialog")
-              }
+              handler: handlerFunction("image")
             }, {
               title: "Shape",
-              handler: () => {
-                this.addTemplateLayer({ template: this.template, layerType: "shape" })
-                this.$modal.hide("dialog")
-              }
+              handler: handlerFunction("shape")
             }, {
               title: "Code",
-              handler: () => {
-                this.addTemplateLayer({ template: this.template, layerType: "code" })
-                this.$modal.hide("dialog")
-              }
+              handler: handlerFunction("code")
             }
           ]
         })
@@ -154,5 +153,18 @@
 
   .layer {
     cursor: pointer;
+  }
+
+  .layer:hover {
+    background-color: lightgray;
+  }
+
+  .active-layer {
+    font-size: 1.25em;
+    font-weight: bold;
+  }
+
+  .active-layer .drag {
+    color: initial;
   }
 </style>

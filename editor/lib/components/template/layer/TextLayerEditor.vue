@@ -3,17 +3,19 @@
   fieldset.fieldset
     legend Text Look &amp; Feel
 
-    .grid-x.grid-margin-x
-      .auto.cell
-        strong Font Color:
-      .shrink.cell
-        input(type="color" v-model="textColor")
+    //- .grid-x.grid-margin-x
+    //-   .medium-6.cell
+    //-     .grid-x.grid-margin-x
+    //-       .auto.cell
+    //-         strong Font Face:
+    //-       .shrink.cell
+    //-         input(type="text" disabled placeholder="Coming soon...")
 
     .grid-x.grid-margin-x
-      .auto.cell
-        strong Font Face:
       .shrink.cell
-        em Coming soon...
+        strong Font Color:
+      .auto.cell
+        input(type="color" v-model="textColor")
 
       .auto.cell
         strong Font Size:
@@ -67,3 +69,9 @@
     }
   }
 </script>
+
+<style scoped>
+  textarea {
+    height: 200px;
+  }
+</style>

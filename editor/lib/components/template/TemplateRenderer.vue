@@ -38,6 +38,8 @@
       layerVerticalAlignment() { return this.activeLayer.verticalAlignment },
 
       layerTextContentTemplate() { return this.activeLayer.textContentTemplate },
+      layerTextColor() { return this.activeLayer.textColor },
+      layerTextSize() { return this.activeLayer.textSize },
 
       templateLayers() {
         return this.$store.getters.getTemplateLayers(this.component.template)
@@ -66,6 +68,8 @@
       layerHorizontalAlignment: "renderPDF",
       layerVerticalAlignment: "renderPDF",
       layerTextContentTemplate: "renderPDF",
+      layerTextColor: "renderPDF",
+      layerTextSize: "renderPDF",
     },
 
     methods: {
