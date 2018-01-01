@@ -110,7 +110,7 @@ const api = {
         if(property) {
           return property.value
         } else {
-          console.error(`No property found by key: ${key}`)
+          console.log(`No property found by key: ${key}`)
           return ""
         }
       },
@@ -282,7 +282,7 @@ const api = {
         }
 
         return helpers.imageBox(imageName, layerDimensions, { horizontalAlignment, verticalAlignment }).catch(() => {
-            console.error(`Failed to add image named "${imageName}"`)
+            console.log(`Failed to add image named "${imageName}"`)
           })
       }
     })

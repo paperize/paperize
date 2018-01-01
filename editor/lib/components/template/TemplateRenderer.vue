@@ -23,23 +23,23 @@
     computed: {
       ...mapGetters(["activeDimensions", "activeLayer"]),
 
-      layerStrokePresent() { return this.activeLayer.strokePresent },
-      layerStrokeWidth() { return this.activeLayer.strokeWidth },
-      layerStrokeColor() { return this.activeLayer.strokeColor },
-      layerFillPresent() { return this.activeLayer.fillPresent },
-      layerFillColor() { return this.activeLayer.fillColor },
+      layerStrokePresent() { return (this.activeLayer && this.activeLayer.strokePresent) },
+      layerStrokeWidth() { return (this.activeLayer && this.activeLayer.strokeWidth) },
+      layerStrokeColor() { return (this.activeLayer && this.activeLayer.strokeColor) },
+      layerFillPresent() { return (this.activeLayer && this.activeLayer.fillPresent) },
+      layerFillColor() { return (this.activeLayer && this.activeLayer.fillColor) },
 
-      layerImageNameStatic() { return this.activeLayer.imageNameStatic },
-      layerImageName() { return this.activeLayer.imageName },
-      layerImageNamePrefix() { return this.activeLayer.imageNamePrefix },
-      layerImageNameProperty() { return this.activeLayer.imageNameProperty },
-      layerImageNameSuffix() { return this.activeLayer.imageNameSuffix },
-      layerHorizontalAlignment() { return this.activeLayer.horizontalAlignment },
-      layerVerticalAlignment() { return this.activeLayer.verticalAlignment },
+      layerImageNameStatic() { return (this.activeLayer && this.activeLayer.imageNameStatic) },
+      layerImageName() { return (this.activeLayer && this.activeLayer.imageName) },
+      layerImageNamePrefix() { return (this.activeLayer && this.activeLayer.imageNamePrefix) },
+      layerImageNameProperty() { return (this.activeLayer && this.activeLayer.imageNameProperty) },
+      layerImageNameSuffix() { return (this.activeLayer && this.activeLayer.imageNameSuffix) },
+      layerHorizontalAlignment() { return (this.activeLayer && this.activeLayer.horizontalAlignment) },
+      layerVerticalAlignment() { return (this.activeLayer && this.activeLayer.verticalAlignment) },
 
-      layerTextContentTemplate() { return this.activeLayer.textContentTemplate },
-      layerTextColor() { return this.activeLayer.textColor },
-      layerTextSize() { return this.activeLayer.textSize },
+      layerTextContentTemplate() { return (this.activeLayer && this.activeLayer.textContentTemplate) },
+      layerTextColor() { return (this.activeLayer && this.activeLayer.textColor) },
+      layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
       templateLayers() {
         return this.$store.getters.getTemplateLayers(this.component.template)

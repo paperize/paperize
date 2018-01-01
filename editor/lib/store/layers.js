@@ -137,6 +137,7 @@ const LayersModule = {
         layer.dimensionsId = dimensionsId
         // clone it up and commit it, returns the ID
         commit("createLayer", clone(layer))
+        commit("setActiveLayer", { layer })
 
         return layer.id
       })

@@ -89,7 +89,7 @@
       ...mapMutations(["setActiveLayer"]),
 
       isActive(layer) {
-        return this.activeLayer.id === layer.id
+        return this.activeLayer === layer
       },
 
       selectNewLayerType() {
