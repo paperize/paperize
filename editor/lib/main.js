@@ -12,6 +12,9 @@ persistence.initializeAndWatchStore(store)
 import router from './routes'
 
 // Vue extensions
+import Autocomplete from 'v-autocomplete'
+Vue.use(Autocomplete)
+
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
