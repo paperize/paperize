@@ -46,7 +46,7 @@
   import ImageLayerEditor from './ImageLayerEditor.vue'
   import ShapeLayerEditor from './ShapeLayerEditor.vue'
 
-  const INPUT_DELAY_MS = 200
+  const INPUT_DELAY_MS = 400
 
   export default {
     props: ["layer", "source"],
@@ -66,8 +66,8 @@
       layerName: {
         get() { return this.layer.name },
 
-        set(newName) {
-          this.setLayerName({ layer: this.layer, name: newName })
+        set(name) {
+          this.updateLayerSlowly({ layer: this.layer, keyValueObject: { name } })
         }
       },
 
@@ -109,11 +109,15 @@
     },
 
     methods: {
-      ...mapActions(["setLayerName", "setLayerDimensions", "setDimensions"]),
+      ...mapActions(["updateLayer", "setDimensions"]),
+
+      updateLayerSlowly: debounce(function(args) {
+        this.updateLayer(args)
+      }, INPUT_DELAY_MS),
 
       setDimensionsSlowly: debounce(function(dimensions) {
         this.setDimensions(dimensions)
-      }, INPUT_DELAY_MS)
+      }, INPUT_DELAY_MS),
     }
   }
 </script>

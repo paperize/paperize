@@ -26,12 +26,7 @@
             .auto.cell
               span(:title="layer.name")  {{ layer.name | truncate }} ({{ layer.renderOrder }})
 
-
             .shrink.cell
-              //- edit code layer
-              //- a(@click="$modal.show(`Layer ${layer.renderOrder}`)")
-              //-   i.fa.fa-pencil
-              //- = " "
               a(@click="confirmDeletion(layer)")
                 i.fa.fa-remove
 </template>
@@ -48,8 +43,8 @@
 
     filters: {
       truncate(string) {
-        if(string.length > 10) {
-          string = `${string.substr(0, 8)}...`
+        if(string.length > 20) {
+          string = `${string.substr(0, 18)}...`
         }
         return string
       }
@@ -86,22 +81,12 @@
         set(newLayers) {
           this.setLayersRenderOrder(newLayers)
         }
-      },
-
-      layerName: {
-        get() {
-          return this.editing.name
-        },
-
-        set(newName) {
-          this.updateLayerName({ layer: this.editing, name: newName })
-        }
       }
     },
 
     methods: {
       ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setLayersRenderOrder"]),
-      ...mapMutations(["updateLayerName", "setActiveLayer"]),
+      ...mapMutations(["setActiveLayer"]),
 
       selectNewLayerType() {
         this.$modal.show('dialog', {
