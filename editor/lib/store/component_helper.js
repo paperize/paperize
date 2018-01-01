@@ -7,7 +7,8 @@ const computedVModelUpdate = function(objectName, actionName, propertyToUpdate) 
       if(isUndefined(object)) { throw new Error(`Object name must exist on component for vmodel helper: "${objectName}"`)}
       let property = object[propertyToUpdate]
       if(isUndefined(property)) { throw new Error(`Property must exist for vmodel helper: "${propertyToUpdate}"`)}
-      return this[objectName][propertyToUpdate]  },
+      return this[objectName][propertyToUpdate]
+    },
 
     set(propertyValue) {
       let keyValueObject = {}

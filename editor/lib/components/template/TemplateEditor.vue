@@ -25,7 +25,7 @@
     h5 Layer Config
 
     template(v-if="activeLayer")
-      layer-editor(:layer="activeLayer")
+      layer-editor(:layer="activeLayer" :source="component.source")
     template(v-else)
       p No Layer Selected
 

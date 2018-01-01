@@ -2,6 +2,7 @@ import Promise from 'bluebird'
 import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
+import mustache from '../../services/tiny-mustache'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
@@ -123,6 +124,14 @@ const api = {
         }
       },
 
+      hexToRGB(hexColorString) {
+        let r = parseInt(`${hexColorString[1]}${hexColorString[2]}`, 16),
+          g = parseInt(`${hexColorString[3]}${hexColorString[4]}`, 16),
+          b = parseInt(`${hexColorString[5]}${hexColorString[6]}`, 16)
+
+        return { r, g, b }
+      },
+
       // easy to render a rect given dimensions
       easyRect(dimensions, mode="S") {
         doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, mode)
@@ -223,15 +232,10 @@ const api = {
 
       } else if(layer.type == "shape") {
         // extract RGB255 from hex
-        let redFillComponent = parseInt(`${layer.fillColor[1]}${layer.fillColor[2]}`, 16),
-          greenFillComponent = parseInt(`${layer.fillColor[3]}${layer.fillColor[4]}`, 16),
-          blueFillComponent  = parseInt(`${layer.fillColor[5]}${layer.fillColor[6]}`, 16),
-          redStrokeComponent = parseInt(`${layer.strokeColor[1]}${layer.strokeColor[2]}`, 16),
-          greenStrokeComponent = parseInt(`${layer.strokeColor[3]}${layer.strokeColor[4]}`, 16),
-          blueStrokeComponent  = parseInt(`${layer.strokeColor[5]}${layer.strokeColor[6]}`, 16)
-
-        doc.setFillColor(redFillComponent, greenFillComponent, blueFillComponent)
-        doc.setDrawColor(redStrokeComponent, greenStrokeComponent, blueStrokeComponent)
+        let { r: fr, g: fg, b: fb } = helpers.hexToRGB(layer.fillColor)
+        doc.setFillColor(fr, fg, fb)
+        let { r: sr, g: sg, b: sb } = helpers.hexToRGB(layer.strokeColor)
+        doc.setDrawColor(sr, sg, sb)
         doc.setLineWidth(layer.strokeWidth)
 
         if(layer.strokePresent && layer.fillPresent) {
@@ -243,13 +247,29 @@ const api = {
         }
 
       } else if(layer.type == "text") {
-        doc.setFontSize(8)
+        doc.setFontSize(layer.textSize)
+        let { r, g, b } = helpers.hexToRGB(layer.textColor)
+        doc.setTextColor(r, g, b)
 
-        let propertyText = _.reduce(item, (text, itemPair) => {
-          text += `${itemPair.key}: ${itemPair.value}\n`
-          return text
-        }, "")
-        helpers.textBox(propertyText, layerDimensions, {})
+        // List Properties template:
+        // let propertyText = _.reduce(item, (text, itemPair) => {
+        //   text += `${itemPair.key}: ${itemPair.value}\n`
+        //   return text
+        // }, "")
+
+        // Prepare template variables
+        let textContentTemplateVars = _.reduce(item, (kvObject, itemPair) => {
+          kvObject[itemPair.key] = itemPair.value
+          return kvObject
+        }, {})
+
+        // Render the template
+        // Allow multiple render passes?
+        // Check for templates that call themselves?
+        // Check for circular dependencies?
+        let textContentTemplate = mustache(layer.textContentTemplate, textContentTemplateVars)
+
+        helpers.textBox(textContentTemplate, layerDimensions, {})
 
       } else if(layer.type == "image") {
         let imageName = "",

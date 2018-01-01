@@ -31,10 +31,14 @@ const DEFAULT_RENDER_FUNCTION = `
 const LAYER_DEFAULTS = {}
 LAYER_DEFAULTS[TEXT] =
   {
-    name:         "[Text]",
-    type:         TEXT,
-    renderOrder:  0,
-    dimensionsId: null
+    name:                "[Text]",
+    type:                TEXT,
+    renderOrder:         0,
+    dimensionsId:        null,
+    textContentTemplate: "",
+    textColor:          "#000000",
+    textSize:           16,
+    // textFontId:            null
   }
 LAYER_DEFAULTS[IMAGE] =
   {

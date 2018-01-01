@@ -37,6 +37,8 @@
       layerHorizontalAlignment() { return this.activeLayer.horizontalAlignment },
       layerVerticalAlignment() { return this.activeLayer.verticalAlignment },
 
+      layerTextContentTemplate() { return this.activeLayer.textContentTemplate },
+
       templateLayers() {
         return this.$store.getters.getTemplateLayers(this.component.template)
       }
@@ -63,6 +65,7 @@
       layerImageNameSuffix: "renderPDF",
       layerHorizontalAlignment: "renderPDF",
       layerVerticalAlignment: "renderPDF",
+      layerTextContentTemplate: "renderPDF",
     },
 
     methods: {

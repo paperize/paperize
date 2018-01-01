@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.shape-layer-fields
   fieldset.fieldset
     legend
       input(type="checkbox" v-model="strokePresent")

@@ -32,10 +32,10 @@
           span.input-group-label H
           input.input-group-field(type="number" v-model.number="layerDimensionH")
 
-  code-layer-editor(v-if="layer.type == 'code'" :layer="layer")
-  text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer")
-  image-layer-editor(v-else-if="layer.type == 'image'" :layer="layer")
-  shape-layer-editor(v-else-if="layer.type == 'shape'" :layer="layer")
+  code-layer-editor(v-if="layer.type == 'code'" :layer="layer" :source="source")
+  text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer" :source="source")
+  image-layer-editor(v-else-if="layer.type == 'image'" :layer="layer" :source="source")
+  shape-layer-editor(v-else-if="layer.type == 'shape'" :layer="layer" :source="source")
 </template>
 
 <script>
@@ -49,7 +49,7 @@
   const INPUT_DELAY_MS = 200
 
   export default {
-    props: ["layer"],
+    props: ["layer", "source"],
 
     components: {
       "code-layer-editor": CodeLayerEditor,

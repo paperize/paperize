@@ -1,7 +1,7 @@
 <template lang="pug">
-div
+.image-layer-fields
   fieldset.fieldset
-    legend Image Source
+    legend Image Name
 
     .grid-x.grid-margin-x
       .shrink.cell
