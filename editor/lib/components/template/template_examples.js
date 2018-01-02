@@ -39,9 +39,9 @@ const toDataURL = function(url) {
 const api = {
   renderItemToPdf(game, component, item) {
     const doc = this.startNewDocument()
-    this.addPage(doc, component)
+    this.addPage(doc, component.template.size)
 
-    return this.renderItem(doc, game, component, item).then(() => {
+    return this.renderItem(doc, game, component, item, component.template.size).then(() => {
       return doc.output('bloburi')
     })
   },
@@ -60,14 +60,71 @@ const api = {
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-    const components = game.components // this.sortComponents(game)
+    const components = game.components
+
+    let pageSize = { h: 8.5, w: 11 },
+      defaultMargin = .25
+
+    // TODO: gather all items' layouts
+    // generate a layout with locations mapped to dimensions
+    let componentSizes = components.map((component) => {
+      return {
+        size: component.template.size,
+        name: component.id,
+        quantity: store.getters.getComponentItems(component).length
+      }
+    })
+
+    let lastX = defaultMargin,
+      lastY = defaultMargin,
+      currentPage = 1
+
+    let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
+      locations[name] = locations[name] || []
+      console.log("working size:", size)
+      while(quantity > 0){
+        let thisX = lastX,
+          thisY = lastY
+
+        if(thisX + size.w > (pageSize.w - defaultMargin*2)) {
+          // if x is past width, set zero and increment y
+          thisX = lastX = defaultMargin
+          thisY = lastY = lastY + size.h
+
+          if(thisY + size.h > (pageSize.h - defaultMargin*2)) {
+            // if y is past height, set zero and increment page
+            thisY = lastY = defaultMargin
+            currentPage += 1
+          }
+        }
+
+        locations[name].push({
+          ...size,
+          page: currentPage,
+          x: thisX, y: thisY
+        })
+        lastX += size.w
+        quantity -= 1
+      }
+
+      return locations
+    }, {})
+
+    // Add all needed pages to doc up front
+    _.times(currentPage, () => {
+      doc.addPage(pageSize.w-defaultMargin*2, pageSize.h-defaultMargin*2)
+    })
 
     return Promise.each(components, (component) => {
       const items = store.getters.getComponentItems(component)
 
       return Promise.each(items, (item) => {
-        this.addPage(doc, component)
-        return this.renderItem(doc, game, component, item)
+
+        let parentDimensions = itemLocations[component.id].pop()
+        // what page is this item's location on?
+        doc.setPage(parentDimensions.page)
+
+        return this.renderItem(doc, game, component, item, parentDimensions)
       })
     }).then(() => {
       return doc.save("game.pdf") //output('bloburi')
@@ -83,11 +140,11 @@ const api = {
     return doc
   },
 
-  addPage(doc, component) {
+  addPage(doc, size) {
     // game or template knows page settings?
     // template.pageArguments?
     // doc.apply('addPage', template.pageArguments)
-    doc.addPage(component.template.size.w, component.template.size.h)
+    doc.addPage(size.w, size.h)
   },
 
   restoreDocumentDefaults(doc) {
@@ -97,7 +154,7 @@ const api = {
     doc.setFillColor(0)
   },
 
-  renderItem(doc, game, component, item) {
+  renderItem(doc, game, component, item, parentDimensions) {
     // get transforms for this component
     let layers = store.getters.getTemplateLayers(component.template)
     // render each transform upon this item
@@ -117,8 +174,8 @@ const api = {
 
       percentOfParent(dimensions, parent) {
         return {
-          x: dimensions.x*.01*parent.w,
-          y: dimensions.y*.01*parent.h,
+          x: (dimensions.x*.01*parent.w)+(parent.x || 0),
+          y: (dimensions.y*.01*parent.h)+(parent.y || 0),
           w: dimensions.w*.01*parent.w,
           h: dimensions.h*.01*parent.h,
         }
@@ -212,7 +269,8 @@ const api = {
     helpers.p = helpers.findProperty
 
     return Promise.each(layers, layer => {
-      let layerDimensions = helpers.percentOfParent(store.getters.getLayerDimensions(layer), component.template.size)
+      // TODO: modify with layout dimensions
+      let layerDimensions = helpers.percentOfParent(store.getters.getLayerDimensions(layer), parentDimensions)
 
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
@@ -287,43 +345,6 @@ const api = {
       }
     })
   },
-
-  renderBackgroundTemplates() {
-
-  },
-
-  renderPerPropertyTemplates() {
-
-  },
-
-  renderForegroundTemplates() {
-
-  },
 }
 
 export default api
-
-// Ideas for per-property templates
-// propertyTemplate("title", (title, doc) => {
-//   failUnless("text")
-//
-//   doc.setColor(color)
-//   doc.setFont(font)
-//   doc.renderText(title, x, y)
-// })
-//
-// propertyTemplate("cost", (cost, doc) => {
-//   failUnless("template")
-//
-//   doc.setColor(color)
-//   doc.setFont(font)
-//   doc.renderText(cost(), x, y)
-// })
-//
-// propertyTemplate("image", (image, doc) => {
-//   failUnless("image")
-//
-//   // implement stretch/crop to fit/fill
-//
-//   doc.addImage(image, x, y)
-// })
