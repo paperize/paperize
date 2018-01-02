@@ -4,7 +4,7 @@
     legend
       input(type="checkbox" v-model="strokePresent")
       = " Stroke? "
-      i.fa.fa-pencil-square-o
+      i.fas.fa-edit
 
     .grid-x.grid-margin-x(v-if="strokePresent")
       .shrink.cell
@@ -23,7 +23,7 @@
     legend
       input(type="checkbox" v-model="fillPresent")
       = " Fill? "
-      i.fa.fa-pencil-square
+      i.fas.fa-pen-square
 
     .grid-x.grid-margin-x(v-if="fillPresent")
       .shrink.cell

@@ -8,13 +8,13 @@
     template(v-if="editingSize")
       h5
         a(@click="editingSize = false")
-          i.fa.fa-pencil
+          i.fas.fa-pencil-alt
         |  Component Size
       template-size-editor(:template="component.template")
 
     h5(v-else)
       a(@click="editingSize = true")
-        i.fa.fa-pencil
+        i.fas.fa-pencil-alt
       |  Component Size {{ sizeLabel }}
 
     hr

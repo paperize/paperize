@@ -14,7 +14,7 @@
 
       .auto.cell
         a.button.small.alert(@click="unsetComponentSource({ component })")
-          i.fa.fa-close
+          i.fas.fa-times
           |  Change Now...
 
       .small-12.cell
@@ -29,7 +29,7 @@
 
       .auto.cell
         a.button.small(@click="createOrUpdateSourceById(componentSource.id)")
-          i.fa.fa-refresh
+          i.fas.fa-sync
           |  Refresh Now
 
     template(v-else)
@@ -51,10 +51,10 @@
               ul.menu
                 li
                   a.button.tiny.alert(@click="confirmDeletion(source)")
-                    i.fa.fa-close
+                    i.fas.fa-times
                 li
                   a.button.tiny.success(@click="setSource(source)")
-                    i.fa.fa-check
+                    i.fas.fa-check
             .small-8.cell
               p {{ source.name }}
 

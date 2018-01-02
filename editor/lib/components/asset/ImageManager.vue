@@ -25,7 +25,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
               a.button.alert.tiny(@click="confirmDeletion(image)") X
               a.button.tiny(@click="editImage(image)")
                 //- = "Edit "
-                i.fa.fa-pencil.fa-fw
+                i.fas.fa-pencil-alt.fa-fw
 
             td(v-if="editing == image.id")
               inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")

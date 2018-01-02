@@ -4,7 +4,7 @@
     h5 Layers
   .shrink.cell
     a.button.tiny.success(@click="selectNewLayerType()")
-      i.fa.fa-plus
+      i.fas.fa-plus
       |  New Layer
 
 
@@ -14,21 +14,21 @@
         tr.layer(v-for="layer in templateLayers" @click="setActiveLayer({ layer })" :class="{ 'active-layer': isActive(layer) }")
           td.grid-x.grid-padding-x
             .shrink.cell.drag
-              i.fa.fa-bars
+              i.fas.fa-bars
 
               = " "
 
-              i.fa.fa-code(v-if="layer.type == 'code'" title="This is a Code Layer")
-              i.fa.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
-              i.fa.fa-circle(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
-              i.fa.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
+              i.fas.fa-code(v-if="layer.type == 'code'" title="This is a Code Layer")
+              i.fas.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
+              i.fas.fa-circle(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
+              i.fas.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
 
             .auto.cell
               span(:title="layer.name")  {{ layer.name | truncate }}
 
             .shrink.cell
               a(@click="confirmDeletion(layer)")
-                i.fa.fa-remove
+                i.fas.fa-times
 </template>
 
 <script>

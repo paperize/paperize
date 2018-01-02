@@ -4,7 +4,7 @@ div
     //- Source status
     .small-6.cell
       h4
-        i.fa.fa-table
+        i.fas.fa-table
         |  Source
 
       template(v-if="component.source")
@@ -14,7 +14,7 @@ div
               th
                 | {{ component.source.name + " " }}
                 a(@click="openSourceManager()")
-                  i.fa.fa-pencil
+                  i.fas.fa-pencil-alt
           tbody
             tr(v-for="property in sourceProperties(component.source)")
               td.property-name(title="Property Name") {{ property }}
@@ -38,7 +38,7 @@ div
     //- Template status
     .small-6.cell
       h4
-        i.fa.fa-file-code-o
+        i.fas.fa-file-code
         |  Template
 
       template(v-if="component.template")
@@ -46,7 +46,7 @@ div
           .auto.cell
           .shrink.cell
             a.button(@click="openTemplateManager()")
-              i.fa.fa-pencil
+              i.fas.fa-pencil-alt
               |  Edit
           .auto.cell
         .grid-x
@@ -68,7 +68,7 @@ div
 
         template(v-else)
           p
-            i.fa.fa-arrow-left
+            i.fas.fa-arrow-left
             em  You need to set a data Source before you can get started with Templates.
 
       modal(name="Template Manager" height="auto" width="98%" :pivotY=".15" :scrollable="true")

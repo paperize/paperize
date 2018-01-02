@@ -9,7 +9,7 @@
         ul.menu
           li
             a.button(@click="printGame()")
-              i.fa.fa-file-pdf-o
+              i.fas.fa-file-pdf
               |  Print Game
           li
             a(@click="$modal.show('edit-game-modal')") Edit Game
