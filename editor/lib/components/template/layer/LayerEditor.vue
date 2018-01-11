@@ -1,35 +1,41 @@
 <template lang="pug">
 .layer-editor
   .grid-x.grid-padding-x
-    .shrink.cell
-      label.text-right.middle(for="layer-name")
+    .small-12.large-6.cell
+      label(for="layer-name")
         strong Layer Name:
-    .auto.cell
+    .small-12.large-6.cell
       input(id="layer-name" type="text" v-model="layerName")
 
   fieldset.fieldset
     legend Dimensions
 
+    p Expressed as percentage of total width or height.
+
     .grid-x.grid-padding-x
-      .auto.cell
+      .medium-12.large-6.cell
         .input-group
-          span.input-group-label X
+          span.input-group-label
+            strong X%
           input.input-group-field(type="number" v-model.number="layerDimensionX")
 
-      .auto.cell
+      .medium-12.large-6.cell
         .input-group
-          span.input-group-label Y
+          span.input-group-label
+            strong Y%
           input.input-group-field(type="number" v-model.number="layerDimensionY")
 
     .grid-x.grid-padding-x
-      .auto.cell
+      .medium-12.large-6.cell
         .input-group
-          span.input-group-label W
+          span.input-group-label
+            strong W%
           input.input-group-field(type="number" v-model.number="layerDimensionW")
 
-      .auto.cell
+      .medium-12.large-6.cell
         .input-group
-          span.input-group-label H
+          span.input-group-label
+            strong H%
           input.input-group-field(type="number" v-model.number="layerDimensionH")
 
   code-layer-editor(v-if="layer.type == 'code'" :layer="layer" :source="source")

@@ -3,23 +3,15 @@
   fieldset.fieldset
     legend Text Look &amp; Feel
 
-    //- .grid-x.grid-margin-x
-    //-   .medium-6.cell
-    //-     .grid-x.grid-margin-x
-    //-       .auto.cell
-    //-         strong Font Face:
-    //-       .shrink.cell
-    //-         input(type="text" disabled placeholder="Coming soon...")
-
     .grid-x.grid-margin-x
-      .shrink.cell
+      .small-12.medium-6.cell
         strong Font Color:
-      .auto.cell
+      .small-12.medium-6.cell
         input(type="color" v-model="textColor")
 
-      .auto.cell
+      .small-12.medium-6.cell
         strong Font Size:
-      .shrink.cell
+      .small-12.medium-6.cell
         select(v-model="textSize")
           option(v-for="size in [5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 32, 48, 64, 72]" :value="size") {{ size }}
 
@@ -27,11 +19,7 @@
   fieldset.fieldset
     legend Text Content
 
-    //- .grid-x.grid-margin-x
-    //-   .shrink.cell
-    //-     strong From Source Property:
-    //-     select(v-model="textProperty")
-    //-       option(v-for="property in propertyNames" value="property") {{ property }}
+    p(v-pre) Use curly brackets to reference columns, like: {{Name}}
 
     .grid-x.grid-margin-x
       .auto.cell

@@ -7,16 +7,16 @@
       i.fas.fa-edit
 
     .grid-x.grid-margin-x(v-if="strokePresent")
-      .shrink.cell
+      .small-6.large-3.cell
         label
           strong Color:
-      .auto.cell
+      .small-6.large-3.cell
         input(type="color" v-model="strokeColor")
 
-      .shrink.cell
+      .small-6.large-3.cell
         label
           strong Width:
-      .auto.cell
+      .small-6.large-3.cell
         input(type="number" v-model.number="strokeWidth")
 
   fieldset.fieldset
@@ -26,10 +26,10 @@
       i.fas.fa-pen-square
 
     .grid-x.grid-margin-x(v-if="fillPresent")
-      .shrink.cell
+      .small-6.large-3.cell
         label
           strong Color:
-      .auto.cell
+      .small-6.large-3.cell
         input(type="color" v-model="fillColor")
 </template>
 

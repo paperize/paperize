@@ -2,7 +2,7 @@
 div
   .grid-x.grid-margin-x
     //- Source status
-    .small-6.cell
+    .small-4.medium-6.cell
       h4
         i.fas.fa-table
         |  Source
@@ -13,8 +13,9 @@ div
             tr
               th
                 | {{ component.source.name + " " }}
-                a(@click="openSourceManager()")
+                a.button.tiny(@click="openSourceManager()")
                   i.fas.fa-pencil-alt
+                  |  Edit
           tbody
             tr(v-for="property in sourceProperties(component.source)")
               td.property-name(title="Property Name") {{ property }}
@@ -36,9 +37,9 @@ div
           span(aria-hidden="true") &times;
 
     //- Template status
-    .small-6.cell
+    .small-8.medium-6.cell
       h4
-        i.fas.fa-file-code
+        i.far.fa-file-code
         |  Template
 
       template(v-if="component.template")

@@ -81,7 +81,6 @@ const api = {
 
     let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
       locations[name] = locations[name] || []
-      console.log("working size:", size)
       while(quantity > 0){
         let thisX = lastX,
           thisY = lastY

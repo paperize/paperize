@@ -4,65 +4,66 @@
     legend Image Name
 
     .grid-x.grid-margin-x
-      .shrink.cell
+      .small-12.large-6.cell
         input(type="radio" id="radio-static" :value="true" v-model="imageNameStatic")
         label(for="radio-static") Static
 
+      .small-12.large-6.cell
         input(type="radio" id="radio-dynamic" :value="false" v-model="imageNameStatic")
         label(for="radio-dynamic") Dynamic
 
     .grid-x.grid-margin-x(v-if="imageNameStatic")
-      .shrink.cell
+      .small-12.large-6.cell
         label
           strong Static Name:
-      .auto.cell
+      .small-12.large-6.cell
         v-autocomplete(:items="imageItems" v-model="imageName" :get-label="getImageLabel")
 
     .grid-x.grid-margin-x(v-else)
-      .small-4.cell
+      .small-12.large-6.cell
         label
           strong Prefix:
-      .small-8.cell
+      .small-12.large-6.cell
         input(type="text" v-model="imageNamePrefix")
 
-      .small-4.cell
+      .small-12.large-6.cell
         label
           strong Property:
-      .small-8.cell
+      .small-12.large-6.cell
         select(type="text" v-model="imageNameProperty")
           option(value="Rank") Rank
           option(value="Name") Name
 
-      .small-4.cell
+      .small-12.large-6.cell
         label
           strong Suffix:
-      .small-8.cell
+      .small-12.large-6.cell
         input(type="text" v-model="imageNameSuffix")
 
-      .small-4.cell
+      .small-12.large-6.cell
         label
           strong Dynamic Name:
-      .small-8.cell
+      .small-12.large-6.cell
         input(type="text" disabled :value="dynamicImageName")
 
   fieldset.fieldset
     legend Image Alignment
 
     .grid-x.grid-margin-x
-      .shrink.cell
+      .small-12.large-6.cell
         label
           strong Horizontal:
-      .auto.cell
+      .small-12.large-6.cell
         select(v-model="horizontalAlignment")
           option(value="left") Left
           option(value="center") Center
           option(value="right") Right
 
     .grid-x.grid-margin-x
-      .shrink.cell
+      .small-12.large-6.cell
         label
           strong Vertical:
-      .auto.cell
+      .small-12.large-6.cell
         select(v-model="verticalAlignment")
           option(value="top") Top
           option(value="middle") Middle

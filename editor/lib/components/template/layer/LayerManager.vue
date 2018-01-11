@@ -20,7 +20,7 @@
 
               i.fas.fa-code(v-if="layer.type == 'code'" title="This is a Code Layer")
               i.fas.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
-              i.fas.fa-circle(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
+              i.far.fa-square(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
               i.fas.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
 
             .auto.cell
