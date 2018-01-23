@@ -3,6 +3,8 @@ import { forEach, isUndefined, clone, defaults } from 'lodash'
 import Vue from 'vue'
 import uuid from 'uuid/v4'
 
+import massAssign from './mass_assign'
+
 const CODE = 'code'
 const TEXT = 'text'
 const IMAGE = 'image'
@@ -96,13 +98,7 @@ const LayersModule = {
     },
 
     updateLayer(state, { layer, keyValueObject }) {
-      forEach(keyValueObject, (value, key) => {
-        if(!isUndefined(layer[key])) {
-          layer[key] = value
-        } else {
-          throw new Error(`No mass assignment of non-existent keys: ${key}`)
-        }
-      })
+      massAssign(layer, keyValueObject)
     },
 
     setLayerRenderFunction(state, { layer, renderFunction }) {
