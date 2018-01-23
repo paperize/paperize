@@ -24,12 +24,10 @@ div(v-if="!game")
   export default {
     props: ['gameId'],
 
-    computed: {
-      ...mapGetters({
-        activeComponent: 'activeComponent',
-        game: 'activeGame'
-      })
-    },
+    computed: mapGetters({
+      activeComponent: 'activeComponent',
+      game: 'activeGame'
+    }),
 
     components: {
       "game-panel":       GamePanel,
