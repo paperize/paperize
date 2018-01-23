@@ -29,14 +29,14 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
             .small-6.cell
               .input-group
                 span.input-group-label(title="inches") Size
-                select.input-group-field(id="paper-format" @change="updatePageDimensions" v-model="paperFormat")
+                select.input-group-field(id="paper-format" @change="updatePageDimensions" v-model.number="paperFormat")
                   option()
                   option(v-for="printOption in standardPrintOptions" :value="printOption.value") {{ printOption.name }}
 
             .small-6.cell
               .input-group
                 span.input-group-label(title="inches") Orientation
-                select.input-group-field(id="paper-orientation" @change="updatePageDimensions" v-model="paperOrientation")
+                select.input-group-field(id="paper-orientation" @change="updatePageDimensions" v-model.number="paperOrientation")
                   option(value="portrait") Portrait
                   option(value="landscape") Landscape
 
@@ -48,13 +48,13 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
             .small-6.cell
               .input-group
                 span.input-group-label(title="inches") Width
-                input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model="paperWidth")
+                input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="paperWidth")
                 span.input-group-label(title="inches") in.
 
             .small-6.cell
               .input-group
                 span.input-group-label Height
-                input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model="paperWidth")
+                input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="paperHeight")
                 span.input-group-label(title="inches") in.
 
     //- Margins
@@ -71,7 +71,7 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
             .input-group
               span.input-group-label(title="Top Margin")
                 i.fas.fa-arrow-down
-              input.input-group-field(type="number" step="0.01" min="0" v-model="marginTop")
+              input.input-group-field(type="number" step="0.01" min="0" v-model.number="marginTop")
               span.input-group-label(title="inches") in.
           .auto.cell
 
@@ -80,14 +80,14 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
             .input-group
               span.input-group-label(title="Left Margin")
                 i.fas.fa-arrow-right
-              input.input-group-field(type="number" step="0.01" min="0" v-model="marginLeft")
+              input.input-group-field(type="number" step="0.01" min="0" v-model.number="marginLeft")
               span.input-group-label(title="inches") in.
           .auto.cell
           .small-4.cell
             .input-group
               span.input-group-label(title="Right Margin")
                 i.fas.fa-arrow-left
-              input.input-group-field(type="number" step="0.01" min="0" v-model="marginRight")
+              input.input-group-field(type="number" step="0.01" min="0" v-model.number="marginRight")
               span.input-group-label(title="inches") in.
 
         .grid-x
@@ -96,7 +96,7 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
             .input-group
               span.input-group-label(title="Left Margin")
                 i.fas.fa-arrow-up
-              input.input-group-field(type="number" step="0.01" min="0" v-model="marginBottom")
+              input.input-group-field(type="number" step="0.01" min="0" v-model.number="marginBottom")
               span.input-group-label(title="inches") in.
           .auto.cell
 
@@ -105,7 +105,8 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
 </template>
 
 <script>
-  import { find } from 'lodash'
+  import { find, debounce } from 'lodash'
+  import { mapGetters, mapActions } from 'vuex'
 
   let standardPrintOptions = [
     { value: 'a4', name: 'A4',
@@ -116,58 +117,117 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
       width: 8.3, height: 11 },
   ]
 
-  const DEFAULT_MARGIN = .25
-
   export default {
     data() {
       return {
         standardPrintOptions,
         paperMode: 'standard',
-        paperFormat: 'letter',
+        paperFormat: '',
         paperOrientation: 'portrait',
-        paperWidth: 8,
-        paperHeight: 10,
-        marginTop: DEFAULT_MARGIN,
-        marginRight: DEFAULT_MARGIN,
-        marginBottom: DEFAULT_MARGIN,
-        marginLeft: DEFAULT_MARGIN,
       }
     },
 
-    // computed: {
-    //   paperWidth: {
-    //     get() { },
-    //     set() { },
-    //   },
-    //
-    //   paperHeight: {
-    //     get() { },
-    //     set() { },
-    //   }
-    // },
+    computed: {
+      ...mapGetters(["getPrintSettings"]),
+
+      paperWidth: {
+        get() {
+          return this.getPrintSettings.width
+        },
+
+        set(width) {
+          console.log('yar', width)
+          this.updatePrintSettings({ width })
+        },
+      },
+
+      paperHeight: {
+        get() {
+          return this.getPrintSettings.height
+        },
+
+        set(height) {
+          console.log('yar', height)
+          this.updatePrintSettings({ height })
+        },
+      },
+
+      marginTop: {
+        get() {
+          return this.getPrintSettings.marginTop
+        },
+
+        set(marginTop) {
+          this.updatePrintSettings({ marginTop })
+        }
+      },
+
+      marginRight: {
+        get() {
+          return this.getPrintSettings.marginRight
+        },
+
+        set(marginRight) {
+          this.updatePrintSettings({ marginRight })
+        }
+      },
+
+      marginBottom: {
+        get() {
+          return this.getPrintSettings.marginBottom
+        },
+
+        set(marginBottom) {
+          this.updatePrintSettings({ marginBottom })
+        }
+      },
+
+      marginLeft: {
+        get() {
+          return this.getPrintSettings.marginLeft
+        },
+
+        set(marginLeft) {
+          this.updatePrintSettings({ marginLeft })
+        }
+      },
+
+    },
 
     methods: {
+      updatePrintSettings: debounce(function(attributes) {
+        this.$store.dispatch("updatePrintSettings", attributes)
+      }, 200),
+
       setPaperMode(mode) {
         this.paperMode = mode
-        this.updatePageDimensions()
+
+        if(this.paperMode != "standard") {
+          this.paperFormat = ""
+          this.paperOrientation = "portrait"
+        }
       },
 
       updatePageDimensions() {
-        if(this.paperFormat) {
-          let format = find(standardPrintOptions, { value: this.paperFormat })
-          this.paperWidth = format.width
-          this.paperHeight = format.height
-        }
+        if(this.paperFormat.length == 0) { return }
 
-        let smallerDimension = Math.min(this.paperWidth, this.paperHeight)
-          , largerDimension = Math.max(this.paperWidth, this.paperHeight)
+        let format = find(standardPrintOptions, { value: this.paperFormat })
+          , width = format.width
+          , height = format.height
+          , smallerDimension = Math.min(width, height)
+          , largerDimension = Math.max(width, height)
 
         if(this.paperOrientation == 'portrait') {
-          this.paperWidth = smallerDimension
-          this.paperHeight = largerDimension
+          this.updatePrintSettings({
+            width: smallerDimension,
+            height: largerDimension
+          })
+
         } else if(this.paperOrientation == 'landscape') {
-          this.paperWidth = largerDimension
-          this.paperHeight = smallerDimension
+          this.updatePrintSettings({
+            width: largerDimension,
+            height: smallerDimension
+          })
         }
       }
     }
