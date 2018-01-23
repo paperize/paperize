@@ -8,31 +8,39 @@
       .small-12.cell
         ul.menu
           li
-            a.button(@click="printGame()")
-              i.fas.fa-file-pdf
-              |  Print Game
+            .button-group
+              a.button(@click="printGame()")
+                i.fas.fa-file-pdf
+                |  Print Game
+              a.button(title="Print Settings" @click="openPrintSettings()")
+                i.fas.fa-cog
+
           li
             a(@click="$modal.show('edit-game-modal')") Edit Game
           li
             a(@click="confirmDeletion") Delete Game
 
   game-form(mode="edit" :game="game")
+  print-settings
 </template>
 
 <script>
   import { mapActions } from 'vuex'
   import pdfRenderer from '../template/template_examples'
   import GameForm from './GameForm.vue'
+  import PrintSettings from '../print/PrintSettings.vue'
 
   export default {
     props: ["game"],
 
     components: {
-      'game-form': GameForm
+      'game-form': GameForm,
+      'print-settings': PrintSettings
     },
 
     methods: {
       ...mapActions(["deleteGame"]),
+
       confirmDeletion() {
         this.$modal.show('dialog', {
           title: `Are you sure you want to delete the Game "${this.game.title}"?`,
@@ -55,6 +63,10 @@
 
       printGame() {
         pdfRenderer.renderGameToPdf(this.game)
+      },
+
+      openPrintSettings() {
+        this.$modal.show('Print Settings')
       }
     }
   }
