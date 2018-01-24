@@ -7,17 +7,19 @@
       i.fas.fa-edit
 
     .grid-x.grid-margin-x(v-if="strokePresent")
-      .small-6.large-3.cell
-        label
-          strong Color:
-      .small-6.large-3.cell
-        input(type="color" v-model="strokeColor")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="stroke-color")
+              strong Color
+          input.input-group-field(id="stroke-color" type="color" v-model="strokeColor")
 
-      .small-6.large-3.cell
-        label
-          strong Width:
-      .small-6.large-3.cell
-        input(type="number" v-model.number="strokeWidth")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="stroke-width")
+              strong Width
+          input.input-group-field(id="stroke-width" type="number" v-model.number="strokeWidth")
 
   fieldset.fieldset
     legend
@@ -26,11 +28,12 @@
       i.fas.fa-pen-square
 
     .grid-x.grid-margin-x(v-if="fillPresent")
-      .small-6.large-3.cell
-        label
-          strong Color:
-      .small-6.large-3.cell
-        input(type="color" v-model="fillColor")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="fill-color")
+              strong Color
+          input.input-group-field(id="fill-color" type="color" v-model.number="fillColor")
 </template>
 
 <script>

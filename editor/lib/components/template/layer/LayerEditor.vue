@@ -1,11 +1,12 @@
 <template lang="pug">
 .layer-editor
   .grid-x.grid-padding-x
-    .small-12.large-6.cell
-      label(for="layer-name")
-        strong Layer Name:
-    .small-12.large-6.cell
-      input(id="layer-name" type="text" v-model="layerName")
+    .small-12.cell
+      .input-group
+        span.input-group-label
+          label(for="layer-name")
+            strong Name
+        input.input-group-field(id="layer-name" type="text" v-model="layerName")
 
   fieldset.fieldset
     legend Dimensions
@@ -127,3 +128,10 @@
     }
   }
 </script>
+
+<style>
+  /* color inputs are ugly in XY grid with input groups if I don't puff them up a bit */
+  input[type='color'] {
+    height: 2.5em;
+  }
+</style>

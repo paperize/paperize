@@ -15,59 +15,64 @@
     .grid-x.grid-margin-x(v-if="imageNameStatic")
       .small-12.large-6.cell
         label
-          strong Static Name:
+          strong Image Name:
       .small-12.large-6.cell
         v-autocomplete(:items="imageItems" v-model="imageName" :get-label="getImageLabel")
 
     .grid-x.grid-margin-x(v-else)
-      .small-12.large-6.cell
-        label
-          strong Prefix:
-      .small-12.large-6.cell
-        input(type="text" v-model="imageNamePrefix")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="image-prefix")
+              strong Prefix
+          input.input-group-field(id="image-prefix" type="text" v-model="imageNamePrefix")
 
-      .small-12.large-6.cell
-        label
-          strong Property:
-      .small-12.large-6.cell
-        select(type="text" v-model="imageNameProperty")
-          option(value="Rank") Rank
-          option(value="Name") Name
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="image-name-property")
+              strong Property
+          select.input-group-field(id="image-name-property" v-model="imageNameProperty")
+            option(value="Rank") Rank
+            option(value="Name") Name
 
-      .small-12.large-6.cell
-        label
-          strong Suffix:
-      .small-12.large-6.cell
-        input(type="text" v-model="imageNameSuffix")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="image-suffix")
+              strong Suffix
+          input.input-group-field(id="image-suffix" type="text" v-model="imageNameSuffix")
 
-      .small-12.large-6.cell
-        label
-          strong Dynamic Name:
-      .small-12.large-6.cell
-        input(type="text" disabled :value="dynamicImageName")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label
+              strong Dynamic Name
+          input.input-group-field(type="text" disabled :value="dynamicImageName")
 
   fieldset.fieldset
     legend Image Alignment
 
     .grid-x.grid-margin-x
-      .small-12.large-6.cell
-        label
-          strong Horizontal:
-      .small-12.large-6.cell
-        select(v-model="horizontalAlignment")
-          option(value="left") Left
-          option(value="center") Center
-          option(value="right") Right
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="horizontal-alignment")
+              strong Horizontal
+          select.input-group-field(id="horizontal-alignment" v-model="horizontalAlignment")
+            option(value="left") Left
+            option(value="center") Center
+            option(value="right") Right
 
-    .grid-x.grid-margin-x
-      .small-12.large-6.cell
-        label
-          strong Vertical:
-      .small-12.large-6.cell
-        select(v-model="verticalAlignment")
-          option(value="top") Top
-          option(value="middle") Middle
-          option(value="bottom") Bottom
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="vertical-alignment")
+              strong Vertical
+          select.input-group-field(id="vertical-alignment" v-model="verticalAlignment")
+            option(value="top") Top
+            option(value="middle") Middle
+            option(value="bottom") Bottom
 </template>
 
 <script>
@@ -125,7 +130,7 @@
 </script>
 
 <style>
-.v-autocomplete .v-autocomplete-input-group .v-autocomplete-input{
+/* .v-autocomplete .v-autocomplete-input-group .v-autocomplete-input{
   font-size: 1.5em;
   padding: 10px 15px;
   box-shadow: none;
@@ -137,7 +142,7 @@
 .v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {
   color: green;
   background-color: #f2fff2;
-}
+} */
 
 .v-autocomplete .v-autocomplete-list {
   width: 100%;

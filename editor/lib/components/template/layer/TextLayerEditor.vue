@@ -4,16 +4,20 @@
     legend Text Look &amp; Feel
 
     .grid-x.grid-margin-x
-      .small-12.medium-6.cell
-        strong Font Color:
-      .small-12.medium-6.cell
-        input(type="color" v-model="textColor")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="text-color")
+              strong Text Color
+          input.input-group-field(id="text-color" type="color" v-model="textColor")
 
-      .small-12.medium-6.cell
-        strong Font Size:
-      .small-12.medium-6.cell
-        select(v-model="textSize")
-          option(v-for="size in [5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 32, 48, 64, 72]" :value="size") {{ size }}
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(for="text-size")
+              strong Text Size
+          select.input-group-field(id="text-size" v-model="textSize")
+            option(v-for="size in [5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 32, 48, 64, 72]" :value="size") {{ size }}
 
 
   fieldset.fieldset
