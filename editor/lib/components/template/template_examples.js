@@ -62,8 +62,12 @@ const api = {
     const doc = this.startNewDocument()
     const components = game.components
 
-    let pageSize = { h: 8.5, w: 11 },
-      defaultMargin = .25
+    let printSettings = store.getters.getPrintSettings,
+      pageSize = { w: printSettings.width, h: printSettings.height },
+      marginTop = printSettings.marginTop,
+      marginRight = printSettings.marginRight,
+      marginBottom = printSettings.marginBottom,
+      marginLeft = printSettings.marginLeft
 
     // TODO: gather all items' layouts
     // generate a layout with locations mapped to dimensions
@@ -75,8 +79,8 @@ const api = {
       }
     })
 
-    let lastX = defaultMargin,
-      lastY = defaultMargin,
+    let lastX = marginRight,
+      lastY = marginTop,
       currentPage = 1
 
     let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
@@ -85,14 +89,14 @@ const api = {
         let thisX = lastX,
           thisY = lastY
 
-        if(thisX + size.w > (pageSize.w - defaultMargin*2)) {
+        if(thisX + size.w > (pageSize.w - (marginLeft + marginRight))) {
           // if x is past width (right side of medium page), reset x and increment y
-          thisX = lastX = defaultMargin
+          thisX = lastX = marginLeft
           thisY = lastY = lastY + size.h
 
-          if(thisY + size.h > (pageSize.h - defaultMargin*2)) {
+          if(thisY + size.h > (pageSize.h - (marginTop + marginBottom))) {
             // if y is past height (bottom of medium page), reset y and increment page
-            thisY = lastY = defaultMargin
+            thisY = lastY = marginTop
             currentPage += 1
           }
 
@@ -116,7 +120,7 @@ const api = {
 
     // Add all needed pages to doc up front
     _.times(currentPage, () => {
-      doc.addPage(pageSize.w-defaultMargin*2, pageSize.h-defaultMargin*2)
+      doc.addPage(pageSize.w - (marginLeft + marginRight), pageSize.h - (marginTop + marginBottom))
     })
 
     return Promise.each(components, (component) => {
