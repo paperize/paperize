@@ -136,7 +136,6 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
         },
 
         set(width) {
-          console.log('yar', width)
           this.updatePrintSettings({ width })
         },
       },
@@ -147,7 +146,6 @@ modal(name="Print Settings" height="auto" :pivotY="0.25")
         },
 
         set(height) {
-          console.log('yar', height)
           this.updatePrintSettings({ height })
         },
       },

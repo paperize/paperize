@@ -1,48 +1,80 @@
 <template lang="pug">
-.grid-x
-  .small-12.cell
-    ul.menu.horizontal
-      li
-        a(@click="setPageMode('preset')") Preset
-      li
-        a(@click="setPageMode('custom')") Custom
+fieldset.fieldset
+  legend
+    strong Component Size
 
-  template(v-if="pageMode === 'preset'")
-    .small-5.cell
-      label Format:
-      select(v-model="templateWidth")
-        option(v-for="pageFormat in pageFormats" :value="pageFormat")
-          | {{ capitalize(pageFormat.replace("-", " ")) }}
+  .grid-x.grid-padding-x
+    .small-12.cell
+      ul.menu
+        li.menu-text Using:
+        li(:class="{ 'is-active': paperMode == 'standard' }")
+          a(@click="setPaperMode('standard')") Standard Sizes
+        li(:class="{ 'is-active': paperMode == 'custom' }")
+          a(@click="setPaperMode('custom')") Custom Size
 
-    .small-7.cell
-      label Orientation:
-      select(v-model="templateHeight")
-        option(value="portrait") Portrait
-        option(value="landscape") Landscape
+      hr
 
-  template(v-else-if="pageMode === 'custom'")
-    .small-6.cell
-      label Width:
-      input(type="number" v-model.number="templateWidth")
+    //- Standard Sizes
+    template(v-if="paperMode == 'standard'")
+      .small-12.cell
+        p Select from some common component sizes.
 
-    .small-6.cell
-      label Height:
-      input(type="number" v-model.number="templateHeight")
+      .small-12.cell
+        .input-group
+          span.input-group-label(title="inches") Size
+          select.input-group-field(id="paper-format" @change="updatePageDimensions" v-model="paperFormat")
+            option()
+            option(v-for="componentOption in standardComponentOptions" :value="componentOption.value") {{ componentOption.name }}
+
+      .small-12.cell
+        .input-group
+          span.input-group-label(title="inches") Orientation
+          select.input-group-field(id="paper-orientation" @change="updatePageDimensions" v-model="paperOrientation")
+            option(value="portrait") Portrait
+            option(value="landscape") Landscape
+
+    //- Custom Size
+    template(v-else)
+      .small-12.cell
+        p Set your own custom component size in inches.
+
+      .small-12.cell
+        .input-group
+          span.input-group-label(title="inches") Width
+          input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateWidth")
+          span.input-group-label(title="inches") in.
+
+      .small-12.cell
+        .input-group
+          span.input-group-label Height
+          input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateHeight")
+          span.input-group-label(title="inches") in.
 </template>
 
 <script>
-  import { capitalize, isString } from 'lodash'
+  import { debounce, isString, find } from 'lodash'
+  import { mapMutations } from 'vuex'
+
+  const standardComponentOptions = [
+    { value: 'poker', name: 'Poker-sized Cards',
+      width: 2.5, height: 3.5 },
+    { value: 'a4', name: 'Whole Page (A4)',
+      width: 8.3, height: 11.7 },
+    { value: 'letter', name: 'Whole Page (Letter)',
+      width: 8.5, height: 11 },
+    { value: 'universal', name: 'Whole Page (Universal)',
+      width: 8.3, height: 11 },
+  ]
+
   export default {
     props: ["template"],
 
     data() {
       return {
-        pageMode: "preset",
-        pageFormats: ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
-          'a9', 'a10', 'b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
-          'b9', 'b10', 'c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
-          'c9', 'c10', 'dl', 'letter', 'government-letter', 'legal',
-          'junior-legal', 'ledger', 'tabloid', 'credit-card']
+        standardComponentOptions,
+        paperMode: 'standard',
+        paperFormat: '',
+        paperOrientation: 'portrait',
       }
     },
 
@@ -52,7 +84,7 @@
         set(newWidth) {
           if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
           const newSize = { ...this.template.size, w: newWidth  }
-          this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
+          this.updateTemplateSize({ template: this.template, size: newSize })
         }
       },
 
@@ -61,23 +93,53 @@
         set(newHeight) {
           if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
           const newSize = { ...this.template.size, h: newHeight }
-          this.$store.commit("updateTemplateSize", { template: this.template, size: newSize })
+          this.updateTemplateSize({ template: this.template, size: newSize })
         }
       }
     },
 
     methods: {
-      capitalize,
+      updateTemplateSize: debounce(function(payload) {
+        this.$store.commit("updateTemplateSize", payload)
+      }, 200),
 
-      setPageMode(newPageMode) {
-        this.pageMode = newPageMode
+      setPaperMode(mode) {
+        this.paperMode = mode
 
-        if(this.pageMode === "preset") {
-
-        } else if(this.pageMode === "custom") {
-
+        if(this.paperMode != "standard") {
+          this.paperFormat = ""
+          this.paperOrientation = "portrait"
         }
       },
+
+      updatePageDimensions() {
+        if(this.paperFormat.length == 0) { return }
+
+        let format = find(standardComponentOptions, { value: this.paperFormat })
+          , width = format.width
+          , height = format.height
+          , smallerDimension = Math.min(width, height)
+          , largerDimension = Math.max(width, height)
+
+        if(this.paperOrientation == 'portrait') {
+          this.updateTemplateSize({
+            template: this.template,
+            size: {
+              w: smallerDimension,
+              h: largerDimension
+            }
+          })
+
+        } else if(this.paperOrientation == 'landscape') {
+          this.updateTemplateSize({
+            template: this.template,
+            size: {
+              w: largerDimension,
+              h: smallerDimension
+            }
+          })
+        }
+      }
     }
   }
 </script>
