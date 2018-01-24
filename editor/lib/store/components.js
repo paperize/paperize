@@ -40,6 +40,7 @@ const ComponentsModule = {
   actions: {
     createComponent({ commit, getters, rootGetters }, { component }) {
       let game = rootGetters.activeGame
+      // get a new id if i don't have one or mine collides
       if(!component.id || getters.findGameComponent(game, component.id, false)) {
         component.id = uuid()
       }

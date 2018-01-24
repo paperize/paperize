@@ -86,15 +86,20 @@ const api = {
           thisY = lastY
 
         if(thisX + size.w > (pageSize.w - defaultMargin*2)) {
-          // if x is past width, set zero and increment y
+          // if x is past width (right side of medium page), reset x and increment y
           thisX = lastX = defaultMargin
           thisY = lastY = lastY + size.h
 
           if(thisY + size.h > (pageSize.h - defaultMargin*2)) {
-            // if y is past height, set zero and increment page
+            // if y is past height (bottom of medium page), reset y and increment page
             thisY = lastY = defaultMargin
             currentPage += 1
           }
+
+          // TODO: "rasturbate mode"
+          // TODO: component is larger than the physical page itself and must
+          //  be striped across multiple physical pages and reconstructed at
+          //  "PnP-time" (vs "Data-time", "Print-time", etc?)
         }
 
         locations[name].push({
