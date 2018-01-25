@@ -24,8 +24,9 @@ const AssetsModule = {
     findImage: state => imageId => assetStore.getImage(imageId),
 
     findImageByName: (state, getters) => name => {
-      let id = find(getters.images, { name }).id
-      return getters.findImage(id)
+      let foundImage = find(getters.images, { name })
+      if(!foundImage) { throw new Error(`No Image found with name "${name}"`)}
+      return getters.findImage(foundImage.id)
     }
   },
 
@@ -36,6 +37,10 @@ const AssetsModule = {
 
     updateImageName(state, { image, name }) {
       image.name = name
+    },
+
+    deleteImage(state, { image }) {
+      state.images.splice(state.images.indexOf(image), 1)
     }
   },
 
@@ -74,6 +79,10 @@ const AssetsModule = {
       .value()
 
       return Promise.all(promises)
+    },
+
+    deleteImage({ commit }, { image }) {
+      commit("deleteImage", { image })
     }
   }
 }

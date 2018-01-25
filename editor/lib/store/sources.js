@@ -69,7 +69,7 @@ const SourcesModule = {
       .value()
     },
 
-    activeSource: (state, getters) => (getters.activeComponent || { }).source,
+    activeSource: (state, getters, rootState, rootGetters) => (rootGetters.activeComponent || { }).source,
 
     activeSourceProperties: (state, getters) => {
       return getters.activeSource &&
@@ -115,9 +115,9 @@ const SourcesModule = {
   },
 
   actions: {
-    setActiveComponentSource({ commit, getters }, source) {
+    setActiveComponentSource({ commit, getters, rootGetters }, source) {
       source = getters.findSource(source)
-      commit("setComponentSource", { component: getters.activeComponent, source })
+      commit("setComponentSource", { component: rootGetters.activeComponent, source })
     },
 
     fetchRemoteSources({ commit, dispatch }) {
@@ -127,7 +127,7 @@ const SourcesModule = {
     },
 
     importSource({ dispatch }, source) {
-      dispatch("createOrUpdateSourceById", source.id)
+      return dispatch("createOrUpdateSourceById", source.id)
     },
 
     createOrUpdateSourceById({ getters, dispatch }, sourceId) {

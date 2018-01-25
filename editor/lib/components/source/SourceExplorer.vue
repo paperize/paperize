@@ -34,7 +34,13 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
     computed: mapGetters(["showSpinner", "sourceExists", "remoteSources"]),
 
     methods: {
-      ...mapActions(["fetchRemoteSources", "importSource"]),
+      ...mapActions(["fetchRemoteSources"]),
+
+      importSource(source) {
+        this.$store.dispatch("importSource", source).then(() => {
+          this.$modal.hide("Source Manager")
+        })
+      },
 
       sourceImportLabel(source) {
         let label = source.name

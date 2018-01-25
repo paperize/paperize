@@ -2,10 +2,11 @@ import Promise from 'bluebird'
 import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
+import mustache from '../../services/tiny-mustache'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
-  return store.getters.findImageByName(name).then(asset => asset.data)
+  return Promise.try(() => store.getters.findImageByName(name).then(asset => asset.data))
 }
 
 const fetchImageByName = function(name) {
@@ -38,9 +39,9 @@ const toDataURL = function(url) {
 const api = {
   renderItemToPdf(game, component, item) {
     const doc = this.startNewDocument()
-    this.addPage(doc, component)
+    this.addPage(doc, component.template.size)
 
-    return this.renderItem(doc, game, component, item).then(() => {
+    return this.renderItem(doc, game, component, item, component.template.size).then(() => {
       return doc.output('bloburi')
     })
   },
@@ -59,14 +60,79 @@ const api = {
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-    const components = game.components // this.sortComponents(game)
+    const components = game.components
+
+    let printSettings = store.getters.getPrintSettings,
+      pageSize = { w: printSettings.width, h: printSettings.height },
+      marginTop = printSettings.marginTop,
+      marginRight = printSettings.marginRight,
+      marginBottom = printSettings.marginBottom,
+      marginLeft = printSettings.marginLeft
+
+    // TODO: gather all items' layouts
+    // generate a layout with locations mapped to dimensions
+    let componentSizes = components.map((component) => {
+      return {
+        size: component.template.size,
+        name: component.id,
+        quantity: store.getters.getComponentItems(component).length
+      }
+    })
+
+    let lastX = marginRight,
+      lastY = marginTop,
+      currentPage = 1
+
+    let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
+      locations[name] = locations[name] || []
+      while(quantity > 0){
+        let thisX = lastX,
+          thisY = lastY
+
+        if(thisX + size.w > (pageSize.w - (marginLeft + marginRight))) {
+          // if x is past width (right side of medium page), reset x and increment y
+          thisX = lastX = marginLeft
+          thisY = lastY = lastY + size.h
+
+          if(thisY + size.h > (pageSize.h - (marginTop + marginBottom))) {
+            // if y is past height (bottom of medium page), reset y and increment page
+            thisY = lastY = marginTop
+            currentPage += 1
+          }
+
+          // TODO: "rasturbate mode"
+          // TODO: component is larger than the physical page itself and must
+          //  be striped across multiple physical pages and reconstructed at
+          //  "PnP-time" (vs "Data-time", "Print-time", etc?)
+        }
+
+        locations[name].push({
+          ...size,
+          page: currentPage,
+          x: thisX, y: thisY
+        })
+        lastX += size.w
+        quantity -= 1
+      }
+
+      return locations
+    }, {})
+
+    // Add all needed pages to doc up front
+    _.times(currentPage, () => {
+      doc.addPage(pageSize.w - (marginLeft + marginRight), pageSize.h - (marginTop + marginBottom))
+    })
 
     return Promise.each(components, (component) => {
       const items = store.getters.getComponentItems(component)
 
       return Promise.each(items, (item) => {
-        this.addPage(doc, component)
-        return this.renderItem(doc, game, component, item)
+
+        let parentDimensions = itemLocations[component.id].pop()
+        // what page is this item's location on?
+        doc.setPage(parentDimensions.page)
+
+        return this.renderItem(doc, game, component, item, parentDimensions)
       })
     }).then(() => {
       return doc.save("game.pdf") //output('bloburi')
@@ -82,33 +148,59 @@ const api = {
     return doc
   },
 
-  addPage(doc, component) {
+  addPage(doc, size) {
     // game or template knows page settings?
     // template.pageArguments?
     // doc.apply('addPage', template.pageArguments)
-    doc.addPage(component.pageSize.w, component.pageSize.h)
+    doc.addPage(size.w, size.h)
   },
 
   restoreDocumentDefaults(doc) {
     doc.setFontSize(16)
+    doc.setLineWidth(.02)
+    doc.setDrawColor(0)
+    doc.setFillColor(0)
   },
 
-  renderItem(doc, game, component, item) {
+  renderItem(doc, game, component, item, parentDimensions) {
     // get transforms for this component
-    const transforms = store.getters.getComponentTransforms(component)
+    let layers = store.getters.getTemplateLayers(component.template)
     // render each transform upon this item
-    console.log(`Rendering ${transforms.length} layers...`)
+    console.log(`Rendering ${layers.length} layers...`, layers)
 
 
     let helpers = {
-      // Guide box
-      drawGuideBox(dimensions) {
-        doc.setLineWidth(.02)
-        doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h)
+      findProperty(key) {
+        const property = _.find(item, { key })
+        if(property) {
+          return property.value
+        } else {
+          console.log(`No property found by key: ${key}`)
+          return ""
+        }
       },
 
-      findProperty(key) {
-        return _.find(item, { key }).value || ""
+      percentOfParent(dimensions, parent) {
+        return {
+          x: (dimensions.x*.01*parent.w)+(parent.x || 0),
+          y: (dimensions.y*.01*parent.h)+(parent.y || 0),
+          w: dimensions.w*.01*parent.w,
+          h: dimensions.h*.01*parent.h,
+        }
+      },
+
+      hexToRGB(hexColorString) {
+        let r = parseInt(`${hexColorString[1]}${hexColorString[2]}`, 16),
+          g = parseInt(`${hexColorString[3]}${hexColorString[4]}`, 16),
+          b = parseInt(`${hexColorString[5]}${hexColorString[6]}`, 16)
+
+        return { r, g, b }
+      },
+
+      // easy to render a rect given dimensions
+      easyRect(dimensions, mode="S") {
+        doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, mode)
+        // doc.roundedRect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, .1, .1, mode)
       },
 
       text(fontSize, text, x, y) {
@@ -117,6 +209,7 @@ const api = {
       },
 
       textBox(text, boxDimensions, options) {
+        options = _.defaults(options, {})
         // helpers.drawGuideBox(boxDimensions)
 
         // Line Height Formula: fontSize * lineHeight / ptsPerInch
@@ -131,8 +224,8 @@ const api = {
       imageBox(imageName, boxDimensions, options) {
         // helpers.drawGuideBox(boxDimensions)
         options = _.defaults(options, {
-          hAlign: "center",
-          vAlign: "top"
+          horizontalAlignment: "center",
+          verticalAlignment: "top"
         })
         let boxRatio = boxDimensions.w / boxDimensions.h
 
@@ -151,9 +244,9 @@ const api = {
             finalH *= boxRatio/imageRatio
 
             // Manage Vertical Alignment
-            if(options.vAlign == "middle") {
+            if(options.verticalAlignment == "middle") {
               finalY += (boxDimensions.h - finalH)/2
-            } else if(options.vAlign == "bottom") {
+            } else if(options.verticalAlignment == "bottom") {
               finalY += boxDimensions.h - finalH
             }
 
@@ -162,10 +255,10 @@ const api = {
             finalW *= imageRatio/boxRatio
 
             // Manage Horizontal Alignment
-            if(options.hAlign == "center") {
+            if(options.horizontalAlignment == "center") {
               finalX += (boxDimensions.w - finalW)/2
 
-            } else if(options.hAlign == "right") {
+            } else if(options.horizontalAlignment == "right") {
               finalX += (boxDimensions.w - finalW)
             }
           }
@@ -183,54 +276,83 @@ const api = {
 
     helpers.p = helpers.findProperty
 
-    return Promise.each(transforms, transform => {
+    return Promise.each(layers, layer => {
+      // TODO: modify with layout dimensions
+      let layerDimensions = helpers.percentOfParent(store.getters.getLayerDimensions(layer), parentDimensions)
+
+      // Always revert to defaults
       this.restoreDocumentDefaults(doc)
-      let actualFunction
-      // Let the fires of hell erupt
-      eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
-        ${transform.renderFunction}
-      }`)
 
-      return actualFunction(doc, helpers, transform.dimensions, game, component, item)
+      // Draw a helper rectangle
+      // TODO: draw based on dimensions.mode
+      doc.setLineWidth(.005)
+      helpers.easyRect(layerDimensions)
+
+      if(layer.type == "code" && layer.renderFunction) {
+        let actualFunction
+        // Let the fires of hell erupt
+        eval(`actualFunction = function(doc, helpers, dimensions, game, component, item) {
+          ${layer.renderFunction}
+        }`)
+        return actualFunction(doc, helpers, layerDimensions, game, component, item)
+
+      } else if(layer.type == "shape") {
+        // extract RGB255 from hex
+        let { r: fr, g: fg, b: fb } = helpers.hexToRGB(layer.fillColor)
+        doc.setFillColor(fr, fg, fb)
+        let { r: sr, g: sg, b: sb } = helpers.hexToRGB(layer.strokeColor)
+        doc.setDrawColor(sr, sg, sb)
+        doc.setLineWidth(layer.strokeWidth)
+
+        if(layer.strokePresent && layer.fillPresent) {
+          helpers.easyRect(layerDimensions, "DF")
+        } else if(layer.strokePresent) {
+          helpers.easyRect(layerDimensions, "S")
+        } else if(layer.fillPresent) {
+          helpers.easyRect(layerDimensions, "F")
+        }
+
+      } else if(layer.type == "text") {
+        doc.setFontSize(layer.textSize)
+        let { r, g, b } = helpers.hexToRGB(layer.textColor)
+        doc.setTextColor(r, g, b)
+
+        // List Properties template:
+        // let propertyText = _.reduce(item, (text, itemPair) => {
+        //   text += `${itemPair.key}: ${itemPair.value}\n`
+        //   return text
+        // }, "")
+
+        // Prepare template variables
+        let textContentTemplateVars = _.reduce(item, (kvObject, itemPair) => {
+          kvObject[itemPair.key] = itemPair.value
+          return kvObject
+        }, {})
+
+        // Render the template
+        // Allow multiple render passes?
+        // Check for templates that call themselves?
+        // Check for circular dependencies?
+        let textContentTemplate = mustache(layer.textContentTemplate, textContentTemplateVars)
+
+        helpers.textBox(textContentTemplate, layerDimensions, {})
+
+      } else if(layer.type == "image") {
+        let imageName = "",
+          { horizontalAlignment, verticalAlignment } = layer
+
+        if(layer.imageNameStatic) {
+          imageName = layer.imageName
+        } else {
+          imageName = `${layer.imageNamePrefix}${helpers.p(layer.imageNameProperty)}${layer.imageNameSuffix}`
+        }
+
+        return helpers.imageBox(imageName, layerDimensions, { horizontalAlignment, verticalAlignment }).catch(() => {
+            console.log(`Failed to add image named "${imageName}"`)
+          })
+      }
     })
-  },
-
-  renderBackgroundTemplates() {
-
-  },
-
-  renderPerPropertyTemplates() {
-
-  },
-
-  renderForegroundTemplates() {
-
   },
 }
 
 export default api
-
-// Ideas for per-property templates
-// propertyTemplate("title", (title, doc) => {
-//   failUnless("text")
-//
-//   doc.setColor(color)
-//   doc.setFont(font)
-//   doc.renderText(title, x, y)
-// })
-//
-// propertyTemplate("cost", (cost, doc) => {
-//   failUnless("template")
-//
-//   doc.setColor(color)
-//   doc.setFont(font)
-//   doc.renderText(cost(), x, y)
-// })
-//
-// propertyTemplate("image", (image, doc) => {
-//   failUnless("image")
-//
-//   // implement stretch/crop to fit/fill
-//
-//   doc.addImage(image, x, y)
-// })

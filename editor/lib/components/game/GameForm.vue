@@ -9,27 +9,6 @@ modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true
         label(for="game-title") Title:
       .small-8.cell
         input(type="text" id="game-title" name="title" v-model="gameClone.title")
-
-      .small-4.cell
-        label(for="game-description") Description:
-      .small-8.cell
-        textarea(id="game-description" name="description" v-model="gameClone.description")
-
-      .small-4.cell
-        label(for="game-player-count") Player Count:
-      .small-8.cell
-        input(type="text" id="game-player-count" name="player-count" v-model="gameClone.playerCount")
-
-      .small-4.cell
-        label(for="game-age-range") Age Range:
-      .small-8.cell
-        input(type="text" id="game-age-range" name="age-range" v-model="gameClone.ageRange")
-
-      .small-4.cell
-        label(for="game-play-time") Play Time:
-      .small-8.cell
-        input(type="text" id="game-play-time" name="play-time" v-model="gameClone.playTime")
-
       .small-4.cell
         button.button.small.alert(type="button" @click="closeModal") Cancel
       .small-8.cell

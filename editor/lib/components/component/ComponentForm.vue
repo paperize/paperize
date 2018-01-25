@@ -6,19 +6,14 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
         h1 {{ titleLabel }}
         hr
 
-      .small-4.cell
-        label(:for="`component-title-${component.id}`") Title:
-      .small-8.cell
-        input.component-title-new(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
+      .small-12.cell
+        .input-group
+          span.input-group-label
+            label(:for="`component-title-${component.id}`") Title
+          input.input-group-field.component-title-new(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
 
-      .small-4.cell
-        label(:for="`component-type-${component.id}`") Type:
-      .small-8.cell
-        select.component-type-new(:id="`component-type-${component.id}`" name="type" v-model="componentClone.type")
-          option(value="deck") Deck of Cards
-          option(value="tile-stack") Stack of Tiles
-          option(value="booklet") Booklet or Manual
-          option(value="custom") Custom Component
+      .small-12.cell
+        template-size-editor(:template="componentClone.template")
 
       .small-4.cell
         button.small.button.alert(type="button" @click="closeModal") Cancel
@@ -32,6 +27,7 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
 
 <script>
   import Component from '../../models/component'
+  import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
 
   export default {
     props: {
@@ -42,8 +38,16 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
       },
 
       component: {
-        default: Component.factory
+        default() {
+          let component = Component.factory()
+          this.$store.dispatch("createComponentTemplate", component)
+          return component
+        }
       }
+    },
+
+    components: {
+      "template-size-editor": TemplateSizeEditor,
     },
 
     data() {
