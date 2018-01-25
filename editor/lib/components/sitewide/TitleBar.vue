@@ -9,7 +9,7 @@
             router-link(:to="{ name: homeLink }")
               strong Paperize.io
           li.build-status
-            a(target="_blank" title="Alpha 4" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 4
+            a(target="_blank" title="Prodigious Electromancer" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 4 "Prodigious Electromancer"
       .top-bar-right
         profile-component
 </template>
