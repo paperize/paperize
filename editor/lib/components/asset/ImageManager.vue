@@ -19,12 +19,13 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
         tbody
           tr(v-for="image in images")
             td(v-if="editing == image.id")
-              .button.tiny(@click="stopEditing")
+              a.button.tiny(@click="stopEditing")
                 = "Accept"
             td(v-else)
-              .button.alert.tiny(@click="editImage(image)")
-                = "Edit "
-                i.fa.fa-pencil.fa-fw
+              a.button.alert.tiny(@click="confirmDeletion(image)") X
+              a.button.tiny(@click="editImage(image)")
+                //- = "Edit "
+                i.fas.fa-pencil-alt.fa-fw
 
             td(v-if="editing == image.id")
               inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
@@ -43,7 +44,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 
 <script>
   import { find, findIndex } from 'lodash'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   import spinner from 'vue-simple-spinner'
   import InlineImageEditor from './InlineImageEditor.vue'
@@ -68,6 +69,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
     },
 
     methods: {
+      ...mapActions(["deleteImage"]),
       editImage(image) {
         this.editing = image.id
       },
@@ -101,6 +103,24 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
         this.showImageSpinner = true
         this.$store.dispatch('importImageFiles', files).finally(() => {
           this.showImageSpinner = false
+        })
+      },
+
+      confirmDeletion(image) {
+        this.$modal.show('dialog', {
+          title: `Are you sure you want to delete the image "${image.name}"?`,
+          buttons: [
+            {
+              title: "No",
+              default: true
+            }, {
+              title: "Yes",
+              handler: () => {
+                this.deleteImage({ image })
+                this.$modal.hide('dialog')
+              }
+            }
+          ]
         })
       }
     }

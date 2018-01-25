@@ -11,11 +11,11 @@
       li
         a.button.small(@click="showEditModal") Edit
       li
-        a.button.small.alert(@click.stop="deleteComponent") Delete
+        a.button.small.alert(@click.stop="confirmDeletion") Delete
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import ComponentForm from './ComponentForm.vue'
 
   export default {
@@ -37,6 +37,7 @@
     },
 
     methods: {
+      ...mapActions(["deleteComponent"]),
       showEditModal() {
         this.$modal.show(`edit-component-modal-${this.component.id}`)
       },
@@ -52,8 +53,24 @@
         return this.component.id === (this.activeComponent && this.activeComponent.id)
       },
 
-      deleteComponent() {
-        this.$store.dispatch("deleteComponent", { component: this.component })
+      confirmDeletion() {
+        this.$modal.show("dialog", {
+          title: 'Are you sure you want to delete this component?',
+          text: 'It will be lost forever.',
+          buttons: [
+            {
+              title: 'No',
+              default: true
+            },
+            {
+              title: 'Yes',
+              handler: () => {
+                this.deleteComponent({ component: this.component })
+                this.$modal.hide('dialog')
+              }
+            }
+         ]
+        })
       }
     }
   }

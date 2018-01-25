@@ -1,6 +1,6 @@
 {
   "name": "editor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {
@@ -76,6 +76,7 @@
     "pouchdb-mapreduce": "^6.3.4",
     "pouchdb-replication": "^6.3.4",
     "uuid": "^3.1.0",
+    "v-autocomplete": "^1.8.1",
     "vue": "^2.5.5",
     "vue-async-computed": "^3.3.1",
     "vue-js-modal": "^1.2.11",
