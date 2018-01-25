@@ -67,7 +67,13 @@ const api = {
       marginTop = printSettings.marginTop,
       marginRight = printSettings.marginRight,
       marginBottom = printSettings.marginBottom,
-      marginLeft = printSettings.marginLeft
+      marginLeft = printSettings.marginLeft,
+      totalHorizontalMargin = marginLeft + marginRight,
+      totalVerticalMargin = marginTop + marginBottom,
+      printablePageSize = {
+        w: (pageSize.w - totalHorizontalMargin),
+        h: (pageSize.h - totalVerticalMargin)
+      }
 
     // TODO: gather all items' layouts
     // generate a layout with locations mapped to dimensions
@@ -79,7 +85,7 @@ const api = {
       }
     })
 
-    let lastX = marginRight,
+    let lastX = marginLeft,
       lastY = marginTop,
       currentPage = 1
 
@@ -89,12 +95,12 @@ const api = {
         let thisX = lastX,
           thisY = lastY
 
-        if(thisX + size.w > (pageSize.w - (marginLeft + marginRight))) {
+        if(thisX + size.w > printablePageSize.w + marginLeft) {
           // if x is past width (right side of medium page), reset x and increment y
           thisX = lastX = marginLeft
           thisY = lastY = lastY + size.h
 
-          if(thisY + size.h > (pageSize.h - (marginTop + marginBottom))) {
+          if(thisY + size.h > printablePageSize.h + marginTop) {
             // if y is past height (bottom of medium page), reset y and increment page
             thisY = lastY = marginTop
             currentPage += 1
@@ -120,7 +126,7 @@ const api = {
 
     // Add all needed pages to doc up front
     _.times(currentPage, () => {
-      doc.addPage(pageSize.w - (marginLeft + marginRight), pageSize.h - (marginTop + marginBottom))
+      doc.addPage(pageSize.w, pageSize.h)
     })
 
     return Promise.each(components, (component) => {
