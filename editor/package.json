@@ -1,6 +1,6 @@
 {
   "name": "editor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {

@@ -30,6 +30,7 @@ recursiveReaddir('./build').then (files) ->
         Paths:
           Quantity: 1
           Items: [ '/*' ]
+
   .then ->
     console.log("Done.")
 
