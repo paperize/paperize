@@ -5,7 +5,7 @@
 <script>
   import { debounce, reduce } from 'lodash'
   import { mapGetters } from 'vuex'
-  import pdfRenderer from './template_examples'
+  import pdfRenderer from '../../services/pdf_renderer'
 
   const RENDER_DELAY_MS = 800
 

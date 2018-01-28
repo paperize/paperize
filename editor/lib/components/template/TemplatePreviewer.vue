@@ -38,7 +38,6 @@ div
 <script>
   import { mapGetters } from 'vuex'
   import { clamp } from 'lodash'
-  import pdfRenderer from './template_examples'
   import TemplateRenderer from './TemplateRenderer.vue'
 
   export default {

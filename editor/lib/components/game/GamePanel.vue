@@ -26,7 +26,7 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import pdfRenderer from '../template/template_examples'
+  import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import PrintSettings from '../print/PrintSettings.vue'
 

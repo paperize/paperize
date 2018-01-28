@@ -91,19 +91,8 @@
   import { debounce } from 'lodash'
   import { computedVModelUpdateAll } from '../../../store/component_helper'
 
-  const imageTemplate = new Vue({
-    props: ["item"],
-    template: "<span>> {{ item }}</span>"
-  })
-
   export default {
     props: ["layer"],
-
-    data() {
-      return {
-        imageTemplate
-      }
-    },
 
     computed: {
       ...computedVModelUpdateAll("layer", "updateLayer", [
@@ -128,10 +117,6 @@
 
     methods: {
       getImageLabel(imageItem) { return imageItem },
-      //
-      // updateImageItems(searchText) {
-      //   return this.imageItems()
-      // },
 
       updateLayer: debounce(function({ layer, keyValueObject }) {
         this.$store.dispatch("updateLayer", { layer, keyValueObject})
