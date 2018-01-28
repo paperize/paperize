@@ -42,6 +42,10 @@ const api = {
     this.addPage(doc, component.template.size)
 
     return this.renderItem(doc, game, component, item, component.template.size).then(() => {
+      // if(store.getters.activeLayer) {
+      //   TODO: render a helper rectangle around the active layer
+      // }
+
       return doc.output('bloburi')
     })
   },
@@ -231,7 +235,8 @@ const api = {
         // helpers.drawGuideBox(boxDimensions)
         options = _.defaults(options, {
           horizontalAlignment: "center",
-          verticalAlignment: "top"
+          verticalAlignment:   "top",
+          scaleMode:           "fillToBox"
         })
         let boxRatio = boxDimensions.w / boxDimensions.h
 
@@ -242,30 +247,54 @@ const api = {
             finalW = boxDimensions.w,
             finalH = boxDimensions.h
 
-          // TODO: Fill to Box
 
-          // Fit to Box
-          if(imageRatio > boxRatio) {
-            // Squeeze Height
-            finalH *= boxRatio/imageRatio
+          if(options.scaleMode == "fillToBox") {
+            if(imageRatio > boxRatio) { // image is widthier than box
+              finalW *= imageRatio/boxRatio
 
-            // Manage Vertical Alignment
-            if(options.verticalAlignment == "middle") {
-              finalY += (boxDimensions.h - finalH)/2
-            } else if(options.verticalAlignment == "bottom") {
-              finalY += boxDimensions.h - finalH
+              // Manage Horizontal Alignment
+              if(options.horizontalAlignment == "center") {
+                finalX += (boxDimensions.w - finalW)/2
+
+              } else if(options.horizontalAlignment == "right") {
+                finalX += (boxDimensions.w - finalW)
+              }
+
+            } else { // image is heightier than box
+              finalH *= boxRatio/imageRatio
+
+              // Manage Vertical Alignment
+              if(options.verticalAlignment == "middle") {
+                finalY += (boxDimensions.h - finalH)/2
+
+              } else if(options.verticalAlignment == "bottom") {
+                finalY += boxDimensions.h - finalH
+              }
             }
+          } else if(options.scaleMode == "fitToBox") {
+            if(imageRatio > boxRatio) { // image is widthier than box
+              // Squeeze Height
+              finalH *= boxRatio/imageRatio
 
-          } else {
-            // Squeeze Width
-            finalW *= imageRatio/boxRatio
+              // Manage Vertical Alignment
+              if(options.verticalAlignment == "middle") {
+                finalY += (boxDimensions.h - finalH)/2
 
-            // Manage Horizontal Alignment
-            if(options.horizontalAlignment == "center") {
-              finalX += (boxDimensions.w - finalW)/2
+              } else if(options.verticalAlignment == "bottom") {
+                finalY += boxDimensions.h - finalH
+              }
 
-            } else if(options.horizontalAlignment == "right") {
-              finalX += (boxDimensions.w - finalW)
+            } else { // image is heightier than box
+              // Squeeze Width
+              finalW *= imageRatio/boxRatio
+
+              // Manage Horizontal Alignment
+              if(options.horizontalAlignment == "center") {
+                finalX += (boxDimensions.w - finalW)/2
+
+              } else if(options.horizontalAlignment == "right") {
+                finalX += (boxDimensions.w - finalW)
+              }
             }
           }
 
@@ -288,11 +317,6 @@ const api = {
 
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
-
-      // Draw a helper rectangle
-      // TODO: draw based on dimensions.mode
-      doc.setLineWidth(.005)
-      helpers.easyRect(layerDimensions)
 
       if(layer.type == "code" && layer.renderFunction) {
         let actualFunction
@@ -345,7 +369,7 @@ const api = {
 
       } else if(layer.type == "image") {
         let imageName = "",
-          { horizontalAlignment, verticalAlignment } = layer
+          { horizontalAlignment, verticalAlignment, imageScaling } = layer
 
         if(layer.imageNameStatic) {
           imageName = layer.imageName
@@ -353,7 +377,7 @@ const api = {
           imageName = `${layer.imageNamePrefix}${helpers.p(layer.imageNameProperty)}${layer.imageNameSuffix}`
         }
 
-        return helpers.imageBox(imageName, layerDimensions, { horizontalAlignment, verticalAlignment }).catch(() => {
+        return helpers.imageBox(imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling }).catch(() => {
             console.log(`Failed to add image named "${imageName}"`)
           })
       }

@@ -34,6 +34,7 @@
       layerImageNamePrefix() { return (this.activeLayer && this.activeLayer.imageNamePrefix) },
       layerImageNameProperty() { return (this.activeLayer && this.activeLayer.imageNameProperty) },
       layerImageNameSuffix() { return (this.activeLayer && this.activeLayer.imageNameSuffix) },
+      layerImageScaling() { return (this.activeLayer && this.activeLayer.imageScaling) },
       layerHorizontalAlignment() { return (this.activeLayer && this.activeLayer.horizontalAlignment) },
       layerVerticalAlignment() { return (this.activeLayer && this.activeLayer.verticalAlignment) },
 
@@ -65,6 +66,7 @@
       layerImageNamePrefix: "renderPDF",
       layerImageNameProperty: "renderPDF",
       layerImageNameSuffix: "renderPDF",
+      layerImageScaling: "renderPDF",
       layerHorizontalAlignment: "renderPDF",
       layerVerticalAlignment: "renderPDF",
       layerTextContentTemplate: "renderPDF",

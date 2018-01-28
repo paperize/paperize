@@ -55,6 +55,16 @@
 
     .grid-x.grid-margin-x
       .small-12.cell
+        label
+          strong Scaling:
+
+        input(type="radio" id="radio-fit" value="fitToBox" v-model="imageScaling")
+        label(for="radio-fit") Fit
+
+        input(type="radio" id="radio-fill" value="fillToBox" v-model="imageScaling")
+        label(for="radio-fill") Fill
+
+      .small-12.cell
         .input-group
           span.input-group-label
             label(for="horizontal-alignment")
@@ -102,6 +112,7 @@
         "imageNamePrefix",
         "imageNameProperty",
         "imageNameSuffix",
+        "imageScaling",
         "horizontalAlignment",
         "verticalAlignment",
       ]),

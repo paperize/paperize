@@ -53,6 +53,7 @@ LAYER_DEFAULTS[IMAGE] =
     imageNamePrefix:     "",
     imageNameProperty:   null,
     imageNameSuffix:     "",
+    imageScaling:        "fillToBox",
     horizontalAlignment: "center",
     verticalAlignment:   "middle"
   }
