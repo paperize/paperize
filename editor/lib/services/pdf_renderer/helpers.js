@@ -17,6 +17,7 @@ const percentOfParent = function(dimensions, parent) {
   }
 }
 
+// extract RGB255 from hex
 const hexToRGB = function(hexColorString) {
   let r = parseInt(`${hexColorString[1]}${hexColorString[2]}`, 16),
     g = parseInt(`${hexColorString[3]}${hexColorString[4]}`, 16),
