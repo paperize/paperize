@@ -7,6 +7,7 @@ const STATE_KEY = 'state'
 
 const IGNORED_MUTATIONS = [
   "resetState",
+  "setLoginError",
   "setActiveGame",
   "clearActiveGame",
   "setActiveComponent",

@@ -24,7 +24,7 @@ const GoogleModule = {
         auth.getAuth2((auth2) => {
           auth2.signIn().then(
             (googleUser) => { resolve(googleUser) },
-            (error) => { reject(error) }
+            (error) => { reject(new Error(error.error)) }
           )
         })
       })

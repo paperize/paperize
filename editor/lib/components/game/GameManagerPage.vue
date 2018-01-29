@@ -1,11 +1,6 @@
 <template lang="pug">
 .grid-container
-  .grid-x(v-if="!user.authenticated")
-    p
-      | You are not logged in.
-      a(v-on:click="login") Click here to log in now.
-
-  .grid-x.grid-margin-x(v-else)
+  .grid-x.grid-margin-x
     .small-12.cell
       h2 Game Manager
 
@@ -23,7 +18,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import GameCard from './GameCard.vue'
   import GameForm from './GameForm.vue'
 
@@ -36,10 +31,6 @@
     computed: {
       ...mapState(["user"]),
       ...mapGetters(["games"])
-    },
-
-    methods: {
-      ...mapActions(["login"])
     }
   }
 

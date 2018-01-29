@@ -3,10 +3,13 @@ const UsersModule = {
     idToken: null,
     authenticated: false,
     name: '',
-    avatarSrc: ''
+    avatarSrc: '',
+    loginError: null
   },
 
-  getters: { },
+  getters: {
+    loginError: state => state.loginError
+  },
 
   mutations: {
     become(state, user) {
@@ -14,6 +17,10 @@ const UsersModule = {
       state.idToken       = user.idToken
       state.name          = user.name
       state.avatarSrc     = user.avatarSrc
+    },
+
+    setLoginError(state, errorType) {
+      state.loginError = errorType
     },
 
     logout() { }
@@ -25,7 +32,8 @@ const UsersModule = {
       commit("become", user)
     },
 
-    login({ dispatch }) {
+    login({ dispatch, commit }) {
+      commit("setLoginError", null)
       return dispatch("googleLoginFlow")
         .then((googleUser) => {
           return dispatch("become", {
@@ -37,7 +45,8 @@ const UsersModule = {
         })
 
         .catch((error) => {
-          console.error("Sign in Error:", error)
+          commit("setLoginError", error.message)
+          return null
         })
     },
 

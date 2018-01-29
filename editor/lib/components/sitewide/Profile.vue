@@ -10,13 +10,39 @@ ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
       li
         a(@click="logout()") Sign Out
 
-ul.menu.unauthenticated(v-else)
-  li
-    a(@click='login()') Sign In
+div(v-else)
+  ul.menu.unauthenticated
+    li
+      a(@click='prepareForLogin') Sign In
+
+  modal(name="Google Pop-up Helper")
+    .grid-x.grid-padding-x
+      .small-12.cell
+        h1(v-if="!loginError") Logging In With Google...
+        h1(v-else) Error Logging In:
+        hr
+
+        .callout.primary(v-if="!loginError")
+          p Look for a pop-up window asking for your Google login and follow the instruction.
+
+        .callout.alert(v-else-if="loginError == 'popup_closed_by_user'")
+          p You closed the pop-up without logging in.
+
+        .callout.alert(v-else-if="loginError == 'popup_blocked_by_browser'")
+          p Your browser blocked the login pop-up. Enable pop-ups for this site and try again!
+
+        .callout.alert(v-else-if="loginError == 'access_denied'")
+          p You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.
+
+        .callout.alert(v-else)
+          p There was an unknown error logging in: {{ loginError }}
+
+      .small-12.cell(v-if="loginError")
+        a.button(@click="login") Try Again
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import { mapState, mapGetters, mapActions } from 'vuex'
   import auth from '../../auth'
 
   export default {
@@ -29,6 +55,9 @@ ul.menu.unauthenticated(v-else)
 
     computed: {
       ...mapState(['user']),
+
+      ...mapGetters(['loginError']),
+
       avatarSrc() {
         return this.user.avatarSrc || "/images/blank-avatar.png"
       }
@@ -36,6 +65,11 @@ ul.menu.unauthenticated(v-else)
 
     methods: {
       ...mapActions(["login", "logout"]),
+
+      prepareForLogin() {
+        this.$modal.show("Google Pop-up Helper")
+        return this.login()
+      }
     }
   }
 </script>
