@@ -43,10 +43,14 @@ const UIModule = {
 
     setActiveComponent(state, { component }) {
       state.activeComponentId = component.id
+      state.activeLayerId = null
+      state.activeDimensionsId = null
     },
 
     clearActiveComponent(state) {
       state.activeComponentId = null
+      state.activeLayerId = null
+      state.activeDimensionsId = null
     },
 
     setActiveLayer(state, { layer }) {
