@@ -85,16 +85,32 @@ const imageBox = function(doc, imageName, boxDimensions, options) {
       }
 
       const canvas = document.createElement("canvas"),
-        ctx = canvas.getContext("2d")
+        ctx = canvas.getContext("2d"),
+        maxWidth = finalW * 300,
+        widthOverage = Math.max(imageObject.width - maxWidth, 0)/imageObject.width,
+        maxHeight = finalH * 300,
+        heightOverage = Math.max(imageObject.height - maxHeight, 0)/imageObject.height
 
-      canvas.width = cropW
-      canvas.height = cropH
+      let canvasWidth = cropW,
+        canvasHeight = cropH
+
+      // Adjust canvas width/height
+      if(widthOverage < heightOverage) {
+        canvasWidth = canvasWidth - (canvasWidth * widthOverage)
+        canvasHeight = canvasHeight - (canvasHeight * widthOverage)
+      } else if(heightOverage < widthOverage) {
+        canvasWidth = canvasWidth - (canvasWidth * heightOverage)
+        canvasHeight = canvasHeight - (canvasHeight * heightOverage)
+      }
+
+      canvas.width = canvasWidth
+      canvas.height = canvasHeight
 
       // ctx.fillRect(0, 0, cropW, cropH)
 
       ctx.drawImage(imageObject,
         cropX, cropY, cropW, cropH,
-        0, 0, cropW, cropH)
+        0, 0, canvasWidth, canvasHeight)
 
       doc.addImage(
         canvas.toDataURL(),
@@ -152,8 +168,10 @@ export default {
       imageName = `${layer.imageNamePrefix}${helpers.p(layer.imageNameProperty)}${layer.imageNameSuffix}`
     }
 
-    return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling }).catch(() => {
-      console.log(`Failed to add image named "${imageName}"`)
+    return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
+
+    .catch((e) => {
+      console.log(`Failed to add image named "${imageName}"`, e)
     })
   }
 }
