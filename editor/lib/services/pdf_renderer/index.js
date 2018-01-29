@@ -112,7 +112,7 @@ const api = {
 
       return Promise.each(items, (item) => {
 
-        let parentDimensions = itemLocations[component.id].pop()
+        let parentDimensions = itemLocations[component.id].shift()
         // what page is this item's location on?
         doc.setPage(parentDimensions.page)
 
