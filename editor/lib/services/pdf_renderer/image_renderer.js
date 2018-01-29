@@ -50,50 +50,51 @@ const imageBox = function(doc, imageName, boxDimensions, options) {
       finalH = boxDimensions.h
 
     if(options.scaleMode == "fillToBox") {
-      let canvasImageX = 0,
-        canvasImageY = 0,
-        canvasImageW = imageObject.width,
-        canvasImageH = imageObject.height
+      let cropX = 0,
+        cropY = 0,
+        cropW = imageObject.width,
+        cropH = imageObject.height
 
       // create a canvas with dimensions matching the image's cropped to the box's ratio
       // add the image to the canvas with these offsets
       // export the canvas as a data URI
 
       if(imageRatio > boxRatio) { // image is widthier than box
-        canvasImageW *= imageRatio/boxRatio
-        const widthOffset = imageObject.width - canvasImageW
+        cropW *= boxRatio/imageRatio
+        const widthOffset = imageObject.width - cropW
 
         // Manage Horizontal Alignment
         if(options.horizontalAlignment == "center") {
-          canvasImageX += widthOffset/2
+          cropX += widthOffset/2
 
         } else if(options.horizontalAlignment == "right") {
-          canvasImageX += widthOffset
+          cropX += widthOffset
         }
 
       } else { // image is heightier than box
-        canvasImageH *= boxRatio/imageRatio
-        const heightOffset = imageObject.height - canvasImageH
+        cropH *= imageRatio/boxRatio
+        const heightOffset = imageObject.height - cropH
 
         // Manage Vertical Alignment
         if(options.verticalAlignment == "middle") {
-          canvasImageY += heightOffset/2
+          cropY += heightOffset/2
 
         } else if(options.verticalAlignment == "bottom") {
-          canvasImageY += heightOffset
+          cropY += heightOffset
         }
       }
 
       const canvas = document.createElement("canvas"),
         ctx = canvas.getContext("2d")
 
-      canvas.width = imageObject.width
-      canvas.height = imageObject.height
+      canvas.width = cropW
+      canvas.height = cropH
+
+      // ctx.fillRect(0, 0, cropW, cropH)
 
       ctx.drawImage(imageObject,
-        0, 0, imageObject.width, imageObject.height,
-        // 0, 0, imageObject.width, imageObject.height)
-        canvasImageX, canvasImageY, canvasImageW, canvasImageH)
+        cropX, cropY, cropW, cropH,
+        0, 0, cropW, cropH)
 
       doc.addImage(
         canvas.toDataURL(),
