@@ -171,7 +171,8 @@ export default {
     return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
 
     .catch((e) => {
-      console.log(`Failed to add image named "${imageName}"`, e)
+      console.log(`Failed to add image named "${imageName}"`)
+      console.error(e)
     })
   }
 }
