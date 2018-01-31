@@ -1,4 +1,4 @@
-const findProperty = function(key) {
+const findProperty = function(item, key) {
   const property = _.find(item, { key })
   if(property) {
     return property.value

@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import store from '../../store'
+import { findProperty } from './helpers'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
@@ -158,14 +159,14 @@ const imageBox = function(doc, imageName, boxDimensions, options) {
 }
 
 export default {
-  render(doc, layer, layerDimensions) {
+  render(doc, layer, layerDimensions, item) {
     let imageName = "",
       { horizontalAlignment, verticalAlignment, imageScaling } = layer
 
     if(layer.imageNameStatic) {
       imageName = layer.imageName
     } else {
-      imageName = `${layer.imageNamePrefix}${helpers.p(layer.imageNameProperty)}${layer.imageNameSuffix}`
+      imageName = `${layer.imageNamePrefix}${findProperty(item, layer.imageNameProperty)}${layer.imageNameSuffix}`
     }
 
     return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
