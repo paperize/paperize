@@ -166,7 +166,10 @@ export default {
     if(layer.imageNameStatic) {
       imageName = layer.imageName
     } else {
-      imageName = `${layer.imageNamePrefix}${findProperty(item, layer.imageNameProperty)}${layer.imageNameSuffix}`
+      const prefix = layer.imageNamePrefix,
+        property = findProperty(item, layer.imageNameProperty),
+        suffix = layer.imageNameSuffix
+      imageName = `${prefix}${property}${suffix}`
     }
 
     return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })

@@ -19,7 +19,7 @@
           span.input-group-label
             label(for="stroke-width")
               strong Width
-          input.input-group-field(id="stroke-width" type="number" v-model.number="strokeWidth")
+          input.input-group-field(id="stroke-width" type="number" step="0.01" v-model.number="strokeWidth")
 
   fieldset.fieldset
     legend
