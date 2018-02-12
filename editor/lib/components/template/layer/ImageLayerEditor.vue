@@ -33,8 +33,7 @@
             label(for="image-name-property")
               strong Property
           select.input-group-field(id="image-name-property" v-model="imageNameProperty")
-            option(value="Rank") Rank
-            option(value="Name") Name
+            option(v-for="property in activeSourceProperties" :value="property") {{ property }}
 
       .small-12.cell
         .input-group
@@ -87,7 +86,7 @@
 
 <script>
   import Vue from 'vue'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
   import { computedVModelUpdateAll } from '../../../store/component_helper'
 
@@ -95,6 +94,8 @@
     props: ["layer"],
 
     computed: {
+      ...mapGetters(["activeSourceProperties"]),
+
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
         "imageName",
