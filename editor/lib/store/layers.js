@@ -94,7 +94,7 @@ const LayersModule = {
       Vue.set(state.layers, layer.id, layer)
     },
 
-    deleteLayer(state, layer) {
+    destroyLayer(state, layer) {
       delete state.layers[layer.id]
     },
 
@@ -161,6 +161,11 @@ const LayersModule = {
     setLayersRenderOrder({ commit }, layers) {
       commit("setLayersRenderOrder", layers)
     },
+
+    deleteLayer({ commit, dispatch }, layer) {
+      dispatch("destroyDimensions", { id: layer.dimensionsId })
+      commit("destroyLayer", layer)
+    }
   },
 }
 

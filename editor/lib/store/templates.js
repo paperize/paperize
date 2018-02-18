@@ -69,7 +69,7 @@ const TemplatesModule = {
 
     deleteTemplateLayer({ dispatch, commit, getters }, { template, layer }) {
       // Layers only exist in one template, so they get globally purged immediately
-      commit("deleteLayer", layer)
+      dispatch("deleteLayer", layer)
       commit("deleteTemplateLayer", { template, layer })
       dispatch("setLayersRenderOrder", getters.getTemplateLayers(template))
     }
