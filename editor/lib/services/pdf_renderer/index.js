@@ -145,7 +145,7 @@ const api = {
 
   renderItem(doc, game, component, item, parentDimensions) {
     // get transforms for this component
-    let layers = store.getters.getTemplateLayers(component.template)
+    let layers = store.getters.findAllTemplateLayers(component.template)
     // render each transform upon this item
     console.log(`Rendering ${layers.length} layers...`, layers)
 

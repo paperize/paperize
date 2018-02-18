@@ -57,7 +57,7 @@
     },
 
     computed: {
-      ...mapGetters(["getTemplateLayers", "activeLayer"]),
+      ...mapGetters(["findAllTemplateLayers", "activeLayer"]),
 
       editing: {
         get() {
@@ -75,7 +75,7 @@
 
       templateLayers: {
         get() {
-          return this.getTemplateLayers(this.template) || []
+          return this.findAllTemplateLayers(this.template) || []
         },
 
         set(newLayers) {
@@ -85,7 +85,7 @@
     },
 
     methods: {
-      ...mapActions(["addTemplateLayer", "deleteTemplateLayer", "setLayersRenderOrder"]),
+      ...mapActions(["createTemplateLayer", "destroyTemplateLayer", "setLayersRenderOrder"]),
       ...mapMutations(["setActiveLayer"]),
 
       isActive(layer) {
@@ -95,7 +95,7 @@
       selectNewLayerType() {
         const handlerFunction = (layerType) => {
           return () => {
-            this.addTemplateLayer({ template: this.template, layerType })
+            this.createTemplateLayer({ template: this.template, layerType })
             this.$modal.hide("dialog")
           }
         }
@@ -134,7 +134,7 @@
             }, {
               title: "Yes",
               handler: () => {
-                this.deleteTemplateLayer({ template: this.template, layer })
+                this.destroyTemplateLayer({ template: this.template, layer })
                 this.$modal.hide("dialog")
               }
             }

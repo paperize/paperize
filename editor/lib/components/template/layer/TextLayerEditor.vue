@@ -55,8 +55,8 @@
     },
 
     methods: {
-      updateLayer: debounce(function({ layer, keyValueObject }) {
-        this.$store.dispatch("updateLayer", { layer, keyValueObject })
+      updateLayer: debounce(function(layer) {
+        this.$store.dispatch("updateLayer", layer)
       }, 650, { leading: true }),
     }
   }

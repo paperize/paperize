@@ -84,7 +84,7 @@ fieldset.fieldset
         set(newWidth) {
           if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
           const newSize = { ...this.template.size, w: newWidth  }
-          this.updateTemplateSize({ template: this.template, size: newSize })
+          this.updateTemplate({ ...this.template, size: newSize })
         }
       },
 
@@ -93,14 +93,14 @@ fieldset.fieldset
         set(newHeight) {
           if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
           const newSize = { ...this.template.size, h: newHeight }
-          this.updateTemplateSize({ template: this.template, size: newSize })
+          this.updateTemplate({ ...this.template, size: newSize })
         }
       }
     },
 
     methods: {
-      updateTemplateSize: debounce(function(payload) {
-        this.$store.commit("updateTemplateSize", payload)
+      updateTemplate: debounce(function(payload) {
+        this.$store.commit("updateTemplate", payload)
       }, 200),
 
       setPaperMode(mode) {
@@ -122,8 +122,8 @@ fieldset.fieldset
           , largerDimension = Math.max(width, height)
 
         if(this.paperOrientation == 'portrait') {
-          this.updateTemplateSize({
-            template: this.template,
+          this.updateTemplate({
+            ...this.template,
             size: {
               w: smallerDimension,
               h: largerDimension
@@ -131,8 +131,8 @@ fieldset.fieldset
           })
 
         } else if(this.paperOrientation == 'landscape') {
-          this.updateTemplateSize({
-            template: this.template,
+          this.updateTemplate({
+            ...this.template,
             size: {
               w: largerDimension,
               h: smallerDimension

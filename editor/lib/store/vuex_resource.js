@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import { camelCase, map, zip, filter, find, isString, isNumber, isObject } from 'lodash'
+import { capitalize, camelCase, map, zip, filter, find, isString, isNumber, isObject } from 'lodash'
 import Vue from 'vue'
 
 export function generateCrud(model) {
@@ -26,7 +26,7 @@ export function generateCrud(model) {
 
   getters[findModelName] = state => modelQuery => {
     if(!isString(modelQuery) && !isNumber(modelQuery)) {
-      throw new Error(`ID format not recognized: ${modelQuery}, pass a string or number!`)
+      throw new Error(`${capitalize(singularModelName)} ID format not recognized: ${modelQuery}, pass a string or number!`)
 
     } else {
       let foundModel = state[modelRepoName][modelQuery]
@@ -91,7 +91,6 @@ export function generateCrud(model) {
   }
 
   actions[updateModelName] = ({ getters, commit }, modelToUpdate) => {
-    console.log('updating', model.name, modelToUpdate)
     // throws if we can't find it
     getters[findModelName](modelToUpdate.id)
 

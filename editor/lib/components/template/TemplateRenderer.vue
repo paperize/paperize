@@ -7,7 +7,7 @@
   import { mapGetters } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
 
-  const RENDER_DELAY_MS = 800
+  const RENDER_DELAY_MS = 600
 
   export default {
     props: ["game", "component", "item"],
@@ -43,7 +43,7 @@
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
       templateLayers() {
-        return this.$store.getters.getTemplateLayers(this.component.template)
+        return this.$store.getters.findAllTemplateLayers(this.component.template)
       }
     },
 
@@ -79,7 +79,7 @@
         pdfRenderer.renderItemToPdf(this.game, this.component, this.item).then((pdf) => {
           this.pdfBlob = pdf
         })
-      }, RENDER_DELAY_MS, { leading: true })
+      }, RENDER_DELAY_MS)
     }
   }
 
