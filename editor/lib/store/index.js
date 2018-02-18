@@ -16,6 +16,7 @@ import ui         from './ui'
 
 Vue.use(Vuex)
 
+
 const INITIAL_STATE = {
   user:       user.state,
   games:      games.state,
@@ -44,9 +45,24 @@ const INITIALIZATION_PROMISE = new Promise((resolve) => {
 let store = new Vuex.Store({
   // Throw errors if state is touched outside of mutations
   strict: process.env.NODE_ENV !== 'production',
+
   // All state established inside modules
   state: newInitialState(),
-  modules: { user, games, components, sources, templates, layers, dimensions, assets, print, google, ui },
+
+  modules: {
+    user,
+    games,
+    components,
+    sources,
+    templates,
+    layers,
+    dimensions,
+    assets,
+    print,
+    google,
+    ui
+  },
+
   mutations: {
     resetState(state, newState={}) {
       Object.assign(state, { ...newInitialState(), ...newState })

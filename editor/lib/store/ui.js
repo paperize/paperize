@@ -28,7 +28,9 @@ const UIModule = {
     },
 
     activeDimensions(state, getters, rootState, rootGetters) {
-      return rootGetters.findDimensions(state.activeDimensionsId)
+      if(state.activeDimensionsId) {
+        return rootGetters.findDimensions(state.activeDimensionsId)
+      }
     }
   },
 
