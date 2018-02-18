@@ -91,9 +91,10 @@ store.subscribe(({ type, payload }, state) => {
     router.push({ name: 'splash' })
   } else if(type === 'deleteGame') {
     router.push({ name: 'gameManager' })
-  } else if(type === 'createGameComponent') {
-    router.push({ name: 'componentEditor', params: { gameId: payload.game.id, componentId: payload.component.id } })
-  } else if(type === 'deleteGameComponent') {
+  } else if(type === 'createComponent') {
+    console.log(payload)
+    router.push({ name: 'componentEditor', params: { gameId: state.ui.activeGameId, componentId: payload.id } })
+  } else if(type === 'destroyComponent') {
     router.push({ name: 'gameEditor', params: { gameId: state.ui.activeGameId }})
   }
 })

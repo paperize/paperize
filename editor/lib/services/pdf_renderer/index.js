@@ -13,9 +13,10 @@ const RENDERERS = { shape, text, image, code }
 const api = {
   renderItemToPdf(game, component, item) {
     const doc = this.startNewDocument()
-    this.addPage(doc, component.template.size)
+    const template = store.getters.findTemplate(component.templateId)
+    this.addPage(doc, template.size)
 
-    return this.renderItem(doc, game, component, item, component.template.size).then(() => {
+    return this.renderItem(doc, game, component, item, template.size).then(() => {
       // if(store.getters.activeLayer) {
       //   TODO: render a rectangle around the active layer
       // }
@@ -56,8 +57,9 @@ const api = {
     // TODO: gather all items' layouts
     // generate a layout with locations mapped to dimensions
     let componentSizes = components.map((component) => {
+      const template = store.getters.findTemplate(component.templateId)
       return {
-        size: component.template.size,
+        size: template.size,
         name: component.id,
         quantity: store.getters.getComponentItems(component).length
       }
@@ -145,7 +147,8 @@ const api = {
 
   renderItem(doc, game, component, item, parentDimensions) {
     // get transforms for this component
-    let layers = store.getters.findAllTemplateLayers(component.template)
+    let template = store.getters.findTemplate(component.templateId)
+    let layers = store.getters.findAllTemplateLayers(template)
     // render each transform upon this item
     console.log(`Rendering ${layers.length} layers...`, layers)
 

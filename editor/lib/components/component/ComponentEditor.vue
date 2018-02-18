@@ -42,7 +42,7 @@ div
         i.far.fa-file-code
         |  Template
 
-      template(v-if="component.template")
+      template(v-if="findComponentTemplate(component)")
         .grid-x
           .auto.cell
           .shrink.cell
@@ -102,7 +102,7 @@ div
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent", "sourceProperties"]),
+      ...mapGetters(["activeGame", "activeComponent", "sourceProperties", "findComponentTemplate"]),
     },
 
     methods: {

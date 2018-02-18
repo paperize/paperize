@@ -43,7 +43,8 @@
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
       templateLayers() {
-        return this.$store.getters.findAllTemplateLayers(this.component.template)
+        let template = this.$store.getters.findTemplate(this.component.templateId)
+        return this.$store.getters.findAllTemplateLayers(template)
       }
     },
 

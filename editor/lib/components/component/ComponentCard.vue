@@ -1,6 +1,6 @@
 <template lang="pug">
 .component.card.small-10.small-offset-1.cell(:class="{ active: isActiveComponent() }" @click="setActive")
-  component-form(mode='edit' :component="component")
+  component-form(:component="component")
   .card-divider
     p.title {{ component.title || "[No title]" }} ({{ totalItems }})
 
@@ -30,14 +30,16 @@
     },
 
     computed: {
-      ...mapGetters(["activeComponent"]),
+      ...mapGetters(["activeGame", "activeComponent"]),
+
       totalItems() {
         return this.$store.getters.getComponentItems(this.component).length
       }
     },
 
     methods: {
-      ...mapActions(["deleteComponent"]),
+      ...mapActions(["destroyGameComponent"]),
+
       showEditModal() {
         this.$modal.show(`edit-component-modal-${this.component.id}`)
       },
@@ -45,7 +47,7 @@
       setActive() {
         if(this.isActiveComponent()) { return }
         let gameId = this.$store.getters.activeGame.id,
-            componentId = this.component.id
+          componentId = this.component.id
         this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
       },
 
@@ -65,7 +67,7 @@
             {
               title: 'Yes',
               handler: () => {
-                this.deleteComponent({ component: this.component })
+                this.destroyGameComponent({ game: this.activeGame, component: this.component})
                 this.$modal.hide('dialog')
               }
             }

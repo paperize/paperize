@@ -16,7 +16,7 @@ const UIModule = {
 
     activeComponent(state, getters, rootState, rootGetters) {
       if(state.activeComponentId) {
-        return rootGetters.findGameComponent(getters.activeGame, state.activeComponentId)
+        return rootGetters.findComponent(state.activeComponentId)
       }
     },
 
@@ -77,7 +77,7 @@ const UIModule = {
     },
 
     setActiveComponent({ commit, getters, rootGetters }, componentId) {
-      let component = rootGetters.findGameComponent(getters.activeGame, componentId)
+      let component = rootGetters.findComponent(componentId)
 
       commit("setActiveComponent", { component })
     }
@@ -85,7 +85,11 @@ const UIModule = {
 
   // respond to other commits
   subscribe({ commit }, { type, payload }) {
-    if(type === 'destroyLayer') {
+    if(type === 'destroyComponent') {
+      commit("clearActiveComponent")
+    } else if(type === 'createComponent') {
+      commit("setActiveComponent", { component: payload })
+    } else if(type === 'destroyLayer') {
       commit("clearActiveLayer")
     } else if(type === 'createLayer') {
       commit("setActiveLayer", { layer: payload })

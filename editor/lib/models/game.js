@@ -9,7 +9,7 @@ const DEFAULT_GAME = {
   playerCount: "",
   playTime:    "",
   ageRange:    "",
-  components:  [ ]
+  componentIds:  [ ]
 }
 
 const EX_BILL = {

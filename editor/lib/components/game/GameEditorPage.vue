@@ -6,7 +6,7 @@ div(v-if="!game")
 
   .grid-x.grid-padding.x
     .small-4.medium-3.large-2.cell
-      component-panel(:components="game.components")
+      component-panel(:components="findAllGameComponents(game)")
 
     .small-8.medium-9.large-10.cell
       .active-component
@@ -25,6 +25,7 @@ div(v-if="!game")
     props: ['gameId'],
 
     computed: mapGetters({
+      findAllGameComponents: 'findAllGameComponents',
       activeComponent: 'activeComponent',
       game: 'activeGame'
     }),

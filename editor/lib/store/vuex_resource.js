@@ -2,29 +2,40 @@ import Promise from 'bluebird'
 import { capitalize, camelCase, map, zip, filter, find, isString, isNumber, isObject } from 'lodash'
 import Vue from 'vue'
 
+const VERBOSE = true
+
+const debug = (...args) => {
+  if(VERBOSE) {
+    console.log(...args)
+  }
+}
+
 export function generateCrud(model) {
 
   // NAMING THINGS
-  const pluralModelName = model.name
+  const pluralModelName   = model.name
   const singularModelName = pluralModelName.slice(0, pluralModelName.length - 1)
-  const modelRepoName = pluralModelName
-  const findModelName    = camelCase(`find ${singularModelName}`) // findModel
-  const findAllModelName = camelCase(`find all ${pluralModelName}`) // findAllModels
-  const searchModelName  = camelCase(`search ${pluralModelName}`) // searchModels
-  const createModelName  = camelCase(`create ${singularModelName}`) // createModel
-  const updateModelName  = camelCase(`update ${singularModelName}`) // updateModel
-  const destroyModelName = camelCase(`destroy ${singularModelName}`) // destroyModel
+  const resourceName      = capitalize(singularModelName)
+  const modelRepoName     = pluralModelName
+  const findModelName     = camelCase(`find ${singularModelName}`) // findModel
+  const findAllModelName  = camelCase(`find all ${pluralModelName}`) // findAllModels
+  const searchModelName   = camelCase(`search ${pluralModelName}`) // searchModels
+  const createModelName   = camelCase(`create ${singularModelName}`) // createModel
+  const updateModelName   = camelCase(`update ${singularModelName}`) // updateModel
+  const destroyModelName  = camelCase(`destroy ${singularModelName}`) // destroyModel
 
 
   // STATE (MODEL REPOSITORY)
   const state = {}
   state[modelRepoName] = {}
+  debug(resourceName, state)
 
 
   // GETTERS
   const getters = {}
 
   getters[findModelName] = state => modelQuery => {
+    debug(findModelName)
     if(!isString(modelQuery) && !isNumber(modelQuery)) {
       throw new Error(`${capitalize(singularModelName)} ID format not recognized: ${modelQuery}, pass a string or number!`)
 
@@ -41,10 +52,12 @@ export function generateCrud(model) {
   }
 
   getters[findAllModelName] = state => modelIds => {
-    return modelIds.map(modelId => state[modelRepoName][modelId])
+    debug(findAllModelName)
+    return map(modelIds, modelId => state[modelRepoName][modelId])
   }
 
   getters[searchModelName] = state => modelQuery => {
+    debug(searchModelName)
     return filter(Object.values(state[modelRepoName]), modelQuery)
   }
 
@@ -53,14 +66,17 @@ export function generateCrud(model) {
   const mutations = {}
 
   mutations[createModelName] = (state, modelToCreate) => {
+    debug(createModelName)
     Vue.set(state[modelRepoName], modelToCreate.id, modelToCreate)
   }
 
   mutations[updateModelName] = (state, modelToUpdate) => {
+    debug(updateModelName)
     Vue.set(state[modelRepoName], modelToUpdate.id, modelToUpdate)
   }
 
   mutations[destroyModelName] = (state, modelToDestroy) => {
+    debug(destroyModelName)
     delete state[modelRepoName][modelToDestroy.id]
   }
 
@@ -69,6 +85,7 @@ export function generateCrud(model) {
   const actions = {}
 
   actions[createModelName] = ({ dispatch, commit }, modelDefaults={}) => {
+    debug(createModelName)
     let newModel = model.create(modelDefaults)
 
     let relationshipsToInitialize = filter(model.relationships, (relation) => relation.initialize)
@@ -91,6 +108,7 @@ export function generateCrud(model) {
   }
 
   actions[updateModelName] = ({ getters, commit }, modelToUpdate) => {
+    debug(updateModelName)
     // throws if we can't find it
     getters[findModelName](modelToUpdate.id)
 
@@ -98,6 +116,7 @@ export function generateCrud(model) {
   }
 
   actions[destroyModelName] = ({ getters, dispatch, commit }, modelToDestroy) => {
+    debug(destroyModelName)
     // throws if we can't find it
     getters[findModelName](modelToDestroy.id)
 
@@ -111,9 +130,16 @@ export function generateCrud(model) {
     .then(() => {
       commit(destroyModelName, modelToDestroy)
 
-      return null
+      return modelToDestroy.id
     })
   }
 
-  return { state, getters, mutations, actions }
+  // Merge store mechanics from the model
+
+  return {
+    state:     { ...state, ...model.state},
+    getters:   { ...getters, ...model.getters},
+    mutations: { ...mutations, ...model.mutations},
+    actions:   { ...actions, ...model.actions},
+  }
 }
