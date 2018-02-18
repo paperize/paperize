@@ -80,4 +80,9 @@ let store = new Vuex.Store({
   }
 })
 
+store.subscribe((mutation, state) => {
+  ui.subscribe(store, mutation, state)
+})
+
+
 export default store

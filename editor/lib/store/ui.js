@@ -4,8 +4,7 @@ const UIModule = {
   state: {
     activeGameId:       null,
     activeComponentId:  null,
-    activeLayerId:      null,
-    activeDimensionsId: null
+    activeLayerId:      null
   },
 
   getters: {
@@ -28,8 +27,8 @@ const UIModule = {
     },
 
     activeDimensions(state, getters, rootState, rootGetters) {
-      if(state.activeDimensionsId) {
-        return rootGetters.findDimensions(state.activeDimensionsId)
+      if(getters.activeLayer) {
+        return rootGetters.findDimension(getters.activeLayer.dimensionId)
       }
     }
   },
@@ -57,7 +56,12 @@ const UIModule = {
 
     setActiveLayer(state, { layer }) {
       state.activeLayerId = layer.id
-      state.activeDimensionsId = layer.dimensionsId
+      state.activeDimensionsId = layer.dimensionId
+    },
+
+    clearActiveLayer(state) {
+      state.activeLayerId = null
+      state.activeDimensionsId = null
     }
   },
 
@@ -77,7 +81,17 @@ const UIModule = {
 
       commit("setActiveComponent", { component })
     }
+  },
+
+  // respond to other commits
+  subscribe({ commit }, { type, payload }) {
+    if(type === 'destroyLayer') {
+      commit("clearActiveLayer")
+    } else if(type === 'createLayer') {
+      commit("setActiveLayer", { layer: payload })
+    }
   }
 }
+
 
 export default UIModule

@@ -8,7 +8,7 @@ const TemplatesModule = {
 
   getters: {
     getTemplateLayers: (state, getters, rootState, rootGetters) => template => {
-      let layers = rootGetters.findLayers(template.layerIds)
+      let layers = rootGetters.findAllLayers(template.layerIds)
       // let layers = template.layerIds.map(layerId => rootGetters.findLayer(layerId))
 
       return orderBy(layers, ["renderOrder"], ["asc"])
@@ -69,7 +69,7 @@ const TemplatesModule = {
 
     deleteTemplateLayer({ dispatch, commit, getters }, { template, layer }) {
       // Layers only exist in one template, so they get globally purged immediately
-      dispatch("deleteLayer", layer)
+      dispatch("destroyLayer", layer)
       commit("deleteTemplateLayer", { template, layer })
       dispatch("setLayersRenderOrder", getters.getTemplateLayers(template))
     }

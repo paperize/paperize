@@ -74,7 +74,7 @@
         get() { return this.layer.name },
 
         set(name) {
-          this.updateLayerSlowly({ layer: this.layer, keyValueObject: { name } })
+          this.updateLayerSlowly({ ...this.layer, name: name })
         }
       },
 
@@ -83,7 +83,7 @@
 
         set(newX) {
           if(isString(newX) || newX < 0) { newX = 0 }
-          this.updateDimensionsSlowly({ ...this.layerDimensions, x: newX })
+          this.updateDimensionSlowly({ ...this.layerDimensions, x: newX })
         }
       },
 
@@ -92,7 +92,7 @@
 
         set(newY) {
           if(isString(newY) || newY < 0) { newY = 0 }
-          this.updateDimensionsSlowly({ ...this.layerDimensions, y: newY })
+          this.updateDimensionSlowly({ ...this.layerDimensions, y: newY })
         }
       },
 
@@ -101,7 +101,7 @@
 
         set(newW) {
           if(isString(newW) || newW < 0) { newW = 0 }
-          this.updateDimensionsSlowly({ ...this.layerDimensions, w: newW })
+          this.updateDimensionSlowly({ ...this.layerDimensions, w: newW })
         }
       },
 
@@ -110,20 +110,20 @@
 
         set(newH) {
           if(isString(newH) || newH < 0) { newH = 0 }
-          this.updateDimensionsSlowly({ ...this.layerDimensions, h: newH })
+          this.updateDimensionSlowly({ ...this.layerDimensions, h: newH })
         }
       },
     },
 
     methods: {
-      ...mapActions(["updateLayer", "updateDimensions"]),
+      ...mapActions(["updateLayer", "updateDimension"]),
 
       updateLayerSlowly: debounce(function(args) {
         this.updateLayer(args)
       }, INPUT_DELAY_MS),
 
-      updateDimensionsSlowly: debounce(function(dimensions) {
-        this.updateDimensions(dimensions)
+      updateDimensionSlowly: debounce(function(dimensions) {
+        this.updateDimension(dimensions)
       }, INPUT_DELAY_MS),
     }
   }

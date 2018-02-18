@@ -119,8 +119,8 @@
     methods: {
       getImageLabel(imageItem) { return imageItem },
 
-      updateLayer: debounce(function({ layer, keyValueObject }) {
-        this.$store.dispatch("updateLayer", { layer, keyValueObject})
+      updateLayer: debounce(function(layerUpdate) {
+        this.$store.dispatch("updateLayer", layerUpdate)
       }, 400, { leading: true })
     }
   }
