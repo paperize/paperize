@@ -8,13 +8,13 @@
         li
           a Load Example
         li
-          a(@click="$modal.show('create-game-modal')") New Game
+          a(@click="$modal.show('Game Modal')") New Game
 
     .small-12.cell
       .grid-x.grid-margin-x
-        game-card(v-for="game in games" :key="game.id" :game="game")
+        game-card(v-for="game in allGames" :key="game.id" :game="game")
 
-    game-form(mode="create")
+    game-form
 </template>
 
 <script>
@@ -30,7 +30,7 @@
 
     computed: {
       ...mapState(["user"]),
-      ...mapGetters(["games"])
+      ...mapGetters(["allGames"])
     }
   }
 

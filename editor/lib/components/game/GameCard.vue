@@ -24,7 +24,7 @@
     },
 
     methods: {
-      ...mapActions(["deleteGame"]),
+      ...mapActions(["destroyGame"]),
       confirmDeletion() {
         this.$modal.show('dialog', {
           title: 'Are you sure you want to delete this game?',
@@ -37,7 +37,7 @@
             {
               title: 'Yes',
               handler: () => {
-                this.deleteGame({ game: this.game })
+                this.destroyGame(this.game)
                 this.$modal.hide('dialog')
               }
             }

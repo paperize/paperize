@@ -81,7 +81,7 @@ const LayerModel = {
   name: 'layers',
 
   relationships: [
-    { relation: 'hasOne', model: 'dimension', initialize: true }
+    { relation: 'hasOne', model: 'dimension', initialize: true, dependent: true }
   ],
 
   create(layerObject) {

@@ -87,13 +87,20 @@ router.beforeEach((to, from, next) => {
 store.subscribe(({ type, payload }, state) => {
   if(type === 'become' && router.currentRoute.name === 'splash') {
     router.push({ name: 'gameManager' })
+
   } else if(type === 'logout') {
     router.push({ name: 'splash' })
-  } else if(type === 'deleteGame') {
+
+  } else if(type === 'createGame') {
+    router.push({ name: "gameEditor", params: { gameId: payload.id }})
+
+  } else if(type === 'destroyGame') {
     router.push({ name: 'gameManager' })
+
   } else if(type === 'createComponent') {
     console.log(payload)
     router.push({ name: 'componentEditor', params: { gameId: state.ui.activeGameId, componentId: payload.id } })
+
   } else if(type === 'destroyComponent') {
     router.push({ name: 'gameEditor', params: { gameId: state.ui.activeGameId }})
   }

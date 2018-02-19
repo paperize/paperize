@@ -10,6 +10,6 @@ describe "Games Store", ->
       store.dispatch("setActiveGame", { gameId: loveLetter.id })
       store.dispatch("setActiveComponent", { component: loveLetter.components[0] })
 
-      store.dispatch("deleteGame", { loveLetter })
+      store.dispatch("destroyGame", loveLetter)
 
       assert.equal(null, store.getters.activeComponent)

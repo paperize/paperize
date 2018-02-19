@@ -25,7 +25,6 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
 
 <script>
   import { mapGetters } from 'vuex'
-  import Component from '../../models/component'
   import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
 
   export default {

@@ -36,16 +36,20 @@ export function generateCrud(model) {
   // GETTERS
   const getters = {}
 
-  getters[findModelName] = state => modelQuery => {
-    debug(findModelName)
-    if(!isString(modelQuery) && !isNumber(modelQuery)) {
-      throw new Error(`${capitalize(singularModelName)} ID format not recognized: ${modelQuery}, pass a string or number!`)
+  getters[findModelName] = state => (modelId, throwOnFail=true) => {
+    debug("Getter:", findModelName, modelId)
+    if(!isString(modelId) && !isNumber(modelId)) {
+      if(throwOnFail) {
+        throw new Error(`${capitalize(singularModelName)} ID format not recognized: ${modelId}, pass a string or number!`)
+      } else {
+        return null
+      }
 
     } else {
-      let foundModel = state[modelRepoName][modelQuery]
+      let foundModel = state[modelRepoName][modelId]
 
-      if(!foundModel) {
-        const notFoundError = new Error(`No ${model.name} found with id: ${modelQuery}`)
+      if(!foundModel && throwOnFail) {
+        const notFoundError = new Error(`No ${model.name} found with id: ${modelId}`)
         notFoundError.code = 'NOT_FOUND'
         throw notFoundError
 
@@ -56,17 +60,17 @@ export function generateCrud(model) {
   }
 
   getters[findAllModelName] = state => modelIds => {
-    debug(findAllModelName)
+    debug("Getter:", findAllModelName, modelIds)
     return map(modelIds, modelId => state[modelRepoName][modelId])
   }
 
   getters[allModelName] = state => {
-    debug(allModelName)
+    debug("Getter:", allModelName)
     return values(state[modelRepoName])
   }
 
   getters[searchModelName] = state => modelQuery => {
-    debug(searchModelName)
+    debug("Getter:", searchModelName, modelQuery)
     return filter(Object.values(state[modelRepoName]), modelQuery)
   }
 
@@ -75,18 +79,18 @@ export function generateCrud(model) {
   const mutations = {}
 
   mutations[createModelName] = (state, modelToCreate) => {
-    debug(createModelName)
+    debug("Mutation:", createModelName, modelToCreate)
     Vue.set(state[modelRepoName], modelToCreate.id, modelToCreate)
   }
 
   mutations[updateModelName] = (state, modelToUpdate) => {
-    debug(updateModelName)
+    debug("Mutation:", updateModelName, modelToUpdate)
     Vue.set(state[modelRepoName], modelToUpdate.id, modelToUpdate)
   }
 
   mutations[destroyModelName] = (state, modelToDestroy) => {
-    debug(destroyModelName)
-    delete state[modelRepoName][modelToDestroy.id]
+    debug("Mutation:", destroyModelName, modelToDestroy)
+    Vue.delete(state[modelRepoName], modelToDestroy.id)
   }
 
 
@@ -94,7 +98,7 @@ export function generateCrud(model) {
   const actions = {}
 
   actions[createModelName] = ({ dispatch, commit }, modelDefaults={}) => {
-    debug(createModelName)
+    debug("Action:", createModelName, modelDefaults)
     let newModel = model.create(modelDefaults)
 
     let relationshipsToInitialize = filter(model.relationships, (relation) => relation.initialize)
@@ -117,7 +121,7 @@ export function generateCrud(model) {
   }
 
   actions[updateModelName] = ({ getters, commit }, modelToUpdate) => {
-    debug(updateModelName)
+    debug("Action:", updateModelName, modelToUpdate)
     // throws if we can't find it
     getters[findModelName](modelToUpdate.id)
 
@@ -125,15 +129,26 @@ export function generateCrud(model) {
   }
 
   actions[destroyModelName] = ({ getters, dispatch, commit }, modelToDestroy) => {
-    debug(destroyModelName)
+    debug("Action:", destroyModelName, modelToDestroy)
     // throws if we can't find it
-    getters[findModelName](modelToDestroy.id)
+    modelToDestroy = getters[findModelName](modelToDestroy.id)
 
-    let relationshipsToDestroy = filter(model.relationships, { relation: 'hasOne' })
+    let hasOnesToDestroy = filter(model.relationships, { relation: 'hasOne', dependent: true })
+    let hasManysToDestroy = filter(model.relationships, { relation: 'hasMany', dependent: true })
 
-    return Promise.map(relationshipsToDestroy, (relationship) => {
+    return Promise.map(hasOnesToDestroy, (relationship) => {
+      console.log("destroying one", relationship.model)
       let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
       return dispatch(relationshipDestroyModelName, { id: modelToDestroy[`${relationship.model}Id`] })
+
+    }).then(() => {
+      return Promise.map(hasManysToDestroy, (relationship) => {
+        console.log("destroying many", relationship.model)
+        let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
+        return Promise.map(modelToDestroy[`${relationship.model}Ids`], (relationshipId) => {
+          return dispatch(relationshipDestroyModelName, { id: relationshipId })
+        })
+      })
     })
 
     .then(() => {

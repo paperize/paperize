@@ -9,33 +9,26 @@ const UIModule = {
 
   getters: {
     activeGame(state, getters, rootState, rootGetters) {
-      if(state.activeGameId) {
-        return rootGetters.findGame(state.activeGameId)
-      }
+      return rootGetters.findGame(state.activeGameId, false)
     },
 
     activeComponent(state, getters, rootState, rootGetters) {
-      if(state.activeComponentId) {
-        return rootGetters.findComponent(state.activeComponentId)
-      }
+      return rootGetters.findComponent(state.activeComponentId, false)
     },
 
     activeSource: (state, getters, rootState, rootGetters) => {
       if(getters.activeComponent) {
-        return rootGetters.findComponentSource(getters.activeComponent)
+        return rootGetters.findComponentSource(getters.activeComponent, false)
       }
     },
 
-
     activeLayer(state, getters, rootState, rootGetters) {
-      if(state.activeLayerId) {
-        return rootGetters.findLayer(state.activeLayerId)
-      }
+      return rootGetters.findLayer(state.activeLayerId, false)
     },
 
     activeDimensions(state, getters, rootState, rootGetters) {
       if(getters.activeLayer) {
-        return rootGetters.findDimension(getters.activeLayer.dimensionId)
+        return rootGetters.findDimension(getters.activeLayer.dimensionId, false)
       }
     }
   },
@@ -91,8 +84,12 @@ const UIModule = {
   },
 
   // respond to other commits
-  subscribe({ commit }, { type, payload }) {
-    if(type === 'destroyComponent') {
+  subscribe({ dispatch, commit }, { type, payload }) {
+    if(type === 'createGame') {
+      dispatch("setActiveGame", payload.id)
+    } else if(type === 'destroyGame') {
+      dispatch("clearActiveGame")
+    } else if(type === 'destroyComponent') {
       commit("clearActiveComponent")
     } else if(type === 'createComponent') {
       commit("setActiveComponent", { component: payload })

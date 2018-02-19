@@ -9,7 +9,7 @@ const TemplateModel = {
   name: 'templates',
 
   relationships: [
-    { relation: 'hasMany', model: 'layer' }
+    { relation: 'hasMany', model: 'layer', dependent: true }
   ],
 
   create(templateObject) {

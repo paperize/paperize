@@ -1,18 +1,18 @@
 <template lang="pug">
-modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
-  form(method="post" v-on:submit.prevent="submitForm")
+modal.game-form(name="Game Modal" height="auto" :pivotY="0.25" :scrollable="true")
+  form(method="post" v-on:submit.prevent="submitGame")
     .grid-x.grid-padding-x
       .small-12.cell
-        h2 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
+        h2 Game
 
       .small-4.cell
         label(for="game-title") Title:
       .small-8.cell
-        input(type="text" id="game-title" name="title" v-model="gameClone.title")
+        input(type="text" id="game-title" name="title" v-model="gameTitle")
       .small-4.cell
-        button.button.small.alert(type="button" @click="closeModal") Cancel
+        //- button.button.small.alert(type="button" @click="closeModal") Cancel
       .small-8.cell
-        button.button.small.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
+        button.button.small.success(type="submit") Start Editing
 
 
     button.close-button(aria-label="Close modal" type="button" @click="closeModal")
@@ -20,46 +20,36 @@ modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true
 </template>
 
 <script>
-  import Game from '../../models/game'
+  import { mapActions } from 'vuex'
 
   export default {
     props: {
-      mode: {
-        default: 'edit',
-        type: String,
-        validator: (mode) => mode == 'edit' || mode == 'create'
-      },
       game: {
-        default: Game.factory
+        default() { return {} }
       }
     },
 
     data() {
       return {
-        gameClone: { ...this.game },
-        modalName: `${this.mode}-game-modal`
+        gameTitle: this.game.title
       }
     },
 
     methods: {
-      submitForm() {
-        // Add or update the game in the store
-        if(this.mode === 'edit') {
-          this.$store.dispatch("updateGame", { game: this.gameClone })
-        } else if(this.mode === 'create') {
-          this.$store.commit("createGame", { game: this.gameClone })
-          this.$router.push({ name: "gameEditor", params: { gameId: this.gameClone.id }})
+      ...mapActions(["createGame", "updateGame"]),
+
+      submitGame() {
+        if(this.game.id) {
+          this.updateGame({ ...this.game, title: this.gameTitle })
+        } else {
+          this.createGame({ title: this.gameTitle })
         }
-        // Close the modal
+
         this.closeModal()
-        // Alert our parents we've submitted
-        this.$emit("submitted")
-        // Reset the model
-        this.gameClone = { ...this.game }
       },
 
       closeModal() {
-        this.$modal.hide(this.modalName)
+        this.$modal.hide("Game Modal")
       }
     }
   }

@@ -7,7 +7,7 @@ const ComponentModel = {
   name: 'components',
 
   relationships: [
-    { relation: 'hasOne', model: 'template', initialize: true },
+    { relation: 'hasOne', model: 'template', initialize: true, dependent: true },
     { relation: 'hasOne', model: 'source' }
   ],
 

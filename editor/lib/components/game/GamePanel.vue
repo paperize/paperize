@@ -16,11 +16,11 @@
                 i.fas.fa-cog
 
           li
-            a(@click="$modal.show('edit-game-modal')") Edit Game
+            a(@click="$modal.show('Game Modal')") Edit Game
           li
             a(@click="confirmDeletion") Delete Game
 
-  game-form(mode="edit" :game="game")
+  game-form(:game="game")
   print-settings
 </template>
 
@@ -39,7 +39,7 @@
     },
 
     methods: {
-      ...mapActions(["deleteGame"]),
+      ...mapActions(["destroyGame"]),
 
       confirmDeletion() {
         this.$modal.show('dialog', {
@@ -53,7 +53,7 @@
             {
               title: 'Yes',
               handler: () => {
-                this.deleteGame({ game: this.game })
+                this.destroyGame(this.game)
                 this.$modal.hide('dialog')
               }
             }
