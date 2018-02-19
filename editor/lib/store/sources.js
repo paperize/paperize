@@ -7,12 +7,12 @@ import { generateCrud } from './vuex_resource'
 const SourceModel = {
   name: 'sources',
 
-  create(remoteSource) {
-    if(!remoteSource.id) {
+  create(fetchedSource) {
+    if(!fetchedSource.id) {
       throw new Error("Attempted to import a remote source without and id.")
     }
 
-    return remoteSource
+    return fetchedSource
   },
 
   state: {
@@ -86,35 +86,9 @@ const SourceModel = {
     setRemoteSources(state, sources) {
       state.remoteSources = sources
     },
-
-    // createSource(state, { source }) {
-    //   source.id = source.id || uuid()
-    //   state.sources.push(source)
-    // },
-
-    // overwriteSource(state, { existingSource, newSource }) {
-    //   Object.assign(existingSource, newSource)
-    // },
-
-    // deleteSource(state, { source }) {
-    //   state.sources.splice(state.sources.indexOf(source), 1)
-    // },
-
-    // setComponentSource(state, { component, source }) {
-    //   Vue.set(component, "source", source)
-    // },
-    //
-    // unsetComponentSource(state, { component }) {
-    //   component.source = null
-    // }
   },
 
   actions: {
-    // setActiveComponentSource({ commit, getters, rootGetters }, source) {
-    //   source = getters.findSource(source.id)
-    //   commit("setComponentSource", { component: rootGetters.activeComponent, source })
-    // },
-
     fetchRemoteSources({ commit, dispatch }) {
       // fetch listing from google
       dispatch("fetchSheets")
@@ -142,11 +116,6 @@ const SourceModel = {
           return null
         })
     },
-
-    // refreshSource({ commit, getters }, { id, newSource }) {
-    //   let existingSource = getters.findSource(id)
-    //   commit("overwriteSource", { existingSource, newSource })
-    // }
   }
 }
 

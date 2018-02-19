@@ -56,11 +56,4 @@ const ComponentModel = {
 
 const ComponentsModule = generateCrud(ComponentModel)
 
-// setComponentSource({ state, commit, getters, rootGetters }, { component, source }) {
-//   component = getters.findGameComponent(rootGetters.activeGame, component.id)
-//   source = rootGetters.findSource(source)
-//
-//   commit("setComponentSource", { component, source })
-// }
-
 export default ComponentsModule
