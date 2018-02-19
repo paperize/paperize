@@ -1,5 +1,5 @@
 <template lang="pug">
-div(v-if="component.template")
+div(v-if="findComponentTemplate(component)")
   template-editor(:component="component")
 div(v-else)
   .grid-x.grid-padding-x
@@ -23,7 +23,7 @@ div(v-else)
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateEditor from './TemplateEditor.vue'
 
   export default {
@@ -35,7 +35,7 @@ div(v-else)
 
     data() { return { } },
 
-    computed: { },
+    computed: mapGetters(["findComponentTemplate"]),
 
     methods: mapActions(["createComponentTemplate"])
   }

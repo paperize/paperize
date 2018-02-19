@@ -2,33 +2,30 @@ import Vue from 'vue'
 import { find, map, zipWith } from 'lodash'
 import uuid from 'uuid/v4'
 
-const SourcesModule = {
+import { generateCrud } from './vuex_resource'
+
+const SourceModel = {
+  name: 'sources',
+
+  create(remoteSource) {
+    if(!remoteSource.id) {
+      throw new Error("Attempted to import a remote source without and id.")
+    }
+
+    return remoteSource
+  },
+
   state: {
-    sources: [],
     remoteSources: []
   },
 
   getters: {
-    sources: state => state.sources,
-
     remoteSources: state => state.remoteSources,
 
-    findSource: state => source => {
-      if(!source || !source.id ) { return null }
-      let foundSource = find(state.sources, { id: source.id })
-      if(!foundSource) {
-        let notFoundError = new Error(`No component source found with id: ${source.id}`)
-        notFoundError.code = 'NOT_FOUND'
-        throw notFoundError
-      }
-
-      return foundSource
-    },
-
-    sourceExists: (state, getters) => source => {
+    sourceExists: (state, getters) => sourceId => {
       let found = true
       try {
-        getters.findSource(source)
+        getters.findSource(sourceId)
       } catch(error) {
         if(error.code === 'NOT_FOUND'){
           found = false
@@ -51,14 +48,14 @@ const SourcesModule = {
     },
 
     sourceProperties: (state, getters) => source => {
-      source = getters.findSource(source)
-      let theProperties = (((source || { }).data || { }).values || [])[0] || []
+      source = getters.findSource(source.id)
+      let theProperties = source.data.values[0]
 
       return theProperties
     },
 
-    sourcePropertyExamples: () => (source, propertyName) => {
-      let propertyIndex = sourceProperties(source).indexOf(propertyName) // getters.activeSourceProperties.indexOf(propertyName)
+    sourcePropertyExamples: (_, getters) => (source, propertyName) => {
+      let propertyIndex = getters.sourceProperties(source).indexOf(propertyName)
 
       return chain(source.data.values)
         .map((row) => row[propertyIndex])
@@ -69,16 +66,14 @@ const SourcesModule = {
       .value()
     },
 
-    activeSource: (state, getters, rootState, rootGetters) => (rootGetters.activeComponent || { }).source,
-
-    activeSourceProperties: (state, getters) => {
-      return getters.activeSource &&
-        getters.sourceProperties(getters.activeSource)
+    activeSourceProperties: (_, getters, __, rootGetters) => {
+      return rootGetters.activeSource &&
+        getters.sourceProperties(rootGetters.activeSource)
     },
 
-    activeSourcePropertyExamples: (state, getters) => (propertyName) => {
-      return getters.activeSource &&
-        getters.sourcePropertyExamples(getters.activeSource, propertyName) ||
+    activeSourcePropertyExamples: (_, getters, __, rootGetters) => (propertyName) => {
+      return rootGetters.activeSource &&
+        getters.sourcePropertyExamples(rootGetters.activeSource, propertyName) ||
         []
     }
   },
@@ -92,33 +87,33 @@ const SourcesModule = {
       state.remoteSources = sources
     },
 
-    createSource(state, { source }) {
-      source.id = source.id || uuid()
-      state.sources.push(source)
-    },
+    // createSource(state, { source }) {
+    //   source.id = source.id || uuid()
+    //   state.sources.push(source)
+    // },
 
-    overwriteSource(state, { existingSource, newSource }) {
-      Object.assign(existingSource, newSource)
-    },
+    // overwriteSource(state, { existingSource, newSource }) {
+    //   Object.assign(existingSource, newSource)
+    // },
 
-    deleteSource(state, { source }) {
-      state.sources.splice(state.sources.indexOf(source), 1)
-    },
+    // deleteSource(state, { source }) {
+    //   state.sources.splice(state.sources.indexOf(source), 1)
+    // },
 
-    setComponentSource(state, { component, source }) {
-      Vue.set(component, "source", source)
-    },
-
-    unsetComponentSource(state, { component }) {
-      component.source = null
-    }
+    // setComponentSource(state, { component, source }) {
+    //   Vue.set(component, "source", source)
+    // },
+    //
+    // unsetComponentSource(state, { component }) {
+    //   component.source = null
+    // }
   },
 
   actions: {
-    setActiveComponentSource({ commit, getters, rootGetters }, source) {
-      source = getters.findSource(source)
-      commit("setComponentSource", { component: rootGetters.activeComponent, source })
-    },
+    // setActiveComponentSource({ commit, getters, rootGetters }, source) {
+    //   source = getters.findSource(source.id)
+    //   commit("setComponentSource", { component: rootGetters.activeComponent, source })
+    // },
 
     fetchRemoteSources({ commit, dispatch }) {
       // fetch listing from google
@@ -126,37 +121,35 @@ const SourcesModule = {
         .then(sheets => commit("setRemoteSources", sheets))
     },
 
-    importSource({ dispatch }, source) {
-      return dispatch("createOrUpdateSourceById", source.id)
+    importRemoteSource({ dispatch }, remoteSourceId) {
+      return dispatch("createOrUpdateSourceById", remoteSourceId)
     },
 
-    createOrUpdateSourceById({ getters, dispatch }, sourceId) {
+    createOrUpdateSourceById({ getters, dispatch, commit }, remoteSourceId) {
       // fetch sheet from google
-      return dispatch("fetchSheetById", sourceId)
+      return dispatch("fetchSheetById", remoteSourceId)
         .then((fetchedSource) => {
           // check if it's new or existing
-          if(getters.sourceExists(fetchedSource)) {
+          if(getters.sourceExists(fetchedSource.id)) {
             // if we already have it, refresh it
-            dispatch("refreshSource", { id: fetchedSource.id, newSource: fetchedSource })
+            commit("updateSource", fetchedSource)
           } else {
             // if we don't have it, add it
-            dispatch("addSource", fetchedSource)
+            commit("createSource", fetchedSource)
           }
 
-          dispatch("setActiveComponentSource", { id: fetchedSource.id })
+          dispatch("updateComponent", { ...getters.activeComponent, sourceId: fetchedSource.id })
           return null
         })
     },
 
-    addSource({ commit }, source) {
-      commit("createSource", { source })
-    },
-
-    refreshSource({ commit, getters }, { id, newSource }) {
-      let existingSource = getters.findSource({ id })
-      commit("overwriteSource", { existingSource, newSource })
-    }
+    // refreshSource({ commit, getters }, { id, newSource }) {
+    //   let existingSource = getters.findSource(id)
+    //   commit("overwriteSource", { existingSource, newSource })
+    // }
   }
 }
+
+const SourcesModule = generateCrud(SourceModel)
 
 export default SourcesModule

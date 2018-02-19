@@ -20,6 +20,13 @@ const UIModule = {
       }
     },
 
+    activeSource: (state, getters, rootState, rootGetters) => {
+      if(getters.activeComponent) {
+        return rootGetters.findComponentSource(getters.activeComponent)
+      }
+    },
+
+
     activeLayer(state, getters, rootState, rootGetters) {
       if(state.activeLayerId) {
         return rootGetters.findLayer(state.activeLayerId)

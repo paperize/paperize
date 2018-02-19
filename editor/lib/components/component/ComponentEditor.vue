@@ -7,17 +7,17 @@ div
         i.fas.fa-table
         |  Source
 
-      template(v-if="component.source")
+      template(v-if="componentSource")
         table
           thead
             tr
               th
-                | {{ component.source.name + " " }}
+                | {{ componentSource.name + " " }}
                 a.button.tiny(@click="openSourceManager()")
                   i.fas.fa-pencil-alt
                   |  Edit
           tbody
-            tr(v-for="property in sourceProperties(component.source)")
+            tr(v-for="property in sourceProperties(componentSource)")
               td.property-name(title="Property Name") {{ property }}
 
       template(v-else)
@@ -42,7 +42,7 @@ div
         i.far.fa-file-code
         |  Template
 
-      template(v-if="findComponentTemplate(component)")
+      template(v-if="componentTemplate")
         .grid-x
           .auto.cell
           .shrink.cell
@@ -60,7 +60,7 @@ div
         p
           strong This component does not have a Template set.
 
-        template(v-if="component.source")
+        template(v-if="componentSource")
           .grid-x.grid-margin-x
             .medium-auto.cell
             .medium-6.cell
@@ -102,7 +102,11 @@ div
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent", "sourceProperties", "findComponentTemplate"]),
+      ...mapGetters(["activeGame", "activeComponent", "sourceProperties", "findComponentSource", "findComponentTemplate"]),
+
+      componentSource() { return this.findComponentSource(this.component) },
+
+      componentTemplate() { return this.findComponentTemplate(this.component) }
     },
 
     methods: {

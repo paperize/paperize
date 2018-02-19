@@ -8,27 +8,48 @@ const ComponentModel = {
 
   relationships: [
     { relation: 'hasOne', model: 'template', initialize: true },
+    { relation: 'hasOne', model: 'source' }
   ],
 
   create(componentObject) {
     return {
       id:         uuid(),
       title:      "",
+      sourceId:   null,
       templateId: null
     }
   },
 
   getters: {
     findComponentTemplate: (_, __, ___, rootGetters) => component => {
-      return rootGetters.findTemplate(component.templateId)
+      if(component.templateId) {
+        return rootGetters.findTemplate(component.templateId)
+      }
+    },
+
+    findComponentSource: (_, __, ___, rootGetters) => component => {
+      if(component.sourceId) {
+        return rootGetters.findSource(component.sourceId)
+      }
     },
 
     getComponentItems: (state, getters) => component => {
-      if(!component.source) {
+      const componentSource = getters.findComponentSource(component)
+      if(!componentSource) {
         return []
       } else {
-        return getters.getSourceItems(component.source)
+        return getters.getSourceItems(componentSource)
       }
+    }
+  },
+
+  actions: {
+    linkComponentSource({ commit }, { component, source }) {
+      commit("updateComponent", { ...component, sourceId: source.id })
+    },
+
+    unlinkComponentSource({ commit }, component) {
+      commit("updateComponent", { ...component, sourceId: null })
     }
   }
 }

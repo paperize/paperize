@@ -16,9 +16,9 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
           strong Select a Sheet to Import or Refresh:
 
         ul.menu.vertical
-          li(v-for="source in remoteSources")
-            a(@click="importSource(source)" :title="source.id")
-              | {{ sourceImportLabel(source) }}
+          li(v-for="remoteSource in remoteSources")
+            a(@click="importRemoteSource(remoteSource.id)" :title="remoteSource.id")
+              | {{ remoteSourceImportLabel(remoteSource) }}
 
     button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('source-explorer')")
       span(aria-hidden="true") &times;
@@ -36,15 +36,15 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
     methods: {
       ...mapActions(["fetchRemoteSources"]),
 
-      importSource(source) {
-        this.$store.dispatch("importSource", source).then(() => {
+      importRemoteSource(remoteSourceId) {
+        this.$store.dispatch("importRemoteSource", remoteSourceId).then(() => {
           this.$modal.hide("Source Manager")
         })
       },
 
-      sourceImportLabel(source) {
-        let label = source.name
-        label += this.$store.getters.sourceExists(source) ? " (Refresh)" : " (Add)"
+      remoteSourceImportLabel(remoteSource) {
+        let label = remoteSource.name
+        label += this.$store.getters.sourceExists(remoteSource.id) ? " (Refresh)" : " (Add)"
         return label
       }
     }

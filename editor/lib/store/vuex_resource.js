@@ -1,7 +1,8 @@
 import Promise from 'bluebird'
-import { capitalize, camelCase, map, zip, filter, find, isString, isNumber, isObject } from 'lodash'
+import { capitalize, camelCase, map, zip, filter, find, values, isString, isNumber, isObject } from 'lodash'
 import Vue from 'vue'
 
+// const VERBOSE = false
 const VERBOSE = true
 
 const debug = (...args) => {
@@ -19,6 +20,7 @@ export function generateCrud(model) {
   const modelRepoName     = pluralModelName
   const findModelName     = camelCase(`find ${singularModelName}`) // findModel
   const findAllModelName  = camelCase(`find all ${pluralModelName}`) // findAllModels
+  const allModelName      = camelCase(`all ${pluralModelName}`) // allModels
   const searchModelName   = camelCase(`search ${pluralModelName}`) // searchModels
   const createModelName   = camelCase(`create ${singularModelName}`) // createModel
   const updateModelName   = camelCase(`update ${singularModelName}`) // updateModel
@@ -43,7 +45,9 @@ export function generateCrud(model) {
       let foundModel = state[modelRepoName][modelQuery]
 
       if(!foundModel) {
-        throw new Error(`No ${model.name} found with id: ${modelQuery}`)
+        const notFoundError = new Error(`No ${model.name} found with id: ${modelQuery}`)
+        notFoundError.code = 'NOT_FOUND'
+        throw notFoundError
 
       } else {
         return foundModel
@@ -54,6 +58,11 @@ export function generateCrud(model) {
   getters[findAllModelName] = state => modelIds => {
     debug(findAllModelName)
     return map(modelIds, modelId => state[modelRepoName][modelId])
+  }
+
+  getters[allModelName] = state => {
+    debug(allModelName)
+    return values(state[modelRepoName])
   }
 
   getters[searchModelName] = state => modelQuery => {

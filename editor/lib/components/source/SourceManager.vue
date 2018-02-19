@@ -13,7 +13,7 @@
           dd {{ componentSource.name }}
 
       .auto.cell
-        a.button.small.alert(@click="unsetComponentSource({ component })")
+        a.button.small.alert(@click="unlinkComponentSource(component)")
           i.fas.fa-times
           |  Change Now...
 
@@ -42,11 +42,11 @@
       .small-4.cell
         p ...from your past sources?
 
-        template(v-if="sources.length == 0")
+        template(v-if="allSources.length == 0")
           p You have not imported any sources.
 
         .grid-x(v-else)
-          template(v-for="source in sources")
+          template(v-for="source in allSources")
             .shrink.cell
               ul.menu
                 li
@@ -89,26 +89,24 @@ export default {
 
   computed: {
     ...mapGetters([
-      "sources",
+      "findComponentSource",
+      "allSources",
       "sourceProperties"
     ]),
 
-    componentSource() { return this.component.source }
+    componentSource() { return this.findComponentSource(this.component) }
   },
 
   methods: {
-    ...mapMutations([
-      "unsetComponentSource",
-      "deleteSource"
-    ]),
-
     ...mapActions([
-      "setComponentSource",
+      "destroySource",
+      "linkComponentSource",
+      "unlinkComponentSource",
       "createOrUpdateSourceById"
     ]),
 
     setSource(source) {
-      this.setComponentSource({ component: this.component, source })
+      this.linkComponentSource({ component: this.component, source })
       this.$modal.hide("Source Manager")
     },
 
@@ -123,7 +121,7 @@ export default {
           }, {
             title: "Yes",
             handler: () => {
-              this.deleteSource({ source })
+              this.destroySource(source)
               this.$modal.hide('dialog')
             }
           }
