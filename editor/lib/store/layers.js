@@ -95,22 +95,28 @@ const LayerModel = {
     layer.id = uuid()
 
     return layer
+  },
+
+  getters: {
+    getLayerDimensions: (_, __, ___, rootGetters) => layer => {
+      return rootGetters.findDimension(layer.dimensionId)
+    }
+  },
+
+  actions: {
+    setLayersRenderOrder: ({ commit }, layers) => {
+      commit("setLayersRenderOrder", layers)
+    }
+  },
+
+  mutations: {
+    setLayersRenderOrder: (state, layers) => {
+      forEach(layers, (layer, index) => layer.renderOrder = index)
+    }
   }
 }
 
 const LayersModule = generateCrud(LayerModel)
-
-LayersModule.getters.getLayerDimensions = (_, __, ___, rootGetters) => layer => {
-  return rootGetters.findDimension(layer.dimensionId)
-}
-
-LayersModule.mutations.setLayersRenderOrder = (state, layers) => {
-  forEach(layers, (layer, index) => layer.renderOrder = index)
-}
-
-LayersModule.actions.setLayersRenderOrder = ({ commit }, layers) => {
-  commit("setLayersRenderOrder", layers)
-}
 
 
 export default LayersModule
