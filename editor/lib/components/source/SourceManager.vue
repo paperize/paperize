@@ -50,10 +50,10 @@
             .shrink.cell
               ul.menu
                 li
-                  a.button.tiny.alert(@click="confirmDeletion(source)")
+                  a.button.tiny.alert.delete-source(@click="confirmDeletion(source)")
                     i.fas.fa-times
                 li
-                  a.button.tiny.success(@click="setSource(source)")
+                  a.button.tiny.success.set-source(@click="setSource(source)")
                     i.fas.fa-check
             .small-8.cell
               p {{ source.name }}

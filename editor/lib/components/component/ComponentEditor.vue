@@ -2,7 +2,7 @@
 div
   .grid-x.grid-margin-x
     //- Source status
-    .small-4.medium-6.cell
+    #source-editor.small-4.medium-6.cell
       h4
         i.fas.fa-table
         |  Source
@@ -30,7 +30,7 @@ div
             a.button(@click="openSourceManager()") Set a Source...
           .medium-auto.cell
 
-      modal(name="Source Manager" width="80%")
+      modal(name="Source Manager" width="90%" height="auto" :pivotY="0.25" :scrollable="true")
         source-manager(:component="component")
 
         button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Source Manager')")

@@ -1,55 +1,70 @@
 describe "Component Source manager", ->
   beforeEach ->
-    cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
-      allGames = Cypress._.values(games)
-      loveLetter = games['loveLetter']
-      firstComponent = loveLetter.components[0]
-
-      vuex.dispatch("become", users[0])
-      vuex.commit("setGames", allGames)
-      vuex.dispatch("setActiveGame", { gameId: loveLetter.id })
-      vuex.dispatch("setActiveComponent", { component: firstComponent })
-
-    .visitActiveGameAndComponent()
+    cy.loginAndEditGame()
 
   it "prompts me to create a source", ->
-    cy.get("#source-manager")
-      .contains("You have no sources.")
+    cy.get("#source-editor")
+      .contains("This component does not have a data Source set.")
+
+    cy.get(".button")
+      .contains("Set a Source...")
 
   context "with existing sources", ->
     beforeEach ->
       cy.loadSourcesIntoVuex()
 
     describe "no source selected", ->
+      beforeEach ->
+        cy.get(".button")
+        .contains("Set a Source...")
+        .click()
+
+      it "prompts to set a source", ->
+        cy.get("#source-manager").within ->
+          cy.contains("You need to load a component source...")
+
       it "lists the sources i've already imported", ->
         cy.get("#source-manager").within ->
-          cy.contains("Select a Source:")
+          cy.contains("Source Manager")
           cy.contains("Love Letter Revisited")
           cy.contains("Carcassonne")
           cy.contains("Pandemic V2")
+            .should("be.visible")
 
       it "allows me to select a source", ->
-        cy.get("#source-manager")
-          .contains("Love Letter Revisited")
+        cy.get("#source-manager .set-source")
+          .first()
           .click()
 
-        cy.get("#source-manager")
-          .contains('"Love Letter Revisited"')
+        cy.get("#source-editor")
+          .contains('Love Letter Revisited')
 
       it "allows me to delete a source", ->
-        cy.get("#source-manager")
+        cy.get("#source-editor")
           .find('a.delete-source')
           .first()
           .click()
 
+        cy.get("button")
+          .contains("Yes")
+          .click()
+
+        cy.get("#source-manager").within ->
+          cy.contains("Love Letter Revisited")
+            .should("not.exist")
+
     describe "with a source selected", ->
       beforeEach ->
-        cy.get("#source-manager")
-          .contains("Love Letter Revisited")
+        cy.get(".button")
+          .contains("Set a Source...")
+          .click()
+
+        cy.get("#source-manager .set-source")
+          .first()
           .click()
 
       it "shows me the exposed properties in a nice way", ->
-        cy.get("#source-manager").within ->
+        cy.get("#source-editor").within ->
           cy.get(".property-name").its("length").should("eq", 5)
           cy.contains("Quantity")
           cy.contains("Name")
@@ -57,14 +72,21 @@ describe "Component Source manager", ->
           cy.contains("Image")
           cy.contains("Rule")
 
-      it "allows me to refresh that source", ->
-        cy.get("#source-manager")
-          .get(".refresh")
+      context "editing the source", ->
+        beforeEach ->
+          cy.get('#source-editor').within ->
+            cy.get(".button")
+              .contains("Edit")
+              .click()
 
-      it "allows me to deselect that source", ->
-        cy.get("#source-manager")
-          .find(".unset-source")
-          .click()
+        it "allows me to refresh that source", ->
+          cy.get("#source-manager")
+            .contains("Refresh Now")
 
-        cy.get("#source-manager")
-          .contains("Select a Source:")
+        it "allows me to deselect that source", ->
+          cy.get("#source-manager")
+            .contains("Change Now...")
+            .click()
+
+          cy.get("#source-manager")
+            .contains("You need to load a component source...")

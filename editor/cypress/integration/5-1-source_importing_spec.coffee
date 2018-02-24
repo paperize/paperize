@@ -1,6 +1,6 @@
 Promise = require('bluebird')
 
-describe "Importing Sources", ->
+describe.only "Importing Sources", ->
   beforeEach ->
     cy.loginAndEditGame()
 
@@ -14,6 +14,10 @@ describe "Importing Sources", ->
             .click()
 
     beforeEach ->
+      cy.get(".button")
+        .contains("Set a Source...")
+        .click()
+
       cy.get("#source-manager")
         .contains("Paste a Link")
           .click()
@@ -107,7 +111,7 @@ describe "Importing Sources", ->
             .should("not.be.visible")
 
       it "i see i have the new source selected", ->
-        cy.contains('"Love Letter Revisited"')
+        cy.contains('Love Letter Revisited')
 
   context "by browsing my Google Sheets", ->
     beforeEach ->
@@ -122,6 +126,10 @@ describe "Importing Sources", ->
 
 
     beforeEach ->
+      cy.get(".button")
+        .contains("Set a Source...")
+        .click()
+
       cy.get("#source-manager")
         .contains("Browse Google Sheets")
           .click()
@@ -151,9 +159,9 @@ describe "Importing Sources", ->
         beforeEach ->
           cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
             # 2 come back from google
-            @fetchSheetsPromiseResolve([sources.loveLetter, sources.carcassonne])
+            @fetchSheetsPromiseResolve([sources.carcassonne, sources.loveLetter])
             # 1 is already in the store
-            vuex.commit("setSources", [sources.carcassonne])
+            vuex.commit("setSources", { carcassonne: sources.carcassonne })
 
         it "adds new sources", ->
           cy.get("div[data-modal='source-explorer']").within ->
@@ -175,16 +183,24 @@ describe "Importing Sources", ->
 
       cy.loadSourcesIntoVuex()
 
-      cy.get("#source-manager")
-        .contains("Love Letter Revisited")
+      cy.get(".button")
+        .contains("Set a Source...")
+        .click()
+
+      cy.get("#source-manager .set-source")
+        .first()
         .click()
 
     it "prompts with diff before overwrite"
 
     it "overwrites the data if accepted", ->
+      cy.get("#source-editor .button")
+        .contains("Edit")
+        .click()
+
       cy.get("#source-manager").within ->
-        cy.get(".refresh")
-          .click(force: true)
+        cy.contains("Refresh Now")
+          .click()
 
         # new version has been loaded
         cy.contains("Love Letter V2")
