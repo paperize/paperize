@@ -1,0 +1,14 @@
+{
+  "characterDeck": {
+    "id": "characterDeck",
+    "title": "Character Deck"
+  },
+  "instructionBook": {
+    "id": "instructionBook",
+    "title": "Instruction Book"
+  },
+  "pointCubes": {
+    "id": "pointCubes",
+    "title": "Point Cubes"
+  }
+}

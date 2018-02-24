@@ -1,28 +1,12 @@
 {
   "loveLetter": {
-    "id": "love-letter",
+    "id": "loveLetter",
     "title": "Love Letter",
     "description": "Chaotic microgame of forbidden royal romance.",
     "ageRange": "6+",
     "playerCount": "2-4",
     "playTime": "5-45 minutes",
-    "components": [
-      {
-        "id": "character-deck",
-        "type": "Deck",
-        "title": "Character Deck"
-      },
-      {
-        "id": "instruction-book",
-        "type": "Manual",
-        "title": "Instruction Book"
-      },
-      {
-        "id": "point-cubes",
-        "type": "Cubes",
-        "title": "Point Cubes"
-      }
-    ]
+    "componentIds": [ "characterDeck", "instructionBook", "pointCubes"]
   },
   "carcassonne": {
     "id": "carcassonne",
@@ -31,8 +15,8 @@
     "ageRange": "8+",
     "playerCount": "2-6",
     "playTime": "20-120 minutes",
-    "components": [
-      
+    "componentIds": [
+
     ]
   },
   "pandemic": {
@@ -42,8 +26,8 @@
     "ageRange": "12+",
     "playerCount": "2-6",
     "playTime": "45 - 150 minutes",
-    "components": [
-      
+    "componentIds": [
+
     ]
   }
 }

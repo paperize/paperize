@@ -1,6 +1,6 @@
 {
   "loveLetter": {
-    "id": "1UuBvFnNyeHpL7kq8b9J6N420-td9DFZ2GCcsvIdvxjU",
+    "id": "loveLetter",
     "name": "Love Letter Revisited",
     "data": {
       "majorDimension": "ROWS",
@@ -72,27 +72,27 @@
     }
   },
   "carcassonne": {
-    "id": "carcassonne-source",
+    "id": "carcassonne",
     "name": "Carcassonne",
     "data": {
       "majorDimension": "ROWS",
       "range": "Sheet1!A1:AA1000",
       "values": [
         [
-          
+
         ]
       ]
     }
   },
   "pandemic": {
-    "id": "pandemic-source",
+    "id": "pandemic",
     "name": "Pandemic V2",
     "data": {
       "majorDimension": "ROWS",
       "range": "Sheet1!A1:AA1000",
       "values": [
         [
-          
+
         ]
       ]
     }
