@@ -1,6 +1,7 @@
 <template lang="pug">
 div(v-if="findComponentTemplate(component)")
   template-editor(:component="component")
+
 div(v-else)
   .grid-x.grid-padding-x
     .small-12.cell
