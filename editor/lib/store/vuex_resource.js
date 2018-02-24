@@ -19,10 +19,12 @@ export function generateCrud(model) {
   const resourceName      = capitalize(singularModelName)
   const modelRepoName     = pluralModelName
   const findModelName     = camelCase(`find ${singularModelName}`) // findModel
+  const existsModelName   = camelCase(`${singularModelName} exists`) // modelExists
   const findAllModelName  = camelCase(`find all ${pluralModelName}`) // findAllModels
   const allModelName      = camelCase(`all ${pluralModelName}`) // allModels
   const searchModelName   = camelCase(`search ${pluralModelName}`) // searchModels
   const createModelName   = camelCase(`create ${singularModelName}`) // createModel
+  const setModelName      = camelCase(`set ${pluralModelName}`) // setModels
   const updateModelName   = camelCase(`update ${singularModelName}`) // updateModel
   const destroyModelName  = camelCase(`destroy ${singularModelName}`) // destroyModel
 
@@ -59,6 +61,11 @@ export function generateCrud(model) {
     }
   }
 
+  getters[existsModelName] = (state, localGetters) => modelId => {
+    debug("Getter:", existsModelName, modelId)
+    return !!localGetters[findModelName](modelId, false)
+  }
+
   getters[findAllModelName] = state => modelIds => {
     debug("Getter:", findAllModelName, modelIds)
     return map(modelIds, modelId => state[modelRepoName][modelId])
@@ -81,6 +88,11 @@ export function generateCrud(model) {
   mutations[createModelName] = (state, modelToCreate) => {
     debug("Mutation:", createModelName, modelToCreate)
     Vue.set(state[modelRepoName], modelToCreate.id, modelToCreate)
+  }
+
+  mutations[setModelName] = (state, modelCollection) => {
+    debug("Mutation:", setModelName, modelCollection)
+    Vue.set(state, modelRepoName, modelCollection)
   }
 
   mutations[updateModelName] = (state, modelToUpdate) => {
@@ -137,13 +149,17 @@ export function generateCrud(model) {
     let hasManysToDestroy = filter(model.relationships, { relation: 'hasMany', dependent: true })
 
     return Promise.map(hasOnesToDestroy, (relationship) => {
-      console.log("destroying one", relationship.model)
-      let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
-      return dispatch(relationshipDestroyModelName, { id: modelToDestroy[`${relationship.model}Id`] })
+      let relationToDestroyId = modelToDestroy[`${relationship.model}Id`]
+
+      if(relationToDestroyId) {
+        let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
+        return dispatch(relationshipDestroyModelName, { id:  relationToDestroyId })
+      } else {
+        return
+      }
 
     }).then(() => {
       return Promise.map(hasManysToDestroy, (relationship) => {
-        console.log("destroying many", relationship.model)
         let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
         return Promise.map(modelToDestroy[`${relationship.model}Ids`], (relationshipId) => {
           return dispatch(relationshipDestroyModelName, { id: relationshipId })
@@ -159,7 +175,6 @@ export function generateCrud(model) {
   }
 
   // Merge store mechanics from the model
-
   return {
     state:     { ...state, ...model.state},
     getters:   { ...getters, ...model.getters},

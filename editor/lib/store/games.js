@@ -33,10 +33,6 @@ const GameModel = {
   },
 
   mutations: {
-    setGames(state, games) {
-      state.games = games
-    },
-
     pushGameComponentId(state, { game, componentId }) {
       game.componentIds.push(componentId)
     },

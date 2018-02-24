@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { find, map, zipWith } from 'lodash'
 import uuid from 'uuid/v4'
 
@@ -21,20 +20,6 @@ const SourceModel = {
 
   getters: {
     remoteSources: state => state.remoteSources,
-
-    sourceExists: (state, getters) => sourceId => {
-      let found = true
-      try {
-        getters.findSource(sourceId)
-      } catch(error) {
-        if(error.code === 'NOT_FOUND'){
-          found = false
-        } else {
-          throw error
-        }
-      }
-      return found
-    },
 
     getSourceItems: (state, getters) => source => {
       const propertyNames = getters.sourceProperties(source),
@@ -79,10 +64,6 @@ const SourceModel = {
   },
 
   mutations: {
-    setSources(state, sources) {
-      state.sources = sources
-    },
-
     setRemoteSources(state, sources) {
       state.remoteSources = sources
     },
