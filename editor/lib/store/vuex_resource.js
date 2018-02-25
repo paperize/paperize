@@ -1,9 +1,10 @@
+/* global process */
 import Promise from 'bluebird'
-import { capitalize, camelCase, map, zip, filter, find, values, isString, isNumber, isObject } from 'lodash'
+import { capitalize, camelCase, map, zip, filter, values, isString, isNumber } from 'lodash'
 import Vue from 'vue'
 
 // const VERBOSE = false
-const VERBOSE = true
+const VERBOSE = (process.NODE_ENV !== "production")
 
 const debug = (...args) => {
   if(VERBOSE) {
@@ -120,15 +121,15 @@ export function generateCrud(model) {
       return dispatch(relationshipCreateModelName)
     })
 
-    .then((relationshipIds) => {
-      zip(map(relationshipsToInitialize, 'model'), relationshipIds).forEach((nameAndId) => {
-        newModel[`${nameAndId[0]}Id`] = nameAndId[1]
+      .then((relationshipIds) => {
+        zip(map(relationshipsToInitialize, 'model'), relationshipIds).forEach((nameAndId) => {
+          newModel[`${nameAndId[0]}Id`] = nameAndId[1]
+        })
+
+        commit(createModelName, newModel)
+
+        return newModel.id
       })
-
-      commit(createModelName, newModel)
-
-      return newModel.id
-    })
   }
 
   actions[updateModelName] = ({ getters, commit }, modelToUpdate) => {
@@ -147,30 +148,34 @@ export function generateCrud(model) {
     let hasOnesToDestroy = filter(model.relationships, { relation: 'hasOne', dependent: true })
     let hasManysToDestroy = filter(model.relationships, { relation: 'hasMany', dependent: true })
 
-    return Promise.map(hasOnesToDestroy, (relationship) => {
-      let relationToDestroyId = modelToDestroy[`${relationship.model}Id`]
+    return Promise.map(hasOnesToDestroy,
+      (relationship) => {
+        let relationToDestroyId = modelToDestroy[`${relationship.model}Id`]
 
-      if(relationToDestroyId) {
-        let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
-        return dispatch(relationshipDestroyModelName, { id:  relationToDestroyId })
-      } else {
-        return
-      }
+        if(relationToDestroyId) {
+          let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
+          return dispatch(relationshipDestroyModelName, { id:  relationToDestroyId })
+        } else {
+          return
+        }
 
-    }).then(() => {
-      return Promise.map(hasManysToDestroy, (relationship) => {
-        let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
-        return Promise.map(modelToDestroy[`${relationship.model}Ids`], (relationshipId) => {
-          return dispatch(relationshipDestroyModelName, { id: relationshipId })
-        })
       })
-    })
 
-    .then(() => {
-      commit(destroyModelName, modelToDestroy)
+      .then(() => {
+        return Promise.map(hasManysToDestroy,
+          (relationship) => {
+            let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
+            return Promise.map(modelToDestroy[`${relationship.model}Ids`], (relationshipId) => {
+              return dispatch(relationshipDestroyModelName, { id: relationshipId })
+            })
+          })
+      })
 
-      return modelToDestroy.id
-    })
+      .then(() => {
+        commit(destroyModelName, modelToDestroy)
+
+        return modelToDestroy.id
+      })
   }
 
   // Merge Vuex store mechanics from the provided model, provided methods take precedence

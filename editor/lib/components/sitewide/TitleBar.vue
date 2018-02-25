@@ -9,7 +9,8 @@
             router-link(:to="{ name: homeLink }")
               strong Paperize.io
           li.build-status
-            a(target="_blank" title="Prodigious Electromancer" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45") Alpha 4 "Prodigious Electromancer"
+            a(target="_blank" :title="gitChanges" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45")
+              | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
       .top-bar-right
         profile-component
 </template>
@@ -21,9 +22,17 @@
 
   export default {
     mixins: [FoundationMixin],
+
     components: {
       "profile-component": Profile,
       "image-manager": ImageManager
+    },
+
+    data() {
+      return {
+        gitSha: process.env.GIT_SHA,
+        gitChanges: process.env.GIT_CHANGE_INFO
+      }
     },
 
     computed: {

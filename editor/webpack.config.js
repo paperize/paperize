@@ -1,7 +1,16 @@
+/* global require, __dirname, module */
 var webpack = require('webpack')
   , CopyWebpackPlugin = require('copy-webpack-plugin')
   , path = require('path')
+  , shell = require('shelljs')
 
+var gitSha = shell.exec("git log --pretty=format:'%h' -n 1").stdout
+  , gitChanges = shell.exec("git diff --stat").stdout.trim()
+
+gitChanges = gitChanges.split("\n")
+gitChanges = gitChanges[gitChanges.length-1]
+gitSha += "+" + parseInt(gitChanges.split(", ")[1])
+gitSha += "-" + parseInt(gitChanges.split(", ")[2])
 
 module.exports = {
   entry: './lib/main.js',
@@ -10,25 +19,14 @@ module.exports = {
     path: path.resolve(__dirname, 'build')
   },
   plugins: [
-    new webpack.EnvironmentPlugin({'NODE_ENV': 'development'}),
+    new webpack.EnvironmentPlugin({
+      'NODE_ENV': 'development',
+      'GIT_SHA': gitSha,
+      'GIT_CHANGE_INFO': gitChanges
+    }),
+
     new CopyWebpackPlugin([
-      { context: 'static', from: '**', transform: function(content, path) {
-        // Set local/remote JS includes in the HTML based on environment
-        // if(path.includes("/static/index.html")) {
-        //   var gapiInclude = ""
-        //
-        //   if(process.env.NODE_ENV === 'production') {
-        //     gapiInclude = "https://apis.google.com/js/api.js"
-        //   } else {
-        //     gapiInclude = "js/vendor/gapi.min.js"
-        //   }
-        //
-        //   return content.toString().replace("GAPI_SOURCE", gapiInclude)
-        //
-        // } else {
-          return content
-        // }
-      }}
+      { context: 'static', from: '**' }
     ])
   ],
   module: {
@@ -45,4 +43,4 @@ module.exports = {
       }
     ]
   }
-};
+}

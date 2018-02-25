@@ -1,3 +1,4 @@
+/* global require, module, __dirname */
 var webpack = require('webpack')
   , path = require('path')
 
@@ -29,4 +30,4 @@ module.exports = {
       }
     ]
   }
-};
+}
