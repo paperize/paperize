@@ -7,10 +7,21 @@ var webpack = require('webpack')
 var gitSha = shell.exec("git log --pretty=format:'%h' -n 1").stdout
   , gitChanges = shell.exec("git diff --stat").stdout.trim()
 
-gitChanges = gitChanges.split("\n")
-gitChanges = gitChanges[gitChanges.length-1]
-gitSha += "+" + (parseInt(gitChanges.split(", ")[1]) || 0)
-gitSha += "-" + (parseInt(gitChanges.split(", ")[2]) || 0)
+if(gitChanges.length == 0) {
+  gitChanges = "Clean checkout of " + gitSha
+
+} else {
+  gitChanges = gitChanges.split("\n")
+  gitChanges = gitChanges[gitChanges.length-1]
+
+  var diffLines = gitChanges.split(", ")
+  if(diffLines[1]){
+    gitSha += "+" + parseInt(diffLines[1])
+  }
+  if(diffLines[2]){
+    gitSha += "+" + parseInt(diffLines[2])
+  }
+}
 
 module.exports = {
   entry: './lib/main.js',
