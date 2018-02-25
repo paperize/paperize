@@ -129,7 +129,6 @@ export function generateCrud(model) {
 
       return newModel.id
     })
-
   }
 
   actions[updateModelName] = ({ getters, commit }, modelToUpdate) => {
@@ -174,11 +173,11 @@ export function generateCrud(model) {
     })
   }
 
-  // Merge store mechanics from the model
+  // Merge Vuex store mechanics from the provided model, provided methods take precedence
   return {
-    state:     { ...state, ...model.state},
-    getters:   { ...getters, ...model.getters},
-    mutations: { ...mutations, ...model.mutations},
-    actions:   { ...actions, ...model.actions},
+    state:     { ...state, ...model.state },
+    getters:   { ...getters, ...model.getters },
+    mutations: { ...mutations, ...model.mutations },
+    actions:   { ...actions, ...model.actions },
   }
 }

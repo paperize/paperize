@@ -1,3 +1,4 @@
+/* global process */
 if(process.env.NODE_ENV !== "production") {
   console.log("Paperize Editor:", process.env.NODE_ENV)
 }
@@ -32,13 +33,13 @@ import TitleBar from './components/sitewide/TitleBar.vue'
 
 let startApp = () => {
   // Top-level Vue component
-  const app = new Vue({
+  new Vue({
     router, store,
     components: {
       "title-bar": TitleBar
     },
     // Render the TitleBar outside the router view
-    render: (h) => { return h("div", [h("title-bar"), h("router-view"), h("v-dialog")]); }
+    render: (h) => h("div", [h("title-bar"), h("router-view"), h("v-dialog")])
     // Mount it here in the index.html
   }).$mount('#paperize-app')
 }

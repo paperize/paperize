@@ -1,5 +1,4 @@
-import { find, map, zipWith } from 'lodash'
-import uuid from 'uuid/v4'
+import { map, zipWith } from 'lodash'
 
 import { generateCrud } from './vuex_resource'
 
@@ -39,27 +38,9 @@ const SourceModel = {
       return theProperties
     },
 
-    sourcePropertyExamples: (_, getters) => (source, propertyName) => {
-      let propertyIndex = getters.sourceProperties(source).indexOf(propertyName)
-
-      return chain(source.data.values)
-        .map((row) => row[propertyIndex])
-        .compact()
-        .slice(1, 4)
-        .map((content) => truncate(content, { length: 24, separator: /,? +/ }))
-        .join(', ')
-      .value()
-    },
-
     activeSourceProperties: (_, getters, __, rootGetters) => {
       return rootGetters.activeSource &&
         getters.sourceProperties(rootGetters.activeSource)
-    },
-
-    activeSourcePropertyExamples: (_, getters, __, rootGetters) => (propertyName) => {
-      return rootGetters.activeSource &&
-        getters.sourcePropertyExamples(rootGetters.activeSource, propertyName) ||
-        []
     }
   },
 
