@@ -1,3 +1,4 @@
+import { defaults } from 'lodash'
 import Promise from 'bluebird'
 import store from '../../store'
 import { findProperty } from './helpers'
@@ -10,33 +11,33 @@ const fetchDataByName = function(name) {
 const fetchImageByName = function(name) {
   return fetchDataByName(name)
 
-  .then((imageDataURI) => {
-    return new Promise((resolve, reject) => {
-      const image = new Image()
-      image.onload = function() {
-        resolve(image)
-      }
-      image.src = imageDataURI
+    .then((imageDataURI) => {
+      return new Promise((resolve) => {
+        const image = new Image()
+        image.onload = function() {
+          resolve(image)
+        }
+        image.src = imageDataURI
+      })
     })
-  })
 }
 
 // To get CORS-enabled images from the web
 const toDataURL = function(url) {
   return fetch(url)
 
-  .then(response => {
-    return response.blob()
-  })
+    .then(response => {
+      return response.blob()
+    })
 
-  .then(blob => {
-    return URL.createObjectURL(blob)
-  })
+    .then(blob => {
+      return URL.createObjectURL(blob)
+    })
 }
 
 const imageBox = function(doc, imageName, boxDimensions, options) {
   // helpers.drawGuideBox(boxDimensions)
-  options = _.defaults(options, {
+  options = defaults(options, {
     horizontalAlignment: "center",
     verticalAlignment:   "top",
     scaleMode:           "fillToBox"
@@ -174,9 +175,9 @@ export default {
 
     return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
 
-    .catch((e) => {
-      console.log(`Failed to add image named "${imageName}"`)
-      console.error(e)
-    })
+      .catch((e) => {
+        console.log(`Failed to add image named "${imageName}"`)
+        console.error(e)
+      })
   }
 }
