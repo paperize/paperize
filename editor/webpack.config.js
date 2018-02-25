@@ -9,8 +9,8 @@ var gitSha = shell.exec("git log --pretty=format:'%h' -n 1").stdout
 
 gitChanges = gitChanges.split("\n")
 gitChanges = gitChanges[gitChanges.length-1]
-gitSha += "+" + parseInt(gitChanges.split(", ")[1])
-gitSha += "-" + parseInt(gitChanges.split(", ")[2])
+gitSha += "+" + (parseInt(gitChanges.split(", ")[1]) || 0)
+gitSha += "-" + (parseInt(gitChanges.split(", ")[2]) || 0)
 
 module.exports = {
   entry: './lib/main.js',
