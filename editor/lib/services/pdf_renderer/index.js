@@ -39,7 +39,7 @@ const api = {
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-    const components = game.components
+    const components = store.getters.findAllGameComponents(game)
 
     let printSettings = store.getters.getPrintSettings,
       pageSize = { w: printSettings.width, h: printSettings.height },
