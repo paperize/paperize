@@ -19,7 +19,7 @@ if(gitChanges.length == 0) {
     gitSha += "+" + parseInt(diffLines[1])
   }
   if(diffLines[2]){
-    gitSha += "+" + parseInt(diffLines[2])
+    gitSha += "-" + parseInt(diffLines[2])
   }
 }
 
