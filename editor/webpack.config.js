@@ -1,6 +1,7 @@
 /* global require, __dirname, module */
 var webpack = require('webpack')
   , CopyWebpackPlugin = require('copy-webpack-plugin')
+  , VueLoaderPlugin = require('vue-loader/lib/plugin')
   , path = require('path')
   , shell = require('shelljs')
 
@@ -38,11 +39,13 @@ module.exports = {
 
     new CopyWebpackPlugin([
       { context: 'static', from: '**' }
-    ])
+    ]),
+
+    new VueLoaderPlugin()
   ],
   module: {
     noParse: /\/file-api\//,
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
@@ -51,6 +54,18 @@ module.exports = {
         test: /\.vue$/,
         exclude: /(node_modules)/,
         loader: 'vue-loader'
+      }, {
+        test: /\.pug$/,
+        loader: 'pug-plain-loader'
+      }, {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'vue-style-loader'
+          }, {
+            loader: 'css-loader'
+          }
+        ]
       }
     ]
   }
