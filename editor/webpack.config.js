@@ -44,7 +44,7 @@ module.exports = {
     new VueLoaderPlugin()
   ],
   module: {
-    noParse: /\/file-api\//,
+    noParse: /file-api/,
     rules: [
       {
         test: /\.js$/,

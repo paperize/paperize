@@ -3,6 +3,7 @@ var webpack = require('webpack')
   , path = require('path')
 
 module.exports = {
+  mode: 'development',
   target: 'node',
   entry: './test/test.coffee',
   output: {
@@ -13,8 +14,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({'NODE_ENV': 'test'})
   ],
   module: {
-    noParse: /\/leveldown\//,
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
