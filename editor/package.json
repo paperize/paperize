@@ -14,7 +14,7 @@
     "build-test-integration": "npm run clean && NODE_ENV=test webpack --mode=development",
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-unit && npm run test-integration",
-    "create-video": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --config videoRecording=true\"",
+    "create-video": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --config video=true\"",
     "copy-video": "cp cypress/videos/* build/releases/10-14-17.mp4",
     "finalize-prod": "coffee finalize.coffee",
     "build-prod": "npm run clean && webpack --mode=production",
@@ -41,7 +41,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "core-util-is": "^1.0.2",
     "css-loader": "^0.26.2",
-    "cypress": "^2.0.3",
+    "cypress": "^3.0.2",
     "eslint": "^4.18.1",
     "eslint-plugin-vue": "^4.3.0",
     "express": "^4.14.1",
@@ -72,7 +72,7 @@
     "event-emitter": "^0.3.4",
     "jspdf": "^1.3.5",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "md5": "^2.2.1",
     "pouchdb-adapter-http": "^6.3.4",
     "pouchdb-adapter-idb": "^6.3.4",
@@ -86,10 +86,10 @@
     "vue": "^2.5.16",
     "vue-async-computed": "^3.3.1",
     "vue-js-modal": "^1.2.11",
-    "vue-loader": "^15.0.10",
-    "vue-router": "^2.3.0",
+    "vue-loader": "^15.2.4",
+    "vue-router": "^3.0.1",
     "vue-simple-spinner": "^1.2.7",
     "vuedraggable": "^2.15.0",
-    "vuex": "^2.3.1"
+    "vuex": "^3.0.1"
   }
 }
