@@ -10,8 +10,10 @@ modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
     .small-12.cell(v-else)
       a.button(v-if="remoteSources.length == 0" @click="fetchRemoteSources")
         | Fetch Sheet Listing...
-
       div(v-else)
+        a.button(@click="fetchRemoteSources")
+          | Refresh Sheet Listing...
+
         p
           strong Select a Sheet to Import or Refresh:
 

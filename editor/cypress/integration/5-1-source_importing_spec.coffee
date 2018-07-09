@@ -142,7 +142,7 @@ describe "Importing Sources", ->
         cy.contains("Browse Your Google Sheets")
         cy.get('a.button').contains("Fetch Sheet Listing...")
 
-    describe "clicking 'fetch'", ->
+    describe "fetching sources the first time", ->
       beforeEach ->
         cy.contains("Fetch Sheet Listing...")
             .click()
@@ -170,6 +170,33 @@ describe "Importing Sources", ->
         it "refreshes existing sources", ->
           cy.get("div[data-modal='source-explorer']").within ->
             cy.contains("Carcassonne (Refresh)")
+
+    describe "re-fetching sources", ->
+      beforeEach ->
+        cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
+          vuex.commit("setRemoteSources", [sources.carcassonne, sources.loveLetter])
+          vuex.commit("setSources", { carcassonne: sources.carcassonne })
+
+        cy.contains("Refresh Sheet Listing...")
+          .click()
+
+      it "hides call-to-action and shows spinner", ->
+        cy.contains("Refresh Sheet Listing...").should("not.be.visible")
+        cy.contains("Talking to Google...")
+
+      it "hides the spinner", ->
+        @fetchSheetsPromiseResolve([])
+        cy.contains("Talking to Google...").should("not.be.visible")
+
+      it "replaces the remote source list", ->
+        cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
+          # 2 come back from google
+          @fetchSheetsPromiseResolve([sources.loveLetter, sources.pandemic])
+
+        cy.get("div[data-modal='source-explorer']").within ->
+          cy.contains("Carcassonne").should("not.be.visible")
+          cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Pandemic")
 
 
   context "refreshing the active source", ->

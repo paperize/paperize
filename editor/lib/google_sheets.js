@@ -12,14 +12,14 @@ let matchGoogleId = (url) => {
 let BadIdError = function(sheetId) {
   this.message = `No Google Sheet ID detected in "${sheetId}"`
 }
-BadIdError.prototype = Object.create(Error.prototype);
+BadIdError.prototype = Object.create(Error.prototype)
 
 let NotFoundError = function(googleId) {
   this.message = `No Google Sheet found for ID: "${googleId}"`
   this.googleId = googleId
   return this
 }
-NotFoundError.prototype = Object.create(Error.prototype);
+NotFoundError.prototype = Object.create(Error.prototype)
 
 let api = {
   BadIdError, NotFoundError,
@@ -46,7 +46,7 @@ let api = {
   },
 
   fetchSheetData(sheet) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       auth.getClient((client) => {
         return client.sheets.spreadsheets.values.get({
           spreadsheetId: sheet.id,
