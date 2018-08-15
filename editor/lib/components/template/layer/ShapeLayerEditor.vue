@@ -1,6 +1,14 @@
 <template lang="pug">
 .shape-layer-fields
   fieldset.fieldset
+    legend Shape
+
+    select(v-model="shape")
+      option(value="rectangle") Rectangle
+      option(value="roundedRectangle") Rounded Rectangle
+      option(value="ellipse") Ellipse
+
+  fieldset.fieldset
     legend
       input(type="checkbox" v-model="strokePresent")
       = " Stroke? "
@@ -44,6 +52,7 @@
     props: ["layer"],
 
     computed: computedVModelUpdateAll("layer", "updateLayer", [
+      "shape",
       "strokePresent",
       "strokeWidth",
       "strokeColor",

@@ -1,4 +1,4 @@
-import { forEach, isUndefined, clone, defaults } from 'lodash'
+import { forEach } from 'lodash'
 
 import uuid from 'uuid/v4'
 
@@ -8,8 +8,6 @@ const CODE = 'code'
 const TEXT = 'text'
 const IMAGE = 'image'
 const SHAPE = 'shape'
-
-const LAYER_TYPES = [ CODE, TEXT, IMAGE, SHAPE ]
 
 const DEFAULT_RENDER_FUNCTION = `
 // Common tasks, all measurements in inches
@@ -62,6 +60,7 @@ LAYER_DEFAULTS[SHAPE] =
     type:          SHAPE,
     renderOrder:   0,
     dimensionId:   null,
+    shape:         "rectangle",
     strokePresent: true,
     strokeWidth:   0.1,
     strokeColor:   "#000000",
@@ -89,7 +88,7 @@ const LayerModel = {
       layer = { ...LAYER_DEFAULTS[type], ...layerObject }
 
     if(!layer) {
-      throw new Error(`No Layer Type found matching "${layerType}"`)
+      throw new Error(`No Layer Type found matching "${type}"`)
     }
 
     layer.id = uuid()

@@ -37,7 +37,7 @@ div
           span(aria-hidden="true") &times;
 
     //- Template status
-    .small-8.medium-6.cell
+    #template-editor.small-8.medium-6.cell
       h4
         i.far.fa-file-code
         |  Template
