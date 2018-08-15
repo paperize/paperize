@@ -1,5 +1,4 @@
-import { find, map, max, forEach, clone, filter, orderBy } from 'lodash'
-import Vue from 'vue'
+import { map, max, orderBy } from 'lodash'
 
 import { generateCrud } from './vuex_resource'
 
@@ -12,7 +11,7 @@ const TemplateModel = {
     { relation: 'hasMany', model: 'layer', dependent: true }
   ],
 
-  create(templateObject) {
+  create() {
     return {
       id: uuid(),
       layerIds: [],

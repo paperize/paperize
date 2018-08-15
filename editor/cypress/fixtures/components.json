@@ -1,7 +1,9 @@
 {
   "characterDeck": {
     "id": "characterDeck",
-    "title": "Character Deck"
+    "title": "Character Deck",
+    "sourceId": "loveLetter",
+    "templateId": "loveLetter"
   },
   "instructionBook": {
     "id": "instructionBook",

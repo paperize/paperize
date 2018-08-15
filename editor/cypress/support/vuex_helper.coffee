@@ -42,12 +42,14 @@ Cypress.Commands.add "visitActiveGameAndComponent", ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
 Cypress.Commands.add "loginAndEditGame", ->
-  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, sources, templates } }) ->
     loveLetter = games['loveLetter']
 
     vuex.dispatch("become", users[0])
     vuex.commit("setGames", games)
     vuex.commit("setComponents", components)
+    vuex.commit("setSources", sources)
+    vuex.commit("setTemplates", templates)
     vuex.dispatch("setActiveGame", loveLetter.id)
     vuex.dispatch("setActiveComponent", loveLetter.componentIds[0])
 

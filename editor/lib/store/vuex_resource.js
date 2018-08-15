@@ -93,6 +93,9 @@ export function generateCrud(model) {
 
   mutations[setModelName] = (state, modelCollection) => {
     debug("Mutation:", setModelName, modelCollection)
+    if(!modelCollection) {
+      console.warn(`Why are you setting the "${modelRepoName}" store to "${modelCollection}"? This is likely a testing bug.`)
+    }
     Vue.set(state, modelRepoName, modelCollection)
   }
 
