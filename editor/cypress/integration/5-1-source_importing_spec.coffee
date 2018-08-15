@@ -3,6 +3,7 @@ Promise = require('bluebird')
 describe "Importing Sources", ->
   beforeEach ->
     cy.loginAndEditGame()
+    cy.contains("Instruction Book").click()
 
   context "by pasting a Google Sheet URL or ID", ->
     submitPaste = (paste) ->

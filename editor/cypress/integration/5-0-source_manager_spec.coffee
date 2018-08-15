@@ -1,6 +1,7 @@
 describe "Component Source manager", ->
   beforeEach ->
     cy.loginAndEditGame()
+    cy.contains("Instruction Book").click()
 
   it "prompts me to create a source", ->
     cy.get("#source-editor")
