@@ -8,6 +8,14 @@ div
         |  Source
 
       template(v-if="componentSource")
+        .input-group
+          span.input-group-label
+            label(for="quantity-field")
+              strong Quantity Field
+          select.input-group-field(id="quantity-field" type="text" v-model="quantityField")
+            option(value="" disabled) Select Property
+            option(v-for="property in activeSourceProperties" :value="property") {{ property }}
+
         table
           thead
             tr
@@ -80,10 +88,11 @@ div
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import SourceManager from '../source/SourceManager.vue'
   import TemplateManager from '../template/TemplateManager.vue'
   import TemplatePreviewer from '../template/TemplatePreviewer.vue'
+  import { computedVModelUpdate } from '../../store/component_helper'
 
   export default {
     props: ["component"],
@@ -102,7 +111,16 @@ div
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent", "sourceProperties", "findComponentSource", "findComponentTemplate"]),
+      ...mapGetters([
+        "activeGame",
+        "activeComponent",
+        "sourceProperties",
+        "findComponentSource",
+        "findComponentTemplate",
+        "activeSourceProperties"
+      ]),
+
+      quantityField: computedVModelUpdate("component", "updateComponent", "quantityField"),
 
       componentSource() { return this.findComponentSource(this.component) },
 
@@ -110,6 +128,8 @@ div
     },
 
     methods: {
+      ...mapActions(["updateComponent"]),
+
       openSourceManager() {
         this.$modal.show('Source Manager')
       },

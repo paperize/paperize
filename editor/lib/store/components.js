@@ -1,3 +1,4 @@
+import { find, reduce, times } from 'lodash'
 import uuid from 'uuid/v4'
 
 import { generateCrud } from './vuex_resource'
@@ -12,10 +13,11 @@ const ComponentModel = {
 
   create() {
     return {
-      id:         uuid(),
-      title:      "",
-      sourceId:   null,
-      templateId: null
+      id:            uuid(),
+      title:         "",
+      sourceId:      null,
+      templateId:    null,
+      quantityField: null
     }
   },
 
@@ -37,7 +39,19 @@ const ComponentModel = {
       if(!componentSource) {
         return []
       } else {
-        return getters.getSourceItems(componentSource)
+        let sourceItems = getters.getSourceItems(componentSource)
+        if(!component.quantityField) {
+          return sourceItems
+        } else {
+          return reduce(sourceItems, (expandedItems, item) => {
+            let rawQuantity = (find(item, {key: component.quantityField}) || {}).value,
+              quantity = parseInt(rawQuantity, 10) || 1
+
+            times(quantity, () => expandedItems.push(item))
+
+            return expandedItems
+          }, [])
+        }
       }
     }
   },
