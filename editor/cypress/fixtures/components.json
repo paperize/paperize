@@ -3,14 +3,17 @@
     "id": "characterDeck",
     "title": "Character Deck",
     "sourceId": "loveLetter",
-    "templateId": "loveLetter"
+    "templateId": "loveLetter",
+    "quantityField": null
   },
   "instructionBook": {
     "id": "instructionBook",
-    "title": "Instruction Book"
+    "title": "Instruction Book",
+    "quantityField": null
   },
   "pointCubes": {
     "id": "pointCubes",
-    "title": "Point Cubes"
+    "title": "Point Cubes",
+    "quantityField": null
   }
 }

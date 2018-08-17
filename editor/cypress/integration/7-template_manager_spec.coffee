@@ -12,10 +12,10 @@ describe "Template Manager", ->
       cy.contains("[shape] 0")
 
     it "can be set to rectangle", ->
-      cy.get("select").select("Rectangle")
+      cy.get(".shape-layer-fields select").select("Rectangle")
 
     it "can be set to rounded rectangle", ->
-      cy.get("select").select("Rounded Rectangle")
+      cy.get(".shape-layer-fields select").select("Rounded Rectangle")
 
     it "can be set to ellipse", ->
-      cy.get("select").select("Ellipse")
+      cy.get(".shape-layer-fields select").select("Ellipse")
