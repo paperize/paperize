@@ -4,16 +4,16 @@
     "title": "Character Deck",
     "sourceId": "loveLetter",
     "templateId": "loveLetter",
-    "quantityField": null
+    "quantityProperty": null
   },
   "instructionBook": {
     "id": "instructionBook",
     "title": "Instruction Book",
-    "quantityField": null
+    "quantityProperty": null
   },
   "pointCubes": {
     "id": "pointCubes",
     "title": "Point Cubes",
-    "quantityField": null
+    "quantityProperty": null
   }
 }

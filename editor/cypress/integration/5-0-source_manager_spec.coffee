@@ -73,6 +73,15 @@ describe "Component Source manager", ->
           cy.contains("Image")
           cy.contains("Rule")
 
+      context "setting the quantity property", ->
+        it "let's me select a quantity property from the available fields", ->
+          # TODO: assert quantity start
+          cy.get("#source-editor").within ->
+            cy.get("select#quantity-property").select("Quantity")
+            # TODO: assert quantity changed
+            cy.get("select#quantity-property").select("None")
+            # TODO: assert quantity back to start
+
       context "editing the source", ->
         beforeEach ->
           cy.get('#source-editor').within ->

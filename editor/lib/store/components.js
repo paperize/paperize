@@ -17,7 +17,7 @@ const ComponentModel = {
       title:         "",
       sourceId:      null,
       templateId:    null,
-      quantityField: null
+      quantityProperty: null
     }
   },
 
@@ -40,11 +40,11 @@ const ComponentModel = {
         return []
       } else {
         let sourceItems = getters.getSourceItems(componentSource)
-        if(!component.quantityField) {
+        if(!component.quantityProperty) {
           return sourceItems
         } else {
           return reduce(sourceItems, (expandedItems, item) => {
-            let rawQuantity = (find(item, {key: component.quantityField}) || {}).value,
+            let rawQuantity = (find(item, {key: component.quantityProperty}) || {}).value,
               quantity = parseInt(rawQuantity, 10) || 1
 
             times(quantity, () => expandedItems.push(item))

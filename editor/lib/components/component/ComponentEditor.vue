@@ -10,10 +10,11 @@ div
       template(v-if="componentSource")
         .input-group
           span.input-group-label
-            label(for="quantity-field")
-              strong Quantity Field
-          select.input-group-field(id="quantity-field" type="text" v-model="quantityField")
+            label(for="quantity-property")
+              strong Quantity Property
+          select.input-group-field(id="quantity-property" type="text" v-model="quantityProperty")
             option(value="" disabled) Select Property
+            option(:value="null") None
             option(v-for="property in activeSourceProperties" :value="property") {{ property }}
 
         table
@@ -120,7 +121,7 @@ div
         "activeSourceProperties"
       ]),
 
-      quantityField: computedVModelUpdate("component", "updateComponent", "quantityField"),
+      quantityProperty: computedVModelUpdate("component", "updateComponent", "quantityProperty"),
 
       componentSource() { return this.findComponentSource(this.component) },
 
