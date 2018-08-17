@@ -40,11 +40,13 @@ const ComponentModel = {
         return []
       } else {
         let sourceItems = getters.getSourceItems(componentSource)
+        // Handle quantity expansion
         if(!component.quantityProperty) {
           return sourceItems
         } else {
           return reduce(sourceItems, (expandedItems, item) => {
-            let rawQuantity = (find(item, {key: component.quantityProperty}) || {}).value,
+            let foundProperty = find(item, {key: component.quantityProperty}),
+              rawQuantity = (foundProperty || {}).value,
               quantity = parseInt(rawQuantity, 10) || 1
 
             times(quantity, () => expandedItems.push(item))
@@ -53,6 +55,10 @@ const ComponentModel = {
           }, [])
         }
       }
+    },
+
+    getItemQuantity: (state, getters) => component => {
+      return getters.getComponentItems(component).length
     }
   },
 

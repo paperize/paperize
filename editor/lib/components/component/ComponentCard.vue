@@ -33,7 +33,7 @@
       ...mapGetters(["activeGame", "activeComponent"]),
 
       totalItems() {
-        return this.$store.getters.getComponentItems(this.component).length
+        return this.$store.getters.getItemQuantity(this.component)
       }
     },
 
