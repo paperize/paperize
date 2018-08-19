@@ -9,9 +9,10 @@ fieldset#dimension-editor.fieldset
     li(:class="{'is-active': modeInset }")
       a(@click="dimensionMode = 'inset'") Inset
 
-  p Expressed as percentage of total width or height.
 
   template(v-if="modeXYWH")
+    p.mode-description Expressed as percentage of total width or height from the top left corner.
+
     .grid-x.grid-padding-x
       .medium-12.large-6.cell
         .input-group
@@ -39,6 +40,8 @@ fieldset#dimension-editor.fieldset
           input#dimension-h.input-group-field(type="number" v-model.number="dimensionH")
 
   template(v-else-if="modeInset")
+    p.mode-description Expressed as percentage of total width or height in from the top, right, bottom, and left sides.
+
     .grid-x.grid-padding-x
       .medium-12.large-6.cell
         .input-group
@@ -178,6 +181,10 @@ fieldset#dimension-editor.fieldset
 
 <style>
   .menu {
+    font-size: .8em;
+  }
+
+  .mode-description {
     font-size: .8em;
   }
 </style>
