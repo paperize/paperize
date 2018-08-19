@@ -7,7 +7,7 @@ describe "Layer Dimensions", ->
     cy.contains("New Layer").click()
     cy.contains("Shape").click()
 
-  it.only "let's me toggle between xywh and inset mode", ->
+  it "let's me toggle between xywh and inset mode", ->
     cy.get("#dimension-editor").within ->
       # see the x/y/w/h percent values
       cy.get("#dimension-x").invoke("val").should("eq", "5")
@@ -18,17 +18,19 @@ describe "Layer Dimensions", ->
       cy.contains("Inset").click()
       # see the t/r/b/l percent values
       cy.get("#dimension-t").invoke("val").should("eq", "5")
-      cy.get("#dimension-t").clear().type("10")
-      cy.wait(150)
       cy.get("#dimension-r").invoke("val").should("eq", "5")
-      cy.get("#dimension-r").clear().type("10")
-      cy.wait(150)
       cy.get("#dimension-b").invoke("val").should("eq", "5")
-      cy.get("#dimension-b").clear().type("10")
-      cy.wait(150)
       cy.get("#dimension-l").invoke("val").should("eq", "5")
-      cy.get("#dimension-l").clear().type("10")
-      cy.wait(150)
+      # set them all to 10
+      setVal10ThenChill = (input) ->
+        input.val("10")
+        input[0].dispatchEvent(new Event('input', { 'bubbles': true }))
+        cy.wait(400)
+
+      cy.get("#dimension-t").then(setVal10ThenChill)
+      cy.get("#dimension-r").then(setVal10ThenChill)
+      cy.get("#dimension-b").then(setVal10ThenChill)
+      cy.get("#dimension-l").then(setVal10ThenChill)
       # click xywh
       cy.contains("XYWH").click()
       # see the x/y/w/h percent values
