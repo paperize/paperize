@@ -8,7 +8,7 @@
             strong Name
         input.input-group-field(id="layer-name" type="text" v-model="layerName")
 
-  dimension-editor(:layer="layer")
+  dimension-editor(:layer="layer" :size="template.size")
 
   code-layer-editor(v-if="layer.type == 'code'" :layer="layer" :source="source")
   text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer" :source="source")
@@ -28,7 +28,7 @@
   const INPUT_DELAY_MS = 400
 
   export default {
-    props: ["layer", "source"],
+    props: ["layer", "source", "template"],
 
     components: {
       "dimension-editor": DimensionEditor,
