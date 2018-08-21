@@ -28,7 +28,7 @@
     .grid-x.grid-margin-x
       .auto.cell
         strong From Template:
-        textarea(v-model="textContentTemplate")
+        textarea.text-content(v-model="textContentTemplate")
 </template>
 
 <script>
