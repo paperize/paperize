@@ -1,5 +1,6 @@
 <template lang="pug">
 .grid-container
+  database-manager
   image-manager
   .grid-x
     .top-bar.small-12.cell
@@ -18,6 +19,7 @@
 <script>
   import Profile from './Profile.vue'
   import ImageManager from '../asset/ImageManager.vue'
+  import DatabaseManager from '../database/DatabaseManager.vue'
   import FoundationMixin from '../../mixins/foundation'
 
   export default {
@@ -25,6 +27,7 @@
 
     components: {
       "profile-component": Profile,
+      "database-manager": DatabaseManager,
       "image-manager": ImageManager
     },
 

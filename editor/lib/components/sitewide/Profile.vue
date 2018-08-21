@@ -1,14 +1,17 @@
 <template lang="pug">
-ul.menu.dropdown.authenticated(v-if="user.authenticated" data-dropdown-menu)
-  li
-    a(@click="$modal.show('Image Library')") Images
-  li
-    a.avatar
-      img(alt="avatar" :src="avatarSrc")
-    ul.menu
-      li.name {{ user.name }}
-      li
-        a(@click="logout()") Sign Out
+div(v-if="user.authenticated")
+  ul.menu.dropdown.authenticated(data-dropdown-menu)
+    li
+      a(@click="$modal.show('Image Library')") Images
+    li
+      a.avatar
+        img(alt="avatar" :src="avatarSrc")
+      ul.menu
+        li.name {{ user.name }}
+        li
+          a(@click="$modal.show('Database Manager')") Database
+        li
+          a(@click="logout()") Sign Out
 
 div(v-else)
   ul.menu.unauthenticated
@@ -69,7 +72,7 @@ div(v-else)
       prepareForLogin() {
         this.$modal.show("Google Pop-up Helper")
         return this.login()
-      }
+      },
     }
   }
 </script>
