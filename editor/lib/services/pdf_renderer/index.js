@@ -3,6 +3,8 @@ import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
 import { percentOfParent } from './helpers'
+
+// Keep renderers in their own files
 import shape from './shape_renderer'
 import text from './text_renderer'
 import image from './image_renderer'
@@ -24,18 +26,6 @@ const api = {
       return doc.output('bloburi')
     })
   },
-
-  // renderComponentToPdf(game, component) {
-  //   const doc = this.startNewDocument()
-  //   const items = this.sortItems(component)
-  //
-  //   return Promise.each(items, (item) => {
-  //     addPage(doc, template, game)
-  //     return this.renderItem(doc, template, item, items, game)
-  //   }).then(() => {
-  //     return doc.output('bloburi')
-  //   })
-  // },
 
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
