@@ -1,8 +1,9 @@
+import { defaults, reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
 import { hexToRGB } from './helpers'
 
 const textBox = function(doc, text, boxDimensions, options) {
-  options = _.defaults(options, {})
+  options = defaults(options, {})
 
   // Line Height Formula: fontSize * lineHeight / ptsPerInch
   const oneLineHeight = doc.internal.getFontSize() * 1.2 / 72,
@@ -20,7 +21,7 @@ export default {
     doc.setTextColor(r, g, b)
 
     // Prepare template variables
-    const textContentTemplateVars = _.reduce(item, (kvObject, itemPair) => {
+    const textContentTemplateVars = reduce(item, (kvObject, itemPair) => {
       kvObject[itemPair.key] = itemPair.value
       return kvObject
     }, {})
