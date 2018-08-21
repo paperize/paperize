@@ -18,7 +18,7 @@ const api = {
     const template = store.getters.findTemplate(component.templateId)
     this.addPage(doc, template.size)
 
-    return this.renderItem(doc, game, component, item, template.size).then(() => {
+    return this.renderItem(doc, game, component, item, template.size, 0, 1).then(() => {
       // if(store.getters.activeLayer) {
       //   TODO: render a rectangle around the active layer
       // }
@@ -102,13 +102,13 @@ const api = {
     return Promise.each(components, (component) => {
       const items = store.getters.getComponentItems(component)
 
-      return Promise.each(items, (item) => {
+      return Promise.each(items, (item, itemIndex, totalItems) => {
 
         let parentDimensions = itemLocations[component.id].shift()
         // what page is this item's location on?
         doc.setPage(parentDimensions.page)
 
-        return this.renderItem(doc, game, component, item, parentDimensions)
+        return this.renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
       })
     }).then(() => {
       return doc.save("game.pdf") //output('bloburi')
@@ -135,12 +135,12 @@ const api = {
     doc.setFillColor(0)
   },
 
-  renderItem(doc, game, component, item, parentDimensions) {
+  renderItem(doc, game, component, item, parentDimensions, index, total) {
     // get transforms for this component
     let template = store.getters.findTemplate(component.templateId)
     let layers = store.getters.findAllTemplateLayers(template)
     // render each transform upon this item
-    console.log(`Rendering ${layers.length} layers...`, layers)
+    console.log(`Rendering Item ${index+1}/${total} with ${layers.length} layers...`, layers)
 
     return Promise.each(layers, layer => {
       // TODO: modify with layout dimensions
@@ -149,7 +149,8 @@ const api = {
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
 
-      return RENDERERS[layer.type].render(doc, layer, layerDimensions, item)
+      // Type-specific layer renderers
+      return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
     })
   },
 }
