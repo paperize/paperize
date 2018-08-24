@@ -293,7 +293,7 @@ fieldset#dimension-editor.fieldset
   }
 </script>
 
-<style>
+<style scoped>
   .menu {
     font-size: .8em;
   }
