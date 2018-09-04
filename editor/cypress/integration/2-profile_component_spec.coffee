@@ -21,6 +21,7 @@ describe "Profile component", ->
       cy.get('.name').contains "Avid Gamer"
 
     it "logs out when 'Sign Out' is clicked", ->
-      cy.get(".authenticated .menu a").click(force: true)
+      # cy.get(".authenticated .menu a").click(force: true)
+      cy.contains("Sign Out").click(force: true)
       cy.get(".unauthenticated")
       cy.get(".authenticated").should('not.exist')

@@ -1,6 +1,7 @@
 import store from "../../lib/store"
 import gameFixtures from "../../cypress/fixtures/games"
 import componentFixtures from "../../cypress/fixtures/components"
+import templateFixtures from "../../cypress/fixtures/templates"
 import assert from 'assert'
 
 describe "Games Store", ->
@@ -10,6 +11,7 @@ describe "Games Store", ->
 
       store.commit("setGames", gameFixtures)
       store.commit("setComponents", componentFixtures)
+      store.commit("setTemplates", templateFixtures)
 
       store.dispatch("setActiveGame", loveLetter.id)
       store.dispatch("setActiveComponent", store.getters.findAllGameComponents(loveLetter)[0].id)
