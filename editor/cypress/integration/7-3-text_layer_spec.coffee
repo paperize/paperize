@@ -10,7 +10,7 @@ describe "Text Layers", ->
   it "is created", ->
     cy.contains("[text] 0")
 
-  it.only "can be set to rectangle", ->
+  it "can be set to rectangle", ->
     cy.get(".text-layer-fields .text-content")
       .type("""
         n: {{}{{}n}}
