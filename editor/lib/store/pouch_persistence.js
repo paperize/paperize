@@ -18,6 +18,7 @@ const IGNORED_MUTATIONS = [
 let api = {
   db: null,
   initializeAndWatchStore(store) {
+    // call api.on for every store event
     store.subscribe(({ type }, state) => {
       api.on(store, type, state)
     })
