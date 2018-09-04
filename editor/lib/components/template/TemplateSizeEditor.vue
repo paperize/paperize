@@ -47,7 +47,7 @@ fieldset.fieldset
       .small-12.cell
         .input-group
           span.input-group-label Height
-          input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateHeight")
+          input.input-group-field(id="paper-height" type="number" step="0.01" min="0" v-model.number="templateHeight")
           span.input-group-label(title="inches") in.
 </template>
 

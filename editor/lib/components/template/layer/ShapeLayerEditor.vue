@@ -1,6 +1,6 @@
 <template lang="pug">
 .shape-layer-fields
-  fieldset.fieldset
+  fieldset.fieldset.shape-settings
     legend Shape
 
     select(v-model="shape")
@@ -8,7 +8,7 @@
       option(value="roundedRectangle") Rounded Rectangle
       option(value="ellipse") Ellipse
 
-  fieldset.fieldset
+  fieldset.fieldset.stroke-settings
     legend
       input(type="checkbox" v-model="strokePresent")
       = " Stroke? "
@@ -29,7 +29,7 @@
               strong Width
           input.input-group-field(id="stroke-width" type="number" step="0.01" v-model.number="strokeWidth")
 
-  fieldset.fieldset
+  fieldset.fieldset.fill-settings
     legend
       input(type="checkbox" v-model="fillPresent")
       = " Fill? "

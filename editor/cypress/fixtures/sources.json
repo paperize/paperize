@@ -96,5 +96,69 @@
         ]
       ]
     }
+  },
+  "characters": {
+    "id": "characters",
+    "name": "Characters",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          "Name",
+          "Influence"
+        ],
+        [
+          "Guinevere",
+          10
+        ],
+        [
+          "Trog",
+          7
+        ],
+        [
+          "Felix",
+          1
+        ],
+        [
+          "Conrad",
+          3
+        ],
+        [
+          "Ripley",
+          5
+        ]
+      ]
+    }
+  },
+  "tokens": {
+    "id": "tokens",
+    "name": "Tokens",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          "Quantity",
+          "Name",
+          "Abbr"
+        ],
+        [
+          20,
+          "Currency",
+          "$"
+        ],
+        [
+          50,
+          "Influence",
+          "I"
+        ],
+        [
+          100,
+          "Victory Points",
+          "VP"
+        ]
+      ]
+    }
   }
 }

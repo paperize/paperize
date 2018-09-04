@@ -56,7 +56,8 @@
                   a.button.tiny.success.set-source(@click="setSource(source)")
                     i.fas.fa-check
             .small-8.cell
-              p {{ source.name }}
+              p
+                a(@click="setSource(source)") {{ source.name }}
 
       .small-4.cell
         p ...from Google Sheets?
