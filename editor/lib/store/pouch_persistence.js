@@ -76,12 +76,12 @@ let api = {
       // Add the record ID and revision
       let record = { _id: STATE_KEY, _rev: lastRev, ...stateObject }
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         return this.db.put(record)
           .then((response) => {
             resolve(response.rev)
           })
-      }).catch({status: 409}, (error) => {
+      }).catch({status: 409}, () => {
         console.error("PouchDB conflict saving record:", record)
       })
     })

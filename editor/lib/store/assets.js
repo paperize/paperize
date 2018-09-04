@@ -21,7 +21,7 @@ const AssetsModule = {
   getters: {
     images: state => state.images,
 
-    findImage: state => imageId => assetStore.getImage(imageId),
+    findImage: () => imageId => assetStore.getImage(imageId),
 
     findImageByName: (state, getters) => name => {
       let foundImage = find(getters.images, { name })
@@ -49,7 +49,7 @@ const AssetsModule = {
       let promises = chain(files)
         .filter(file => IMAGE_MIME_CHECK.test(file.type))
         .map(file => {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             let reader = getFileReader()
             reader.onload = function(e) {
               resolve({
@@ -61,22 +61,22 @@ const AssetsModule = {
             reader.readAsDataURL(file)
           })
 
-          .tap((asset) => {
-            return assetStore.putImage(asset)
+            .tap((asset) => {
+              return assetStore.putImage(asset)
 
-            // Successfully stored, put an entry in the index
-            .then((response) => {
-              commit('addImageReference', { name: asset.name, id: asset._id })
-              return null
+              // Successfully stored, put an entry in the index
+                .then(() => {
+                  commit('addImageReference', { name: asset.name, id: asset._id })
+                  return null
+                })
             })
-          })
 
           // Failed to store, say something
-          .catch({ status: 409 }, (error) => {
-            console.log(`Failed to upload "${file.name}": This asset is already in the store!`)
-          })
+            .catch({ status: 409 }, () => {
+              console.log(`Failed to upload "${file.name}": This asset is already in the store!`)
+            })
         })
-      .value()
+        .value()
 
       return Promise.all(promises)
     },
