@@ -88,6 +88,10 @@ store.subscribe(({ type, payload }, state) => {
   if(type === 'become' && router.currentRoute.name === 'splash') {
     router.push({ name: 'gameManager' })
 
+  } else if(type === 'resetState') {
+    // No reason to be at a non-root URL if we're resetting state
+    router.push({ name: 'gameManager' })
+
   } else if(type === 'logout') {
     router.push({ name: 'splash' })
 
@@ -98,7 +102,6 @@ store.subscribe(({ type, payload }, state) => {
     router.push({ name: 'gameManager' })
 
   } else if(type === 'createComponent') {
-    console.log(payload)
     router.push({ name: 'componentEditor', params: { gameId: state.ui.activeGameId, componentId: payload.id } })
 
   } else if(type === 'destroyComponent') {
