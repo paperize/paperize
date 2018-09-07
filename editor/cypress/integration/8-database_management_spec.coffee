@@ -15,3 +15,7 @@ describe "Database Manager", ->
     cy.contains("Yes").click()
     cy.get('.games-total').contains("0")
     cy.url().should('match', /games$/)
+
+  it.only "can export as JSON", ->
+    cy.contains("avid_gamer@example.com").click()
+    cy.contains("Export").click()

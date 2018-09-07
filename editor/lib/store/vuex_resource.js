@@ -3,8 +3,8 @@ import Promise from 'bluebird'
 import { capitalize, camelCase, map, zip, filter, values, isString, isNumber } from 'lodash'
 import Vue from 'vue'
 
-// const VERBOSE = false
-const VERBOSE = (process.NODE_ENV !== "production")
+const VERBOSE = false
+// const VERBOSE = (process.NODE_ENV !== "production")
 
 const debug = (...args) => {
   if(VERBOSE) {

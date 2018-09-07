@@ -6,6 +6,10 @@ let api = {
   clear() {
     let userState = store.state.user
     store.commit("resetState", { user: userState })
+  },
+
+  getJSON() {
+    return JSON.stringify(store.state)
   }
 }
 

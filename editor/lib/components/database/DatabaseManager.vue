@@ -5,13 +5,14 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
       h2 Database Manager
       hr
 
+  .grid-x.grid-padding-x(v-if="selectedDatabase")
     .small-12.cell
-      a.button Export
-      a.button Import
+      a(@click="selectedDatabase = null") Back...
+      a.button(@click="exportDatabase") Export
       a.button.alert(@click="clearDatabaseConfirm") Clear
 
     .small-12.medium-6.cell
-      h3 Game Data
+      h3 Game Data ({{ selectedDatabaseSize }} bytes)
       dl
         dt Games:
         dd.games-total {{ allGames.length }}
@@ -31,6 +32,14 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
       dl
         dt Images:
         dd {{ images.length }}
+
+  .grid-x.grid-padding-x(v-else)
+    .small-12.cell
+      p
+        a(@click="selectedDatabase = true") avid_gamer@example.com
+
+  modal(name="JSON Export" height="100%" :pivotY="0.1" :scrollable="true")
+    textarea(@click="$event.target.select()") {{ jsonExport }}
 </template>
 
 <script>
@@ -38,7 +47,14 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
   import databaseController from '../../services/database_controller'
 
   export default {
-    computed: mapGetters([
+    data() {
+      return {
+        selectedDatabase: null,
+        jsonExport: {}
+      }
+    },
+
+    computed: { ...mapGetters([
       "allGames",
       "allComponents",
       "allSources",
@@ -46,9 +62,21 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
       "allLayers",
       "allDimensions",
       "images",
-    ]),
+      ]),
+
+      selectedDatabaseSize() {
+        // return this.selectedDatabased.length
+        return databaseController.getJSON().length
+      }
+    },
 
     methods: {
+      exportDatabase() {
+        // get the JSON of the db
+        this.jsonExport = databaseController.getJSON()
+        this.$modal.show("JSON Export")
+      },
+
       clearDatabaseConfirm() {
         // this.$modal.show("Confirmation")
         this.$modal.show('dialog', {
@@ -72,3 +100,9 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
     }
   }
 </script>
+
+<style scoped="true">
+  textarea {
+    height: inherit;
+  }
+</style>
