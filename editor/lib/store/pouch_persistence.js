@@ -15,6 +15,12 @@ const IGNORED_MUTATIONS = [
   "setShowSpinner"
 ]
 
+const LOCAL_STORAGE_DOUBLE = {
+  setItem() { },
+  getItem() { },
+  removeItem() { }
+}
+
 let api = {
   db: null,
   initializeAndWatchStore(store) {
@@ -33,20 +39,18 @@ let api = {
 
   getLocalStorage() {
     if(typeof localStorage === 'undefined') {
-      return {
-        setItem() { },
-        getItem() { },
-        removeItem() { }
-      }
+      // TODO: shouldn't this just be an error?
+      return LOCAL_STORAGE_DOUBLE
     } else {
       return localStorage
     }
   },
 
   openDatabase(dbName) {
-    return new Promise((resolve, reject) => {
-      // Close existing database and squelch error if it's not open
+    return new Promise((resolve) => {
+      // Close existing database
       this.closeDatabase().catch((error) => {
+        // Squelch the error if it wasn't actually open
         if(error.message !== "database is closed") {
           throw error
         }
@@ -103,7 +107,7 @@ let api = {
           resolve(record)
         })
         .catch((error) => { reject(error) })
-    }).catch({status: 404}, (error) => {
+    }).catch({status: 404}, () => {
       return null
     })
   },

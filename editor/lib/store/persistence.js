@@ -8,7 +8,7 @@
 let pouchPersistence = {
   initializeAndWatchStore(store) {
     console.log("No persistence layer.")
-    store.subscribe(({ type }, state) => {
+    store.subscribe(({ type }) => {
       if(type === "become") {
         store.dispatch("setStoreReady")
       }
