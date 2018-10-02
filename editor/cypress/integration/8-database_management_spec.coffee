@@ -1,4 +1,4 @@
-describe "Database Manager", ->
+xdescribe "Database Manager", ->
   beforeEach ->
     cy.loginAndEditGame()
     cy.contains("Database").click(force: true)
@@ -16,6 +16,6 @@ describe "Database Manager", ->
     cy.get('.games-total').contains("0")
     cy.url().should('match', /games$/)
 
-  it.only "can export as JSON", ->
+  it "can export as JSON", ->
     cy.contains("avid_gamer@example.com").click()
     cy.contains("Export").click()
