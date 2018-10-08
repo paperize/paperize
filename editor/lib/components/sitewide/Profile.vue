@@ -49,13 +49,6 @@ div(v-else)
   import auth from '../../auth'
 
   export default {
-    updated() {
-      try {
-        $(this.$el).foundation("destroy")
-      } catch(error) {}
-      $(this.$el).foundation()
-    },
-
     computed: {
       ...mapState(['user']),
 

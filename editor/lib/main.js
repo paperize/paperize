@@ -13,6 +13,17 @@ persistence.initializeAndWatchStore(store)
 import router from './routes'
 
 // Vue extensions
+import Vuetify from 'vuetify'
+import colors from 'vuetify/es5/util/colors'
+import 'vuetify/dist/vuetify.min.css'
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.blueGrey.lighten2,
+    secondary: colors.blueGrey.darken2,
+    accent: colors.lime.accent3
+  }
+})
+
 import Autocomplete from 'v-autocomplete'
 Vue.use(Autocomplete)
 
@@ -29,19 +40,18 @@ if(process.env.NODE_ENV == 'test') {
   window.paperize = { store }
 }
 
-import TitleBar from './components/sitewide/TitleBar.vue'
+import AppLayout from './components/layout/AppLayout.vue'
 
 let startApp = () => {
   // Top-level Vue component
   new Vue({
     router, store,
+    el: '#paperize-app',
     components: {
-      "title-bar": TitleBar
+      "app-layout": AppLayout
     },
-    // Render the TitleBar outside the router view
-    render: (h) => h("div", [h("title-bar"), h("router-view"), h("v-dialog")])
-    // Mount it here in the index.html
-  }).$mount('#paperize-app')
+    render: (h) => h("app-layout")
+  })
 }
 
 window.addEventListener('load', startApp)

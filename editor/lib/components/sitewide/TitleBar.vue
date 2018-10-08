@@ -20,11 +20,8 @@
   import Profile from './Profile.vue'
   import ImageManager from '../asset/ImageManager.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
-  import FoundationMixin from '../../mixins/foundation'
 
   export default {
-    mixins: [FoundationMixin],
-
     components: {
       "profile-component": Profile,
       "database-manager": DatabaseManager,
