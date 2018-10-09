@@ -8,14 +8,12 @@ v-toolbar(app)
       | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
 
   v-spacer
+  //-   database-manager
+  //-   image-manager
 
-  v-toolbar-items.hidden-sm-and-down
+  v-toolbar-items
     v-btn(flat) About
-    v-btn(flat color="success") Login
-
-//-   database-manager
-//-   image-manager
-//-   profile-component
+    login-btn
 </template>
 
 <script>
@@ -25,7 +23,7 @@ v-toolbar(app)
 
   export default {
     components: {
-      "profile-component": Profile,
+      "login-btn": Profile,
       "database-manager": DatabaseManager,
       "image-manager": ImageManager
     },

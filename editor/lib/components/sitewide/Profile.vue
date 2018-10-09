@@ -1,47 +1,44 @@
 <template lang="pug">
-div(v-if="user.authenticated")
-  ul.menu.dropdown.authenticated(data-dropdown-menu)
-    li
-      a(@click="$modal.show('Image Library')") Images
-    li
-      a.avatar
+v-menu(v-if="user.authenticated")
+  v-btn(flat slot="activator")
+    v-avatar
+      img(alt="avatar" :src="avatarSrc")
+
+  v-list
+    v-list-tile
+      v-list-tile-avatar
         img(alt="avatar" :src="avatarSrc")
-      ul.menu
-        li.name {{ user.name }}
-        li
-          a(@click="$modal.show('Database Manager')") Database
-        li
-          a(@click="logout()") Sign Out
+      v-list-tile-title {{ user.name }}
 
-div(v-else)
-  ul.menu.unauthenticated
-    li
-      a(@click='prepareForLogin') Sign In
+    v-list-tile(@click="$modal.show('Database Manager')")
+      v-list-tile-title Database
 
-  modal(name="Google Pop-up Helper")
-    .grid-x.grid-padding-x
-      .small-12.cell
-        h1(v-if="!loginError") Logging In With Google...
-        h1(v-else) Error Logging In:
-        hr
+    v-list-tile(@click="logout()")
+      v-list-tile-title Sign Out
 
-        .callout.primary(v-if="!loginError")
-          p Look for a pop-up window asking for your Google login and follow the instruction.
-
-        .callout.alert(v-else-if="loginError == 'popup_closed_by_user'")
-          p You closed the pop-up without logging in.
-
-        .callout.alert(v-else-if="loginError == 'popup_blocked_by_browser'")
-          p Your browser blocked the login pop-up. Enable pop-ups for this site and try again!
-
-        .callout.alert(v-else-if="loginError == 'access_denied'")
-          p You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.
-
-        .callout.alert(v-else)
-          p There was an unknown error logging in: {{ loginError }}
-
-      .small-12.cell(v-if="loginError")
-        a.button(@click="login") Try Again
+v-btn(v-else flat color="success" @click='prepareForLogin') Sign In
+  //- TODO: fix google helper modal
+  //-     h1(v-if="!loginError") Logging In With Google...
+  //-     h1(v-else) Error Logging In:
+  //-     hr
+  //-
+  //-     .callout.primary(v-if="!loginError")
+  //-       p Look for a pop-up window asking for your Google login and follow the instruction.
+  //-
+  //-     .callout.alert(v-else-if="loginError == 'popup_closed_by_user'")
+  //-       p You closed the pop-up without logging in.
+  //-
+  //-     .callout.alert(v-else-if="loginError == 'popup_blocked_by_browser'")
+  //-       p Your browser blocked the login pop-up. Enable pop-ups for this site and try again!
+  //-
+  //-     .callout.alert(v-else-if="loginError == 'access_denied'")
+  //-       p You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.
+  //-
+  //-     .callout.alert(v-else)
+  //-       p There was an unknown error logging in: {{ loginError }}
+  //-
+  //-   .small-12.cell(v-if="loginError")
+  //-     a.button(@click="login") Try Again
 </template>
 
 <script>
@@ -49,6 +46,12 @@ div(v-else)
   import auth from '../../auth'
 
   export default {
+    data() {
+      return {
+        showPopupHelper: true
+      }
+    },
+
     computed: {
       ...mapState(['user']),
 
@@ -63,7 +66,8 @@ div(v-else)
       ...mapActions(["login", "logout"]),
 
       prepareForLogin() {
-        this.$modal.show("Google Pop-up Helper")
+        // this.$modal.show("Google Pop-up Helper")
+        // this.showPopupHelper = true
         return this.login()
       },
     }
