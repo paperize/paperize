@@ -1,19 +1,21 @@
 <template lang="pug">
-.grid-container
-  database-manager
-  image-manager
-  .grid-x
-    .top-bar.small-12.cell
-      .top-bar-left
-        ul.menu
-          li
-            router-link(:to="{ name: homeLink }")
-              strong Paperize.io
-          li.build-status
-            a(target="_blank" :title="gitChanges" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45")
-              | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
-      .top-bar-right
-        profile-component
+v-toolbar(app)
+  v-toolbar-side-icon
+
+  router-link(:to="{ name: homeLink }")
+    v-tooltip
+      v-toolbar-title(slot="activator") Paperize.io
+      | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
+
+  v-spacer
+
+  v-toolbar-items.hidden-sm-and-down
+    v-btn.unauthenticated(flat) Login
+
+//-   database-manager
+//-   image-manager
+//-   profile-component
+
 </template>
 
 <script>
