@@ -10,12 +10,12 @@ v-toolbar(app)
   v-spacer
 
   v-toolbar-items.hidden-sm-and-down
-    v-btn.unauthenticated(flat) Login
+    v-btn(flat) About
+    v-btn(flat color="success") Login
 
 //-   database-manager
 //-   image-manager
 //-   profile-component
-
 </template>
 
 <script>
