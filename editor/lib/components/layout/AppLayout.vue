@@ -8,6 +8,9 @@ v-app
       router-view
 
   v-footer(app)
+    v-layout(row)
+      v-btn(flat href="/privacy-policy.html") Privacy Policy
+      v-spacer
 </template>
 
 <script>
