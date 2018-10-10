@@ -16,39 +16,37 @@ v-menu(v-if="user.authenticated")
     v-list-tile(@click="logout()")
       v-list-tile-title Sign Out
 
-v-btn(v-else flat color="success" @click='prepareForLogin') Sign In
-  //- TODO: fix google helper modal
-  //-     h1(v-if="!loginError") Logging In With Google...
-  //-     h1(v-else) Error Logging In:
-  //-     hr
-  //-
-  //-     .callout.primary(v-if="!loginError")
-  //-       p Look for a pop-up window asking for your Google login and follow the instruction.
-  //-
-  //-     .callout.alert(v-else-if="loginError == 'popup_closed_by_user'")
-  //-       p You closed the pop-up without logging in.
-  //-
-  //-     .callout.alert(v-else-if="loginError == 'popup_blocked_by_browser'")
-  //-       p Your browser blocked the login pop-up. Enable pop-ups for this site and try again!
-  //-
-  //-     .callout.alert(v-else-if="loginError == 'access_denied'")
-  //-       p You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.
-  //-
-  //-     .callout.alert(v-else)
-  //-       p There was an unknown error logging in: {{ loginError }}
-  //-
-  //-   .small-12.cell(v-if="loginError")
-  //-     a.button(@click="login") Try Again
+v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
+  v-dialog(v-model="showPopupHelper" max-width="500")
+    v-card(v-if="!loginError")
+      v-card-title(primary-title)
+        .headline Logging In With Google...
+      v-card-text Look for a pop-up window asking for your Google login and follow the instruction.
+
+    v-card(v-else)
+      v-card-title(primary-title)
+        .headline Error Logging In
+      v-card-text
+        v-alert(type="error" :value="true") {{ errorCodeInEnglish }}
+
+      v-card-actions
+        v-btn(@click="login") Try Again
 </template>
 
 <script>
   import { mapState, mapGetters, mapActions } from 'vuex'
   import auth from '../../auth'
 
+  const ERROR_CODE_MAP = {
+    popup_closed_by_user: "You closed the pop-up without logging in.",
+    popup_blocked_by_browser: "Your browser blocked the login pop-up. Enable pop-ups for this site and try again!",
+    access_denied: "You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.",
+  }
+
   export default {
     data() {
       return {
-        showPopupHelper: true
+        showPopupHelper: false
       }
     },
 
@@ -59,6 +57,10 @@ v-btn(v-else flat color="success" @click='prepareForLogin') Sign In
 
       avatarSrc() {
         return this.user.avatarSrc || "/images/blank-avatar.png"
+      },
+
+      errorCodeInEnglish() {
+        return ERROR_CODE_MAP[this.loginError] || "There was an unknown error logging in: {{ this.loginError }}"
       }
     },
 
@@ -66,31 +68,11 @@ v-btn(v-else flat color="success" @click='prepareForLogin') Sign In
       ...mapActions(["login", "logout"]),
 
       prepareForLogin() {
-        // this.$modal.show("Google Pop-up Helper")
-        // this.showPopupHelper = true
+        // Helpful information inside our app about the Google login process
+        this.showPopupHelper = true
+        // Start the Google login process
         return this.login()
       },
     }
   }
 </script>
-
-<style scoped>
-  .dropdown.menu > li.is-dropdown-submenu-parent > a::after {
-    display: none;
-  }
-
-  .menu.dropdown .avatar {
-    padding: 0;
-  }
-
-  .name {
-    padding: .7rem 1rem;
-    font-weight: bold;
-  }
-
-  .avatar img {
-    max-width: 40px;
-    max-height: 40px;
-    border-radius: 50px;
-  }
-</style>
