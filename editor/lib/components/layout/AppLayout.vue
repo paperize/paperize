@@ -4,8 +4,7 @@ v-app
   title-bar
 
   v-content
-    v-container(fluid)
-      router-view
+    router-view
 
   v-footer(app)
     v-layout(row)
