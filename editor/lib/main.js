@@ -30,9 +30,6 @@ Vue.use(Autocomplete)
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
-import VModal from 'vue-js-modal'
-Vue.use(VModal, { dialog: true })
-
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
