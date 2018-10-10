@@ -2,9 +2,11 @@
 v-toolbar(app)
   v-toolbar-side-icon
 
-  router-link(:to="{ name: homeLink }")
+  v-toolbar-title
+    router-link(:to="{ name: homeLink }") Paperize.io
+
     v-tooltip
-      v-toolbar-title(slot="activator") Paperize.io
+      span.caption(slot="activator")= " ver.A4"
       | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
 
   v-spacer
