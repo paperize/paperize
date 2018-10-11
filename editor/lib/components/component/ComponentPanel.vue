@@ -1,14 +1,13 @@
 <template lang="pug">
-.component-panel.grid-y
-  .small-12.cell
-    h4 Components
+v-layout(column).component-panel
+  v-flex(sm12)
+    .headline Components
 
     ul.menu
       li
         a(@click="createComponentAndShowForm") New Component
 
-    .grid-x
-      component-card(v-for="component in components" :key="component.id" :component="component")
+  component-card(v-for="component in components" :key="component.id" :component="component")
 </template>
 
 <script>

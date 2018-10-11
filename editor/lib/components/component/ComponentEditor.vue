@@ -1,9 +1,9 @@
 <template lang="pug">
 div
-  .grid-x.grid-margin-x
+  v-layout(row)
     //- Source status
-    #source-editor.small-4.medium-6.cell
-      h4
+    v-flex#source-editor(sm4 md6)
+      .headline
         i.fas.fa-table
         |  Source
 
@@ -33,13 +33,13 @@ div
         p
           strong This component does not have a data Source set.
 
-        .grid-x.grid-margin-x
-          .medium-auto.cell
-          .medium-6.cell
+        v-layout
+          //- .medium-auto.cell
+          v-flex(md6)
             a.button(@click="openSourceManager()") Set a Source...
-          .medium-auto.cell
+          //- .medium-auto.cell
 
-      modal(name="Source Manager" width="90%" height="auto" :pivotY="0.25" :scrollable="true")
+      //- modal(name="Source Manager" width="90%" height="auto" :pivotY="0.25" :scrollable="true")
         source-manager(:component="component")
 
         button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Source Manager')")
@@ -81,7 +81,7 @@ div
             i.fas.fa-arrow-left
             em  You need to set a data Source before you can get started with Templates.
 
-      modal(name="Template Manager" height="auto" width="98%" :pivotY=".15" :scrollable="true")
+      //- modal(name="Template Manager" height="auto" width="98%" :pivotY=".15" :scrollable="true")
         template-manager(:component="component")
 
         button.close-button(aria-label="Close modal" type="button" @click="closeTemplateManager")

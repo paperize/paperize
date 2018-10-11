@@ -1,11 +1,11 @@
 <template lang="pug">
-.game-panel.grid-x.grid-padding.x
-  .small-6.cell
-    h1 {{ game.title || "[No title]" }}
+v-layout(row fluid).game-panel
+  v-flex(sm6)
+    .headline {{ game.title || "[No title]" }}
 
-  .small-6.cell
-    .grid-x
-      .small-12.cell
+  v-flex(sm6)
+    v-layout(row fluid)
+      v-flex(sm12)
         ul.menu
           li
             .button-group
@@ -20,8 +20,8 @@
           li
             a(@click="confirmDeletion") Delete Game
 
-  game-form(:game="game")
-  print-settings
+  //- game-form(:game="game")
+  //- print-settings
 </template>
 
 <script>

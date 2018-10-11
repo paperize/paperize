@@ -1,17 +1,18 @@
 <template lang="pug">
 div(v-if="!game")
   p no game selected
-.grid-container(v-else)
+
+v-container(v-else fluid)
   game-panel(:game="game")
 
-  .grid-x.grid-padding.x
-    .small-4.medium-3.large-2.cell
+  v-layout(row)
+    v-flex(sm4 md3 lg2)
       component-panel(:components="findAllGameComponents(game)")
 
-    .small-8.medium-9.large-10.cell
+    v-flex(sm8 md9 lg10)
       .active-component
         component-editor(v-if="activeComponent" :component="activeComponent")
-        h2(v-else) No Component Selected
+        .headline(v-else) No Component Selected
 </template>
 
 <script>

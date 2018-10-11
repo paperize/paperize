@@ -1,16 +1,16 @@
 <template lang="pug">
-.game.card.small-6.medium-4.large-3.cell(:id="`game-${ game.id }`")
-  .card-divider
-    h4 {{ game.title || "[No title]" }}
+v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
+  v-card
+    v-card-title
+      .headline {{ game.title || "[No title]" }}
 
-  img(v-bind:src="game.coverArt")
+    v-responsive
+      img(:src="game.coverArt")
 
-  .card-section
-    ul.menu
-      li
+    v-card-actions
+      v-btn
         router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
-      li
-        a.small.button.alert(@click="confirmDeletion()") Delete
+      v-btn(@click="confirmDeletion()") Delete
 </template>
 
 <script>

@@ -1,8 +1,8 @@
 <template lang="pug">
-.grid-container
-  .grid-x.grid-margin-x
-    .small-12.cell
-      h2 Game Manager
+v-container(fluid)
+  v-layout(row wrap)
+    v-flex(sm12)
+      .headline Game Manager
 
       ul.menu
         li
@@ -10,11 +10,9 @@
         li
           a(@click="$modal.show('Game Modal')") New Game
 
-    .small-12.cell
-      .grid-x.grid-margin-x
+    v-flex(sm12)
+      v-layout(row wrap)
         game-card(v-for="game in allGames" :key="game.id" :game="game")
-
-    game-form
 </template>
 
 <script>
