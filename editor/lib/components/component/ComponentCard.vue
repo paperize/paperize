@@ -1,6 +1,5 @@
 <template lang="pug">
 v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive")
-  //- component-form(:component="component")
   v-card
     v-card-title
       .headline {{ component.title || "[No title]" }} ({{ totalItems }})
@@ -9,23 +8,18 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
       p {{ component.type || "[No type]" }}
 
     v-card-actions
-      v-btn(@click="showEditModal") Edit
+      v-btn(@click="$emit('edit-me')") Edit
       v-btn(color="alert" @click.stop="confirmDeletion") Delete
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import ComponentForm from './ComponentForm.vue'
 
   export default {
     props: {
       component: {
         required: true
       }
-    },
-
-    components: {
-      "component-form": ComponentForm
     },
 
     computed: {
@@ -38,10 +32,6 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
 
     methods: {
       ...mapActions(["destroyGameComponent"]),
-
-      showEditModal() {
-        this.$modal.show(`edit-component-modal-${this.component.id}`)
-      },
 
       setActive() {
         if(this.isActiveComponent()) { return }

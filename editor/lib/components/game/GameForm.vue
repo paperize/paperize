@@ -1,5 +1,5 @@
 <template lang="pug">
-v-form(method="post" ref="gameForm" v-on:submit.prevent="submitGame")
+v-form(ref="gameForm" v-on:submit.prevent="submitGame")
   v-card
     v-card-title
       .headline Design a New Game
