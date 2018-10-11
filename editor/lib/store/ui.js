@@ -1,5 +1,3 @@
-import { find } from 'lodash'
-
 const UIModule = {
   state: {
     activeGameId:       null,
@@ -76,7 +74,7 @@ const UIModule = {
       commit("clearActiveGame")
     },
 
-    setActiveComponent({ commit, getters, rootGetters }, componentId) {
+    setActiveComponent({ commit, rootGetters }, componentId) {
       let component = rootGetters.findComponent(componentId)
 
       commit("setActiveComponent", { component })
