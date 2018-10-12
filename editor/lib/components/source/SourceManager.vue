@@ -9,8 +9,8 @@ v-card#source-manager
         dt Current Source:
         dd {{ componentSource.name }}
 
-      v-btn(small color="alert" @click="unlinkComponentSource(component)")
-        v-icon(left) times
+      v-btn(small color="error" @click="unlinkComponentSource(component)")
+        v-icon(left) delete
         | Change Now...
 
       v-btn(small @click="createOrUpdateSourceById(componentSource.id)")
@@ -18,46 +18,37 @@ v-card#source-manager
         | Refresh Now
 
     template(v-else)
-      .small-12.cell
-        strong You need to load a component source...
+      strong No source set.
 
-      .small-4.cell
-        p ...from Paperize examples?
+      template(v-if="allSources.length == 0")
+        p You have not imported any sources.
 
-      .small-4.cell
-        p ...from your past sources?
+      template(v-for="source in allSources")
+        v-btn.delete-source(small color="error" @click="confirmDeletion(source)")
+          v-icon delete
+        v-btn.set-source(small color="success" @click="setSource(source)")
+          v-icon check
 
-        template(v-if="allSources.length == 0")
-          p You have not imported any sources.
+        a(@click="setSource(source)") {{ source.name }}
 
-        .grid-x(v-else)
-          template(v-for="source in allSources")
-            .shrink.cell
-              ul.menu
-                li
-                  a.button.tiny.alert.delete-source(@click="confirmDeletion(source)")
-                    i.fas.fa-times
-                li
-                  a.button.tiny.success.set-source(@click="setSource(source)")
-                    i.fas.fa-check
-            .small-8.cell
-              p
-                a(@click="setSource(source)") {{ source.name }}
+      v-dialog(v-model="showSourceDeleteDialog" max-width="500")
+        v-card
+          v-card-title
+            .headline Are you sure you want to purge the source "{{ sourceToDelete.name }}" from Paperize?
+          v-card-text It is in use in X components across Y games.
+          v-card-actions
+            v-btn(@click="showSourceDeleteDialog = false") No
+            v-btn(@click="deleteSource") Yes
 
-      .small-4.cell
-        p ...from Google Sheets?
-        .grid-x
-          .auto.cell
-          .shrink.cell
-            a.button(@click="$modal.show('source-explorer')") Browse Google Sheets
-            source-explorer
-          .auto.cell
-        .grid-x
-          .auto.cell
-          .shrink.cell
-            a.button(@click="$modal.show('source-paste-form')") Paste a Link
-            source-paste-form
-          .auto.cell
+      p ...from Google Sheets?
+
+      v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
+      v-dialog(v-model="showSourceExplorerDialog")
+        source-explorer
+
+      v-btn(@click="showSourcePasteDialog = true") Paste a Link
+      v-dialog(v-model="showSourcePasteDialog")
+        source-paste-form
 </template>
 
 <script>
@@ -71,6 +62,15 @@ export default {
   components: {
     'source-paste-form': SourcePasteForm,
     'source-explorer': SourceExplorer
+  },
+
+  data() {
+    return {
+      showSourceExplorerDialog: false,
+      showSourcePasteDialog: false,
+      showSourceDeleteDialog: false,
+      sourceToDelete: {}
+    }
   },
 
   computed: {
@@ -93,26 +93,18 @@ export default {
 
     setSource(source) {
       this.linkComponentSource({ component: this.component, source })
-      this.$modal.hide("Source Manager")
+      this.$emit('close-dialog')
     },
 
     confirmDeletion(source) {
-      this.$modal.show('dialog', {
-        title: `Are you sure you want to purge the source "${source.name}" from Paperize?`,
-        text: "It is in use in X components across Y games.",
-        buttons: [
-          {
-            title: "No",
-            default: true
-          }, {
-            title: "Yes",
-            handler: () => {
-              this.destroySource(source)
-              this.$modal.hide('dialog')
-            }
-          }
-        ]
-      })
+      this.sourceToDelete = source
+      this.showSourceDeleteDialog = true
+    },
+
+    deleteSource() {
+      this.destroySource(this.sourceToDelete)
+      this.sourceToDelete = {}
+      this.showSourceDeleteDialog = false
     }
   }
 }
