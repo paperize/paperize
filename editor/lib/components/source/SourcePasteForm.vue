@@ -1,5 +1,5 @@
 <template lang="pug">
-modal(name="source-paste-form" height="auto" :pivotY="0.25" :scrollable="true")
+v-dialog
   form(@submit.prevent="importSourceViaPaste()")
     .grid-x.grid-padding-x
       .small-12.cell

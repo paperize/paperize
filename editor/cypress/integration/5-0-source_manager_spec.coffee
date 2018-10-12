@@ -7,8 +7,7 @@ describe "Component Source manager", ->
     cy.get("#source-editor")
       .contains("This component does not have a data Source set.")
 
-    cy.get(".button")
-      .contains("Set a Source...")
+    cy.contains("Set a Source...")
 
   context "with existing sources", ->
     beforeEach ->
@@ -16,9 +15,8 @@ describe "Component Source manager", ->
 
     describe "no source selected", ->
       beforeEach ->
-        cy.get(".button")
-        .contains("Set a Source...")
-        .click()
+        cy.contains("Set a Source...")
+          .click()
 
       it "prompts to set a source", ->
         cy.get("#source-manager").within ->
@@ -32,7 +30,7 @@ describe "Component Source manager", ->
           cy.contains("Pandemic V2")
             .should("be.visible")
 
-      it "allows me to select a source", ->
+      it.only "allows me to select a source", ->
         cy.get("#source-manager .set-source")
           .first()
           .click()

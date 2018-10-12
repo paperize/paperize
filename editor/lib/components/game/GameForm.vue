@@ -1,14 +1,14 @@
 <template lang="pug">
-v-form(ref="gameForm" v-on:submit.prevent="submitGame")
+v-form(ref="gameForm" @submit.prevent="submitGame")
   v-card
     v-card-title
-      .headline Design a New Game
+      .headline {{ headlineText }}
 
     v-card-text
       v-text-field(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
     v-card-actions
-      v-btn(small color="success" @click="submitGame") Start Designing
+      v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
 </template>
 
 <script>
@@ -30,6 +30,11 @@ v-form(ref="gameForm" v-on:submit.prevent="submitGame")
       }
     },
 
+    computed: {
+      headlineText() { return this.game.id ? `Editing ${this.game.title}` : "Design a New Game" },
+      submitButtonText() { return this.game.id ? `Update` : "Start Designing" },
+    },
+
     methods: {
       ...mapActions(["createGame", "updateGame"]),
 
@@ -40,6 +45,8 @@ v-form(ref="gameForm" v-on:submit.prevent="submitGame")
           } else {
             this.createGame({ title: this.gameTitle })
           }
+
+          this.$emit("close-dialog")
         }
       }
     }

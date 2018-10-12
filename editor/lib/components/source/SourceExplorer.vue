@@ -1,5 +1,5 @@
 <template lang="pug">
-modal(name="source-explorer" height="auto" :pivotY="0.25" :scrollable="true")
+v-dialog
   .grid-x.grid-padding-x
     .small-12.cell
       h2 Browse Your Google Sheets

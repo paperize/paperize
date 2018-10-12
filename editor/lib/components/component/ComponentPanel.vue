@@ -42,6 +42,3 @@ v-layout(column).component-panel
     }
   }
 </script>
-
-<style>
-</style>

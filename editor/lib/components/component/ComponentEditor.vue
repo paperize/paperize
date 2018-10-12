@@ -34,16 +34,10 @@ div
           strong This component does not have a data Source set.
 
         v-layout
-          //- .medium-auto.cell
           v-flex(md6)
-            a.button(@click="openSourceManager()") Set a Source...
-          //- .medium-auto.cell
-
-      //- modal(name="Source Manager" width="90%" height="auto" :pivotY="0.25" :scrollable="true")
-        source-manager(:component="component")
-
-        button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Source Manager')")
-          span(aria-hidden="true") &times;
+            v-btn(@click="showSourceManager = true") Set a Source...
+            v-dialog(v-model="showSourceManager")
+              source-manager(:component="component")
 
     //- Template status
     #template-editor.small-8.medium-6.cell
@@ -107,7 +101,8 @@ div
     data() {
       return {
         // TODO: fix this required preview-hiding behavior due to multiple previewers
-        editingTemplate: false
+        editingTemplate: false,
+        showSourceManager: false
       }
     },
 

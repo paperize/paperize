@@ -6,22 +6,34 @@ v-layout(row fluid).game-panel
   v-flex(sm6)
     v-layout(row fluid)
       v-flex(sm12)
-        ul.menu
-          li
-            .button-group
-              a.button(@click="printGame()")
-                i.fas.fa-file-pdf
-                |  Print Game
-              a.button(title="Print Settings" @click="openPrintSettings()")
-                i.fas.fa-cog
+        v-btn(small @click="printGame()")
+          v-icon(left) photo_library
+          | Print Game
 
-          li
-            a(@click="$modal.show('Game Modal')") Edit Game
-          li
-            a(@click="confirmDeletion") Delete Game
+        v-btn(small title="Print Settings" @click="openPrintSettings()")
+          v-icon(left) settings
+          |  Print Settings
+          //- print-settings
 
-  //- game-form(:game="game")
-  //- print-settings
+        v-btn(small @click="showEditDialog = true")
+          v-icon(left) edit
+          | Edit Game
+
+          v-dialog(v-model="showEditDialog" max-width="500")
+            game-form(:game="game" @close-dialog="showEditDialog = false")
+
+        v-btn(small @click="showDeleteDialog = true")
+          v-icon(left) delete
+          | Delete Game
+
+          v-dialog(v-model="showDeleteDialog" max-width="500")
+            v-card
+              v-card-title
+                .headline Are you sure you want to delete the Game "{{ game.title }}"?
+              v-card-text It has X Components and was last printed Y.
+              v-card-actions
+                v-btn(@click="showDeleteDialog = false") No
+                v-btn(@click="deleteGame") Yes
 </template>
 
 <script>
@@ -38,27 +50,18 @@ v-layout(row fluid).game-panel
       'print-settings': PrintSettings
     },
 
+    data() {
+      return {
+        showEditDialog: false,
+        showDeleteDialog: false
+      }
+    },
+
     methods: {
       ...mapActions(["destroyGame"]),
 
-      confirmDeletion() {
-        this.$modal.show('dialog', {
-          title: `Are you sure you want to delete the Game "${this.game.title}"?`,
-          text: `It has X Components and was last printed Y.`,
-          buttons: [
-            {
-              title: 'No',
-              default: true
-            },
-            {
-              title: 'Yes',
-              handler: () => {
-                this.destroyGame(this.game)
-                this.$modal.hide('dialog')
-              }
-            }
-         ]
-        })
+      deleteGame() {
+        return this.destroyGame(this.game)
       },
 
       printGame() {

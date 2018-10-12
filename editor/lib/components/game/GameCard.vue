@@ -10,7 +10,15 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
     v-card-actions
       v-btn
         router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
-      v-btn(@click="confirmDeletion()") Delete
+      v-btn(@click="showDeleteDialog = true") Delete
+        v-dialog(v-model="showDeleteDialog" max-width="500")
+          v-card
+            v-card-title
+              .headline Are you sure you want to delete the Game "{{ game.title }}"?
+            v-card-text It has X Components and was last printed Y.
+            v-card-actions
+              v-btn(@click="showDeleteDialog = false") No
+              v-btn(@click="deleteGame") Yes
 </template>
 
 <script>
@@ -23,8 +31,19 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
       }
     },
 
+    data() {
+      return {
+        showDeleteDialog: false
+      }
+    },
+
     methods: {
       ...mapActions(["destroyGame"]),
+
+      deleteGame() {
+        this.destroyGame(this.game)
+      },
+
       confirmDeletion() {
         this.$modal.show('dialog', {
           title: 'Are you sure you want to delete this game?',

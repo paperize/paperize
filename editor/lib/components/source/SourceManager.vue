@@ -1,36 +1,21 @@
 <template lang="pug">
-#source-manager
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Source Manager
+v-card#source-manager
+  v-card-title
+    .headline Source Manager
 
-      hr
-
+  v-card-text
     template(v-if="componentSource")
-      .shrink.cell
-        dl
-          dt Current Source:
-          dd {{ componentSource.name }}
+      dl
+        dt Current Source:
+        dd {{ componentSource.name }}
 
-      .auto.cell
-        a.button.small.alert(@click="unlinkComponentSource(component)")
-          i.fas.fa-times
-          |  Change Now...
+      v-btn(small color="alert" @click="unlinkComponentSource(component)")
+        v-icon(left) times
+        | Change Now...
 
-      .small-12.cell
-        dl
-          dt From:
-          dd Google Spreadsheets
-
-      .shrink.cell
-        dl
-          dt Last Updated:
-          dd a few minutes ago
-
-      .auto.cell
-        a.button.small(@click="createOrUpdateSourceById(componentSource.id)")
-          i.fas.fa-sync
-          |  Refresh Now
+      v-btn(small @click="createOrUpdateSourceById(componentSource.id)")
+        v-icon(left) sync
+        | Refresh Now
 
     template(v-else)
       .small-12.cell
