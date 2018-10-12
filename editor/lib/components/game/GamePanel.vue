@@ -10,10 +10,12 @@ v-layout(row fluid).game-panel
           v-icon(left) photo_library
           | Print Game
 
-        v-btn(small title="Print Settings" @click="openPrintSettings()")
+        v-btn(small title="Print Settings" @click="showPrintSettingsDialog = true")
           v-icon(left) settings
-          |  Print Settings
-          //- print-settings
+          | Print Settings
+
+          v-dialog(v-model="showPrintSettingsDialog" max-width="500")
+            print-settings
 
         v-btn(small @click="showEditDialog = true")
           v-icon(left) edit
@@ -53,7 +55,8 @@ v-layout(row fluid).game-panel
     data() {
       return {
         showEditDialog: false,
-        showDeleteDialog: false
+        showDeleteDialog: false,
+        showPrintSettingsDialog: false
       }
     },
 
@@ -66,10 +69,6 @@ v-layout(row fluid).game-panel
 
       printGame() {
         pdfRenderer.renderGameToPdf(this.game)
-      },
-
-      openPrintSettings() {
-        this.$modal.show('Print Settings')
       }
     }
   }
