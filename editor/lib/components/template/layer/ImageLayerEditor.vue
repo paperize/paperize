@@ -82,6 +82,9 @@
             option(value="top") Top
             option(value="middle") Middle
             option(value="bottom") Bottom
+v-layout(column)
+  v-flex(xs12 v-if="imageNameStatic")
+    v-autocomplete(v-model="imageName" :items="imageItems" box label="Select an Image")
 </template>
 
 <script>

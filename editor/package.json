@@ -82,7 +82,6 @@
     "pouchdb-mapreduce": "^6.3.4",
     "pouchdb-replication": "^6.3.4",
     "uuid": "^3.1.0",
-    "v-autocomplete": "^1.8.1",
     "vue": "^2.5.16",
     "vue-async-computed": "^3.3.1",
     "vue-loader": "^15.2.4",

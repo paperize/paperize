@@ -24,9 +24,6 @@ Vue.use(Vuetify, {
   }
 })
 
-import Autocomplete from 'v-autocomplete'
-Vue.use(Autocomplete)
-
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
