@@ -30,7 +30,7 @@ describe "Component Source manager", ->
           cy.contains("Pandemic V2")
             .should("be.visible")
 
-      it.only "allows me to select a source", ->
+      it "allows me to select a source", ->
         cy.get("#source-manager .set-source")
           .first()
           .click()
@@ -54,7 +54,7 @@ describe "Component Source manager", ->
 
     describe "with a source selected", ->
       beforeEach ->
-        cy.get(".button")
+        cy.get(".v-btn")
           .contains("Set a Source...")
           .click()
 
@@ -83,7 +83,7 @@ describe "Component Source manager", ->
       context "editing the source", ->
         beforeEach ->
           cy.get('#source-editor').within ->
-            cy.get(".button")
+            cy.get(".v-btn")
               .contains("Edit")
               .click()
 

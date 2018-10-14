@@ -2,9 +2,9 @@ describe "Shape Layers", ->
   beforeEach ->
     cy.loginAndEditGame()
     cy.get("#template-editor").within ->
-      cy.contains("Edit").click()
+      cy.contains("edit").click()
 
-    cy.contains("New Layer").click()
+    cy.contains("library_add").click()
     cy.contains("Shape").click()
 
   it "is created", ->
