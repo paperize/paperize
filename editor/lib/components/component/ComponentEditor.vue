@@ -1,11 +1,7 @@
 <template lang="pug">
-div
-  v-layout(row)
-    //- Source status
-    source-panel(:component="component")
-
-    //- Template status
-    template-panel(:component="component")
+v-layout(row)
+  source-panel(:component="component")
+  template-panel(:component="component")
 </template>
 
 <script>

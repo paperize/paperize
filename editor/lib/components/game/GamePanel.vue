@@ -1,9 +1,9 @@
 <template lang="pug">
 v-layout(row fluid).game-panel
-  v-flex(sm6)
+  v-flex(xs12 md4)
     .headline {{ game.title || "[No title]" }}
 
-  v-flex(sm6)
+  v-flex(xs12 md8)
     v-layout(row fluid)
       v-flex(sm12)
         v-btn(small @click="printGame()")

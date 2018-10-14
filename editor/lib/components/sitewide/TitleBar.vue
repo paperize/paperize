@@ -1,7 +1,5 @@
 <template lang="pug">
 v-toolbar(app)
-  v-toolbar-side-icon
-
   v-toolbar-title
     router-link(:to="{ name: homeLink }") Paperize.io
 

@@ -9,7 +9,7 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
 
     v-card-actions
       v-btn(@click="$emit('edit-me')") Edit
-      v-btn(color="alert" @click.stop="confirmDeletion") Delete
+      v-btn(color="red" @click.stop="confirmDeletion") Delete
 </template>
 
 <script>

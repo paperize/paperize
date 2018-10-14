@@ -1,55 +1,35 @@
 <template lang="pug">
-.shape-layer-fields
-  fieldset.fieldset.shape-settings
-    legend Shape
+fieldset.fieldset.shape-settings
+  legend Shape
 
-    select(v-model="shape")
-      option(value="rectangle") Rectangle
-      option(value="roundedRectangle") Rounded Rectangle
-      option(value="ellipse") Ellipse
+  v-select(v-model="shape" :items="shapeOptions" label="Shape")
 
-  fieldset.fieldset.stroke-settings
-    legend
-      input(type="checkbox" v-model="strokePresent")
-      = " Stroke? "
-      i.fas.fa-edit
+  v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
+  v-text-field(v-if="strokePresent" type="color" v-model="strokeColor" label="Color")
+  v-text-field(v-if="strokePresent" type="number" step="0.01" v-model.number="strokeWidth")
 
-    .grid-x.grid-margin-x(v-if="strokePresent")
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="stroke-color")
-              strong Color
-          input.input-group-field(id="stroke-color" type="color" v-model="strokeColor")
-
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="stroke-width")
-              strong Width
-          input.input-group-field(id="stroke-width" type="number" step="0.01" v-model.number="strokeWidth")
-
-  fieldset.fieldset.fill-settings
-    legend
-      input(type="checkbox" v-model="fillPresent")
-      = " Fill? "
-      i.fas.fa-pen-square
-
-    .grid-x.grid-margin-x(v-if="fillPresent")
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="fill-color")
-              strong Color
-          input.input-group-field(id="fill-color" type="color" v-model.number="fillColor")
+  v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
+  v-text-field(v-if="fillPresent" type="color" v-model="fillColor" label="Color")
 </template>
 
 <script>
   import { mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../../../store/component_helper'
 
+  const shapeOptions = [
+    { value: "rectangle", text: "Rectangle" },
+    { value: "roundedRectangle", text: "Rounded Rectangle" },
+    { value: "ellipse", text: "Ellipse" },
+  ]
+
   export default {
     props: ["layer"],
+
+    data() {
+      return {
+        shapeOptions
+      }
+    },
 
     computed: computedVModelUpdateAll("layer", "updateLayer", [
       "shape",

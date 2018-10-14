@@ -20,9 +20,6 @@ v-card#source-manager
     template(v-else)
       strong No source set.
 
-      template(v-if="allSources.length == 0")
-        p You have not imported any sources.
-
       template(v-for="source in allSources")
         v-btn.delete-source(small color="error" @click="confirmDeletion(source)")
           v-icon delete
@@ -39,8 +36,6 @@ v-card#source-manager
           v-card-actions
             v-btn(@click="showSourceDeleteDialog = false") No
             v-btn(@click="deleteSource") Yes
-
-      p ...from Google Sheets?
 
       v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
       v-dialog(v-model="showSourceExplorerDialog")

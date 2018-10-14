@@ -1,38 +1,15 @@
 <template lang="pug">
 div
   template(v-if="!currentItem")
-    p No items to render.
+    p Nothing to render.
 
   template(v-else)
-    .grid-x
-      .auto.cell
-      .shrink.cell
-        ul.menu.horizontal
-          li
-            a(@click="previousItem") &lt;&lt;
-          li
-            | Item {{ currentItemIndex + 1 }} / {{ totalItems }}
-          li
-            a(@click="nextItem") &gt;&gt;
-      .auto.cell
+    v-pagination(v-model="currentItemIndex" :length="totalItems")
 
-    .grid-x
-      .auto.cell
-      .shrink.cell
-        template-renderer(:game="game" :component="component" :item="currentItem")
-      .auto.cell
+    v-flex
+      template-renderer(:game="game" :component="component" :item="currentItem")
 
-    .grid-x
-      .auto.cell
-      .shrink.cell
-        ul.menu.horizontal
-          li
-            a(@click="previousItem") &lt;&lt;
-          li
-            | Item {{ currentItemIndex + 1 }} / {{ totalItems }}
-          li
-            a(@click="nextItem") &gt;&gt;
-      .auto.cell
+    v-pagination(v-model="currentItemIndex" :length="totalItems")
 </template>
 
 <script>
@@ -49,7 +26,7 @@ div
 
     data() {
       return {
-        currentItemIndex: 0,
+        currentItemIndex: 1,
       }
     },
 
@@ -65,18 +42,8 @@ div
       },
 
       currentItem() {
-        return this.items[this.currentItemIndex]
+        return this.items[this.currentItemIndex-1]
       },
     },
-
-    methods: {
-      previousItem() {
-        this.currentItemIndex = clamp(this.currentItemIndex - 1, 0, this.totalItems - 1)
-      },
-
-      nextItem() {
-        this.currentItemIndex = clamp(this.currentItemIndex + 1, 0, this.totalItems - 1)
-      },
-    }
   }
 </script>

@@ -1,6 +1,6 @@
 <template lang="pug">
 div(v-if="findComponentTemplate(component)")
-  template-editor(:component="component")
+  template-editor(:component="component" @close-dialog="$emit('close-dialog')")
 
 div(v-else)
   .grid-x.grid-padding-x
