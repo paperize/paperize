@@ -3,25 +3,19 @@ describe "Profile component", ->
     beforeEach ->
       cy.visit("/")
 
-    it "we see .unauthenticated elements", ->
-      cy.get(".unauthenticated")
-      cy.get(".authenticated").should('not.exist')
+    it "we see Sign In", ->
+      cy.contains("Sign In")
 
   context "with login", ->
     beforeEach ->
       cy.login()
 
-    it "we see .authenticated elements", ->
-      cy.get(".authenticated")
-      cy.get(".unauthenticated").should('not.exist')
+    it "we see our name", ->
+      cy.contains("Avid Gamer")
 
-    it "profile info is visible", ->
-      cy.get('.avatar')
-
-      cy.get('.name').contains "Avid Gamer"
+    it "we see Sign Out", ->
+      cy.contains("Sign Out")
 
     it "logs out when 'Sign Out' is clicked", ->
-      # cy.get(".authenticated .menu a").click(force: true)
       cy.contains("Sign Out").click(force: true)
-      cy.get(".unauthenticated")
-      cy.get(".authenticated").should('not.exist')
+      cy.contains("Sign In")

@@ -5,7 +5,7 @@ v-form(ref="gameForm" @submit.prevent="submitGame")
       .headline {{ headlineText }}
 
     v-card-text
-      v-text-field(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
+      v-text-field#game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}

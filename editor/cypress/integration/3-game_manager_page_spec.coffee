@@ -1,7 +1,6 @@
 describe "Game Manager page", ->
-
   context "when not logged in", ->
-    it "shows a message about logging in", ->
+    it "redirects home", ->
       cy.visit("/#/games")
       cy.url().should("match", /#\/$/)
 
@@ -13,13 +12,13 @@ describe "Game Manager page", ->
       it "says Game Manager", ->
         cy.contains "Game Manager"
 
-      it "lets me create a new game", ->
-        cy.contains("New Game").click()
+      it.only "lets me create a new game", ->
+        cy.get("button").contains("New Game").click()
 
         cy.typeIntoSelectors
           "input#game-title": "Love Letter"
 
-        cy.get("button[type=submit]").click()
+        cy.get("button").contains("Start Designing").click()
 
         cy.url().should("match", /games\/.+$/)
 
