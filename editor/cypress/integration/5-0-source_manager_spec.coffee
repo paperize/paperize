@@ -20,7 +20,9 @@ describe "Component Source manager", ->
 
       it "prompts to set a source", ->
         cy.get("#source-manager").within ->
-          cy.contains("You need to load a component source...")
+          cy.contains("No source set.")
+          cy.contains("Browse Google Sheets")
+          cy.contains("Paste a Link")
 
       it "lists the sources i've already imported", ->
         cy.get("#source-manager").within ->
@@ -38,9 +40,12 @@ describe "Component Source manager", ->
         cy.get("#source-editor")
           .contains('Love Letter Revisited')
 
+        cy.contains("Source Manager")
+          .should("not.be.visible")
+
       it "allows me to delete a source", ->
-        cy.get("#source-editor")
-          .find('a.delete-source')
+        cy.get("#source-manager")
+          .find('.delete-source')
           .first()
           .click()
 
@@ -64,7 +69,7 @@ describe "Component Source manager", ->
 
       it "shows me the exposed properties in a nice way", ->
         cy.get("#source-editor").within ->
-          cy.get(".property-name").its("length").should("eq", 5)
+          cy.get(".source-properties li").its("length").should("eq", 5)
           cy.contains("Quantity")
           cy.contains("Name")
           cy.contains("Rank")
@@ -74,17 +79,17 @@ describe "Component Source manager", ->
       context "setting the quantity property", ->
         it "let's me select a quantity property from the available fields", ->
           # TODO: assert quantity start
-          cy.get("#source-editor").within ->
-            cy.get("select#quantity-property").select("Quantity")
-            # TODO: assert quantity changed
-            cy.get("select#quantity-property").select("None")
-            # TODO: assert quantity back to start
+          cy.get("#source-editor .quantity-property").click()
+          cy.contains("Quantity").click()
+          # TODO: assert quantity changed
+          # cy.get("select#quantity-property").select("None")
+          # TODO: assert quantity back to start
 
       context "editing the source", ->
         beforeEach ->
           cy.get('#source-editor').within ->
             cy.get(".v-btn")
-              .contains("Edit")
+              .contains("edit")
               .click()
 
         it "allows me to refresh that source", ->
@@ -97,4 +102,4 @@ describe "Component Source manager", ->
             .click()
 
           cy.get("#source-manager")
-            .contains("You need to load a component source...")
+            .contains("No source set.")

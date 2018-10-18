@@ -9,11 +9,11 @@ v-flex#source-editor(sm4 md6)
         v-icon edit
 
     v-tooltip(top)
-      v-select(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourceProperties")
+      v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourceProperties")
       | A quantity property duplicates an item any number of times.
 
     .subheading Available Properties
-    ul
+    ul.source-properties
       li(v-for="property in sourceProperties(componentSource)") {{ property }}
 
   template(v-else)
@@ -23,7 +23,7 @@ v-flex#source-editor(sm4 md6)
     v-btn(small color="primary" @click="showSourceManager = true") Set a Source...
 
   v-dialog(v-model="showSourceManager")
-    source-manager(:component="component")
+    source-manager(:component="component" @close-dialog="showSourceManager = false")
 </template>
 
 <script>
