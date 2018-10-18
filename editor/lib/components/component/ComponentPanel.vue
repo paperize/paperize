@@ -4,7 +4,7 @@ v-layout(column).component-panel
     .headline Components
 
     v-btn(small @click="createComponentAndShowForm") New Component
-    v-dialog(v-model="showEditDialog" max-width="500")
+    v-dialog(v-model="showEditDialog" max-width="500" lazy)
       component-form(v-if="activeComponent" :component="activeComponent" @close-dialog="showEditDialog = false")
 
   component-card(v-for="component in components" :key="component.id" :component="component" @edit-me="showEditDialog = true")

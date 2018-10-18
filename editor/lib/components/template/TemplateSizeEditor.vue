@@ -18,20 +18,10 @@ fieldset.fieldset
 
   //- Custom Size
   template(v-else)
-    .small-12.cell
-      p Set your own custom component size in inches.
+    p Set your own custom component size in inches.
 
-    .small-12.cell
-      .input-group
-        span.input-group-label(title="inches") Width
-        input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateWidth")
-        span.input-group-label(title="inches") in.
-
-    .small-12.cell
-      .input-group
-        span.input-group-label Height
-        input.input-group-field(id="paper-height" type="number" step="0.01" min="0" v-model.number="templateHeight")
-        span.input-group-label(title="inches") in.
+    v-text-field.paper-width(label="Width" suffix="in." type="number" step="0.01" min="0" v-model.number="templateWidth")
+    v-text-field.paper-height(label="Height" suffix="in." type="number" step="0.01" min="0" v-model.number="templateHeight")
 </template>
 
 <script>

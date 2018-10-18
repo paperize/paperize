@@ -28,7 +28,7 @@ v-card#source-manager
 
         a(@click="setSource(source)") {{ source.name }}
 
-      v-dialog(v-model="showSourceDeleteDialog" max-width="500")
+      v-dialog(v-model="showSourceDeleteDialog" max-width="500" lazy)
         v-card
           v-card-title
             .headline Are you sure you want to purge the source "{{ sourceToDelete.name }}" from Paperize?

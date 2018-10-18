@@ -15,7 +15,7 @@ describe "Importing Sources", ->
             .click()
 
     beforeEach ->
-      cy.get(".button")
+      cy.get("button")
         .contains("Set a Source...")
         .click()
 

@@ -12,7 +12,7 @@ describe "Game Manager page", ->
       it "says Game Manager", ->
         cy.contains "Game Manager"
 
-      it.only "lets me create a new game", ->
+      it "lets me create a new game", ->
         cy.get("button").contains("New Game").click()
 
         cy.typeIntoSelectors

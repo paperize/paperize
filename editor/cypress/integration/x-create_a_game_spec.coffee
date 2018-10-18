@@ -6,11 +6,12 @@ xdescribe "Creating a game from scratch", ->
 
     # create a game
     cy.contains("New Game").click()
-    cy.get("#game-title").type("Factions{enter}")
+    cy.get(".game-title input").type("Factions{enter}")
 
     # create a characters component
     cy.contains("New Component").click()
-    cy.get(".component-title-new").type("Characters{enter}")
+    cy.get(".component-title input").type("Characters")
+    cy.get(".component-form").contains("Close").click()
     # set the source
     cy.contains("Set a Source...").click()
     cy.get("#source-manager").within ->
@@ -18,63 +19,64 @@ xdescribe "Creating a game from scratch", ->
 
     # edit the template
     cy.get("#template-editor").within ->
-      cy.contains("Edit").click()
+      cy.contains("edit").click()
 
-    cy.contains("New Layer").click()
+    cy.contains("library_add").click()
     cy.contains("Text").click()
-    cy.get("#text-size").select("24")
-    cy.get(".text-content").type("""
+    cy.get(".text-size input").clear().type("24")
+    cy.get(".text-content textarea").type("""
       {{}{{}Name}}
     """)
 
-    cy.contains("New Layer").click()
-    cy.get(".dialog-buttons").within ->
-      cy.contains("Text").click()
+    cy.contains("library_add").click()
+    cy.contains("Text").click()
 
-    # cy.get("#dimension-x").type("{backspace}35", delay: 300)
-    cy.get("#dimension-y").type("{backspace}50", delay: 300)
-    cy.get("#text-size").select("24")
-    cy.get(".text-content").type("""
+    # cy.get("#dim-x").type("{backspace}35", delay: 300)
+    cy.get("#dim-y").type("{backspace}50", delay: 300)
+    cy.get(".text-size input").clear().type("24")
+    cy.get(".text-content textarea").type("""
       Influence: {{}{{}Influence}}
     """)
-    cy.get(".close-button").click()
+    cy.get("button").contains("close").click()
 
     # create tokens component
     cy.contains("New Component").click()
-    cy.get(".component-title-new").type("Tokens")
+    cy.get(".component-title input").type("Tokens")
     # set the size to be a 1" square
-    cy.contains("Custom Size").click()
-    cy.get("#paper-width").type("{backspace}{backspace}{backspace}1", delay: 100)
-    cy.get("#paper-height").type("{backspace}{backspace}{backspace}1")
+    cy.contains("Custom").click()
+    cy.get(".paper-width input").type("{backspace}{backspace}{backspace}1", delay: 100)
+    cy.get(".paper-height input").type("{backspace}{backspace}{backspace}1")
     cy.contains("Close").click()
 
     # set the source
     cy.contains("Set a Source...").click()
     cy.get("#source-manager").within ->
       cy.contains("Tokens").click()
-    cy.get("#quantity-property").select("Quantity")
+    cy.get("#source-editor .quantity-property").click()
+    cy.contains("Quantity").click()
 
     # edit the template
     cy.get("#template-editor").within ->
-      cy.contains("Edit").click()
+      cy.contains("edit").click()
 
-    cy.contains("New Layer").click()
+    cy.contains("library_add").click()
     cy.contains("Shape").click()
-    cy.get("#dimension-x").type("{backspace}1.5", delay: 300)
-    cy.get("#dimension-y").type("{backspace}1.5", delay: 300)
-    cy.get("#dimension-w").type("{backspace}{backspace}97", delay: 300)
-    cy.get("#dimension-h").type("{backspace}{backspace}97")
+    cy.get("#dim-x").type("{backspace}1.5", delay: 300)
+    cy.get("#dim-y").type("{backspace}1.5", delay: 300)
+    cy.get("#dim-w").type("{backspace}{backspace}97", delay: 300)
+    cy.get("#dim-h").type("{backspace}{backspace}97")
 
-    cy.get(".shape-settings select").select("Ellipse")
+    cy.get(".shape-select").click()
+    cy.contains("Ellipse").click()
 
-    cy.contains("New Layer").click()
+    cy.contains("library_add").click()
     cy.contains("Text").click()
 
-    cy.get("#dimension-x").type("{backspace}35", delay: 300)
-    cy.get("#dimension-y").type("{backspace}0", delay: 300)
-    cy.get("#text-size").select("48")
+    cy.get("#dim-x").type("{backspace}35", delay: 300)
+    cy.get("#dim-y").type("{backspace}0", delay: 300)
+    cy.get(".text-size input").clear().type("24")
 
-    cy.get(".text-content").type("""
+    cy.get(".text-content textarea").type("""
       {{}{{}Abbr}}
     """)
 

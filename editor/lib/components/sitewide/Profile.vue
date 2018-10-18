@@ -17,7 +17,7 @@ v-menu(v-if="user.authenticated")
       v-list-tile-title Sign Out
 
 v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
-  v-dialog(v-model="showPopupHelper" max-width="500")
+  v-dialog(v-model="showPopupHelper" max-width="500" lazy)
     v-card(v-if="!loginError")
       v-card-title(primary-title)
         .headline Logging In With Google...

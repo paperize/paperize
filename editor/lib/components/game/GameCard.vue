@@ -11,7 +11,7 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
       v-btn
         router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
       v-btn(@click="showDeleteDialog = true") Delete
-        v-dialog(v-model="showDeleteDialog" max-width="500")
+        v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
           v-card
             v-card-title
               .headline Are you sure you want to delete the Game "{{ game.title }}"?

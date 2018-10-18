@@ -1,8 +1,8 @@
 <template lang="pug">
-fieldset.fieldset.shape-settings
-  legend Shape
+#shape-settings
+  .subheading Shape
 
-  v-select(v-model="shape" :items="shapeOptions" label="Shape")
+  v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape")
 
   v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
   v-text-field(v-if="strokePresent" type="color" v-model="strokeColor" label="Color")

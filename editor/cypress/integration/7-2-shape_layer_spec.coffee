@@ -11,10 +11,20 @@ describe "Shape Layers", ->
     cy.contains("[shape] 0")
 
   it "can be set to rectangle", ->
-    cy.get(".shape-layer-fields select").select("Rectangle")
+    cy.get("#shape-settings .shape-select").click()
+    cy.contains("Rectangle").click()
 
   it "can be set to rounded rectangle", ->
-    cy.get(".shape-layer-fields select").select("Rounded Rectangle")
+    cy.get("#shape-settings .shape-select").click()
+    cy.contains("Rounded Rectangle").click()
 
   it "can be set to ellipse", ->
-    cy.get(".shape-layer-fields select").select("Ellipse")
+    cy.get("#shape-settings .shape-select").click()
+    cy.contains("Ellipse").click()
+
+  # TODO:
+  # - stroke presence
+  # - stroke width
+  # - stroke color
+  # - fill presence
+  # - fill color

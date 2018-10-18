@@ -1,5 +1,5 @@
 <template lang="pug">
-v-form.component-form(v-on:submit.prevent="$emit('close-dialog')")
+v-form.component-form(@submit.prevent="$emit('close-dialog')")
   v-card
     v-card-title
       .headline Component: {{ component.title }}

@@ -10,7 +10,7 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
     v-card-actions
       v-btn(@click="$emit('edit-me')") Edit
       v-btn(color="red" @click.stop="showDeleteDialog = true") Delete
-  v-dialog(v-model="showDeleteDialog" max-width="500")
+  v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
     v-card.delete-component
       v-card-title
         .headline Are you sure you want to delete this component?

@@ -5,7 +5,7 @@ v-container(fluid)
       .headline Game Manager
 
       v-btn(small) Load Example
-      v-dialog(max-width="500")
+      v-dialog(max-width="500" lazy)
         v-btn(slot="activator" small) New Game
         game-form
 

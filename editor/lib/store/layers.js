@@ -35,8 +35,8 @@ LAYER_DEFAULTS[TEXT] =
     renderOrder:         0,
     dimensionId:         null,
     textContentTemplate: "",
-    textColor:          "#000000",
-    textSize:           16,
+    textColor:           "#000000",
+    textSize:            16,
     // textFontId:            null
   }
 LAYER_DEFAULTS[IMAGE] =

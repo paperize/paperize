@@ -6,7 +6,7 @@ v-layout(column)
   v-flex
     v-text-field(v-model="textColor" type="color" label="Text Color")
   v-flex
-    v-text-field(v-model="textSize" type="number" min="1" max="128" label="Text Size")
+    v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
 
   v-flex
     .subheading Text Content

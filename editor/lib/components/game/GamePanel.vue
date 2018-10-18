@@ -14,21 +14,21 @@ v-layout(row fluid).game-panel
           v-icon(left) settings
           | Print Settings
 
-          v-dialog(v-model="showPrintSettingsDialog" max-width="500")
+          v-dialog(v-model="showPrintSettingsDialog" max-width="500" lazy)
             print-settings
 
         v-btn(small @click="showEditDialog = true")
           v-icon(left) edit
           | Edit Game
 
-          v-dialog(v-model="showEditDialog" max-width="500")
+          v-dialog(v-model="showEditDialog" max-width="500" lazy)
             game-form(:game="game" @close-dialog="showEditDialog = false")
 
         v-btn(small @click="showDeleteDialog = true")
           v-icon(left) delete
           | Delete Game
 
-          v-dialog(v-model="showDeleteDialog" max-width="500")
+          v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
             v-card.delete-game
               v-card-title
                 .headline Are you sure you want to delete the Game "{{ game.title }}"?
