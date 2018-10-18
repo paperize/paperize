@@ -1,11 +1,11 @@
 <template lang="pug">
-v-form(v-on:submit.prevent="$emit('close-dialog')")
+v-form.component-form(v-on:submit.prevent="$emit('close-dialog')")
   v-card
     v-card-title
       .headline Component: {{ component.title }}
 
     v-card-text
-      v-text-field(v-model="componentTitle" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
+      v-text-field.component-title(v-model="componentTitle" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
 
       template-size-editor(:template="findComponentTemplate(component)")
 

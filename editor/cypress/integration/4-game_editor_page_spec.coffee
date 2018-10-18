@@ -9,8 +9,13 @@ describe "Game Editor page", ->
     it "lets me edit the game and updates the vitals", ->
       cy.contains("Edit Game").click()
 
-      cy.get(".game-form input[name=title]").clear().type("Munchkin Love Letter")
-      cy.get(".game-form button[type=submit]").click()
+      cy.get(".game-form").within ->
+        cy.get(".game-title input")
+          .clear()
+          .type("Munchkin Love Letter")
+        cy.get("button")
+          .contains("Update")
+          .click()
 
       cy.contains("Munchkin Love Letter")
 
@@ -18,9 +23,10 @@ describe "Game Editor page", ->
       cy.contains("Delete Game")
         .click()
 
-      cy.get("button")
-        .contains("Yes")
-        .click()
+      cy.get(".delete-game").within ->
+        cy.get("button")
+          .contains("Yes")
+          .click()
 
       cy.url()
         .should("match", /games$/)
@@ -34,24 +40,27 @@ describe "Game Editor page", ->
       cy.contains("Point Cubes")
 
     it "defaults to the first component", ->
-      cy.get('.active.card .title').contains("Character Deck")
+      cy.get('.component.active .headline').contains("Character Deck")
 
     it "lets me select a component", ->
       cy.contains("Instruction Book").click()
-      cy.get('.active.card .title').contains("Instruction Book")
+      cy.get('.component.active .headline').contains("Instruction Book")
       cy.contains("Point Cubes").click()
-      cy.get('.active.card .title').contains("Point Cubes")
+      cy.get('.component.active .headline').contains("Point Cubes")
 
     it "lets me add a component", ->
       cy.contains("New Component").click()
-      cy.contains("Component:")
 
-      cy.typeIntoSelectors "input.component-title-new": 'Random Encounters'
-      cy.get('select#paper-format')
-        .select('Poker-sized Cards')
-      cy.contains("Close").click()
+      cy.get(".component-form").within ->
+        cy.contains("Component:")
+        cy.typeIntoSelectors ".component-title input": 'Random Encounters'
+        cy.get('.paper-format').click()
 
-      cy.get('.active.card .title')
+      cy.contains('Poker-sized Cards').click()
+      cy.get(".component-form").within ->
+        cy.contains("Close").click()
+
+      cy.get('.component.active .headline')
         .contains("Random Encounters")
 
     it "lets me edit a component", ->
@@ -62,11 +71,11 @@ describe "Game Editor page", ->
         .contains("Edit")
         .click()
 
-      cy.get("input#component-title-instructionBook")
+      cy.get(".component-title input")
         .clear()
         .type('Instruction Manual')
-      cy.get('select#paper-format')
-        .select('Whole Page (A4)')
+      cy.get('.paper-format').click()
+      cy.contains('Whole Page (A4)').click()
       cy.get('.component-form')
         .contains("Close")
         .click()
@@ -81,9 +90,10 @@ describe "Game Editor page", ->
         .contains("Delete")
         .click()
 
-      cy.get("button")
-        .contains("Yes")
-        .click()
+      cy.get(".delete-component:visible").within ->
+        cy.get("button")
+          .contains("Yes")
+          .click()
 
       cy.contains("Instruction Book")
         .should("not.exist")

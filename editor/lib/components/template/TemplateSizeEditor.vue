@@ -13,8 +13,8 @@ fieldset.fieldset
   template(v-if="paperMode == 'standard'")
     p Select from some common component sizes.
 
-    v-select(label="Size" :items="componentOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperFormat")
-    v-select(label="Orientation" :items="orientationOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperOrientation")
+    v-select.paper-format(label="Size" :items="componentOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperFormat")
+    v-select.paper-orientation(label="Orientation" :items="orientationOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperOrientation")
 
   //- Custom Size
   template(v-else)

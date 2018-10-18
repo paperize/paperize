@@ -29,7 +29,7 @@ v-layout(row fluid).game-panel
           | Delete Game
 
           v-dialog(v-model="showDeleteDialog" max-width="500")
-            v-card
+            v-card.delete-game
               v-card-title
                 .headline Are you sure you want to delete the Game "{{ game.title }}"?
               v-card-text It has X Components and was last printed Y.

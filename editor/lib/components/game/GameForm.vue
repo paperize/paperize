@@ -1,11 +1,11 @@
 <template lang="pug">
-v-form(ref="gameForm" @submit.prevent="submitGame")
+v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
   v-card
     v-card-title
       .headline {{ headlineText }}
 
     v-card-text
-      v-text-field#game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
+      v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
