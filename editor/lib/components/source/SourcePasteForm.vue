@@ -1,34 +1,29 @@
 <template lang="pug">
-v-dialog
-  form(@submit.prevent="importSourceViaPaste()")
-    .grid-x.grid-padding-x
-      .small-12.cell
-        h2 Import a Google Sheet
+v-form(@submit.prevent="importSourceViaPaste()")
+  v-card
+    v-card-title
+        .headline Import a Google Sheet
 
-      .small-12.cell(v-if="showSpinner")
-        spinner(message="Talking to Google...")
+    v-card-text
+      template(v-if="showSpinner")
+        v-progress-circular(indeterminate color="primary")
+        p Talking to Google...
 
-      .small-12.cell(v-else)
+      template(v-else)
         p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
 
         label
           | Paste a Google Sheets link or ID here:
           input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
-        a.button.alert(@click="closeModal()") Cancel
-        input.button.success(type="submit" value="Import")
-
-  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-    span(aria-hidden="true") &times;
+        v-btn(@click="$emit('close-dialog')") Cancel
+        v-btn(@click="importSourceViaPaste()") Import
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
-  import spinner from 'vue-simple-spinner'
 
   export default {
-    components: { spinner },
-
     data() {
       return {
         pastedSource: '',
@@ -46,10 +41,6 @@ v-dialog
             throw error
           })
       },
-
-      closeModal() {
-        this.$modal.hide("source-paste-form")
-      }
     }
   }
 </script>
