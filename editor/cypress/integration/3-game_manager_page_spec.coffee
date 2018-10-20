@@ -16,7 +16,7 @@ describe "Game Manager page", ->
         cy.get("button").contains("New Game").click()
 
         cy.typeIntoSelectors
-          "input#game-title": "Love Letter"
+          ".game-title input": "Love Letter"
 
         cy.get("button").contains("Start Designing").click()
 
@@ -27,9 +27,9 @@ describe "Game Manager page", ->
       it "lets me create 3 games", ->
         cy.wrap(["Love Letter", "Carcassonne", "Pandemic"]).each (title) ->
           cy.contains("New Game").click()
-          cy.get("input[name=title]").invoke("val").should("eq", "")
-          cy.get("input[name=title]").type(title)
-          cy.get("button[type=submit]").click()
+          cy.get(".game-title input").invoke("val").should("eq", "")
+          cy.get(".game-title input").type(title)
+          cy.get("button").contains("Start Designing").click()
           cy.contains(title)
 
           cy.visit("/#/games")
