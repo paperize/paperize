@@ -42,7 +42,6 @@ v-card.image-manager
 
   export default {
     components: {
-      spinner,
       'inline-image-editor': InlineImageEditor,
       'local-image': LocalImage
     },
