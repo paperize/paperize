@@ -3,12 +3,16 @@ const UsersModule = {
     idToken: null,
     authenticated: false,
     name: '',
-    avatarSrc: '',
+    avatarSrc: null,
     loginError: null
   },
 
   getters: {
-    loginError: state => state.loginError
+    loggedIn: state => state.authenticated,
+    loginError: state => state.loginError,
+    userId: state => state.idToken,
+    userName: state => state.name,
+    userAvatar: state => state.avatarSrc || "/images/blank-avatar.png"
   },
 
   mutations: {

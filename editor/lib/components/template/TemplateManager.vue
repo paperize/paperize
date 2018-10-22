@@ -1,26 +1,25 @@
 <template lang="pug">
-div(v-if="findComponentTemplate(component)")
-  template-editor(:component="component" @close-dialog="$emit('close-dialog')")
+template-editor(v-if="findComponentTemplate(component)" :component="component" @close-dialog="$emit('close-dialog')")
 
-div(v-else)
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Template Manager
-      hr
+v-card(v-else)
+  v-card-title
+    .headline Template Manager
 
-    .small-4.cell
-      h5 Create a new Template
-      a.button(@click="createComponentTemplate(component)") Create
+  v-card-text
+    v-layout(row)
+      v-flex(sm4)
+        .subheading Create a new Template
+        v-btn(@click="createComponentTemplate(component)") Create
 
-    .small-4.cell
-      h5 Load a Paperize Template
-      p
-        em Coming soon...
+      v-flex(sm4)
+        .subheading Load a Paperize Template
+        p
+          em Coming soon...
 
-    .small-4.cell
-      h5 Copy another Template
-      p
-        em Coming soon...
+      v-flex(sm4)
+        .subheading Copy another Template
+        p
+          em Coming soon...
 </template>
 
 <script>

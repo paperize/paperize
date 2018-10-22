@@ -1,22 +1,21 @@
 <template lang="pug">
-v-menu(v-if="user.authenticated")
+v-menu(v-if="loggedIn")
+  //- Show account stuff and logout
   v-btn(flat slot="activator")
     v-avatar
-      img(alt="avatar" :src="avatarSrc")
+      img(alt="avatar" :src="userAvatar")
 
   v-list
     v-list-tile
       v-list-tile-avatar
-        img(alt="avatar" :src="avatarSrc")
-      v-list-tile-title {{ user.name }}
-
-    v-list-tile(@click="$modal.show('Database Manager')")
-      v-list-tile-title Database
+        img(alt="avatar" :src="userAvatar")
+      v-list-tile-title {{ userName }}
 
     v-list-tile(@click="logout()")
       v-list-tile-title Sign Out
 
 v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
+  //- Show login flow
   v-dialog(v-model="showPopupHelper" max-width="500" lazy)
     v-card(v-if="!loginError")
       v-card-title(primary-title)
@@ -51,13 +50,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
     },
 
     computed: {
-      ...mapState(['user']),
-
-      ...mapGetters(['loginError']),
-
-      avatarSrc() {
-        return this.user.avatarSrc || "/images/blank-avatar.png"
-      },
+      ...mapGetters(['loggedIn', 'loginError', 'userName', 'userAvatar']),
 
       errorCodeInEnglish() {
         return ERROR_CODE_MAP[this.loginError] || "There was an unknown error logging in: {{ this.loginError }}"

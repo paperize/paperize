@@ -1,45 +1,36 @@
 <template lang="pug">
-modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollable="true")
-  .grid-x.grid-padding-x(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="handleFileDragAndDrop")
-    .small-12.cell
-      h1 Image Library
+v-card.image-manager
+  v-card-title
+    .headline Image Library
 
-    .small-12.cell(v-if="showImageSpinner")
-      spinner(message="Importing images...")
+  v-card-text(v-if="showImageSpinner")
+    v-progress-circular(indeterminate color="primary")
+    p Importing images...
 
-    .small-12.cell(v-else)
-      input(id="image-files-input" type="file" multiple @change="handleFileInput")
+  v-card-text(v-else)
+    input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
-      table
-        thead
-          tr
-            th Controls
-            th Name
-            th Preview
-        tbody
-          tr(v-for="image in images")
-            td(v-if="editing == image.id")
-              a.button.tiny(@click="stopEditing")
-                = "Accept"
-            td(v-else)
-              a.button.alert.tiny(@click="confirmDeletion(image)") X
-              a.button.tiny(@click="editImage(image)")
-                //- = "Edit "
-                i.fas.fa-pencil-alt.fa-fw
+    v-data-table.elevation-1(:items="images")
+      template(slot="items" slot-scope="props")
+        td(v-if="editing == props.item.id")
+          v-btn(small @click="stopEditing") Accept
 
-            td(v-if="editing == image.id")
-              inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
-            td(v-else)
-              a(:title="image.id" @click="editImage(image)")  {{ image.name }}
+        td(v-else)
+          v-btn(small @click="confirmDeletion(image)")
+            v-icon delete
+          v-btn(small @click="editImage(image)")
+            v-icon edit
 
-            td.preview
-              local-image(:imageId="image.id")
+        td(v-if="editing == props.item.id")
+          inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
 
-      input(id="image-files-input" type="file" multiple @change="handleFileInput")
+        td(v-else)
+          a(:title="props.item.id" @click="editImage(image)")  {{ props.item.name }}
 
+        td.preview
+          local-image(:imageId="props.item.id")
 
-  button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Image Library')")
-    span(aria-hidden="true") &times;
+    input(id="image-files-input" type="file" multiple @change="handleFileInput")
 </template>
 
 <script>

@@ -8,15 +8,24 @@ v-toolbar(app)
       | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
 
   v-spacer
-  //-   database-manager
-  //-   image-manager
 
   v-toolbar-items
-    v-btn(flat) About
+    template(v-if="loggedIn")
+      v-btn(@click="showImageManager = true") Images
+      v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
+        image-manager
+
+      v-btn(@click="showDatabaseManager = true") Database
+      v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
+        database-manager
+
+    template(v-else)
+      v-btn(flat) About
     login-btn
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import Profile from './Profile.vue'
   import ImageManager from '../asset/ImageManager.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
@@ -31,21 +40,18 @@ v-toolbar(app)
     data() {
       return {
         gitSha: process.env.GIT_SHA,
-        gitChanges: process.env.GIT_CHANGE_INFO
+        gitChanges: process.env.GIT_CHANGE_INFO,
+        showImageManager: false,
+        showDatabaseManager: false,
       }
     },
 
     computed: {
+      ...mapGetters(["loggedIn"]),
+
       homeLink () {
-        return this.$store.state.authenticated ? 'gameManager' : 'splash'
+        return this.loggedIn ? 'gameManager' : 'splash'
       }
     }
   }
 </script>
-
-<style>
-  .build-status {
-    font-size: .8em;
-    /*padding: .7rem 1rem;*/
-  }
-</style>
