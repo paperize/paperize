@@ -37,7 +37,6 @@ v-card.image-manager
   import { find, findIndex } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
 
-  import spinner from 'vue-simple-spinner'
   import InlineImageEditor from './InlineImageEditor.vue'
   import LocalImage from './LocalImage.vue'
 
