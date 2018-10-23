@@ -18,10 +18,7 @@ v-layout(column).component-panel
   export default {
     props: ["components"],
 
-    components: {
-      "component-card": ComponentCard,
-      "component-form": ComponentForm
-    },
+    components: { ComponentCard, ComponentForm },
 
     data() {
       return {

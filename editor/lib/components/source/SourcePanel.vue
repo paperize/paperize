@@ -34,9 +34,7 @@ v-flex#source-editor(sm4 md6)
   export default {
     props: ["component"],
 
-    components: {
-      'source-manager': SourceManager
-    },
+    components: { SourceManager },
 
     data() {
       return {

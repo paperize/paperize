@@ -11,9 +11,6 @@ v-layout(row)
   export default {
     props: ["component"],
 
-    components: {
-      'source-panel': SourcePanel,
-      'template-panel': TemplatePanel
-    },
+    components: { SourcePanel, TemplatePanel },
   }
 </script>

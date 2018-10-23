@@ -28,16 +28,12 @@ v-container(v-else fluid)
   export default {
     props: ['gameId'],
 
+    components: { GamePanel, ComponentPanel, ComponentEditor },
+
     computed: mapGetters({
       findAllGameComponents: 'findAllGameComponents',
       activeComponent: 'activeComponent',
       game: 'activeGame'
     }),
-
-    components: {
-      "game-panel":       GamePanel,
-      "component-panel":  ComponentPanel,
-      "component-editor": ComponentEditor
-    }
   }
 </script>

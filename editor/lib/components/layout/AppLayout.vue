@@ -16,8 +16,6 @@ v-app
   import TitleBar from '../sitewide/TitleBar.vue'
 
   export default {
-    components: {
-      'title-bar': TitleBar
-    }
+    components: { TitleBar }
   }
 </script>

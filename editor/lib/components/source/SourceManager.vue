@@ -54,10 +54,7 @@ import SourceExplorer from './SourceExplorer.vue'
 export default {
   props: ["component"],
 
-  components: {
-    'source-paste-form': SourcePasteForm,
-    'source-explorer': SourceExplorer
-  },
+  components: { SourcePasteForm, SourceExplorer },
 
   data() {
     return {

@@ -50,12 +50,7 @@ v-card
   export default {
     props: ["component"],
 
-    components: {
-      "template-previewer": TemplatePreviewer,
-      "template-size-editor": TemplateSizeEditor,
-      "layer-manager": LayerManager,
-      "layer-editor": LayerEditor
-    },
+    components: { TemplatePreviewer, TemplateSizeEditor, LayerManager, LayerEditor },
 
     data() {
       return {

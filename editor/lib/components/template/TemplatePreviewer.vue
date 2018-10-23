@@ -20,9 +20,7 @@ div
   export default {
     props: ["game", "component", "item"],
 
-    components: {
-      'template-renderer': TemplateRenderer
-    },
+    components: { TemplateRenderer },
 
     data() {
       return {

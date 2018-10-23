@@ -31,10 +31,7 @@ v-flex#template-editor(sm8 md6)
   export default {
     props: ["component"],
 
-    components: {
-      'template-manager': TemplateManager,
-      'template-previewer': TemplatePreviewer,
-    },
+    components: { TemplateManager, TemplatePreviewer },
 
     data() {
       return {

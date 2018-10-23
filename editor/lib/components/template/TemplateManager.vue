@@ -29,9 +29,7 @@ v-card(v-else)
   export default {
     props: ["component"],
 
-    components: {
-      "template-editor": TemplateEditor
-    },
+    components: { TemplateEditor },
 
     data() { return { } },
 

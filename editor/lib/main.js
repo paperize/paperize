@@ -41,9 +41,7 @@ let startApp = () => {
   new Vue({
     router, store,
     el: '#paperize-app',
-    components: {
-      "app-layout": AppLayout
-    },
+    components: { AppLayout },
     render: (h) => h("app-layout")
   })
 }

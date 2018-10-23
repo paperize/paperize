@@ -47,10 +47,7 @@ v-layout(row fluid).game-panel
   export default {
     props: ["game"],
 
-    components: {
-      'game-form': GameForm,
-      'print-settings': PrintSettings
-    },
+    components: { GameForm, PrintSettings },
 
     data() {
       return {

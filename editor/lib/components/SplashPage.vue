@@ -59,9 +59,7 @@ div
       notInTest: () => false // process.env.NODE_ENV !== 'test'
     },
 
-    components: {
-      "vue-embed": VueEmbed
-    },
+    components: { VueEmbed },
 
     methods: {
       getStarted() {

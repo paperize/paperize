@@ -21,7 +21,7 @@ v-toolbar(app)
 
     template(v-else)
       v-btn(flat) About
-    login-btn
+    profile
 </template>
 
 <script>
@@ -31,11 +31,7 @@ v-toolbar(app)
   import DatabaseManager from '../database/DatabaseManager.vue'
 
   export default {
-    components: {
-      "login-btn": Profile,
-      "database-manager": DatabaseManager,
-      "image-manager": ImageManager
-    },
+    components: { Profile, DatabaseManager, ImageManager },
 
     data() {
       return {

@@ -24,16 +24,14 @@ v-form.component-form(@submit.prevent="$emit('close-dialog')")
       }
     },
 
+    components: { TemplateSizeEditor },
+
     data() {
       return {
         rules: {
           required: value => !!value || 'Required.'
         }
       }
-    },
-
-    components: {
-      "template-size-editor": TemplateSizeEditor
     },
 
     computed: {

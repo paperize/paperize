@@ -20,10 +20,7 @@ v-container(fluid)
   import GameForm from './GameForm.vue'
 
   export default {
-    components: {
-      "game-card": GameCard,
-      "game-form": GameForm
-    },
+    components: { GameCard, GameForm },
 
     computed: {
       ...mapState(["user"]),

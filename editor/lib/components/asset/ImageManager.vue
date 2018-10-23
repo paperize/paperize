@@ -41,10 +41,7 @@ v-card.image-manager
   import LocalImage from './LocalImage.vue'
 
   export default {
-    components: {
-      'inline-image-editor': InlineImageEditor,
-      'local-image': LocalImage
-    },
+    components: { InlineImageEditor, LocalImage },
 
     data() {
       return {

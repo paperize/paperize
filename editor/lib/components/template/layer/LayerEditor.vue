@@ -28,11 +28,11 @@ v-layout(column)
     props: ["layer", "source", "template"],
 
     components: {
-      "dimension-editor": DimensionEditor,
-      "code-layer-editor": CodeLayerEditor,
-      "text-layer-editor": TextLayerEditor,
-      "image-layer-editor": ImageLayerEditor,
-      "shape-layer-editor": ShapeLayerEditor,
+      DimensionEditor,
+      CodeLayerEditor,
+      TextLayerEditor,
+      ImageLayerEditor,
+      ShapeLayerEditor,
     },
 
     computed: {
