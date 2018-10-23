@@ -65,7 +65,3 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
     }
   }
 </script>
-
-<style scoped>
-
-</style>
