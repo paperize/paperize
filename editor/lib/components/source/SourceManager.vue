@@ -38,11 +38,11 @@ v-card#source-manager
             v-btn(@click="deleteSource") Yes
 
       v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
-      v-dialog(v-model="showSourceExplorerDialog" max-width="500")
+      v-dialog(v-model="showSourceExplorerDialog" max-width="500" lazy)
         source-explorer
 
       v-btn(@click="showSourcePasteDialog = true") Paste a Link
-      v-dialog(v-model="showSourcePasteDialog" max-width="500")
+      v-dialog(v-model="showSourcePasteDialog" max-width="500" lazy)
         source-paste-form(@close-dialog="showSourcePasteDialog = false")
 </template>
 

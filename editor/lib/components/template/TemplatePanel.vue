@@ -19,7 +19,7 @@ v-flex#template-editor(sm8 md6)
       p
         em You need to set a data Source before you can get started with Templates.
 
-  v-dialog(v-model="showTemplateManager" fullscreen)
+  v-dialog(v-model="showTemplateManager" fullscreen lazy)
     template-manager(:component="component" @close-dialog="showTemplateManager = false")
 </template>
 

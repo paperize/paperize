@@ -22,7 +22,7 @@ v-flex#source-editor(sm4 md6)
 
     v-btn(small color="primary" @click="showSourceManager = true") Set a Source...
 
-  v-dialog(v-model="showSourceManager")
+  v-dialog(v-model="showSourceManager" lazy)
     source-manager(:component="component" @close-dialog="showSourceManager = false")
 </template>
 
