@@ -104,7 +104,8 @@ store.subscribe(({ type, payload }, state) => {
   } else if(type === 'createComponent') {
     router.push({ name: 'componentEditor', params: { gameId: state.ui.activeGameId, componentId: payload.id } })
 
-  } else if(type === 'destroyComponent') {
+  } else if(type === 'destroyComponent' && router.currentRoute.name === 'splash') {
+    // if we just destroyed the component we're editing, route back up to gameEditor
     router.push({ name: 'gameEditor', params: { gameId: state.ui.activeGameId }})
   }
 })

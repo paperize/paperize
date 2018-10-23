@@ -40,10 +40,10 @@ export function generateCrud(model) {
   const getters = {}
 
   getters[findModelName] = state => (modelId, throwOnFail=true) => {
-    debug("Getter:", findModelName, modelId)
+    debug("Getter:", findModelName, modelId, "Throw?", throwOnFail)
     if(!isString(modelId) && !isNumber(modelId)) {
       if(throwOnFail) {
-        throw new Error(`${capitalize(singularModelName)} ID format not recognized: ${modelId}, pass a string or number!`)
+        throw new Error(`${capitalize(singularModelName)} ID format not recognized: (${modelId}), pass a string or number!`)
       } else {
         return null
       }
@@ -152,6 +152,7 @@ export function generateCrud(model) {
     let hasManysToDestroy = filter(model.relationships, { relation: 'hasMany', dependent: true })
 
     return Promise.map(hasOnesToDestroy,
+      // Destroy dependent hasOne relations
       (relationship) => {
         let relationToDestroyId = modelToDestroy[`${relationship.model}Id`]
 
@@ -161,11 +162,11 @@ export function generateCrud(model) {
         } else {
           return
         }
-
       })
 
       .then(() => {
         return Promise.map(hasManysToDestroy,
+          // Destroy dependent hasMany relations
           (relationship) => {
             let relationshipDestroyModelName = camelCase(`destroy ${relationship.model}`)
             return Promise.map(modelToDestroy[`${relationship.model}Ids`], (relationshipId) => {

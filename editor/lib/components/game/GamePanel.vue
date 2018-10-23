@@ -64,6 +64,7 @@ v-layout(row fluid).game-panel
       ...mapActions(["destroyGame"]),
 
       deleteGame() {
+        this.$router.push({ name: "gameManager" })
         return this.destroyGame(this.game)
       },
 

@@ -8,8 +8,7 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
       img(:src="game.coverArt")
 
     v-card-actions
-      v-btn
-        router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
+      v-btn(@click="$router.push({ name: 'gameEditor', params: { gameId: game.id }})") Edit
       v-btn(@click="showDeleteDialog = true") Delete
         v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
           v-card
