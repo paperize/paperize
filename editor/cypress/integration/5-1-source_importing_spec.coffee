@@ -156,19 +156,19 @@ describe "Importing Sources", ->
             # 2 come back from google
             @fetchSheetsPromiseResolve([sources.carcassonne, sources.loveLetter])
             # 1 is already in the store
-            vuex.commit("setSources", { carcassonne: sources.carcassonne })
+            vuex.commit("setSources", { loveLetter: sources.loveLetter })
 
         it "adds new sources", ->
-          cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Love Letter Revisited (Refresh)")
 
         it "refreshes existing sources", ->
-          cy.contains("Carcassonne (Refresh)")
+          cy.contains("Carcassonne (Add)")
 
     describe "re-fetching sources", ->
       beforeEach ->
         cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
           vuex.commit("setRemoteSources", [sources.carcassonne, sources.loveLetter])
-          vuex.commit("setSources", { carcassonne: sources.carcassonne })
+          vuex.commit("setSources", { loveLetter: sources.loveLetter })
 
         cy.contains("Refresh Sheet Listing...")
           .click()
@@ -188,7 +188,7 @@ describe "Importing Sources", ->
 
         cy.get(".source-explorer").within ->
           cy.contains("Carcassonne").should("not.be.visible")
-          cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Love Letter Revisited")
           cy.contains("Pandemic")
 
 

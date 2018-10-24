@@ -4,12 +4,12 @@
 
   v-layout(column)
     v-flex
-      v-btn-toggle(v-model="dimensionMode")
+      v-btn-toggle(v-model="dimensionMode" mandatory)
         v-btn(small flat value="xywh") XYWH
         v-btn(small flat value="inset") Inset
 
     v-flex
-      v-btn-toggle(v-model="unitMode")
+      v-btn-toggle(v-model="unitMode" mandatory)
         v-btn(small flat value="percent") %
         v-btn(small flat value="inches") in
         v-btn(small flat value="millimeters") mm

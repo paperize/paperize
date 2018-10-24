@@ -5,7 +5,14 @@ import { findProperty } from './helpers'
 
 // To get image data from our local store
 const fetchDataByName = function(name) {
-  return Promise.try(() => store.getters.findImageByName(name).then(asset => asset.data))
+  return Promise.try(() => {
+    return store.getters.findImageByName(name)
+      .then(asset => asset.data)
+  }).catch((e) => {
+    console.warn(`Error looking up image "${name}" in asset library:`)
+    console.warn(e.message)
+    return ""
+  })
 }
 
 const fetchImageByName = function(name) {

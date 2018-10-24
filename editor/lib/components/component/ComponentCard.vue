@@ -37,10 +37,10 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent"]),
+      ...mapGetters(["activeGame", "activeComponent", "getItemQuantity"]),
 
       totalItems() {
-        return this.$store.getters.getItemQuantity(this.component)
+        return this.getItemQuantity(this.component)
       }
     },
 

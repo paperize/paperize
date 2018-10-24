@@ -46,7 +46,7 @@ describe "Component Source manager", ->
       it "allows me to delete a source", ->
         cy.get("#source-manager")
           .find('.delete-source')
-          .first()
+          .last()
           .click()
 
         cy.get("button")
@@ -54,7 +54,7 @@ describe "Component Source manager", ->
           .click()
 
         cy.get("#source-manager").within ->
-          cy.contains("Love Letter Revisited")
+          cy.contains("Tokens")
             .should("not.exist")
 
     describe "with a source selected", ->
