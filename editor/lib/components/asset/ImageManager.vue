@@ -16,19 +16,27 @@ v-card.image-manager
           v-btn(small @click="stopEditing") Accept
 
         td(v-else)
-          v-btn(small @click="confirmDeletion(image)")
+          v-btn(small @click="showDeleteImageDialogFor(props.item)")
             v-icon delete
-          v-btn(small @click="editImage(image)")
+          v-btn(small @click="editImage(props.item)")
             v-icon edit
 
         td(v-if="editing == props.item.id")
-          inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
+          inline-image-editor(:image="props.item" @next="editNextImage(true)" @previous="editNextImage(false)")
 
         td(v-else)
-          a(:title="props.item.id" @click="editImage(image)")  {{ props.item.name }}
+          a(:title="props.item.id" @click="editImage(props.item)")  {{ props.item.name }}
 
         td.preview
           local-image(:imageId="props.item.id")
+
+    v-dialog(v-model="showDeleteImageDialog" max-width="500" lazy)
+      v-card
+        v-card-title
+          .headline Are you sure you want to delete the image "{{ imageToDelete.name }}"?
+        v-card-actions
+          v-btn(@click="showDeleteImageDialog = false") No
+          v-btn(@click="destroyImage()") Yes
 
     input(id="image-files-input" type="file" multiple @change="handleFileInput")
 </template>
@@ -46,6 +54,8 @@ v-card.image-manager
     data() {
       return {
         showImageSpinner: false,
+        showDeleteImageDialog: false,
+        imageToDelete: {},
         editing: null
       }
     },
@@ -56,6 +66,7 @@ v-card.image-manager
 
     methods: {
       ...mapActions(["deleteImage"]),
+
       editImage(image) {
         this.editing = image.id
       },
@@ -92,22 +103,14 @@ v-card.image-manager
         })
       },
 
-      confirmDeletion(image) {
-        this.$modal.show('dialog', {
-          title: `Are you sure you want to delete the image "${image.name}"?`,
-          buttons: [
-            {
-              title: "No",
-              default: true
-            }, {
-              title: "Yes",
-              handler: () => {
-                this.deleteImage({ image })
-                this.$modal.hide('dialog')
-              }
-            }
-          ]
-        })
+      showDeleteImageDialogFor(image) {
+        this.imageToDelete = image
+        this.showDeleteImageDialog = true
+      },
+
+      destroyImage() {
+        this.deleteImage({ image: this.imageToDelete })
+        this.showDeleteImageDialog = false
       }
     }
   }

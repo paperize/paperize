@@ -39,7 +39,7 @@ v-card#source-manager
 
       v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
       v-dialog(v-model="showSourceExplorerDialog" max-width="500" lazy)
-        source-explorer
+        source-explorer(@close-dialog="showSourceExplorerDialog = false")
 
       v-btn(@click="showSourcePasteDialog = true") Paste a Link
       v-dialog(v-model="showSourcePasteDialog" max-width="500" lazy)

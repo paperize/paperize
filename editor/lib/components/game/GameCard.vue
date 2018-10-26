@@ -17,7 +17,7 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
             v-card-text It has X Components and was last printed Y.
             v-card-actions
               v-btn(@click="showDeleteDialog = false") No
-              v-btn(@click="deleteGame") Yes
+              v-btn(@click="destroyGame(game)") Yes
 </template>
 
 <script>
@@ -36,33 +36,7 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
       }
     },
 
-    methods: {
-      ...mapActions(["destroyGame"]),
-
-      deleteGame() {
-        this.destroyGame(this.game)
-      },
-
-      confirmDeletion() {
-        this.$modal.show('dialog', {
-          title: 'Are you sure you want to delete this game?',
-          text: 'It has X components and will be lost forever.',
-          buttons: [
-            {
-              title: 'No',
-              default: true
-            },
-            {
-              title: 'Yes',
-              handler: () => {
-                this.destroyGame(this.game)
-                this.$modal.hide('dialog')
-              }
-            }
-         ]
-        })
-      }
-    }
+    methods: mapActions(["destroyGame"]),
   }
 </script>
 

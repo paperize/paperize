@@ -35,9 +35,8 @@ v-card.source-explorer
       ...mapActions(["fetchRemoteSources"]),
 
       importRemoteSource(remoteSourceId) {
-        this.$store.dispatch("importRemoteSource", remoteSourceId).then(() => {
-          this.$modal.hide("Source Manager")
-        })
+        this.$store.dispatch("importRemoteSource", remoteSourceId)
+        this.$emit('close-dialog')
       },
 
       remoteSourceImportLabel(remoteSource) {
