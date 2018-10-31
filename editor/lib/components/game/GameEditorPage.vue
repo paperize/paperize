@@ -2,7 +2,7 @@
 div(v-if="!game")
   p no game selected
 
-v-container(v-else fluid)
+v-container(v-else fluid grid-list-md)
   game-panel(:game="game")
 
   v-divider
@@ -10,8 +10,6 @@ v-container(v-else fluid)
   v-layout(row)
     v-flex(sm4 md3 lg2)
       component-panel(:components="findAllGameComponents(game)")
-
-    v-divider
 
     v-flex.active-component(sm8 md9 lg10)
       component-editor(v-if="activeComponent" :component="activeComponent")

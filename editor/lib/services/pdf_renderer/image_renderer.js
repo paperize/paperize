@@ -49,7 +49,7 @@ const imageBox = function(doc, imageName, boxDimensions, options) {
     verticalAlignment:   "top",
     scaleMode:           "fillToBox"
   })
-  let boxRatio = boxDimensions.w / boxDimensions.h
+  const boxRatio = boxDimensions.w / boxDimensions.h
 
   return fetchImageByName(imageName).then((imageObject) => {
     let imageRatio = imageObject.width / imageObject.height,

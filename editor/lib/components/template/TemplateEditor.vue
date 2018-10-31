@@ -9,34 +9,35 @@ v-card
   v-divider
 
   v-card-text
-    v-layout(row)
-      v-flex(xs4)
-        .subheading(v-if="editingSize")
-          a(@click="editingSize = false")
-            i.fas.fa-pencil-alt
-          |  Component Size
+    v-container(ma-0 pa-0 grid-list-md fluid)
+      v-layout(row)
+        v-flex(xs4)
+          .subheading(v-if="editingSize")
+            a(@click="editingSize = false")
+              i.fas.fa-pencil-alt
+            |  Component Size
 
-          template-size-editor(:template="componentTemplate")
+            template-size-editor(:template="componentTemplate")
 
-        .subheading(v-else)
-          a(@click="editingSize = true")
-            i.fas.fa-pencil-alt
-          |  Component Size {{ sizeLabel }}
+          .subheading(v-else)
+            a(@click="editingSize = true")
+              i.fas.fa-pencil-alt
+            |  Component Size {{ sizeLabel }}
 
-        layer-manager(:template="componentTemplate")
+          layer-manager(:template="componentTemplate")
 
-      v-flex(xs4)
-        .subheading Layer Config
+        v-flex(xs4)
+          .subheading Layer Config
 
-        template(v-if="activeLayer")
-          layer-editor(:layer="activeLayer" :source="componentSource" :template="componentTemplate")
-        template(v-else)
-          p Create or select a layer
+          template(v-if="activeLayer")
+            layer-editor(:layer="activeLayer" :source="componentSource" :template="componentTemplate")
+          template(v-else)
+            p Create or select a layer
 
-      v-flex(xs4)
-        .subheading Preview
+        v-flex(xs4)
+          .subheading Preview
 
-        template-previewer.inline-preview(:game="activeGame" :component="component")
+          template-previewer.inline-preview(:game="activeGame" :component="component")
 </template>
 
 <script>
@@ -50,7 +51,12 @@ v-card
   export default {
     props: ["component"],
 
-    components: { TemplatePreviewer, TemplateSizeEditor, LayerManager, LayerEditor },
+    components: {
+      TemplatePreviewer,
+      TemplateSizeEditor,
+      LayerManager,
+      LayerEditor
+    },
 
     data() {
       return {
@@ -59,7 +65,12 @@ v-card
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeLayer", "findComponentSource", "findComponentTemplate"]),
+      ...mapGetters([
+        "activeGame",
+        "activeLayer",
+        "findComponentSource",
+        "findComponentTemplate"
+      ]),
 
       componentSource() {
         return this.findComponentSource(this.component)
