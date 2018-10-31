@@ -1,99 +1,45 @@
 <template lang="pug">
-fieldset#dimension-editor.fieldset
-  legend Dimensions
+#dimension-editor
+  .subheading Dimensions
 
-  ul.menu
-    li.menu-text Layout
-    li(:class="{'is-active': modeXYWH }")
-      a(@click="dimensionMode = 'xywh'") XYWH
-    li(:class="{'is-active': modeInset }")
-      a(@click="dimensionMode = 'inset'") Inset
+  v-layout(column)
+    v-flex
+      v-btn-toggle(v-model="dimensionMode" mandatory)
+        v-btn(small flat value="xywh") XYWH
+        v-btn(small flat value="inset") Inset
 
-  ul.menu
-    li.menu-text Units
-    li(:class="{'is-active': modePercent }")
-      a(@click="unitMode = 'percent'") %
-    li(:class="{'is-active': modeInches }")
-      a(@click="unitMode = 'inches'") in
-    li(:class="{'is-active': modeMM }")
-      a(@click="unitMode = 'millimeters'") mm
-    li(:class="{'is-active': modePixels }")
-      a(@click="unitMode = 'pixels'") px
+    v-flex
+      v-btn-toggle(v-model="unitMode" mandatory)
+        v-btn(small flat value="percent") %
+        v-btn(small flat value="inches") in
+        v-btn(small flat value="millimeters") mm
+        v-btn(small flat value="pixels") px
 
+    v-flex(v-if="modeXYWH")
+      v-layout(row wrap)
+        v-flex
+          p Expressed as {{ unitDescription }} from the top left corner.
+        v-flex(xs12 md6)
+          v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX")
+        v-flex(xs12 md6)
+          v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY")
+        v-flex(xs12 md6)
+          v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW")
+        v-flex(xs12 md6)
+          v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH")
 
-  template(v-if="modeXYWH")
-    p.mode-description Expressed as {{ unitDescription }} from the top left corner.
-
-    .grid-x.grid-padding-x
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-x")
-            strong X
-          input#dimension-x.input-group-field(type="number" :step='unitStep' v-model.number="dimensionX")
-          label.input-group-label(for="dimension-x")
-            strong {{ unitName }}
-
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-y")
-            strong Y
-          input#dimension-y.input-group-field(type="number" :step='unitStep' v-model.number="dimensionY")
-          label.input-group-label(for="dimension-y")
-            strong {{ unitName }}
-
-    .grid-x.grid-padding-x
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-w")
-            strong W
-          input#dimension-w.input-group-field(type="number" :step='unitStep' v-model.number="dimensionW")
-          label.input-group-label(for="dimension-w")
-            strong {{ unitName }}
-
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-h")
-            strong H
-          input#dimension-h.input-group-field(type="number" :step='unitStep' v-model.number="dimensionH")
-          label.input-group-label(for="dimension-h")
-            strong {{ unitName }}
-
-  template(v-else-if="modeInset")
-    p.mode-description Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
-
-    .grid-x.grid-padding-x
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-t")
-            strong Top
-          input#dimension-t.input-group-field(type="number" :step='unitStep' v-model.number="dimensionT")
-          label.input-group-label(for="dimension-t")
-            strong {{ unitName }}
-
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-r")
-            strong Right
-          input#dimension-r.input-group-field(type="number" :step='unitStep' v-model.number="dimensionR")
-          label.input-group-label(for="dimension-r")
-            strong {{ unitName }}
-
-    .grid-x.grid-padding-x
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-b")
-            strong Bottom
-          input#dimension-b.input-group-field(type="number" :step='unitStep' v-model.number="dimensionB")
-          label.input-group-label(for="dimension-b")
-            strong {{ unitName }}
-
-      .medium-12.large-6.cell
-        .input-group
-          label.input-group-label(for="dimension-l")
-            strong Left
-          input#dimension-l.input-group-field(type="number" :step='unitStep' v-model.number="dimensionL")
-          label.input-group-label(for="dimension-l")
-            strong {{ unitName }}
+    v-flex(v-else-if="modeInset")
+      v-layout(row wrap)
+        v-flex
+          p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
+        v-flex(xs12)
+          v-text-field#dim-t(prefix="T" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT")
+        v-flex(xs12 md6)
+          v-text-field#dim-l(prefix="L" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL")
+        v-flex(xs12 md6)
+          v-text-field#dim-r(prefix="R" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR")
+        v-flex(xs12)
+          v-text-field#dim-b(prefix="B" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB")
 </template>
 
 <script>
@@ -292,13 +238,3 @@ fieldset#dimension-editor.fieldset
     }
   }
 </script>
-
-<style scoped>
-  .menu {
-    font-size: .8em;
-  }
-
-  .mode-description {
-    font-size: .8em;
-  }
-</style>

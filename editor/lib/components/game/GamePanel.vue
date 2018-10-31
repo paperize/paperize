@@ -1,27 +1,41 @@
 <template lang="pug">
-.game-panel.grid-x.grid-padding.x
-  .small-6.cell
-    h1 {{ game.title || "[No title]" }}
+v-layout(row fluid).game-panel
+  v-flex(xs12 md4)
+    .headline {{ game.title || "[No title]" }}
 
-  .small-6.cell
-    .grid-x
-      .small-12.cell
-        ul.menu
-          li
-            .button-group
-              a.button(@click="printGame()")
-                i.fas.fa-file-pdf
-                |  Print Game
-              a.button(title="Print Settings" @click="openPrintSettings()")
-                i.fas.fa-cog
+  v-flex(xs12 md8)
+    v-layout(row fluid)
+      v-flex(sm12)
+        v-btn(small @click="printGame()")
+          v-icon(left) photo_library
+          | Print Game
 
-          li
-            a(@click="$modal.show('Game Modal')") Edit Game
-          li
-            a(@click="confirmDeletion") Delete Game
+        v-btn(small title="Print Settings" @click="showPrintSettingsDialog = true")
+          v-icon(left) settings
+          | Print Settings
 
-  game-form(:game="game")
-  print-settings
+          v-dialog(v-model="showPrintSettingsDialog" max-width="500" lazy)
+            print-settings
+
+        v-btn(small @click="showEditDialog = true")
+          v-icon(left) edit
+          | Edit Game
+
+          v-dialog(v-model="showEditDialog" max-width="500" lazy)
+            game-form(:game="game" @close-dialog="showEditDialog = false")
+
+        v-btn(small @click="showDeleteDialog = true")
+          v-icon(left) delete
+          | Delete Game
+
+          v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
+            v-card.delete-game
+              v-card-title
+                .headline Are you sure you want to delete the Game "{{ game.title }}"?
+              v-card-text It has X Components and was last printed Y.
+              v-card-actions
+                v-btn(@click="showDeleteDialog = false") No
+                v-btn(@click="deleteGame") Yes
 </template>
 
 <script>
@@ -33,40 +47,26 @@
   export default {
     props: ["game"],
 
-    components: {
-      'game-form': GameForm,
-      'print-settings': PrintSettings
+    components: { GameForm, PrintSettings },
+
+    data() {
+      return {
+        showEditDialog: false,
+        showDeleteDialog: false,
+        showPrintSettingsDialog: false
+      }
     },
 
     methods: {
       ...mapActions(["destroyGame"]),
 
-      confirmDeletion() {
-        this.$modal.show('dialog', {
-          title: `Are you sure you want to delete the Game "${this.game.title}"?`,
-          text: `It has X Components and was last printed Y.`,
-          buttons: [
-            {
-              title: 'No',
-              default: true
-            },
-            {
-              title: 'Yes',
-              handler: () => {
-                this.destroyGame(this.game)
-                this.$modal.hide('dialog')
-              }
-            }
-         ]
-        })
+      deleteGame() {
+        this.$router.push({ name: "gameManager" })
+        return this.destroyGame(this.game)
       },
 
       printGame() {
         pdfRenderer.renderGameToPdf(this.game)
-      },
-
-      openPrintSettings() {
-        this.$modal.show('Print Settings')
       }
     }
   }

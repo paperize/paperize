@@ -1,34 +1,43 @@
 <template lang="pug">
-.grid-x
-  .auto.cell
-    h5 Layers
-  .shrink.cell
-    a.button.tiny.success(@click="selectNewLayerType()")
-      i.fas.fa-plus
-      |  New Layer
+v-layout(column)
+  v-flex
+    .subheading
+      | Layers
 
+      v-btn(small fab color="primary" @click="showNewLayerDialog = true")
+        v-icon library_add
 
-  .small-12.cell
-    table
-      draggable(v-model="templateLayers" element="tbody" :options="{ handle: '.drag' }")
-        tr.layer(v-for="layer in templateLayers" @click="setActiveLayer({ layer })" :class="{ 'active-layer': isActive(layer) }")
-          td.grid-x.grid-padding-x
-            .shrink.cell.drag
-              i.fas.fa-bars
+    v-dialog(v-model="showNewLayerDialog" max-width="500" lazy)
+      v-card
+        v-card-title
+          .headline Add what type of Layer?
+        v-card-actions
+          v-btn(flat @click="showNewLayerDialog = false") Cancel
+          v-btn(flat @click="createLayer('text')") Text
+          v-btn(flat @click="createLayer('image')") Image
+          v-btn(flat @click="createLayer('shape')") Shape
+          v-btn(flat @click="createLayer('code')") Code
 
-              = " "
+  v-list
+    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })")
+      v-list-tile-avatar
+        v-avatar(color="primary" size="36")
+          span.white--text.headline.text-capitalize {{ layer.type[0] }}
 
-              i.fas.fa-code(v-if="layer.type == 'code'" title="This is a Code Layer")
-              i.fas.fa-font(v-else-if="layer.type == 'text'" title="This is a Text Layer")
-              i.far.fa-square(v-else-if="layer.type == 'shape'" title="This is a Shape Layer")
-              i.fas.fa-image(v-else-if="layer.type == 'image'" title="This is an Image Layer")
+      v-list-tile-content
+        v-list-tile-title {{ layer.name }}
 
-            .auto.cell
-              span(:title="layer.name")  {{ layer.name | truncate }}
+      v-list-tile-action
+        v-btn(fab small @click="confirmDeleteLayer(layer)")
+          v-icon delete
 
-            .shrink.cell
-              a(@click="confirmDeletion(layer)")
-                i.fas.fa-times
+  v-dialog(v-model="showDeleteLayerDialog" max-width="500" lazy)
+    v-card
+      v-card-title
+        .headline Are you sure?
+      v-card-actions
+        v-btn(@click="showDeleteLayerDialog = false") No
+        v-btn(@click="deleteLayer(layerToDelete)") Yes
 </template>
 
 <script>
@@ -52,6 +61,8 @@
 
     data() {
       return {
+        showNewLayerDialog: false,
+        showDeleteLayerDialog: false,
         editingVar: null
       }
     },
@@ -92,79 +103,20 @@
         return this.activeLayer === layer
       },
 
-      selectNewLayerType() {
-        const handlerFunction = (layerType) => {
-          return () => {
-            this.createTemplateLayer({ template: this.template, layerType })
-            this.$modal.hide("dialog")
-          }
-        }
-
-        this.$modal.show('dialog', {
-          title: "Add what type of Layer?",
-          buttons: [
-            {
-              title: "Cancel",
-              default: true
-            }, {
-              title: "Text",
-              handler: handlerFunction("text")
-            }, {
-              title: "Image",
-              handler: handlerFunction("image")
-            }, {
-              title: "Shape",
-              handler: handlerFunction("shape")
-            }, {
-              title: "Code",
-              handler: handlerFunction("code")
-            }
-          ]
-        })
-
+      createLayer(layerType) {
+        this.createTemplateLayer({ template: this.template, layerType })
+        this.showNewLayerDialog = false
       },
 
-      confirmDeletion(layer) {
-        this.$modal.show("dialog", {
-          title: `Are you sure you want to delete the layer: "${layer.name}"?`,
-          buttons: [
-            {
-              title: "No",
-              default: true
-            }, {
-              title: "Yes",
-              handler: () => {
-                this.destroyTemplateLayer({ template: this.template, layer })
-                this.$modal.hide("dialog")
-              }
-            }
-          ]
-        })
-      }
+      confirmDeleteLayer(layer) {
+        this.showDeleteLayerDialog = true
+        this.layerToDelete = layer
+      },
+
+      deleteLayer() {
+        this.destroyTemplateLayer({ template: this.template, layer: this.layerToDelete })
+        this.showDeleteLayerDialog = false
+      },
     }
   }
 </script>
-
-<style>
-  .drag {
-    color: gray;
-    cursor: move;
-  }
-
-  .layer {
-    cursor: pointer;
-  }
-
-  .layer:hover {
-    background-color: lightgray;
-  }
-
-  .active-layer {
-    font-size: 1.25em;
-    font-weight: bold;
-  }
-
-  .active-layer .drag {
-    color: initial;
-  }
-</style>

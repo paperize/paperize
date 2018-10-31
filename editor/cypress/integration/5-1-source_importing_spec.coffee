@@ -10,29 +10,28 @@ describe "Importing Sources", ->
       cy.get("input[name='source-paste']")
           .type(paste)
 
-      cy.get("div[data-modal=source-paste-form]")
-          .find(".button.success")
-            .click()
+      cy.get("button")
+        .contains("Import")
+        .click()
 
     beforeEach ->
-      cy.get(".button")
+      cy.get("button")
         .contains("Set a Source...")
         .click()
 
       cy.get("#source-manager")
         .contains("Paste a Link")
-          .click()
+        .click()
 
-      cy.get("div[data-modal=source-paste-form]")
-          .should("be.visible")
+      cy.contains("Import a Google Sheet")
 
     it "closes when i cancel", ->
-      cy.get("div[data-modal=source-paste-form]")
-          .find(".button.alert")
-            .click()
+      cy.get("button")
+        .contains("Cancel")
+        .click()
 
-      cy.get("div[data-modal=source-paste-form]")
-          .should("not.be.visible")
+      cy.contains("Import a Google Sheet")
+        .should("not.be.visible")
 
     it "errors when ID can't be parsed", ->
       submitPaste("abcd1234")
@@ -103,13 +102,13 @@ describe "Importing Sources", ->
         cy.get("input[name='source-paste']")
             .type("the mocked id")
 
-        cy.get("div[data-modal=source-paste-form]")
-            .find(".button.success")
-              .click()
+        cy.get("button")
+          .contains("Import")
+          .click()
 
       it "closes", ->
-        cy.get("div[data-modal=source-paste-form]")
-            .should("not.be.visible")
+        cy.contains("Import a Google Sheet")
+          .should("not.be.visible")
 
       it "i see i have the new source selected", ->
         cy.contains('Love Letter Revisited')
@@ -125,23 +124,18 @@ describe "Importing Sources", ->
           cy.stub(googleSheets, "fetchSheets").returns(@fetchSheetsPromise)
           cy.stub(googleSheets, "fetchSheetById").resolves(sources.loveLetter)
 
-
     beforeEach ->
-      cy.get(".button")
+      cy.get("button")
         .contains("Set a Source...")
         .click()
 
       cy.get("#source-manager")
         .contains("Browse Google Sheets")
-          .click()
-
-      cy.get("div[data-modal='source-explorer']")
-          .should("be.visible")
+        .click()
 
     it "has a title and call-to-action", ->
-      cy.get("div[data-modal='source-explorer']").within ->
-        cy.contains("Browse Your Google Sheets")
-        cy.get('a.button').contains("Fetch Sheet Listing...")
+      cy.contains("Browse Your Google Sheets")
+      cy.get('button').contains("Fetch Sheet Listing...")
 
     describe "fetching sources the first time", ->
       beforeEach ->
@@ -162,21 +156,19 @@ describe "Importing Sources", ->
             # 2 come back from google
             @fetchSheetsPromiseResolve([sources.carcassonne, sources.loveLetter])
             # 1 is already in the store
-            vuex.commit("setSources", { carcassonne: sources.carcassonne })
+            vuex.commit("setSources", { loveLetter: sources.loveLetter })
 
         it "adds new sources", ->
-          cy.get("div[data-modal='source-explorer']").within ->
-            cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Love Letter Revisited (Refresh)")
 
         it "refreshes existing sources", ->
-          cy.get("div[data-modal='source-explorer']").within ->
-            cy.contains("Carcassonne (Refresh)")
+          cy.contains("Carcassonne (Add)")
 
     describe "re-fetching sources", ->
       beforeEach ->
         cy.vuexAndFixtures ({ vuex, fixtures: { sources }}) ->
           vuex.commit("setRemoteSources", [sources.carcassonne, sources.loveLetter])
-          vuex.commit("setSources", { carcassonne: sources.carcassonne })
+          vuex.commit("setSources", { loveLetter: sources.loveLetter })
 
         cy.contains("Refresh Sheet Listing...")
           .click()
@@ -194,9 +186,9 @@ describe "Importing Sources", ->
           # 2 come back from google
           @fetchSheetsPromiseResolve([sources.loveLetter, sources.pandemic])
 
-        cy.get("div[data-modal='source-explorer']").within ->
+        cy.get(".source-explorer").within ->
           cy.contains("Carcassonne").should("not.be.visible")
-          cy.contains("Love Letter Revisited (Add)")
+          cy.contains("Love Letter Revisited")
           cy.contains("Pandemic")
 
 
@@ -211,7 +203,7 @@ describe "Importing Sources", ->
 
       cy.loadSourcesIntoVuex()
 
-      cy.get(".button")
+      cy.get("button")
         .contains("Set a Source...")
         .click()
 
@@ -222,8 +214,8 @@ describe "Importing Sources", ->
     it "prompts with diff before overwrite"
 
     it "overwrites the data if accepted", ->
-      cy.get("#source-editor .button")
-        .contains("Edit")
+      cy.get("#source-editor button")
+        .contains("edit")
         .click()
 
       cy.get("#source-manager").within ->

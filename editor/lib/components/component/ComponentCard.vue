@@ -1,22 +1,27 @@
 <template lang="pug">
-.component.card.small-10.small-offset-1.cell(:class="{ active: isActiveComponent() }" @click="setActive")
-  component-form(:component="component")
-  .card-divider
-    p.title {{ component.title || "[No title]" }} ({{ totalItems }})
+v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive")
+  v-card
+    v-card-title
+      .headline {{ component.title || "[No title]" }} ({{ totalItems }})
 
-  .card-section
-    p {{ component.type || "[No type]" }}
+    v-card-text
+      p {{ component.type || "[No type]" }}
 
-    ul.menu
-      li
-        a.button.small(@click="showEditModal") Edit
-      li
-        a.button.small.alert(@click.stop="confirmDeletion") Delete
+    v-card-actions
+      v-btn(@click="$emit('edit-me')") Edit
+      v-btn(color="red" @click.stop="showDeleteDialog = true") Delete
+  v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
+    v-card.delete-component
+      v-card-title
+        .headline Are you sure you want to delete this component?
+      v-card-text It will be lost forever.
+      v-card-actions
+        v-btn(@click="showDeleteDialog = false") No
+        v-btn(@click="deleteComponent") Yes
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import ComponentForm from './ComponentForm.vue'
 
   export default {
     props: {
@@ -25,24 +30,22 @@
       }
     },
 
-    components: {
-      "component-form": ComponentForm
+    data() {
+      return {
+        showDeleteDialog: false
+      }
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent"]),
+      ...mapGetters(["activeGame", "activeComponent", "getItemQuantity"]),
 
       totalItems() {
-        return this.$store.getters.getItemQuantity(this.component)
+        return this.getItemQuantity(this.component)
       }
     },
 
     methods: {
       ...mapActions(["destroyGameComponent"]),
-
-      showEditModal() {
-        this.$modal.show(`edit-component-modal-${this.component.id}`)
-      },
 
       setActive() {
         if(this.isActiveComponent()) { return }
@@ -55,71 +58,10 @@
         return this.component.id === (this.activeComponent && this.activeComponent.id)
       },
 
-      confirmDeletion() {
-        this.$modal.show("dialog", {
-          title: 'Are you sure you want to delete this component?',
-          text: 'It will be lost forever.',
-          buttons: [
-            {
-              title: 'No',
-              default: true
-            },
-            {
-              title: 'Yes',
-              handler: () => {
-                this.destroyGameComponent({ game: this.activeGame, component: this.component})
-                this.$modal.hide('dialog')
-              }
-            }
-         ]
-        })
+      deleteComponent() {
+        this.destroyGameComponent({ game: this.activeGame, component: this.component})
+        this.showDeleteDialog = false
       }
     }
   }
 </script>
-
-<style scoped>
-  .component {
-    cursor: pointer;
-  }
-
-    /* Animate in drop shadow on selection */
-  .component {
-    box-shadow: 0; /* 1px 2px rgba(0,0,0,0.15); */
-    transition: all .3s ease-out ;
-    opacity: .75;
-  }
-
-  /* Pre-render the bigger shadow, but hide it */
-  .component::after {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-
-  /* Transition to showing the bigger shadow on hover */
-  .component:hover, .component.active {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    opacity: 1;
-  }
-
-  /*.component:hover, .component.active {
-    box-shadow: 5px 5px 5px gray;
-  }*/
-
-  .component.active {
-    cursor: initial;
-  }
-
-  .component .menu {
-    display: none;
-  }
-
-  .component.active .menu {
-    display: initial;
-  }
-
-  .component.active.card .title {
-    font-weight: bold;
-  }
-</style>

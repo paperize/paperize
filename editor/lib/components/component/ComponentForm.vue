@@ -1,26 +1,16 @@
 <template lang="pug">
-modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
-  form(method="post" v-on:submit.prevent="closeModal")
-    .grid-x.grid-padding-x
-      .small-12.cell
-        h2 Component: {{ component.title }}
-        hr
+v-form.component-form(@submit.prevent="$emit('close-dialog')")
+  v-card
+    v-card-title
+      .headline Component: {{ component.title }}
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(:for="`component-title-${component.id}`") Title
-          input.input-group-field.component-title-new(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentTitle")
+    v-card-text
+      v-text-field.component-title(v-model="componentTitle" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
 
-      .small-12.cell
-        template-size-editor(:template="findComponentTemplate(component)")
+      template-size-editor(:template="findComponentTemplate(component)")
 
-      .small-12.cell
-        button.small.button(@click="closeModal") Close
-
-
-  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-    span(aria-hidden="true") &times;
+    v-card-actions
+      v-btn(small @click="$emit('close-dialog')") Close
 </template>
 
 <script>
@@ -34,13 +24,13 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
       }
     },
 
-    components: {
-      "template-size-editor": TemplateSizeEditor,
-    },
+    components: { TemplateSizeEditor },
 
     data() {
       return {
-        modalName: `edit-component-modal-${this.component.id}`
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     },
 
@@ -55,11 +45,5 @@ modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable=
         }
       }
     },
-
-    methods: {
-      closeModal() {
-        this.$modal.hide(this.modalName)
-      }
-    }
   }
 </script>

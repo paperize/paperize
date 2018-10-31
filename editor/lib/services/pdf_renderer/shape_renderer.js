@@ -50,6 +50,9 @@ export default {
       strokeFillMode = "S"
     } else if(layer.fillPresent) {
       strokeFillMode = "F"
+    } else {
+      // No stroke no fill? Nothing to draw at all!
+      return
     }
 
     if(layer.shape === "rectangle") {

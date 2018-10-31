@@ -1,65 +1,61 @@
 <template lang="pug">
-modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollable="true")
-  .grid-x.grid-padding-x(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="handleFileDragAndDrop")
-    .small-12.cell
-      h1 Image Library
+v-card.image-manager
+  v-card-title
+    .headline Image Library
 
-    .small-12.cell(v-if="showImageSpinner")
-      spinner(message="Importing images...")
+  v-card-text(v-if="showImageSpinner")
+    v-progress-circular(indeterminate color="primary")
+    p Importing images...
 
-    .small-12.cell(v-else)
-      input(id="image-files-input" type="file" multiple @change="handleFileInput")
+  v-card-text(v-else)
+    input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
-      table
-        thead
-          tr
-            th Controls
-            th Name
-            th Preview
-        tbody
-          tr(v-for="image in images")
-            td(v-if="editing == image.id")
-              a.button.tiny(@click="stopEditing")
-                = "Accept"
-            td(v-else)
-              a.button.alert.tiny(@click="confirmDeletion(image)") X
-              a.button.tiny(@click="editImage(image)")
-                //- = "Edit "
-                i.fas.fa-pencil-alt.fa-fw
+    v-data-table.elevation-1(:items="images")
+      template(slot="items" slot-scope="props")
+        td(v-if="editing == props.item.id")
+          v-btn(small @click="stopEditing") Accept
 
-            td(v-if="editing == image.id")
-              inline-image-editor(:image="image" @next="editNextImage(true)" @previous="editNextImage(false)")
-            td(v-else)
-              a(:title="image.id" @click="editImage(image)")  {{ image.name }}
+        td(v-else)
+          v-btn(small @click="showDeleteImageDialogFor(props.item)")
+            v-icon delete
+          v-btn(small @click="editImage(props.item)")
+            v-icon edit
 
-            td.preview
-              local-image(:imageId="image.id")
+        td(v-if="editing == props.item.id")
+          inline-image-editor(:image="props.item" @next="editNextImage(true)" @previous="editNextImage(false)")
 
-      input(id="image-files-input" type="file" multiple @change="handleFileInput")
+        td(v-else)
+          a(:title="props.item.id" @click="editImage(props.item)")  {{ props.item.name }}
 
+        td.preview
+          local-image(:imageId="props.item.id")
 
-  button.close-button(aria-label="Close modal" type="button" @click="$modal.hide('Image Library')")
-    span(aria-hidden="true") &times;
+    v-dialog(v-model="showDeleteImageDialog" max-width="500" lazy)
+      v-card
+        v-card-title
+          .headline Are you sure you want to delete the image "{{ imageToDelete.name }}"?
+        v-card-actions
+          v-btn(@click="showDeleteImageDialog = false") No
+          v-btn(@click="destroyImage()") Yes
+
+    input(id="image-files-input" type="file" multiple @change="handleFileInput")
 </template>
 
 <script>
   import { find, findIndex } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
 
-  import spinner from 'vue-simple-spinner'
   import InlineImageEditor from './InlineImageEditor.vue'
   import LocalImage from './LocalImage.vue'
 
   export default {
-    components: {
-      spinner,
-      'inline-image-editor': InlineImageEditor,
-      'local-image': LocalImage
-    },
+    components: { InlineImageEditor, LocalImage },
 
     data() {
       return {
         showImageSpinner: false,
+        showDeleteImageDialog: false,
+        imageToDelete: {},
         editing: null
       }
     },
@@ -70,6 +66,7 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
 
     methods: {
       ...mapActions(["deleteImage"]),
+
       editImage(image) {
         this.editing = image.id
       },
@@ -106,22 +103,14 @@ modal.image-manager(name="Image Library" height="auto" :pivotY="0.25" :scrollabl
         })
       },
 
-      confirmDeletion(image) {
-        this.$modal.show('dialog', {
-          title: `Are you sure you want to delete the image "${image.name}"?`,
-          buttons: [
-            {
-              title: "No",
-              default: true
-            }, {
-              title: "Yes",
-              handler: () => {
-                this.deleteImage({ image })
-                this.$modal.hide('dialog')
-              }
-            }
-          ]
-        })
+      showDeleteImageDialogFor(image) {
+        this.imageToDelete = image
+        this.showDeleteImageDialog = true
+      },
+
+      destroyImage() {
+        this.deleteImage({ image: this.imageToDelete })
+        this.showDeleteImageDialog = false
       }
     }
   }

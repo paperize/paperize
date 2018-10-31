@@ -13,14 +13,19 @@ persistence.initializeAndWatchStore(store)
 import router from './routes'
 
 // Vue extensions
-import Autocomplete from 'v-autocomplete'
-Vue.use(Autocomplete)
+import Vuetify from 'vuetify'
+import colors from 'vuetify/es5/util/colors'
+import 'vuetify/dist/vuetify.min.css'
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.blueGrey.lighten2,
+    secondary: colors.blueGrey.darken2,
+    accent: colors.lime.accent3
+  }
+})
 
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
-
-import VModal from 'vue-js-modal'
-Vue.use(VModal, { dialog: true })
 
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
@@ -29,19 +34,16 @@ if(process.env.NODE_ENV == 'test') {
   window.paperize = { store }
 }
 
-import TitleBar from './components/sitewide/TitleBar.vue'
+import AppLayout from './components/layout/AppLayout.vue'
 
 let startApp = () => {
   // Top-level Vue component
   new Vue({
     router, store,
-    components: {
-      "title-bar": TitleBar
-    },
-    // Render the TitleBar outside the router view
-    render: (h) => h("div", [h("title-bar"), h("router-view"), h("v-dialog")])
-    // Mount it here in the index.html
-  }).$mount('#paperize-app')
+    el: '#paperize-app',
+    components: { AppLayout },
+    render: (h) => h("app-layout")
+  })
 }
 
 window.addEventListener('load', startApp)

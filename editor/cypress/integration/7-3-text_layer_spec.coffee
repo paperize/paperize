@@ -2,16 +2,16 @@ describe "Text Layers", ->
   beforeEach ->
     cy.loginAndEditGame()
     cy.get("#template-editor").within ->
-      cy.contains("Edit").click()
+      cy.contains("edit").click()
 
-    cy.contains("New Layer").click()
+    cy.contains("library_add").click()
     cy.contains("Text").click()
 
   it "is created", ->
     cy.contains("[text] 0")
 
-  it "can be set to rectangle", ->
-    cy.get(".text-layer-fields .text-content")
+  it "uses a template", ->
+    cy.get(".text-content textarea")
       .type("""
         n: {{}{{}n}}
         q: {{}{{}q}}

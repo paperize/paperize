@@ -1,45 +1,55 @@
 <template lang="pug">
-modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Database Manager
-      hr
+v-card.database-manager
+  v-card-title
+    .headline Database Manager
 
-  .grid-x.grid-padding-x(v-if="selectedDatabase")
-    .small-12.cell
-      a(@click="selectedDatabase = null") Back...
-      a.button(@click="exportDatabase") Export
-      a.button.alert(@click="clearDatabaseConfirm") Clear
+  v-card-text(v-if="selectedDatabase")
+    v-layout(row wrap)
+      v-flex(xs12 md12)
+        v-btn(@click="selectedDatabase = null") Back...
+        v-btn(@click="exportDatabase") Export
+        v-btn(@click="showDatabaseClearDialog = true") Clear
 
-    .small-12.medium-6.cell
-      h3 Game Data ({{ selectedDatabaseSize }} bytes)
-      dl
-        dt Games:
-        dd.games-total {{ allGames.length }}
-        dt Components:
-        dd {{ allComponents.length }}
-        dt Sources:
-        dd {{ allSources.length }}
-        dt Templates:
-        dd {{ allTemplates.length }}
-        dt Layers:
-        dd {{ allLayers.length }}
-        dt Dimensions:
-        dd {{ allDimensions.length }}
+        v-dialog(v-model="showDatabaseExportDialog" max-width="500" lazy)
+          v-card
+            v-card-text
+              textarea(@click="$event.target.select()") {{ jsonExport }}
 
-    .small-12.medium-6.cell
-      h3 Game Assets
-      dl
-        dt Images:
-        dd {{ images.length }}
+        v-dialog(v-model="showDatabaseClearDialog" max-width="500" lazy)
+          v-card.database-clear
+            v-card-title Are you sure?
+            v-card-actions
+              v-btn(@click="showDatabaseClearDialog = false") Cancel
+              v-btn(color="red" @click="clearDatabase") Clear Database
 
-  .grid-x.grid-padding-x(v-else)
-    .small-12.cell
-      p
-        a(@click="selectedDatabase = true") avid_gamer@example.com
 
-  modal(name="JSON Export" height="100%" :pivotY="0.1" :scrollable="true")
-    textarea(@click="$event.target.select()") {{ jsonExport }}
+      v-flex(xs12 md6)
+        .subheading Game Data ({{ selectedDatabaseSize }} bytes)
+
+        dl
+          dt Games:
+          dd.games-total {{ allGames.length }}
+          dt Components:
+          dd {{ allComponents.length }}
+          dt Sources:
+          dd {{ allSources.length }}
+          dt Templates:
+          dd {{ allTemplates.length }}
+          dt Layers:
+          dd {{ allLayers.length }}
+          dt Dimensions:
+          dd {{ allDimensions.length }}
+
+      v-flex(xs12 md6)
+        .subheading Game Assets
+
+        dl
+          dt Images:
+          dd {{ images.length }}
+
+  v-card-text(v-else)
+    p
+      a(@click="selectedDatabase = true") avid_gamer@example.com
 </template>
 
 <script>
@@ -50,18 +60,21 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
     data() {
       return {
         selectedDatabase: null,
+        showDatabaseExportDialog: false,
+        showDatabaseClearDialog: false,
         jsonExport: {}
       }
     },
 
-    computed: { ...mapGetters([
-      "allGames",
-      "allComponents",
-      "allSources",
-      "allTemplates",
-      "allLayers",
-      "allDimensions",
-      "images",
+    computed: {
+      ...mapGetters([
+        "allGames",
+        "allComponents",
+        "allSources",
+        "allTemplates",
+        "allLayers",
+        "allDimensions",
+        "images",
       ]),
 
       selectedDatabaseSize() {
@@ -74,28 +87,12 @@ modal(name="Database Manager" :pivotY="0.1" :scrollable="true" height="auto")
       exportDatabase() {
         // get the JSON of the db
         this.jsonExport = databaseController.getJSON()
-        this.$modal.show("JSON Export")
-      },
-
-      clearDatabaseConfirm() {
-        // this.$modal.show("Confirmation")
-        this.$modal.show('dialog', {
-          title: "Are you sure?",
-          buttons: [
-            {
-              title: "Cancel",
-              default: true
-            }, {
-              title: "Yes",
-              handler: this.clearDatabase
-            }
-          ]
-        })
+        this.showDatabaseExportDialog = true
       },
 
       clearDatabase() {
-        this.$modal.hide('dialog')
         databaseController.clear()
+        this.showDatabaseClearDialog = false
       }
     }
   }

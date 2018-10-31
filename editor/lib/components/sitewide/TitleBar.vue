@@ -1,54 +1,53 @@
 <template lang="pug">
-.grid-container
-  database-manager
-  image-manager
-  .grid-x
-    .top-bar.small-12.cell
-      .top-bar-left
-        ul.menu
-          li
-            router-link(:to="{ name: homeLink }")
-              strong Paperize.io
-          li.build-status
-            a(target="_blank" :title="gitChanges" href="https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45")
-              | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
-      .top-bar-right
-        profile-component
+v-toolbar(app)
+  v-toolbar-title
+    router-link(:to="{ name: homeLink }") Paperize.io
+
+    v-tooltip
+      span.caption(slot="activator")= " ver.A4"
+      | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
+
+  v-spacer
+
+  v-toolbar-items
+    template(v-if="loggedIn")
+      v-btn(@click="showImageManager = true") Images
+      v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
+        image-manager
+
+      v-btn(@click="showDatabaseManager = true") Database
+      v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
+        database-manager
+
+    template(v-else)
+      v-btn(flat) About
+    profile
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import Profile from './Profile.vue'
   import ImageManager from '../asset/ImageManager.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
-  import FoundationMixin from '../../mixins/foundation'
 
   export default {
-    mixins: [FoundationMixin],
-
-    components: {
-      "profile-component": Profile,
-      "database-manager": DatabaseManager,
-      "image-manager": ImageManager
-    },
+    components: { Profile, DatabaseManager, ImageManager },
 
     data() {
       return {
         gitSha: process.env.GIT_SHA,
-        gitChanges: process.env.GIT_CHANGE_INFO
+        gitChanges: process.env.GIT_CHANGE_INFO,
+        showImageManager: false,
+        showDatabaseManager: false,
       }
     },
 
     computed: {
+      ...mapGetters(["loggedIn"]),
+
       homeLink () {
-        return this.$store.state.authenticated ? 'gameManager' : 'splash'
+        return this.loggedIn ? 'gameManager' : 'splash'
       }
     }
   }
 </script>
-
-<style>
-  .build-status {
-    font-size: .8em;
-    /*padding: .7rem 1rem;*/
-  }
-</style>

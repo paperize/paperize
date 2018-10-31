@@ -1,24 +1,21 @@
 <template lang="pug">
-.layer-editor
-  .grid-x.grid-padding-x
-    .small-12.cell
-      .input-group
-        span.input-group-label
-          label(for="layer-name")
-            strong Name
-        input.input-group-field(id="layer-name" type="text" v-model="layerName")
+v-layout(column)
+  v-flex
+    v-text-field(v-model="layerName" label="Name")
 
-  dimension-editor(:layer="layer" :size="template.size")
+  v-flex
+    dimension-editor(:layer="layer" :size="template.size")
 
-  code-layer-editor(v-if="layer.type == 'code'" :layer="layer" :source="source")
-  text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer" :source="source")
-  image-layer-editor(v-else-if="layer.type == 'image'" :layer="layer" :source="source")
-  shape-layer-editor(v-else-if="layer.type == 'shape'" :layer="layer" :source="source")
+  v-flex
+    code-layer-editor(v-if="layer.type == 'code'" :layer="layer" :source="source")
+    text-layer-editor(v-else-if="layer.type == 'text'" :layer="layer" :source="source")
+    image-layer-editor(v-else-if="layer.type == 'image'" :layer="layer" :source="source")
+    shape-layer-editor(v-else-if="layer.type == 'shape'" :layer="layer" :source="source")
 </template>
 
 <script>
-  import { isString, debounce } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
+  import { debounce } from 'lodash'
+  import { mapActions } from 'vuex'
   import DimensionEditor from './DimensionEditor.vue'
   import CodeLayerEditor from './CodeLayerEditor.vue'
   import TextLayerEditor from './TextLayerEditor.vue'
@@ -31,11 +28,11 @@
     props: ["layer", "source", "template"],
 
     components: {
-      "dimension-editor": DimensionEditor,
-      "code-layer-editor": CodeLayerEditor,
-      "text-layer-editor": TextLayerEditor,
-      "image-layer-editor": ImageLayerEditor,
-      "shape-layer-editor": ShapeLayerEditor,
+      DimensionEditor,
+      CodeLayerEditor,
+      TextLayerEditor,
+      ImageLayerEditor,
+      ShapeLayerEditor,
     },
 
     computed: {
@@ -57,10 +54,3 @@
     }
   }
 </script>
-
-<style>
-  /* color inputs are ugly in XY grid with input groups if I don't puff them up a bit */
-  input[type='color'] {
-    height: 2.5em;
-  }
-</style>
