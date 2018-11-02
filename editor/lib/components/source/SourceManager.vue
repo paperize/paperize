@@ -21,7 +21,7 @@ v-card#source-manager
       strong No source set.
 
       v-list(dense)
-        v-list-tile.set-source(v-for="source in allSources" @click="setSource(source)")
+        v-list-tile.set-source(v-for="source in allSources" :key="source.name" @click="setSource(source)")
           v-list-tile-content
             v-list-tile-title {{ source.name }}
 
