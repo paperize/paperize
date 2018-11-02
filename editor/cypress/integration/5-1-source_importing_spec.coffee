@@ -7,7 +7,7 @@ describe "Importing Sources", ->
 
   context "by pasting a Google Sheet URL or ID", ->
     submitPaste = (paste) ->
-      cy.get("input[name='source-paste']")
+      cy.get(".source-paste input")
           .type(paste)
 
       cy.get("button")
@@ -99,7 +99,7 @@ describe "Importing Sources", ->
             cy.stub(googleSheets, "fetchSheets").returns(Promise.resolve([loveLetter]))
             cy.stub(googleSheets, "fetchSheetById").returns(Promise.resolve(loveLetter))
 
-        cy.get("input[name='source-paste']")
+        cy.get(".source-paste input")
             .type("the mocked id")
 
         cy.get("button")
