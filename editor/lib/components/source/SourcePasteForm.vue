@@ -12,10 +12,9 @@ v-form(@submit.prevent="importSourceViaPaste()")
       template(v-else)
         p.error-with-paste(v-if="errorWithPaste") Error: {{ errorWithPaste }}
 
-        label
-          | Paste a Google Sheets link or ID here:
-          input(type="text" name="source-paste" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        v-text-field(label="Paste the URL of your Google Sheet" v-model="pastedSource" placeholder="https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
+    v-card-actions
         v-btn(@click="$emit('close-dialog')") Cancel
         v-btn(@click="importSourceViaPaste()") Import
 </template>

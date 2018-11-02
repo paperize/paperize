@@ -3,30 +3,30 @@ v-card#source-manager
   v-card-title
     .headline Source Manager
 
-  v-card-text
-    template(v-if="componentSource")
-      dl
-        dt Current Source:
-        dd {{ componentSource.name }}
+  v-card-text(v-if="componentSource")
+    dl
+      dt Current Source:
+      dd {{ componentSource.name }}
 
-      v-btn(small color="error" @click="unlinkComponentSource(component)")
-        v-icon(left) delete
-        | Change Now...
+    v-btn(small color="error" @click="unlinkComponentSource(component)")
+      v-icon(left) delete
+      | Change Now...
 
-      v-btn(small @click="createOrUpdateSourceById(componentSource.id)")
-        v-icon(left) sync
-        | Refresh Now
+    v-btn(small @click="createOrUpdateSourceById(componentSource.id)")
+      v-icon(left) sync
+      | Refresh Now
 
-    template(v-else)
+  template(v-else)
+    v-card-text
       strong No source set.
 
-      template(v-for="source in allSources")
-        v-btn.delete-source(small color="error" @click="confirmDeletion(source)")
-          v-icon delete
-        v-btn.set-source(small color="success" @click="setSource(source)")
-          v-icon check
+      v-list(dense)
+        v-list-tile.set-source(v-for="source in allSources" @click="setSource(source)")
+          v-list-tile-content
+            v-list-tile-title {{ source.name }}
 
-        a(@click="setSource(source)") {{ source.name }}
+          v-list-tile-action.delete-source(@click.stop="confirmDeletion(source)")
+            v-icon delete
 
       v-dialog(v-model="showSourceDeleteDialog" max-width="500" lazy)
         v-card
@@ -37,6 +37,7 @@ v-card#source-manager
             v-btn(@click="showSourceDeleteDialog = false") No
             v-btn(@click="deleteSource") Yes
 
+    v-card-actions
       v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
       v-dialog(v-model="showSourceExplorerDialog" max-width="500" lazy)
         source-explorer(@close-dialog="showSourceExplorerDialog = false")
