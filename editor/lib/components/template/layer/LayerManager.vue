@@ -19,17 +19,18 @@ v-layout(column)
           v-btn(flat @click="createLayer('code')") Code
 
   v-list
-    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })")
-      v-list-tile-avatar
-        v-avatar(color="primary" size="36")
-          span.white--text.headline.text-capitalize {{ layer.type[0] }}
+    draggable(v-model="templateLayers")
+      v-list-tile(avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })")
+        v-list-tile-avatar
+          v-avatar(color="primary" size="36")
+            span.white--text.headline.text-capitalize {{ layer.type[0] }}
 
-      v-list-tile-content
-        v-list-tile-title {{ layer.name }}
+        v-list-tile-content
+          v-list-tile-title {{ layer.name }}
 
-      v-list-tile-action
-        v-btn(fab small @click="confirmDeleteLayer(layer)")
-          v-icon delete
+        v-list-tile-action
+          v-btn(fab small @click="confirmDeleteLayer(layer)")
+            v-icon delete
 
   v-dialog(v-model="showDeleteLayerDialog" max-width="500" lazy)
     v-card
@@ -49,15 +50,6 @@ v-layout(column)
     props: ["template"],
 
     components: { draggable },
-
-    filters: {
-      truncate(string) {
-        if(string.length > 20) {
-          string = `${string.substr(0, 18)}...`
-        }
-        return string
-      }
-    },
 
     data() {
       return {

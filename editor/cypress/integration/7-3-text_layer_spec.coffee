@@ -7,8 +7,12 @@ describe "Text Layers", ->
     cy.contains("library_add").click()
     cy.contains("Text").click()
 
+    cy.contains("library_add").click()
+    cy.contains("Text").click()
+
   it "is created", ->
     cy.contains("[text] 0")
+    cy.contains("[text] 1")
 
   it "uses a template", ->
     cy.get(".text-content textarea")
