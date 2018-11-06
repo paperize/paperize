@@ -33,8 +33,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from 'vuex'
-  import auth from '../../auth'
+  import { mapGetters, mapActions } from 'vuex'
 
   const ERROR_CODE_MAP = {
     popup_closed_by_user: "You closed the pop-up without logging in.",

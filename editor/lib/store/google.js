@@ -1,5 +1,4 @@
 import Promise from 'bluebird'
-import Vue from 'vue'
 import auth from '../auth'
 import googleSheets from '../google_sheets'
 
@@ -19,7 +18,7 @@ const GoogleModule = {
   },
 
   actions: {
-    googleLoginFlow({ commit }) {
+    googleLoginFlow() {
       return new Promise((resolve, reject) => {
         auth.getAuth2((auth2) => {
           auth2.signIn().then(
