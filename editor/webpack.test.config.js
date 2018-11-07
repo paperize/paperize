@@ -6,6 +6,9 @@ module.exports = {
   mode: 'development',
   target: 'node',
   entry: './test/test.coffee',
+  watchOptions: {
+    ignored: /node_modules/
+  },
   output: {
     filename: 'test.js',
     path: path.resolve(__dirname, 'test/build')
