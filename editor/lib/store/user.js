@@ -40,12 +40,26 @@ const UsersModule = {
       commit("setLoginError", null)
       return dispatch("googleLoginFlow")
         .then((googleUser) => {
+          // We're logged into Google, set up the local user
           return dispatch("become", {
             idToken:   googleUser.getBasicProfile().getEmail(),
             name:      googleUser.getBasicProfile().getName(),
             email:     googleUser.getBasicProfile().getEmail(),
             avatarSrc: googleUser.getBasicProfile().getImageUrl()
           })
+        })
+
+        .then(() => {
+          return dispatch("googleDatabaseLookup")
+            .then((foundDatabase) => {
+              if(foundDatabase) {
+                // There's a remote database already, load it
+                dispatch("resetState", foundDatabase)
+              } else {
+                // No remote database, create one
+                dispatch("googleDatabaseInitialize")
+              }
+            })
         })
 
         .catch((error) => {
