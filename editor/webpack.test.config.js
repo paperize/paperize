@@ -17,6 +17,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({'NODE_ENV': 'test'})
   ],
   module: {
+    noParse: /lie\.js$|\/leveldown\//,
     rules: [
       {
         test: /\.js$/,
