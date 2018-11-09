@@ -5,7 +5,7 @@ const DISCOVERY_DOCS = [
   "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", // Drive
   "https://sheets.googleapis.com/$discovery/rest?version=v4"    // Sheets
 ]
-const SCOPES         = "email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/spreadsheets"
+const SCOPES         = "email https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets"
 
 let clientLoadedPromise = null
 let ensureClientLoaded = function() {
