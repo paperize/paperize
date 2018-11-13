@@ -8,7 +8,7 @@ const DISCOVERY_DOCS = [
 const SCOPES         = "email https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets"
 
 let clientLoadedPromise = null
-let ensureClientLoaded = function() {
+const ensureClientLoaded = function() {
   if(!clientLoadedPromise) {
     clientLoadedPromise = new Promise((resolve, reject) => {
       gapi.load('client:auth2', {
@@ -30,7 +30,7 @@ let ensureClientLoaded = function() {
 }
 
 let initClientPromise = null
-let initClientAndAuth2 = function() {
+const initClientAndAuth2 = function() {
   if(!initClientPromise) {
     initClientPromise = new Promise((resolve, reject) => {
       return ensureClientLoaded().then(() => {
@@ -50,22 +50,49 @@ let initClientAndAuth2 = function() {
   return initClientPromise
 }
 
-let getClient = function(callback) {
+const getClient = function(callback) {
   return initClientAndAuth2().then(() => {
     callback(gapi.client)
   })
 }
 
-let getAuth2 = function(callback) {
-  initClientAndAuth2().then(() => {
+const getAuth2 = function(callback) {
+  return initClientAndAuth2().then(() => {
     callback(gapi.auth2.getAuthInstance())
   })
 }
 
-let api = { getClient, getAuth2 }
+const signIn = function() {
+  return new Promise((resolve, reject) => {
+    getAuth2((auth2) => {
+      auth2.signIn().then(
+        (googleUser) => {
+          const profile = googleUser.getBasicProfile()
+          resolve({
+            name:     profile.getName(),
+            email:    profile.getEmail(),
+            imageUrl: profile.getImageUrl()
+          })
+        },
+
+        (error) => { reject(new Error(error.error)) }
+      )
+    })
+  })
+}
+
+const signOut = function() {
+  return getAuth2(auth2 => auth2.signOut())
+}
+
+const api = { getClient, signIn, signOut }
 
 if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
 }
 
 export default api
+
+export {
+  getClient, signIn, signOut
+}

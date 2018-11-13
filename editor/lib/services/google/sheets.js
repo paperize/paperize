@@ -1,6 +1,6 @@
 import { map, pick } from 'lodash'
 import Promise from 'bluebird'
-import auth from './auth'
+import { getClient } from './auth'
 
 // Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
 const GOOGLE_ID_REGEX = /[-\w]{25,}/
@@ -28,7 +28,7 @@ let api = {
 
   fetchSheets() {
     return new Promise((resolve, reject) => {
-      auth.getClient((client) => {
+      getClient((client) => {
         client.drive.files.list({
           // Query for spreadsheets only
           q: "mimeType='application/vnd.google-apps.spreadsheet'",
@@ -47,7 +47,7 @@ let api = {
 
   fetchSheetData(sheet) {
     return new Promise((resolve) => {
-      auth.getClient((client) => {
+      getClient((client) => {
         return client.sheets.spreadsheets.values.get({
           spreadsheetId: sheet.id,
           range:         'Sheet1' // TODO: Can't rely on this in reality
@@ -72,7 +72,7 @@ let api = {
         return
       }
 
-      auth.getClient((client) => {
+      getClient((client) => {
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
