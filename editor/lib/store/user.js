@@ -58,7 +58,6 @@ const UsersModule = {
                 // return commit("resetState", foundDatabase)
                 throw new Error("NOT IMPLEMENTED: load database")
               } else {
-                console.log("didn't found a db")
                 // No remote database, create one
                 return dispatch("googleDatabaseInitialize")
               }

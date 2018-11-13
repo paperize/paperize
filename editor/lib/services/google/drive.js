@@ -59,21 +59,17 @@ const searchFolderForDatabase = function(folderId) {
 export default {
   // Find a file named "paperize_database.json" in a folder named "Paperize.io"
   databaseLookup() {
-    console.log("drive.databaseLookup() called")
     // query for possible db files
     return getPaperizeFolderIds().then((folderIds) => {
-      console.log("found folderids", folderIds)
       let foundDatabaseId = null
       // Search each folder for the database filename
       return Promise.each(folderIds, (folderId) => {
         if(foundDatabaseId) { return }
         return searchFolderForDatabase(folderId).then((databaseId) => {
-          console.log("found fileid", databaseId)
           foundDatabaseId = databaseId
         })
 
       }).then(() => {
-        console.log(foundDatabaseId)
         return foundDatabaseId
       })
     })
