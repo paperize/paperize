@@ -1,6 +1,4 @@
-import Promise from 'bluebird'
-import auth from '../auth'
-import googleSheets from '../google_sheets'
+import { auth, sheets, drive } from '../services/google'
 
 const GoogleModule = {
   state: {
@@ -18,33 +16,37 @@ const GoogleModule = {
   },
 
   actions: {
-    googleLoginFlow() {
-      return new Promise((resolve, reject) => {
-        auth.getAuth2((auth2) => {
-          auth2.signIn().then(
-            (googleUser) => { resolve(googleUser) },
-            (error) => { reject(new Error(error.error)) }
-          )
-        })
-      })
+    googleLogin() {
+      return auth.signIn()
     },
 
     googleLogout() {
-      auth.getAuth2(auth2 => auth2.signOut())
+      return auth.signOut()
     },
 
-    fetchSheets({ commit }) {
+    googleFetchSheets({ commit }) {
       commit("setShowSpinner", true)
-      return googleSheets
+      return sheets
         .fetchSheets()
         .finally(() => commit("setShowSpinner", false))
     },
 
-    fetchSheetById({ commit }, sourceId) {
+    googleFetchSheetById({ commit }, sourceId) {
       commit("setShowSpinner", true)
-      return googleSheets
+      return sheets
         .fetchSheetById(sourceId)
         .finally(() => commit("setShowSpinner", false))
+    },
+
+    googleDatabaseLookup() {
+      // return a db ready to load or null
+      return drive.databaseLookup()
+    },
+
+    googleDatabaseInitialize() {
+      // get current vuex state
+      // cull to relevant bits
+      // upload to Drive
     }
   }
 }

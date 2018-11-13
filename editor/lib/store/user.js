@@ -38,26 +38,29 @@ const UsersModule = {
 
     login({ dispatch, commit }) {
       commit("setLoginError", null)
-      return dispatch("googleLoginFlow")
-        .then((googleUser) => {
+      // call the Google auth pop-up
+      return dispatch("googleLogin")
+        .then(({ name, email, imageUrl }) => {
           // We're logged into Google, set up the local user
           return dispatch("become", {
-            idToken:   googleUser.getBasicProfile().getEmail(),
-            name:      googleUser.getBasicProfile().getName(),
-            email:     googleUser.getBasicProfile().getEmail(),
-            avatarSrc: googleUser.getBasicProfile().getImageUrl()
+            idToken:   email,
+            name:      name,
+            avatarSrc: imageUrl
           })
         })
 
         .then(() => {
+          // Find or create a database for this user
           return dispatch("googleDatabaseLookup")
             .then((foundDatabase) => {
               if(foundDatabase) {
-                // There's a remote database already, load it
-                dispatch("resetState", foundDatabase)
+                // Found a remote database, load it
+                // return commit("resetState", foundDatabase)
+                throw new Error("NOT IMPLEMENTED: load database")
               } else {
+                console.log("didn't found a db")
                 // No remote database, create one
-                dispatch("googleDatabaseInitialize")
+                return dispatch("googleDatabaseInitialize")
               }
             })
         })
