@@ -53,7 +53,7 @@ const SourceModel = {
   actions: {
     fetchRemoteSources({ commit, dispatch }) {
       // fetch listing from google
-      dispatch("fetchSheets")
+      dispatch("googleFetchSheets")
         .then(sheets => commit("setRemoteSources", sheets))
     },
 
@@ -63,7 +63,7 @@ const SourceModel = {
 
     createOrUpdateSourceById({ getters, dispatch, commit }, remoteSourceId) {
       // fetch sheet from google
-      return dispatch("fetchSheetById", remoteSourceId)
+      return dispatch("googleFetchSheetById", remoteSourceId)
         .then((fetchedSource) => {
           // check if it's new or existing
           if(getters.sourceExists(fetchedSource.id)) {

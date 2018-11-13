@@ -14,7 +14,7 @@ describe "Profile component", ->
       context "without standard db", ->
         it "tells what it's doing"
         it "initializes and loads the database", ->
-          # stub googleLoginFlow
+          # stub googleLogin
           # stub google drive query
           cy.contains("Sign In").click()
 
