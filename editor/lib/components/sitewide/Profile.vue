@@ -52,7 +52,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
       ...mapGetters(['loggedIn', 'loginError', 'userName', 'userAvatar']),
 
       errorCodeInEnglish() {
-        return ERROR_CODE_MAP[this.loginError] || "There was an unknown error logging in: {{ this.loginError }}"
+        return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`
       }
     },
 
