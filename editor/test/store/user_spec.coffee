@@ -1,5 +1,3 @@
-Promise = require("bluebird")
-# import utils from "@vue/test-utils"
 actions = require("../../lib/store/user").default.actions
 
 # Make it easier to fake out actions
@@ -8,11 +6,11 @@ dispatchHelper = (actionMap) ->
     if action = actionMap[actionName]
       action()
     else
-      Promise.resolve()
+      fake.resolves()
 
-describe "Logging In", ->
+describe "User Module", ->
   beforeEach ->
-    @fakeGoogleLoginFlow = fake.resolves({
+    @fakegoogleLogin = fake.resolves({
       getBasicProfile: ->
         getName: -> "Avid Gamer"
         getEmail: -> "avid_gamer@example.com",
@@ -30,7 +28,7 @@ describe "Logging In", ->
       commit = ->
       dispatch = dispatchHelper({
         resetState: @fakeResetState,
-        googleLoginFlow: @fakeGoogleLoginFlow,
+        googleLogin: @fakegoogleLogin,
         googleDatabaseLookup: @fakeGoogleDatabaseLookup,
         googleDatabaseInitialize: @fakeGoogleDatabaseInitialize,
       })
@@ -38,7 +36,7 @@ describe "Logging In", ->
       actions.login({ commit, dispatch })
 
       .then =>
-        expect(@fakeGoogleLoginFlow).to.be.called
+        expect(@fakegoogleLogin).to.be.called
         expect(@fakeGoogleDatabaseLookup).to.be.called
         expect(@fakeGoogleDatabaseInitialize).to.be.called
         expect(@fakeResetState).not.to.be.called
@@ -54,7 +52,7 @@ describe "Logging In", ->
       commit = ->
       dispatch = dispatchHelper({
         resetState: @fakeResetState,
-        googleLoginFlow: @fakeGoogleLoginFlow,
+        googleLogin: @fakegoogleLogin,
         googleDatabaseLookup: @fakeGoogleDatabaseLookup,
         googleDatabaseInitialize: @fakeGoogleDatabaseInitialize,
       })
@@ -62,7 +60,7 @@ describe "Logging In", ->
       actions.login({ commit, dispatch })
 
       .then =>
-        expect(@fakeGoogleLoginFlow).to.be.called
+        expect(@fakegoogleLogin).to.be.called
         expect(@fakeGoogleDatabaseLookup).to.be.called
         expect(@fakeGoogleDatabaseInitialize).not.to.be.called
         expect(@fakeResetState).to.be.called
