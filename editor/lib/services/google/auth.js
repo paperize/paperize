@@ -86,7 +86,7 @@ const signOut = function() {
   return getAuth2(auth2 => auth2.signOut())
 }
 
-const api = { getClient, signIn, signOut }
+let api = { getClient, signIn, signOut }
 
 if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
@@ -94,6 +94,3 @@ if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
 
 export default api
 
-export {
-  getClient, signIn, signOut
-}
