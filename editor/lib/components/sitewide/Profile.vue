@@ -20,7 +20,9 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
     v-card(v-if="!loginError")
       v-card-title(primary-title)
         .headline Logging In With Google...
-      v-card-text Look for a pop-up window asking for your Google login and follow the instruction.
+      v-card-text
+        p Look for a pop-up window asking for your Google login and follow the instructions.
+        pre {{ loginStatus }}
 
     v-card(v-else)
       v-card-title(primary-title)
@@ -49,7 +51,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
     },
 
     computed: {
-      ...mapGetters(['loggedIn', 'loginError', 'userName', 'userAvatar']),
+      ...mapGetters(['loggedIn', 'loginStatus', 'loginError', 'userName', 'userAvatar']),
 
       errorCodeInEnglish() {
         return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`
@@ -63,7 +65,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
         // Helpful information inside our app about the Google login process
         this.showPopupHelper = true
         // Start the Google login process
-        return this.login()
+        return this.login().then(() => this.showPopupHelper = false)
       },
     }
   }

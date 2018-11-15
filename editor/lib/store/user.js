@@ -41,23 +41,21 @@ const UsersModule = {
       // call the Google auth pop-up
       return dispatch("googleLogin")
         .then(({ name, email, imageUrl }) => {
-          // We're logged into Google, set up the local user
-          return dispatch("become", {
-            idToken:   email,
-            name:      name,
-            avatarSrc: imageUrl
-          })
-        })
-
-        .then(() => {
           // Find or create a database for this user
           return dispatch("googleFindOrCreateDatabase")
-        })
+            .then((databaseFileId) => {
+              console.log("dbfile:", databaseFileId)
+              // set up the watcher with this file
+              // dispatch("googleStartDatabaseWatcher", databaseFileId)
+            })
 
-        .then((databaseFileId) => {
-          console.log("dbfile:", databaseFileId)
-          // set up the watcher with this file
-          // dispatch("googleStartDatabaseWatcher", databaseFileId)
+            .then(() => {
+              return dispatch("become", {
+                idToken:   email,
+                name:      name,
+                avatarSrc: imageUrl
+              })
+            })
         })
 
         .catch((error) => {
