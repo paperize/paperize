@@ -2,76 +2,149 @@ import Promise from 'bluebird'
 import { map } from 'lodash'
 import { getClient } from './auth'
 
-const PAPERIZE_DATABASE_FILENAME = "paperize_database.json"
-
-// Resolves an array of ids
-const getPaperizeFolderIds = function() {
-  return new Promise((resolve, reject) => {
-    getClient((client) => {
-      client.drive.files.list({
-        // Query for Folders named Paperize.io
-        q: "mimeType = 'application/vnd.google-apps.folder' and name = 'Paperize.io'",
-      }).then(
-        // Success callback
-        (folderResponse) => {
-          const driveResult = folderResponse.result,
-            folderIds = map(driveResult.files, (file) => file.id)
-
-          resolve(folderIds)
-        },
-        // Failure callback
-        (driveError) => {
-          reject(driveError)
+const
+  findFolders = function(folderName) {
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.list({
+          // Query for by the given name
+          q: `mimeType = 'application/vnd.google-apps.folder' and name = '${ folderName }'`,
         })
+
+          .then(
+            // Success callback
+            (folderResponse) => {
+              const driveResult = folderResponse.result,
+                folderIds = map(driveResult.files, (file) => file.id)
+
+              resolve(folderIds)
+            },
+            // Failure callback
+            (driveError) => {
+              reject(driveError)
+            }
+          )
+      })
     })
-  })
-}
+  },
 
-// Resolves the found database id or undefined
-const searchFolderForDatabase = function(folderId) {
-  // Build the search query
-  const folderClause = `'${folderId}' in parents`,
-    nameClause       = `name = '${PAPERIZE_DATABASE_FILENAME}'`,
-    mimeTypeClause   = "mimeType = 'application/json'"
+  createFolder = function(folderName) {
+    const fileMetadata = {
+      name: folderName,
+      mimeType: 'application/vnd.google-apps.folder'
+    }
 
-  return new Promise((resolve, reject) => {
-    getClient((client) => {
-      client.drive.files.list({
-        q: `${folderClause} and ${mimeTypeClause} and ${nameClause}`
-      }).then(
-        // Success callback
-        ({ result }) => {
-          if(result.files[0]) {
-            resolve(result.files[0].id)
-          } else {
-            resolve()
-          }
-        },
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.create({
+          resource: fileMetadata,
+        }).then(
+          (successResponse) => {
+            if(successResponse.status == 200) {
+              resolve(successResponse.result.id)
+            } else {
+              reject(new Error(successResponse.statusText))
+            }
+          },
 
-        // Error callback
-        (driveError) => {
-          reject(driveError)
-        })
+          (failure) => { reject(failure) }
+        )
+      })
     })
-  })
-}
+  },
 
-export default {
-  // Find a file named "paperize_database.json" in a folder named "Paperize.io"
-  databaseLookup() {
-    // query for possible db files
-    return getPaperizeFolderIds().then((folderIds) => {
-      let foundDatabaseId = null
-      // Search each folder for the database filename
-      return Promise.each(folderIds, (folderId) => {
-        if(foundDatabaseId) { return }
-        return searchFolderForDatabase(folderId).then((databaseId) => {
-          foundDatabaseId = databaseId
+  findFile = function(filename, mimeType, foldersToSearch) {
+    const nameClause = `name = '${filename}'`,
+      mimeTypeClause = `mimeType = '${mimeType}'`
+
+    let foundDatabaseId = null
+
+    // Search each folder for the database filename
+    return Promise.each(foldersToSearch, (folderId) => {
+      // Early out once one is found
+      if(foundDatabaseId) { return }
+      // Build the search query
+      const folderClause = `'${folderId}' in parents`
+
+      return new Promise((resolve, reject) => {
+        getClient((client) => {
+          client.drive.files.list({
+            q: `${folderClause} and ${mimeTypeClause} and ${nameClause}`
+          }).then(
+            // Success callback
+            ({ result }) => {
+              console.log(`response in ${folderId}:`, result)
+              if(result.files[0]) {
+                resolve(result.files[0].id)
+              } else {
+                resolve()
+              }
+            },
+
+            // Error callback
+            (driveError) => {
+              reject(driveError)
+            })
+        })
+      }).then((databaseId) => {
+        foundDatabaseId = databaseId
+      })
+
+    }).then(() => {
+      return foundDatabaseId
+    })
+  },
+
+  createFile = function(name, mimeType, folder, contents) {
+    // Need to create a file in Drive and actually set its contents?
+    // Seems we have to do this the hard way...
+    // https://stackoverflow.com/questions/34905363/create-file-with-google-drive-api-v3-javascript
+    const boundary = '-------314159265358979323846',
+      delimiter    = `\r\n--${ boundary }\r\n`,
+      close_delim  = `\r\n--${ boundary }--`,
+
+      metadata = {
+        name, mimeType,
+        parents: [folder]
+      },
+
+      multipartRequestBody =
+        delimiter +
+        'Content-Type: application/json\r\n\r\n' +
+        JSON.stringify(metadata) +
+        delimiter +
+        `Content-Type: ${ mimeType }\r\n\r\n` +
+        contents +
+        close_delim
+
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.request({
+          path: '/upload/drive/v3/files',
+          method: 'POST',
+          params: {'uploadType': 'multipart'},
+          headers: {
+            'Content-Type': `multipart/related boundary="${ boundary }"`
+          },
+          body: multipartRequestBody
         })
 
-      }).then(() => {
-        return foundDatabaseId
+          .then(
+            (successResponse) => {
+              if(successResponse.status == 200) {
+                resolve(successResponse.result.id)
+              } else {
+                reject(new Error(successResponse.statusText))
+              }
+            },
+
+            (failureResponse) => {
+              reject(failureResponse)
+            }
+          )
       })
     })
   }
-}
+
+
+export default { findFolders, createFolder, findFile, createFile }

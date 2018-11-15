@@ -51,17 +51,13 @@ const UsersModule = {
 
         .then(() => {
           // Find or create a database for this user
-          return dispatch("googleDatabaseLookup")
-            .then((foundDatabase) => {
-              if(foundDatabase) {
-                // Found a remote database, load it
-                // return commit("resetState", foundDatabase)
-                throw new Error("NOT IMPLEMENTED: load database")
-              } else {
-                // No remote database, create one
-                return dispatch("googleDatabaseInitialize")
-              }
-            })
+          return dispatch("googleFindOrCreateDatabase")
+        })
+
+        .then((databaseFileId) => {
+          console.log("dbfile:", databaseFileId)
+          // set up the watcher with this file
+          // dispatch("googleStartDatabaseWatcher", databaseFileId)
         })
 
         .catch((error) => {
