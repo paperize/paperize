@@ -27,6 +27,7 @@ Vue.use(Vuetify, {
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
+// test-specific settings and globals
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
@@ -34,16 +35,17 @@ if(process.env.NODE_ENV == 'test') {
   window.paperize = { store }
 }
 
+// Top-Level app layout
 import AppLayout from './components/layout/AppLayout.vue'
 
-let startApp = () => {
+// When the window loads: go!
+window.addEventListener('load', () => {
   // Top-level Vue component
   new Vue({
     router, store,
     el: '#paperize-app',
     components: { AppLayout },
+    // Render function instead of compiling templates in production
     render: (h) => h("app-layout")
   })
-}
-
-window.addEventListener('load', startApp)
+})
