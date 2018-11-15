@@ -39,7 +39,7 @@ let api = {
           let fileIdsAndNames = map(driveResult.files, (file) => pick(file, [ "id", "name" ]) )
           resolve(fileIdsAndNames)
         }, (driveError) => {
-          reject(driveError)
+          reject(new Error(driveError.result.error.message))
         })
       })
     })
@@ -94,7 +94,7 @@ let api = {
           if(error.status == 404) {
             reject(new NotFoundError(googleId))
           } else {
-            reject(error)
+            reject(new Error(error.result.error.message))
           }
         })
       })
