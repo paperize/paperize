@@ -22,6 +22,8 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
         .headline Logging In With Google...
       v-card-text
         p Look for a pop-up window asking for your Google login and follow the instructions.
+        template(v-if="showSpinner")
+          v-progress-circular(indeterminate color="primary")
         pre {{ loginStatus }}
 
     v-card(v-else)
@@ -51,7 +53,7 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
     },
 
     computed: {
-      ...mapGetters(['loggedIn', 'loginStatus', 'loginError', 'userName', 'userAvatar']),
+      ...mapGetters(['loggedIn', 'loginStatus', 'loginError', 'showSpinner', 'userName', 'userAvatar']),
 
       errorCodeInEnglish() {
         return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`

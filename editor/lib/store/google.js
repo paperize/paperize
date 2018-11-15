@@ -57,6 +57,7 @@ const GoogleModule = {
     // and folder along the way.
     googleFindOrCreateDatabase({ commit }) {
       // find a Paperize folder
+      commit("setShowSpinner", true)
       commit("setLoginStatus", `Looking for ${FOLDER_NAME} folder in Drive...`)
       return drive.findFolders(FOLDER_NAME)
         .then((maybeFolderIds) => {
@@ -86,6 +87,8 @@ const GoogleModule = {
               }
             })
         })
+
+        .finally(() => { commit("setShowSpinner", false) })
     }
   }
 }
