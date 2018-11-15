@@ -14,7 +14,7 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import { computedVModelUpdateAll } from '../../../store/component_helper'
+  import { computedVModelUpdateAll } from '../../util/component_helper'
 
   const shapeOptions = [
     { value: "rectangle", text: "Rectangle" },

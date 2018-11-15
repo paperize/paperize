@@ -28,7 +28,7 @@ v-flex#source-editor(sm4 md6)
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import { computedVModelUpdate } from '../../store/component_helper'
+  import { computedVModelUpdate } from '../util/component_helper'
   import SourceManager from './SourceManager.vue'
 
   export default {

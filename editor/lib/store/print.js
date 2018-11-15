@@ -1,4 +1,4 @@
-import massAssign from './mass_assign'
+import massAssign from './util/mass_assign'
 
 const DEFAULT_MARGIN = .25
 

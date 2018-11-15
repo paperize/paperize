@@ -1,6 +1,6 @@
 import { map, max, orderBy } from 'lodash'
 
-import { generateCrud } from './vuex_resource'
+import { generateCrud } from './util/vuex_resource'
 
 import uuid from 'uuid/v4'
 

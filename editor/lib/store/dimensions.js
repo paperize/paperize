@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4'
-import { generateCrud } from './vuex_resource'
+import { generateCrud } from './util/vuex_resource'
 
 const SAME_AS_PARENT = "sameAsParent",
   PERCENT_OF_PARENT = "percentOfParent",

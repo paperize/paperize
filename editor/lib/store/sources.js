@@ -1,6 +1,6 @@
 import { map, zipWith } from 'lodash'
 
-import { generateCrud } from './vuex_resource'
+import { generateCrud } from './util/vuex_resource'
 
 const SourceModel = {
   name: 'sources',

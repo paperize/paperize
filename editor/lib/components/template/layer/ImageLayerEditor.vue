@@ -42,7 +42,7 @@ v-layout(column)
   import Vue from 'vue'
   import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
-  import { computedVModelUpdateAll } from '../../../store/component_helper'
+  import { computedVModelUpdateAll } from '../../util/component_helper'
 
   export default {
     props: ["layer"],

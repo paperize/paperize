@@ -21,7 +21,7 @@ v-layout(column)
 <script>
   import { debounce } from 'lodash'
   import { mapActions } from 'vuex'
-  import { computedVModelUpdateAll } from '../../../store/component_helper'
+  import { computedVModelUpdateAll } from '../../util/component_helper'
 
   export default {
     props: ["layer", "source"],

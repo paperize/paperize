@@ -1,7 +1,7 @@
 import { find, reduce, times } from 'lodash'
 import uuid from 'uuid/v4'
 
-import { generateCrud } from './vuex_resource'
+import { generateCrud } from './util/vuex_resource'
 
 const ComponentModel = {
   name: 'components',
