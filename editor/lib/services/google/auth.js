@@ -63,17 +63,41 @@ const getAuth2 = function(callback) {
   })
 }
 
+const isSignedIn = function() {
+  return new Promise((resolve) => {
+    getAuth2((auth2) => {
+      resolve(auth2.isSignedIn.get())
+    })
+  })
+}
+
+const googleUserProfileObject = function(googleUser) {
+  const profile = googleUser.getBasicProfile()
+  return {
+    name:     profile.getName(),
+    email:    profile.getEmail(),
+    imageUrl: profile.getImageUrl()
+  }
+}
+
+const getCurrentUser = function() {
+  return new Promise((resolve) => {
+    getAuth2((auth2) => {
+      // resolve(auth2.isSignedIn.get())
+      let googleUser = auth2.currentUser.get(),
+        profile = googleUserProfileObject(googleUser)
+
+      resolve(profile)
+    })
+  })
+}
+
 const signIn = function() {
   return new Promise((resolve, reject) => {
     getAuth2((auth2) => {
       auth2.signIn().then(
         (googleUser) => {
-          const profile = googleUser.getBasicProfile()
-          resolve({
-            name:     profile.getName(),
-            email:    profile.getEmail(),
-            imageUrl: profile.getImageUrl()
-          })
+          resolve(googleUserProfileObject(googleUser))
         },
 
         (error) => { reject(new Error(error.error)) }
@@ -86,11 +110,11 @@ const signOut = function() {
   return getAuth2(auth2 => auth2.signOut())
 }
 
-let api = { getClient, signIn, signOut }
+let api = { getClient, isSignedIn, signIn, signOut }
 
 if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
 }
 
-export default api
-
+export default { getClient, isSignedIn, getCurrentUser, signIn, signOut }
+export { getClient, isSignedIn, getCurrentUser, signIn, signOut }

@@ -73,7 +73,6 @@ const
           }).then(
             // Success callback
             ({ result }) => {
-              console.log(`response in ${folderId}:`, result)
               if(result.files[0]) {
                 resolve(result.files[0].id)
               } else {
@@ -92,6 +91,25 @@ const
 
     }).then(() => {
       return foundDatabaseId
+    })
+  },
+
+  downloadFile = function(fileId) {
+    return new Promise((resolve, reject) => {
+      // drive.files.get with alt=media to download a file directly
+      getClient((client) => {
+        client.drive.files.get({
+          fileId,
+          alt: 'media'
+        }).then(
+          (result) => {
+            resolve(result.body)
+          },
+
+          (driveError) => {
+            reject(driveError)
+          })
+      })
     })
   },
 
@@ -122,7 +140,7 @@ const
         client.request({
           path: '/upload/drive/v3/files',
           method: 'POST',
-          params: {'uploadType': 'multipart'},
+          params: { 'uploadType': 'multipart' },
           headers: {
             'Content-Type': `multipart/related boundary="${ boundary }"`
           },
@@ -144,7 +162,32 @@ const
           )
       })
     })
+  },
+
+  updateFile = function(fileId, contents) {
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.request({
+          path: `/upload/drive/v3/files/${fileId}`,
+          method: 'PATCH',
+          params: { 'uploadType': 'media' },
+          headers: {},
+          body: contents
+        }).then(
+          (successResponse) => {
+            if(successResponse.status == 200) {
+              resolve()
+            } else {
+              reject(new Error(successResponse.statusText))
+            }
+          },
+
+          (failureResponse) => {
+            reject(failureResponse)
+          }
+        )
+      })
+    })
   }
 
-
-export default { findFolders, createFolder, findFile, createFile }
+export default { findFolders, createFolder, findFile, downloadFile, createFile, updateFile }
