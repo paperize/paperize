@@ -7,8 +7,8 @@ import Vue from 'vue'
 // in-memory store
 import store from './store'
 // long-term store
-import persistence from './store/persistence'
-persistence.initializeAndWatchStore(store)
+import storeSync from './services/store_sync'
+storeSync.initialize(store)
 // routing
 import router from './routes'
 
