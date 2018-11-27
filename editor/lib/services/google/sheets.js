@@ -1,5 +1,5 @@
 import { map, pick } from 'lodash'
-import Promise from 'bluebird'
+
 import { getClient } from './auth'
 
 // Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script

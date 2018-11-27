@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+
 import persistence from '../store/pouch_persistence'
 
 const api = {

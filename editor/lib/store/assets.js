@@ -1,5 +1,5 @@
 import { chain, find } from 'lodash'
-import Promise from 'bluebird'
+
 import md5 from 'md5'
 import assetStore from '../services/asset_store'
 

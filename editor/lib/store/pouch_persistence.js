@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+
 
 import PouchDB from '../services/pouch'
 

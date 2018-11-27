@@ -1,5 +1,5 @@
 import { defaults } from 'lodash'
-import Promise from 'bluebird'
+
 import store from '../../store'
 import { findProperty } from './helpers'
 

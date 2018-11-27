@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+
 import { map } from 'lodash'
 import { getClient } from './auth'
 

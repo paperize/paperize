@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+
 import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'

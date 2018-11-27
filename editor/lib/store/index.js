@@ -1,5 +1,5 @@
 /* global process */
-import Promise from 'bluebird'
+
 import Vue  from 'vue'
 import Vuex from 'vuex'
 

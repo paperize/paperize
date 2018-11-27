@@ -1,5 +1,5 @@
 /* global process */
-import Promise from 'bluebird'
+
 import { capitalize, camelCase, map, zip, filter, values, isString, isNumber } from 'lodash'
 import Vue from 'vue'
 
