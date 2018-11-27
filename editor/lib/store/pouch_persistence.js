@@ -7,6 +7,7 @@ const STATE_KEY = 'state'
 
 const IGNORED_MUTATIONS = [
   "resetState",
+  "setShowSpinner",
   "setLoginError",
   "setLoginStatus",
   "appendLoginStatus",
@@ -14,7 +15,8 @@ const IGNORED_MUTATIONS = [
   "clearActiveGame",
   "setActiveComponent",
   "clearActiveComponent",
-  "setShowSpinner"
+  "setActiveLayer",
+  "clearActiveLayer"
 ]
 
 const LOCAL_STORAGE_DOUBLE = {
@@ -33,7 +35,6 @@ let api = {
 
     // Load existing persisted state if present
     let idToken = api.getLocalStorage().getItem(ID_TOKEN_KEY)
-
     if(idToken) {
       store.dispatch("become", { idToken })
     }
@@ -108,7 +109,7 @@ let api = {
 
           resolve(record)
         })
-        .catch((error) => { reject(error) })
+        .catch(reject)
     }).catch({status: 404}, () => {
       return null
     })
