@@ -1,4 +1,3 @@
-
 import { map } from 'lodash'
 import { getClient } from './auth'
 
@@ -57,7 +56,8 @@ const
     const nameClause = `name = '${filename}'`,
       mimeTypeClause = `mimeType = '${mimeType}'`
 
-    let foundDatabaseId = null
+    let foundDatabaseId = null,
+      foundInParentId = null
 
     // Search each folder for the database filename
     return Promise.each(foldersToSearch, (folderId) => {
@@ -74,10 +74,10 @@ const
             // Success callback
             ({ result }) => {
               if(result.files[0]) {
-                resolve(result.files[0].id)
-              } else {
-                resolve()
+                foundDatabaseId = result.files[0].id
+                foundInParentId = folderId
               }
+              resolve()
             },
 
             // Error callback
@@ -85,12 +85,9 @@ const
               reject(driveError)
             })
         })
-      }).then((databaseId) => {
-        foundDatabaseId = databaseId
       })
-
     }).then(() => {
-      return foundDatabaseId
+      return [foundDatabaseId, foundInParentId]
     })
   },
 

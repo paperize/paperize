@@ -2,7 +2,8 @@ const UIModule = {
   state: {
     activeGameId:       null,
     activeComponentId:  null,
-    activeLayerId:      null
+    activeLayerId:      null,
+    saving:             false
   },
 
   getters: {
@@ -28,7 +29,9 @@ const UIModule = {
       if(getters.activeLayer) {
         return rootGetters.findDimension(getters.activeLayer.dimensionId, false)
       }
-    }
+    },
+
+    saving(state) { return state.saving }
   },
 
   mutations: {
@@ -60,6 +63,10 @@ const UIModule = {
     clearActiveLayer(state) {
       state.activeLayerId = null
       state.activeDimensionsId = null
+    },
+
+    setSaving(state, saving) {
+      state.saving = !!saving
     }
   },
 

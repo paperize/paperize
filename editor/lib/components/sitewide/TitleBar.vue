@@ -19,13 +19,15 @@ v-toolbar(app)
       v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         database-manager
 
+      v-btn(@click="saveToDrive") {{ saveButtonText }}
+
     template(v-else)
       v-btn(flat) About
     profile
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import Profile from './Profile.vue'
   import ImageManager from '../asset/ImageManager.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
@@ -38,16 +40,22 @@ v-toolbar(app)
         gitSha: process.env.GIT_SHA,
         gitChanges: process.env.GIT_CHANGE_INFO,
         showImageManager: false,
-        showDatabaseManager: false,
+        showDatabaseManager: false
       }
     },
 
     computed: {
-      ...mapGetters(["loggedIn"]),
+      ...mapGetters(["loggedIn", "saving"]),
+
+      saveButtonText() {
+        return this.saving ? "Saving..." : "Save"
+      },
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
-    }
+    },
+
+    methods: mapActions(["saveToDrive"])
   }
 </script>

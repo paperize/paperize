@@ -40,33 +40,13 @@ const UsersModule = {
       commit("setLoginError", null)
       // call the Google auth pop-up
       return dispatch("googleLogin")
-        .then(({ name, email, imageUrl }) => {
-          // Find or create a database for this user
-          return dispatch("googleFindOrCreateDatabase")
-            .then((databaseFileId) => {
-              console.log("dbfile:", databaseFileId)
-              // set up the watcher with this file
-              // dispatch("googleStartDatabaseWatcher", databaseFileId)
-            })
-
-            .then(() => {
-              return dispatch("become", {
-                idToken:   email,
-                name:      name,
-                avatarSrc: imageUrl
-              })
-            })
-        })
-
         .catch((error) => {
           commit("setLoginError", error.message)
           return null
         })
     },
 
-    logout({ commit, dispatch }) {
-      commit("resetState")
-      commit("logout")
+    logout({ dispatch }) {
       dispatch("googleLogout")
     }
   }

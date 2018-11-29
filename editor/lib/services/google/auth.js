@@ -63,6 +63,15 @@ const getAuth2 = function(callback) {
   })
 }
 
+const registerSignInListener = function(listener) {
+  return new Promise((resolve) => {
+    getAuth2((auth2) => {
+      auth2.isSignedIn.listen(listener)
+      resolve()
+    })
+  })
+}
+
 const isSignedIn = function() {
   return new Promise((resolve) => {
     getAuth2((auth2) => {
@@ -116,5 +125,5 @@ if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
 }
 
-export default { getClient, isSignedIn, getCurrentUser, signIn, signOut }
-export { getClient, isSignedIn, getCurrentUser, signIn, signOut }
+export default { getClient, registerSignInListener, isSignedIn, getCurrentUser, signIn, signOut }
+export { getClient, registerSignInListener, isSignedIn, getCurrentUser, signIn, signOut }

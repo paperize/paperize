@@ -4,6 +4,10 @@
 import google from "./google"
 
 const
+  FOLDER_NAME = "Paperize.io",
+  DATABASE_NAME = "paperize_database.json",
+  DATABASE_MIME = "application/json",
+  EMPTY_DATABASE = "{}",
   UNPERSISTABLE_MUTATIONS = [
     "become",
     "logout",
@@ -24,7 +28,8 @@ let vuex,
   vuexSubscriptionCanceler,
   lastUnsyncedChangeTime,
   lastChangeTime,
-  databaseFileId
+  databaseFileId,
+  workingDirectoryId
 
 
 const
@@ -32,19 +37,37 @@ const
   initialize = function(store) {
     vuex = store
 
-    return isSignedIn().then((weAreSignedIn) => {
-      if(weAreSignedIn) {
-        // Step into our user and start pulling their data
-        return Promise.all([
-          becomeSignedInUser(),
-          syncAll()
-        ])
-      } else {
-        console.log("not signed in. listening for sign-in...")
-        syncAllOnLogin()
-        return startApplication()
-      }
-    })
+    registerSignInListener()
+
+    return isSignedIn()
+      .then((weAreSignedIn) => {
+        if(weAreSignedIn) {
+          // Step into our user and start pulling their data
+          return Promise.all([
+            becomeSignedInUser(),
+            syncAll()
+          ])
+        } else {
+          syncAllOnLogin()
+          return startApplication()
+        }
+      })
+  },
+
+  registerSignInListener = function () {
+    google.auth.registerSignInListener(signInStatusChange)
+  },
+
+  signInStatusChange = function(signedIn) {
+    if(signedIn) {
+      // become the user
+      becomeSignedInUser()
+      // strategy for database selection
+      syncAll()
+    } else {
+      // wipe vuex
+      vuex.commit("resetState")
+    }
   },
 
   // Ask Google service if we're currently logged in
@@ -71,7 +94,7 @@ const
   syncAll = function() {
     return initializeDrive()
       .then(loadDriveIntoVuex)
-      .then(syncVuexToDrive)
+      // .then(syncVuexToDrive)
       .then(() => {
         unsyncAllOnLogout()
         return startApplication()
@@ -86,9 +109,39 @@ const
 
   // Find or create the Drive database file and resolve its id
   initializeDrive = function() {
-    return vuex.dispatch("googleFindOrCreateDatabase")
-      .then((fileId) => {
-        databaseFileId = fileId
+    return google.drive.findFolders(FOLDER_NAME)
+      .then((maybeFolderIds) => {
+        if(maybeFolderIds.length == 0) {
+          // None found? Create one and wrap in array
+          return google.drive.createFolder(FOLDER_NAME).then(folderId => [folderId])
+        } else {
+          return maybeFolderIds
+        }
+      })
+
+      // Guaranteed to be at least length 1
+      .then((folderIds) => {
+        // Find a database file in any of the folders
+        return google.drive.findFile(DATABASE_NAME, DATABASE_MIME, folderIds)
+          .spread((maybeDatabaseId, maybeParentId) => {
+            if(!maybeDatabaseId) {
+              // Didn't find one? Create an empty one in the first folder.
+              let firstFolderId = folderIds[0]
+              return google.drive.createFile(DATABASE_NAME, DATABASE_MIME, firstFolderId, EMPTY_DATABASE)
+                .then((createdDatabaseId) => {
+                  databaseFileId = createdDatabaseId
+                  workingDirectoryId = firstFolderId
+                })
+            } else {
+              databaseFileId = maybeDatabaseId
+              workingDirectoryId = maybeParentId
+            }
+          })
+      })
+
+      .then(() => {
+        vuex.commit("setWorkingDirectory", { id: workingDirectoryId, name: FOLDER_NAME })
+        vuex.commit("setDatabaseFile", { id: databaseFileId, name: DATABASE_NAME })
       })
   },
 
@@ -99,6 +152,7 @@ const
         if(loadedState) {
           // at this point the vuex user is newer data
           loadedState.user = vuex.state.user
+          loadedState.database = vuex.state.database
 
           // foist it onto the store
           vuex.commit("resetState", loadedState)

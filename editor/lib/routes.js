@@ -90,9 +90,6 @@ store.subscribe(({ type, payload }, state) => {
 
   } else if(type === 'resetState') {
     // No reason to be at a non-root URL if we're resetting state
-    router.push({ name: 'gameManager' })
-
-  } else if(type === 'logout') {
     router.push({ name: 'splash' })
 
   } else if(type === 'createGame') {
