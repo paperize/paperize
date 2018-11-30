@@ -3,6 +3,65 @@ import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
 const
+  getFolder = function(folderIdInput) {
+    return new Promise((resolve, reject) => {
+      const folderId = matchGoogleId(folderIdInput)
+
+      if(!folderId) {
+        reject(new Error(`Invalid Google Drive resource: ${folderIdInput}`))
+      } else {
+        getClient((client) => {
+          client.drive.files.get({
+            fileId: folderId
+          }).then(
+            (folderResponse) => {
+              const driveResult = folderResponse.result
+
+              if(driveResult.mimeType !== "application/vnd.google-apps.folder") {
+                reject(new Error("Not a folder!"))
+              } else {
+                resolve([driveResult.id, driveResult.name])
+              }
+            },
+            reject
+          )
+        })
+      }
+    })
+  },
+
+  getIndex = function(folderId, options={}) {
+    // Build the query
+    let queryParts = []
+    queryParts.push(`'${folderId}' in parents`)
+    if(options.mimeType == 'IMAGE') {
+      // Only looking for image files
+      queryParts.push(`mimeType contains 'image/'`)
+    }
+    const query = queryParts.join(' and ')
+
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.list({
+          q: query,
+          fields: "files(id,name,md5Checksum,mimeType)"
+        }).then(
+          ({ result }) => {
+            resolve(map(result.files, (file) => {
+              return {
+                id:       file.id,
+                name:     file.name,
+                md5:      file.md5Checksum,
+                mimeType: file.mimeType
+              }
+            }))
+          },
+
+          reject)
+      })
+    })
+  },
+
   findFolders = function(folderName) {
     return new Promise((resolve, reject) => {
       getClient((client) => {
@@ -74,7 +133,9 @@ const
           }).then(
             // Success callback
             ({ result }) => {
+              // if at least one file was found
               if(result.files[0]) {
+                // use the first one found
                 foundDatabaseId = result.files[0].id
                 foundInParentId = folderId
               }
@@ -188,4 +249,4 @@ const
     })
   }
 
-export default { findFolders, createFolder, findFile, downloadFile, createFile, updateFile }
+export default { getFolder, getIndex, findFolders, createFolder, findFile, downloadFile, createFile, updateFile }

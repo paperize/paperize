@@ -13,7 +13,7 @@ v-toolbar(app)
     template(v-if="loggedIn")
       v-btn(@click="showImageManager = true") Images
       v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
-        image-manager
+        image-library
 
       v-btn(@click="showDatabaseManager = true") Database
       v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
@@ -29,11 +29,11 @@ v-toolbar(app)
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import Profile from './Profile.vue'
-  import ImageManager from '../asset/ImageManager.vue'
+  import ImageLibrary from '../image/ImageLibrary.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
 
   export default {
-    components: { Profile, DatabaseManager, ImageManager },
+    components: { Profile, DatabaseManager, ImageLibrary },
 
     data() {
       return {
