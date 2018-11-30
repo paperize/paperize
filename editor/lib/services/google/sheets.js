@@ -1,13 +1,7 @@
 import { map, pick } from 'lodash'
 
 import { getClient } from './auth'
-
-// Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
-const GOOGLE_ID_REGEX = /[-\w]{25,}/
-let matchGoogleId = (url) => {
-  let match = url.match(GOOGLE_ID_REGEX)
-  return match && match[0]
-}
+import { matchGoogleId } from './util'
 
 let BadIdError = function(sheetId) {
   this.message = `No Google Sheet ID detected in "${sheetId}"`

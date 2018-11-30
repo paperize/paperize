@@ -1,5 +1,6 @@
 import { map } from 'lodash'
 import { getClient } from './auth'
+import { matchGoogleId } from './util'
 
 const
   findFolders = function(folderName) {
