@@ -9,7 +9,7 @@ v-layout(column)
       v-radio(color="primary" label="Dynamic" :value="false")
 
   v-flex(xs12 v-if="imageNameStatic")
-    v-autocomplete(v-model="imageName" :items="imageItems" box label="Select an Image")
+    v-autocomplete(v-model="imageName" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
 
   v-flex(xs12 v-else)
     v-text-field(v-model="imageNamePrefix" label="Prefix")
@@ -48,7 +48,7 @@ v-layout(column)
     props: ["layer"],
 
     computed: {
-      ...mapGetters(["activeSourceProperties"]),
+      ...mapGetters(["activeSourceProperties", "imageIndex"]),
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
@@ -60,10 +60,6 @@ v-layout(column)
         "horizontalAlignment",
         "verticalAlignment",
       ]),
-
-      imageItems() {
-        return this.$store.getters.images.map((image) => image.name)
-      },
 
       dynamicImageName() {
         return `${this.layer.imageNamePrefix}[${this.layer.imageNameProperty}]${this.layer.imageNameSuffix}`

@@ -2,47 +2,38 @@ import { defaults } from 'lodash'
 
 import store from '../../store'
 import { findProperty } from './helpers'
+import { drive } from '../../services/google'
 
-// To get image data from our local store
-const fetchDataByName = function(name) {
-  return Promise.try(() => {
-    return store.getters.findImageByName(name)
-      .then(asset => asset.data)
-  }).catch((e) => {
-    console.warn(`Error looking up image "${name}" in asset library:`)
-    console.warn(e.message)
-    return ""
+const getImageById = function(imageId) {
+  return drive.downloadFile(imageId).then((imageData) => {
+    const dataURL = `data:image/jpeg;base64,${btoa(imageData)}`
+    return getImageWithSrc(dataURL)
   })
 }
 
 const fetchImageByName = function(name) {
-  return fetchDataByName(name)
+  console.log("looking up", name)
+  const imageRecord = store.getters.findImageByName(name)
 
-    .then((imageDataURI) => {
-      return new Promise((resolve) => {
-        const image = new Image()
-        image.onload = function() {
-          resolve(image)
-        }
-        image.src = imageDataURI
-      })
-    })
+  console.log("found", imageRecord)
+  if(!imageRecord) {
+    throw new Error(`Image not found with name: ${name}`)
+  }
+
+  return getImageById(imageRecord.id)
 }
 
-// To get CORS-enabled images from the web
-const toDataURL = function(url) {
-  return fetch(url)
-
-    .then(response => {
-      return response.blob()
-    })
-
-    .then(blob => {
-      return URL.createObjectURL(blob)
-    })
+const getImageWithSrc = function(imageSource) {
+  return new Promise((resolve) => {
+    const image = new Image()
+    image.onload = function() {
+      resolve(image)
+    }
+    image.src = imageSource
+  })
 }
 
-const imageBox = function(doc, imageName, boxDimensions, options) {
+const imageBox = function(doc, image, boxDimensions, options) {
   // helpers.drawGuideBox(boxDimensions)
   options = defaults(options, {
     horizontalAlignment: "center",
@@ -51,140 +42,141 @@ const imageBox = function(doc, imageName, boxDimensions, options) {
   })
   const boxRatio = boxDimensions.w / boxDimensions.h
 
-  return fetchImageByName(imageName).then((imageObject) => {
-    let imageRatio = imageObject.width / imageObject.height,
-      finalX = boxDimensions.x,
-      finalY = boxDimensions.y,
-      finalW = boxDimensions.w,
-      finalH = boxDimensions.h
 
-    if(options.scaleMode == "fillToBox") {
-      let cropX = 0,
-        cropY = 0,
-        cropW = imageObject.width,
-        cropH = imageObject.height
+  let imageRatio = image.width / image.height,
+    finalX = boxDimensions.x,
+    finalY = boxDimensions.y,
+    finalW = boxDimensions.w,
+    finalH = boxDimensions.h
 
-      // create a canvas with dimensions matching the image's cropped to the box's ratio
-      // add the image to the canvas with these offsets
-      // export the canvas as a data URI
+  if(options.scaleMode == "fillToBox") {
+    let cropX = 0,
+      cropY = 0,
+      cropW = image.width,
+      cropH = image.height
 
-      if(imageRatio > boxRatio) { // image is widthier than box
-        cropW *= boxRatio/imageRatio
-        const widthOffset = imageObject.width - cropW
+    // create a canvas with dimensions matching the image's cropped to the box's ratio
+    // add the image to the canvas with these offsets
+    // export the canvas as a data URI
 
-        // Manage Horizontal Alignment
-        if(options.horizontalAlignment == "center") {
-          cropX += widthOffset/2
+    if(imageRatio > boxRatio) { // image is widthier than box
+      cropW *= boxRatio/imageRatio
+      const widthOffset = image.width - cropW
 
-        } else if(options.horizontalAlignment == "right") {
-          cropX += widthOffset
-        }
+      // Manage Horizontal Alignment
+      if(options.horizontalAlignment == "center") {
+        cropX += widthOffset/2
 
-      } else { // image is heightier than box
-        cropH *= imageRatio/boxRatio
-        const heightOffset = imageObject.height - cropH
-
-        // Manage Vertical Alignment
-        if(options.verticalAlignment == "middle") {
-          cropY += heightOffset/2
-
-        } else if(options.verticalAlignment == "bottom") {
-          cropY += heightOffset
-        }
+      } else if(options.horizontalAlignment == "right") {
+        cropX += widthOffset
       }
 
-      const canvas = document.createElement("canvas"),
-        ctx = canvas.getContext("2d"),
-        maxWidth = finalW * 300,
-        widthOverage = Math.max(imageObject.width - maxWidth, 0)/imageObject.width,
-        maxHeight = finalH * 300,
-        heightOverage = Math.max(imageObject.height - maxHeight, 0)/imageObject.height
+    } else { // image is heightier than box
+      cropH *= imageRatio/boxRatio
+      const heightOffset = image.height - cropH
 
-      let canvasWidth = cropW,
-        canvasHeight = cropH
+      // Manage Vertical Alignment
+      if(options.verticalAlignment == "middle") {
+        cropY += heightOffset/2
 
-      // Adjust canvas width/height
-      if(widthOverage < heightOverage) {
-        canvasWidth = canvasWidth - (canvasWidth * widthOverage)
-        canvasHeight = canvasHeight - (canvasHeight * widthOverage)
-      } else if(heightOverage < widthOverage) {
-        canvasWidth = canvasWidth - (canvasWidth * heightOverage)
-        canvasHeight = canvasHeight - (canvasHeight * heightOverage)
+      } else if(options.verticalAlignment == "bottom") {
+        cropY += heightOffset
       }
-
-      canvas.width = canvasWidth
-      canvas.height = canvasHeight
-
-      // ctx.fillRect(0, 0, cropW, cropH)
-
-      ctx.drawImage(imageObject,
-        cropX, cropY, cropW, cropH,
-        0, 0, canvasWidth, canvasHeight)
-
-      doc.addImage(
-        canvas.toDataURL(),
-        finalX,
-        finalY,
-        finalW,
-        finalH
-      )
-
-    } else if(options.scaleMode == "fitToBox") {
-      if(imageRatio > boxRatio) { // image is widthier than box
-        // Squeeze Height
-        finalH *= boxRatio/imageRatio
-
-        // Manage Vertical Alignment
-        if(options.verticalAlignment == "middle") {
-          finalY += (boxDimensions.h - finalH)/2
-
-        } else if(options.verticalAlignment == "bottom") {
-          finalY += boxDimensions.h - finalH
-        }
-
-      } else { // image is heightier than box
-        // Squeeze Width
-        finalW *= imageRatio/boxRatio
-
-        // Manage Horizontal Alignment
-        if(options.horizontalAlignment == "center") {
-          finalX += (boxDimensions.w - finalW)/2
-
-        } else if(options.horizontalAlignment == "right") {
-          finalX += (boxDimensions.w - finalW)
-        }
-      }
-
-      doc.addImage(
-        imageObject,
-        finalX,
-        finalY,
-        finalW,
-        finalH
-      )
     }
-  })
+
+    const canvas = document.createElement("canvas"),
+      ctx = canvas.getContext("2d"),
+      maxWidth = finalW * 300,
+      widthOverage = Math.max(image.width - maxWidth, 0)/image.width,
+      maxHeight = finalH * 300,
+      heightOverage = Math.max(image.height - maxHeight, 0)/image.height
+
+    let canvasWidth = cropW,
+      canvasHeight = cropH
+
+    // Adjust canvas width/height
+    if(widthOverage < heightOverage) {
+      canvasWidth = canvasWidth - (canvasWidth * widthOverage)
+      canvasHeight = canvasHeight - (canvasHeight * widthOverage)
+    } else if(heightOverage < widthOverage) {
+      canvasWidth = canvasWidth - (canvasWidth * heightOverage)
+      canvasHeight = canvasHeight - (canvasHeight * heightOverage)
+    }
+
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
+
+    // ctx.fillRect(0, 0, cropW, cropH)
+
+    ctx.drawImage(image,
+      cropX, cropY, cropW, cropH,
+      0, 0, canvasWidth, canvasHeight)
+
+    doc.addImage(
+      canvas.toDataURL(),
+      finalX,
+      finalY,
+      finalW,
+      finalH
+    )
+
+  } else if(options.scaleMode == "fitToBox") {
+    if(imageRatio > boxRatio) { // image is widthier than box
+      // Squeeze Height
+      finalH *= boxRatio/imageRatio
+
+      // Manage Vertical Alignment
+      if(options.verticalAlignment == "middle") {
+        finalY += (boxDimensions.h - finalH)/2
+
+      } else if(options.verticalAlignment == "bottom") {
+        finalY += boxDimensions.h - finalH
+      }
+
+    } else { // image is heightier than box
+      // Squeeze Width
+      finalW *= imageRatio/boxRatio
+
+      // Manage Horizontal Alignment
+      if(options.horizontalAlignment == "center") {
+        finalX += (boxDimensions.w - finalW)/2
+
+      } else if(options.horizontalAlignment == "right") {
+        finalX += (boxDimensions.w - finalW)
+      }
+    }
+
+    doc.addImage(
+      image,
+      finalX,
+      finalY,
+      finalW,
+      finalH
+    )
+  }
 }
 
 export default {
   render(doc, layer, layerDimensions, item) {
-    let imageName = "",
-      { horizontalAlignment, verticalAlignment, imageScaling } = layer
+    let { horizontalAlignment, verticalAlignment, imageScaling } = layer,
+      imagePromise
 
     if(layer.imageNameStatic) {
-      imageName = layer.imageName
+      imagePromise = getImageById(layer.imageName)
     } else {
       const prefix = layer.imageNamePrefix,
         property = findProperty(item, layer.imageNameProperty),
-        suffix = layer.imageNameSuffix
-      imageName = `${prefix}${property}${suffix}`
+        suffix = layer.imageNameSuffix,
+        imageName = `${prefix}${property}${suffix}`
+
+      imagePromise = fetchImageByName(imageName)
     }
 
-    return imageBox(doc, imageName, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
-
-      .catch((e) => {
-        console.log(`Failed to add image named "${imageName}"`)
-        console.error(e)
-      })
+    return imagePromise.then((image) => {
+      return imageBox(doc, image, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
+    }).catch((e) => {
+      console.log(`Failed to add image.`)
+      console.error(e)
+    })
   }
 }

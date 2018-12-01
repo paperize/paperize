@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { find } from 'lodash'
+import { find, flatten, map } from 'lodash'
 import { drive } from "../services/google"
 
 const ImagesModule = {
@@ -9,6 +9,17 @@ const ImagesModule = {
 
   getters: {
     imageFolders: state => state.imageFolders,
+
+    imageIndex: state => {
+      return flatten(
+        map(state.imageFolders, (folder) => {
+          return folder.index
+        }))
+    },
+
+    findImageByName: (state, getters) => imageName => {
+      return find(getters.imageIndex, { name: imageName })
+    },
 
     findFolder: state => idToFind => {
       return find(state.imageFolders, { id: idToFind })
