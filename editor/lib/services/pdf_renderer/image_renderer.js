@@ -1,37 +1,7 @@
 import { defaults } from 'lodash'
 
-import store from '../../store'
 import { findProperty } from './helpers'
-import { drive } from '../../services/google'
-
-const getImageById = function(imageId) {
-  return drive.downloadFile(imageId).then((imageData) => {
-    const dataURL = `data:image/jpeg;base64,${btoa(imageData)}`
-    return getImageWithSrc(dataURL)
-  })
-}
-
-const fetchImageByName = function(name) {
-  console.log("looking up", name)
-  const imageRecord = store.getters.findImageByName(name)
-
-  console.log("found", imageRecord)
-  if(!imageRecord) {
-    throw new Error(`Image not found with name: ${name}`)
-  }
-
-  return getImageById(imageRecord.id)
-}
-
-const getImageWithSrc = function(imageSource) {
-  return new Promise((resolve) => {
-    const image = new Image()
-    image.onload = function() {
-      resolve(image)
-    }
-    image.src = imageSource
-  })
-}
+import { getImageById, getImageByName } from '../../services/image_provider'
 
 const imageBox = function(doc, image, boxDimensions, options) {
   // helpers.drawGuideBox(boxDimensions)
@@ -169,7 +139,7 @@ export default {
         suffix = layer.imageNameSuffix,
         imageName = `${prefix}${property}${suffix}`
 
-      imagePromise = fetchImageByName(imageName)
+      imagePromise = getImageByName(imageName)
     }
 
     return imagePromise.then((image) => {

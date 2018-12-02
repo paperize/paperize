@@ -30,6 +30,28 @@ const
     })
   },
 
+  getRecord = function(fileId) {
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.get({
+          fileId,
+          fields: "id,name,md5Checksum,mimeType"
+        }).then(
+          ({ result }) => {
+            console.log(result)
+            resolve({
+              id:       result.file.id,
+              name:     result.file.name,
+              md5:      result.file.md5Checksum,
+              mimeType: result.file.mimeType
+            })
+          },
+
+          reject)
+      })
+    })
+  },
+
   getIndex = function(folderId, options={}) {
     // Build the query
     let queryParts = []
@@ -249,4 +271,4 @@ const
     })
   }
 
-export default { getFolder, getIndex, findFolders, createFolder, findFile, downloadFile, createFile, updateFile }
+export default { getFolder, getRecord, getIndex, findFolders, createFolder, findFile, downloadFile, createFile, updateFile }

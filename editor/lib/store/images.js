@@ -21,6 +21,10 @@ const ImagesModule = {
       return find(getters.imageIndex, { name: imageName })
     },
 
+    findImage: (state, getters) => idToFind => {
+      return find(getters.imageIndex, { id: idToFind })
+    },
+
     findFolder: state => idToFind => {
       return find(state.imageFolders, { id: idToFind })
     },
