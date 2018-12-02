@@ -14,7 +14,6 @@ import templates  from './templates'
 import layers     from './layers'
 import dimensions from './dimensions'
 import images     from './images'
-import assets     from './assets'
 import print      from './print'
 import google     from './google'
 
@@ -32,7 +31,6 @@ const INITIAL_STATE = {
   layers:     layers.state,
   dimensions: dimensions.state,
   images:     images.state,
-  assets:     assets.state,
   print:      print.state,
   google:     google.state,
 }
@@ -66,7 +64,6 @@ let store = new Vuex.Store({
     layers,
     dimensions,
     images,
-    assets,
     print,
     google
   },
