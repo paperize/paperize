@@ -1,5 +1,4 @@
 import { omit } from 'lodash'
-import { drive } from "../services/google"
 
 const DatabaseModule = {
   state: {
@@ -25,7 +24,7 @@ const DatabaseModule = {
     driveUrl: () => driveId => `https://drive.google.com/file/d/${driveId}/edit?usp=sharing`,
 
     databaseState: (_, __, rootState) => {
-      return omit(rootState, ["user", "database", "ui"])
+      return omit(rootState, ["user", "database", "ui", "google"])
     }
   },
 
@@ -42,12 +41,11 @@ const DatabaseModule = {
   },
 
   actions: {
-    saveToDrive({ commit, getters }) {
-      commit("setSaving", true)
-      return drive.updateFile(getters.databaseFileId, getters.databaseState)
-        .finally(() => {
-          commit("setSaving", false)
-        })
+    saveToDrive({ dispatch, getters }) {
+      return dispatch("googleUpdateFile", {
+        fileId: getters.databaseFileId,
+        contents: getters.databaseState
+      })
     }
   }
 }

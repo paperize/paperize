@@ -58,7 +58,7 @@ const ImagesModule = {
     addImageFolderViaLink({ dispatch }, folderLink) {
       // Signal status changes along the way
       // Make a Drive request for the folder
-      return drive.getFolder(folderLink)
+      return dispatch("googleGetImageFolder", folderLink)
         .spread((folderId, folderName) => {
           // Store the name and ID of the folder
           return dispatch("addImageFolder", { id: folderId, name: folderName })
@@ -66,8 +66,8 @@ const ImagesModule = {
     },
 
     // "index", like a listing of files with their metadata but not content
-    refreshImageFileIndex({ commit, getters }, imageFolderId) {
-      return drive.getIndex(imageFolderId, { mimeType: 'IMAGE' })
+    refreshImageFileIndex({ dispatch, commit, getters }, imageFolderId) {
+      return dispatch("googleGetIndex", { folderId: imageFolderId, options: { mimeType: 'IMAGE' }})
         .then((imageFolderIndex) => {
           const folder = getters.findFolder(imageFolderId)
           commit("setImageFolderIndex", { folder, index: imageFolderIndex})

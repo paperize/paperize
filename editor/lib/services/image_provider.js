@@ -1,5 +1,4 @@
 import store from '../store'
-import { drive } from './google'
 
 const getLocalStorage = () => localStorage
 
@@ -20,7 +19,7 @@ const getImageById = function(imageId) {
       resolve(imageRecord)
     } else {
       // not there? request and index
-      return drive.getRecord(imageId).then(
+      return store.dispatch("googleGetRecord", imageId).then(
         (imageRecord) => {
           // TODO: store record in index
           resolve(imageRecord)
@@ -37,7 +36,7 @@ const getImageByRecord = function({ id, md5, mimeType }) {
     if(imageDataURL) {
       resolve(getImageWithSrc(imageDataURL))
     } else {
-      return drive.downloadFile(id).then((imageData) => {
+      return store.dispatch("googleDownloadFile", id).then((imageData) => {
         const dataURL = `data:${mimeType};base64,${btoa(imageData)}`
         setCachedImage(md5, dataURL)
         resolve(getImageWithSrc(dataURL))

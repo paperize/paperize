@@ -1,19 +1,25 @@
+import { keys } from 'lodash'
+import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
 const GoogleModule = {
   state: {
-    showSpinner: false,
-    loginStatus: ""
+    loginStatus: "",
+    trackedRequests: {}
   },
 
   getters: {
-    showSpinner: state => state.showSpinner,
+    showSpinner: state => keys(state.trackedRequests).length > 0,
     loginStatus: state => state.loginStatus
   },
 
   mutations: {
-    setShowSpinner(state, showOrNot) {
-      state.showSpinner = showOrNot
+    addTrackedRequest(state, { id, name }) {
+      state.trackedRequests[id] = name
+    },
+
+    clearTrackedRequest(state, requestId) {
+      delete state.trackedRequests[requestId]
     },
 
     setLoginStatus(state, newStatusMessage) {
@@ -34,23 +40,55 @@ const GoogleModule = {
       return auth.signOut()
     },
 
-    googleFetchSheets({ commit }) {
-      commit("setShowSpinner", true)
-      return sheets
-        .fetchSheets()
-        .finally(() => commit("setShowSpinner", false))
+    traceNetworkRequest({ commit }, { name, promise }) {
+      const requestId = uuid()
+      commit("addTrackedRequest", { id: requestId, name })
+      return promise.finally(() => {
+        commit("clearTrackedRequest", { id: requestId })
+      })
     },
 
-    googleFetchSheetById({ commit }, sourceId) {
-      commit("setShowSpinner", true)
-      return sheets
-        .fetchSheetById(sourceId)
-        .finally(() => commit("setShowSpinner", false))
+    googleGetRecord({ dispatch }, fileId) {
+      return dispatch("traceNetworkRequest",
+        { name: `Get Record. ${fileId}`,
+          promise: drive.getRecord(fileId) })
     },
 
-    // Returns the ID of a database file in Drive, possibly creating the file
-    // and folder along the way.
-    googleFindOrCreateDatabase() { }
+    googleGetIndex({ dispatch }, { folderId, options }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Get Index. ${folderId}, ${options}`,
+          promise: drive.getIndex(folderId, options) })
+    },
+
+    googleGetImageFolder({ dispatch }, folderLink) {
+      return dispatch("traceNetworkRequest",
+        { name: `Get Folder. ${folderLink}`,
+          promise: drive.getFolder(folderLink) })
+    },
+
+    googleUpdateFile({ dispatch }, { fileId, contents }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Update File. ${fileId}`,
+          promise: drive.updateFile(fileId, contents) })
+    },
+
+    googleDownloadFile({ dispatch }, fileId) {
+      return dispatch("traceNetworkRequest",
+        { name: `Download File. ${fileId}`,
+          promise: drive.downloadFile(fileId) })
+    },
+
+    googleFetchSheets({ dispatch }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Fetch Sheets.`,
+          promise: sheets.fetchSheets() })
+    },
+
+    googleFetchSheetById({ dispatch }, sourceId) {
+      return dispatch("traceNetworkRequest",
+        { name: `Fetch Sheet. ${sourceId}`,
+          promise: sheets.fetchSheetById(sourceId) })
+    },
   }
 }
 

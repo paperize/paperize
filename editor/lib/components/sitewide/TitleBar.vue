@@ -11,6 +11,7 @@ v-toolbar(app)
 
   v-toolbar-items
     template(v-if="loggedIn")
+      v-progress-circular(v-if="showSpinner" indeterminate color="primary")
       v-btn(@click="showImageManager = true") Images
       v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
         image-library
@@ -45,7 +46,7 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters(["loggedIn", "saving"]),
+      ...mapGetters(["loggedIn", "saving", "showSpinner"]),
 
       saveButtonText() {
         return this.saving ? "Saving..." : "Save"

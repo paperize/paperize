@@ -7,7 +7,6 @@ const STATE_KEY = 'state'
 
 const IGNORED_MUTATIONS = [
   "resetState",
-  "setShowSpinner",
   "setLoginError",
   "setLoginStatus",
   "appendLoginStatus",

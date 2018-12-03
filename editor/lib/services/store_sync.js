@@ -12,7 +12,6 @@ const
     "become",
     "logout",
     "resetState",
-    "setShowSpinner",
     "setLoginError",
     "setLoginStatus",
     "appendLoginStatus",
@@ -153,6 +152,7 @@ const
           // at this point the vuex user is newer data
           loadedState.user = vuex.state.user
           loadedState.database = vuex.state.database
+          loadedState.google = vuex.state.google
 
           // foist it onto the store
           vuex.commit("resetState", loadedState)
