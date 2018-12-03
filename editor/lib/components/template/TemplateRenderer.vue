@@ -30,7 +30,7 @@
       layerFillColor() { return (this.activeLayer && this.activeLayer.fillColor) },
 
       layerImageNameStatic() { return (this.activeLayer && this.activeLayer.imageNameStatic) },
-      layerImageName() { return (this.activeLayer && this.activeLayer.imageName) },
+      layerImageId() { return (this.activeLayer && this.activeLayer.imageId) },
       layerImageNamePrefix() { return (this.activeLayer && this.activeLayer.imageNamePrefix) },
       layerImageNameProperty() { return (this.activeLayer && this.activeLayer.imageNameProperty) },
       layerImageNameSuffix() { return (this.activeLayer && this.activeLayer.imageNameSuffix) },

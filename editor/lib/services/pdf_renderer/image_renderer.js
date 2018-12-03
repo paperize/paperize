@@ -132,7 +132,7 @@ export default {
       imagePromise
 
     if(layer.imageNameStatic) {
-      imagePromise = getImageById(layer.imageName)
+      imagePromise = getImageById(layer.imageId)
     } else {
       const prefix = layer.imageNamePrefix,
         property = findProperty(item, layer.imageNameProperty),

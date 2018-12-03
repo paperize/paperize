@@ -32,23 +32,29 @@ const
 
   getRecord = function(fileId) {
     return new Promise((resolve, reject) => {
-      getClient((client) => {
-        client.drive.files.get({
-          fileId,
-          fields: "id,name,md5Checksum,mimeType"
-        }).then(
-          ({ result }) => {
-            console.log(result)
-            resolve({
-              id:       result.file.id,
-              name:     result.file.name,
-              md5:      result.file.md5Checksum,
-              mimeType: result.file.mimeType
-            })
-          },
+      fileId = matchGoogleId(fileId || "")
 
-          reject)
-      })
+      if(!fileId) {
+        reject(new Error("Invalid Google Id"))
+      } else {
+        getClient((client) => {
+          client.drive.files.get({
+            fileId,
+            fields: "id,name,md5Checksum,mimeType"
+          }).then(
+            ({ result }) => {
+              console.log(result)
+              resolve({
+                id:       result.file.id,
+                name:     result.file.name,
+                md5:      result.file.md5Checksum,
+                mimeType: result.file.mimeType
+              })
+            },
+
+            reject)
+        })
+      }
     })
   },
 

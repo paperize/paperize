@@ -9,7 +9,7 @@ v-layout(column)
       v-radio(color="primary" label="Dynamic" :value="false")
 
   v-flex(xs12 v-if="imageNameStatic")
-    v-autocomplete(v-model="imageName" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
+    v-autocomplete(v-model="imageId" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
 
   v-flex(xs12 v-else)
     v-text-field(v-model="imageNamePrefix" label="Prefix")
@@ -52,7 +52,7 @@ v-layout(column)
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
-        "imageName",
+        "imageId",
         "imageNamePrefix",
         "imageNameProperty",
         "imageNameSuffix",

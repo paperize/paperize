@@ -46,7 +46,7 @@ LAYER_DEFAULTS[IMAGE] =
     renderOrder:         0,
     dimensionId:         null,
     imageNameStatic:     true,
-    imageName:           null,
+    imageId:             null,
     imageNamePrefix:     "",
     imageNameProperty:   null,
     imageNameSuffix:     "",
