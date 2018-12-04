@@ -1,25 +1,31 @@
-import { keys } from 'lodash'
+import Vue from 'vue'
+import { keys, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
 const GoogleModule = {
   state: {
     loginStatus: "",
-    trackedRequests: {}
+    trackedRequests: {},
+    completedRequests: {}
   },
 
   getters: {
     showSpinner: state => keys(state.trackedRequests).length > 0,
-    loginStatus: state => state.loginStatus
+    loginStatus: state => state.loginStatus,
+    trackedRequests: state => reverse(sortBy(state.trackedRequests, "timestamp")),
+    completedRequests: state => reverse(sortBy(state.completedRequests, "timestamp"))
   },
 
   mutations: {
-    addTrackedRequest(state, { id, name }) {
-      state.trackedRequests[id] = name
+    addTrackedRequest(state, { id, name, details="" }) {
+      let request = { id, name, details, timestamp: Date.now() }
+      Vue.set(state.trackedRequests, id, request)
     },
 
     clearTrackedRequest(state, requestId) {
-      delete state.trackedRequests[requestId]
+      Vue.set(state.completedRequests, requestId, state.trackedRequests[requestId])
+      Vue.delete(state.trackedRequests, requestId)
     },
 
     setLoginStatus(state, newStatusMessage) {
@@ -40,41 +46,46 @@ const GoogleModule = {
       return auth.signOut()
     },
 
-    traceNetworkRequest({ commit }, { name, promise }) {
+    traceNetworkRequest({ commit }, { name, details, promise }) {
       const requestId = uuid()
-      commit("addTrackedRequest", { id: requestId, name })
+      commit("addTrackedRequest", { id: requestId, name, details })
       return promise.finally(() => {
-        commit("clearTrackedRequest", { id: requestId })
+        commit("clearTrackedRequest", requestId)
       })
     },
 
     googleGetRecord({ dispatch }, fileId) {
       return dispatch("traceNetworkRequest",
-        { name: `Get Record. ${fileId}`,
+        { name: "Get Record.",
+          details: fileId,
           promise: drive.getRecord(fileId) })
     },
 
     googleGetIndex({ dispatch }, { folderId, options }) {
       return dispatch("traceNetworkRequest",
-        { name: `Get Index. ${folderId}, ${options}`,
+        { name: `Get Index.`,
+          details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
           promise: drive.getIndex(folderId, options) })
     },
 
     googleGetImageFolder({ dispatch }, folderLink) {
       return dispatch("traceNetworkRequest",
-        { name: `Get Folder. ${folderLink}`,
+        { name: `Get Folder.`,
+          details: folderLink,
           promise: drive.getFolder(folderLink) })
     },
 
     googleUpdateFile({ dispatch }, { fileId, contents }) {
       return dispatch("traceNetworkRequest",
-        { name: `Update File. ${fileId}`,
+        { name: `Update File.`,
+          details: fileId,
           promise: drive.updateFile(fileId, contents) })
     },
 
     googleDownloadFile({ dispatch }, fileId) {
       return dispatch("traceNetworkRequest",
-        { name: `Download File. ${fileId}`,
+        { name: `Download File.`,
+          details: fileId,
           promise: drive.downloadFile(fileId) })
     },
 
@@ -86,7 +97,8 @@ const GoogleModule = {
 
     googleFetchSheetById({ dispatch }, sourceId) {
       return dispatch("traceNetworkRequest",
-        { name: `Fetch Sheet. ${sourceId}`,
+        { name: `Fetch Sheet.`,
+          details: sourceId,
           promise: sheets.fetchSheetById(sourceId) })
     },
   }
