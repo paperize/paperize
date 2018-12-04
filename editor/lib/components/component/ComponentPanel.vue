@@ -3,11 +3,11 @@ v-layout(column).component-panel
   v-flex(sm12)
     .headline Components
 
-    v-btn(small @click="createComponentAndShowForm") New Component
     v-dialog(v-model="showEditDialog" max-width="500" lazy)
-      component-form(v-if="activeComponent" :component="activeComponent" @close-dialog="showEditDialog = false")
+      v-btn(small slot="activator" @click="editComponent = {}") New Component
+      component-form(@close-dialog="showEditDialog = false" :component="editComponent")
 
-  component-card(v-for="component in components" :key="component.id" :component="component" @edit-me="showEditDialog = true")
+  component-card(v-for="component in components" :key="component.id" :component="component" @edit-me="showEditDialog = true; editComponent = component")
 </template>
 
 <script>
@@ -22,20 +22,9 @@ v-layout(column).component-panel
 
     data() {
       return {
+        editComponent: {},
         showEditDialog: false
       }
     },
-
-    computed: mapGetters(["activeGame", "activeComponent"]),
-
-    methods: {
-      createComponentAndShowForm() {
-        this.$store.dispatch("createGameComponent", { game: this.activeGame })
-        .then((componentId) => {
-          this.$store.dispatch("setActiveComponent", componentId)
-          this.showEditDialog = true
-        })
-      }
-    }
   }
 </script>

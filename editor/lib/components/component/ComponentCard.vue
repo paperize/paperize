@@ -4,9 +4,6 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
     v-card-title
       .headline {{ component.title || "[No title]" }} ({{ totalItems }})
 
-    v-card-text
-      p {{ component.type || "[No type]" }}
-
     v-card-actions
       v-btn(@click="$emit('edit-me')") Edit
       v-btn(color="red" @click.stop="showDeleteDialog = true") Delete

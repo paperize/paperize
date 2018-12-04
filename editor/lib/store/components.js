@@ -11,13 +11,15 @@ const ComponentModel = {
     { relation: 'hasOne', model: 'source' }
   ],
 
-  create() {
+  create(newComponent) {
     return {
       id:            uuid(),
       title:         "",
       sourceId:      null,
       templateId:    null,
-      quantityProperty: null
+      quantityProperty: null,
+      // override with given
+      ...newComponent
     }
   },
 

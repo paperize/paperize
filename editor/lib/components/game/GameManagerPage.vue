@@ -22,10 +22,7 @@ v-container(fluid)
   export default {
     components: { GameCard, GameForm },
 
-    computed: {
-      ...mapState(["user"]),
-      ...mapGetters(["allGames"])
-    }
+    computed: mapGetters(["allGames"])
   }
 
 </script>
