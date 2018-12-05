@@ -61,21 +61,26 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     },
 
     methods: {
-      ...mapActions(["createGameComponent", "createGameComponentAndDriveFolder", "updateComponent"]),
+      ...mapActions(["createGameComponent", "createComponentImageFolder", "createComponentFolder", "updateComponent"]),
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {
           if(!this.isSaved) {
             const gameAndComponent = { game: this.activeGame, component: { title: this.component.title } }
-            let createPromise
+            let createComponentPromise
+
+            createComponentPromise = this.createGameComponent(gameAndComponent)
 
             if(this.createDriveFolder) {
-              createPromise = this.createGameComponentAndDriveFolder(gameAndComponent)
-            } else {
-              createPromise = this.createGameComponent(gameAndComponent)
+              createComponentPromise.then((componentId) => {
+                return this.createComponentFolder(componentId)
+                  .then(() => {
+                    return this.createComponentImageFolder(componentId)
+                  })
+              })
             }
 
-            createPromise.then((componentId) => {
+            createComponentPromise.then((componentId) => {
               this.$store.dispatch("setActiveComponent", componentId)
             })
           }

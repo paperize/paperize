@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { find, flatten, map } from 'lodash'
-import { drive } from "../services/google"
+import { find, findIndex, flatten, map } from 'lodash'
 
 const ImagesModule = {
   state: {
@@ -29,6 +28,10 @@ const ImagesModule = {
       return find(state.imageFolders, { id: idToFind })
     },
 
+    findFolderIndex: state => idToFind => {
+      return findIndex(state.imageFolders, { id: idToFind })
+    },
+
     folderExists: (state, getters) => (idToFind) => {
       return !!getters.findFolder(idToFind)
     }
@@ -41,6 +44,10 @@ const ImagesModule = {
 
     setImageFolderIndex(state, { folder, index }) {
       Vue.set(folder, "index", index)
+    },
+
+    deleteImageFolderAtIndex(state, folderIndex) {
+      Vue.delete(state.imageFolders, folderIndex)
     }
   },
 
@@ -72,6 +79,11 @@ const ImagesModule = {
           const folder = getters.findFolder(imageFolderId)
           commit("setImageFolderIndex", { folder, index: imageFolderIndex})
         })
+    },
+
+    deleteImageFolder({ getters, commit }, imageFolderId) {
+      const imageFolderIndex = getters.findFolderIndex(imageFolderId)
+      commit("deleteImageFolderAtIndex", imageFolderIndex)
     }
   }
 }

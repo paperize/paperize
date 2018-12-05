@@ -72,19 +72,7 @@ const GameModel = {
           commit("pushGameComponentId", { game, componentId })
           return componentId
         })
-    },
-
-    createGameComponentAndDriveFolder({ dispatch, getters }, { game, component }) {
-      return dispatch("createGameComponent", { game, component })
-        .tap((componentId) => {
-          const gameFolderId = getters.getGameFolderId(game)
-          return dispatch("googleCreateFolder", { name: component.title, parentId: gameFolderId })
-            .then((folderId) => {
-              const savedComponent = getters.findComponent(componentId)
-              return dispatch("updateComponent", { ...savedComponent, folderId })
-            })
-        })
-    },
+    },   
 
     destroyGameComponent({ dispatch, commit }, { game, component }) {
       dispatch("destroyComponent", component).then((componentId) => {

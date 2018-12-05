@@ -79,6 +79,27 @@ const ComponentModel = {
 
     unlinkComponentSource({ commit }, component) {
       commit("updateComponent", { ...component, sourceId: null })
+    },
+
+    createComponentFolder({ getters, dispatch }, componentId) {
+      const game = getters.findGameByComponentId(componentId),
+        component = getters.findComponent(componentId),
+        gameFolderId = getters.getGameFolderId(game)
+
+      return dispatch("googleCreateFolder", { name: component.title, parentId: gameFolderId })
+        .then((folderId) => {
+          const savedComponent = getters.findComponent(componentId)
+          return dispatch("updateComponent", { ...savedComponent, folderId })
+        })
+    },
+
+    createComponentImageFolder({ getters, dispatch }, componentId) {
+      const componentFolderId = getters.findComponent(componentId).folderId
+
+      return dispatch("googleCreateFolder", { name: "Images", parentId: componentFolderId })
+        .then((folderId) => {
+          return dispatch("addImageFolder", { id: folderId, name: "Images" })
+        })
     }
   }
 }
