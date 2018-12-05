@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4'
-
+import { find, includes } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
 const GameModel = {
@@ -14,6 +14,7 @@ const GameModel = {
       // Defaults
       id:          uuid(),
       title:       "",
+      folderId:    null,
       description: "",
       coverArt:    "",
       playerCount: "",
@@ -28,6 +29,16 @@ const GameModel = {
   getters: {
     findAllGameComponents: (_, __, ___, rootGetters) => game => {
       return rootGetters.findAllComponents(game.componentIds)
+    },
+
+    findGameByComponentId: (state) => componentId => {
+      return find(state.games, (game) => {
+        return includes(game.componentIds, componentId)
+      })
+    },
+
+    getGameFolderId: (_, __, ___, rootGetters) => game => {
+      return game.folderId || rootGetters.workingDirectoryId
     }
   },
 
@@ -43,11 +54,36 @@ const GameModel = {
   },
 
   actions: {
+    createGameAndDriveFolder({ dispatch, getters }, game) {
+      return dispatch("createGame", game)
+        .then((gameId) => {
+          const workingDirectoryId = getters.workingDirectoryId
+          return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
+            .then((folderId) => {
+              const savedGame = getters.findGame(gameId)
+              return dispatch("updateGame", { ...savedGame, folderId })
+            })
+        })
+    },
+
     createGameComponent({ dispatch, commit }, { game, component }) {
-      return dispatch("createComponent", component).then((componentId) => {
-        commit("pushGameComponentId", { game, componentId })
-        return componentId
-      })
+      return dispatch("createComponent", component)
+        .then((componentId) => {
+          commit("pushGameComponentId", { game, componentId })
+          return componentId
+        })
+    },
+
+    createGameComponentAndDriveFolder({ dispatch, getters }, { game, component }) {
+      return dispatch("createGameComponent", { game, component })
+        .tap((componentId) => {
+          const gameFolderId = getters.getGameFolderId(game)
+          return dispatch("googleCreateFolder", { name: component.title, parentId: gameFolderId })
+            .then((folderId) => {
+              const savedComponent = getters.findComponent(componentId)
+              return dispatch("updateComponent", { ...savedComponent, folderId })
+            })
+        })
     },
 
     destroyGameComponent({ dispatch, commit }, { game, component }) {

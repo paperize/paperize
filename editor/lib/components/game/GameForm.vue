@@ -6,6 +6,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
+      v-checkbox(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this game?")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
@@ -24,6 +25,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     data() {
       return {
         gameTitle: this.game.title,
+        createDriveFolder: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -31,17 +33,20 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     computed: {
-      headlineText() { return this.game.id ? `Editing ${this.game.title}` : "Design a New Game" },
-      submitButtonText() { return this.game.id ? `Update` : "Start Designing" },
+      isSaved() { return !!this.game.id },
+      headlineText() { return this.isSaved ? `Editing ${this.game.title}` : "Design a New Game" },
+      submitButtonText() { return this.isSaved ? `Update` : "Start Designing" },
     },
 
     methods: {
-      ...mapActions(["createGame", "updateGame"]),
+      ...mapActions(["createGame", "createGameAndDriveFolder", "updateGame"]),
 
       submitGame() {
         if(this.$refs.gameForm.validate()) {
-          if(this.game.id) {
+          if(this.isSaved) {
             this.updateGame({ ...this.game, title: this.gameTitle })
+          } else if(this.createDriveFolder){
+            this.createGameAndDriveFolder({ title: this.gameTitle })
           } else {
             this.createGame({ title: this.gameTitle })
           }

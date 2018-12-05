@@ -75,6 +75,13 @@ const GoogleModule = {
           promise: drive.getFolder(folderLink) })
     },
 
+    googleCreateFolder({ dispatch }, { parentId, name }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Create Folder.`,
+          details: `Named: "${name}" in folder ${parentId}`,
+          promise: drive.createFolder(name, { parentId }) })
+    },
+
     googleUpdateFile({ dispatch }, { fileId, contents }) {
       return dispatch("traceNetworkRequest",
         { name: `Update File.`,

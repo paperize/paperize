@@ -6,7 +6,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     v-card-text
       v-text-field.component-title(v-model="title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-
+      v-checkbox(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this component?")
       template-size-editor(v-if="isSaved" :template="findComponentTemplate(component)")
 
     v-card-actions
@@ -33,6 +33,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     data() {
       return {
+        createDriveFolder: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -60,13 +61,21 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     },
 
     methods: {
-      ...mapActions(["createGameComponent", "updateComponent"]),
+      ...mapActions(["createGameComponent", "createGameComponentAndDriveFolder", "updateComponent"]),
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {
           if(!this.isSaved) {
-            this.createGameComponent({ game: this.activeGame, component: { title: this.component.title } })
-            .then((componentId) => {
+            const gameAndComponent = { game: this.activeGame, component: { title: this.component.title } }
+            let createPromise
+
+            if(this.createDriveFolder) {
+              createPromise = this.createGameComponentAndDriveFolder(gameAndComponent)
+            } else {
+              createPromise = this.createGameComponent(gameAndComponent)
+            }
+
+            createPromise.then((componentId) => {
               this.$store.dispatch("setActiveComponent", componentId)
             })
           }

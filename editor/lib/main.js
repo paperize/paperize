@@ -20,7 +20,6 @@ Vue.use(Vuetify, {
   theme: {
     primary: colors.blueGrey.lighten2,
     secondary: colors.blueGrey.darken2,
-    accent: colors.lime.accent3
   }
 })
 

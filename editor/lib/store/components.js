@@ -15,6 +15,7 @@ const ComponentModel = {
     return {
       id:            uuid(),
       title:         "",
+      folderId:      null,
       sourceId:      null,
       templateId:    null,
       quantityProperty: null,
@@ -24,6 +25,13 @@ const ComponentModel = {
   },
 
   getters: {
+    getComponentFolderId: (_, __, ___, rootGetters) => component => {
+      return component.folderId ||
+        rootGetters.getGameFolderId(
+          rootGetters.findGameByComponentId(component.id)
+        )
+    },
+
     findComponentTemplate: (_, __, ___, rootGetters) => component => {
       if(component.templateId) {
         return rootGetters.findTemplate(component.templateId)

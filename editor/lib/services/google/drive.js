@@ -115,10 +115,14 @@ const
     })
   },
 
-  createFolder = function(folderName) {
+  createFolder = function(folderName, options={}) {
     const fileMetadata = {
       name: folderName,
       mimeType: 'application/vnd.google-apps.folder'
+    }
+
+    if(options.parentId) {
+      fileMetadata.parents = [options.parentId]
     }
 
     return new Promise((resolve, reject) => {
