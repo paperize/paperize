@@ -20,12 +20,10 @@ v-toolbar(app)
         database-manager
 
       v-btn(@click="showNetworkManager = true")
-        | Network
+        = "Network "
         v-progress-circular(v-if="showSpinner" indeterminate color="primary")
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
-
-      v-btn(@click="saveToDrive") {{ saveButtonText }}
 
     template(v-else)
       v-btn(flat) About
@@ -53,11 +51,7 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters(["loggedIn", "saving", "showSpinner"]),
-
-      saveButtonText() {
-        return this.saving ? "Saving..." : "Save"
-      },
+      ...mapGetters(["loggedIn", "showSpinner"]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'

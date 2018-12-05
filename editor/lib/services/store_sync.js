@@ -1,6 +1,7 @@
 // Store Sync
 // Synchronize data between Vuex, ~~Pouch~~, and GDrive
 // pouch is currently out
+import { debounce } from 'lodash'
 import google from "./google"
 
 const
@@ -8,6 +9,8 @@ const
   DATABASE_NAME = "paperize_database.json",
   DATABASE_MIME = "application/json",
   EMPTY_DATABASE = "{}",
+  AUTOSAVE_MIN_WAIT = 3000,
+  AUTOSAVE_MAX_WAIT = 20000,
   UNPERSISTABLE_MUTATIONS = [
     "become",
     "logout",
@@ -15,6 +18,8 @@ const
     "setLoginError",
     "setLoginStatus",
     "appendLoginStatus",
+    "addTrackedRequest",
+    "clearTrackedRequest",
     "setActiveGame",
     "clearActiveGame",
     "setActiveComponent",
@@ -25,8 +30,6 @@ const
 
 let vuex,
   vuexSubscriptionCanceler,
-  lastUnsyncedChangeTime,
-  lastChangeTime,
   databaseFileId,
   workingDirectoryId
 
@@ -93,7 +96,7 @@ const
   syncAll = function() {
     return initializeDrive()
       .then(loadDriveIntoVuex)
-      // .then(syncVuexToDrive)
+      .then(syncVuexToDrive)
       .then(() => {
         unsyncAllOnLogout()
         return startApplication()
@@ -161,34 +164,21 @@ const
       })
   },
 
+  autoSave = debounce(function() {
+    vuex.dispatch("saveToDrive")
+  }, AUTOSAVE_MIN_WAIT, { maxWait: AUTOSAVE_MAX_WAIT }),
+
   syncVuexToDrive = function() {
     if(vuexSubscriptionCanceler) {
       throw new Error("Already subscribed to Vuex mutations!")
     }
 
-    vuexSubscriptionCanceler = vuex.subscribe(({ type }, state) => {
-      // early out if this change is unpersistable
-      if(UNPERSISTABLE_MUTATIONS.includes(type)) {
-        return Promise.resolve(null)
-      }
-
-      // TODO: this is junk, need to actually use debounce and such
-      let now = Date.now(),
-        syncDelta = now - (lastUnsyncedChangeTime || now),
-        changeDelta = now - (lastChangeTime || now)
-
-      lastChangeTime = now
-      lastUnsyncedChangeTime = lastUnsyncedChangeTime || now
-
-      // throttle and debounce:
-      //   > 5s since last sync and > 1s since last change call
-      //   sync immediately if over 20s since last sync with any change calls
-      if((syncDelta > 5000 && changeDelta > 1000) || syncDelta > 20000) {
-        lastUnsyncedChangeTime = null
-
-        // TODO: TRANSFORM HERE
-        console.log("writing to Drive...")
-        return google.drive.updateFile(databaseFileId, state)
+    // Subscribe to all store updates
+    vuexSubscriptionCanceler = vuex.subscribe(({ type }) => {
+      // Ignore as many updates as possible
+      if(!UNPERSISTABLE_MUTATIONS.includes(type)) {
+        // Call autosave otherwise
+        autoSave()
       }
     })
   },

@@ -4,8 +4,11 @@ v-card.database-manager
     .headline Database Manager
 
   v-card-text
+    p Paperize stores all of its data in a location YOU control, currently Google Drive. It creates a folder in your Drive (called a "working directory"), and stores its database as a .json file inside. The locations of the working directory and database file are listed below. Games, components, and images may further create their own folders inside of the working directory.
+
     .subheading Working Directory
     a(:href="workingDirectory.url") {{ workingDirectory.name }}
+
     .subheading Database File
     a(:href="databaseFile.url") {{ databaseFile.name }}
 </template>
