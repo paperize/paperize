@@ -4,7 +4,10 @@ v-container(fluid)
     v-flex(sm12)
       .headline Game Manager
 
-      v-btn(small) Load Example
+      v-tooltip(bottom)
+        v-btn(slot="activator" small disabled) Load Example
+        span Coming Soon!
+
       v-dialog(max-width="500" lazy)
         v-btn(slot="activator" small) New Game
         game-form
