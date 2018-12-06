@@ -44,13 +44,8 @@ const
     return isSignedIn()
       .then((weAreSignedIn) => {
         if(weAreSignedIn) {
-          // Step into our user and start pulling their data
-          return Promise.all([
-            becomeSignedInUser(),
-            syncAll()
-          ])
+          return signInStatusChange(true)
         } else {
-          syncAllOnLogin()
           return startApplication()
         }
       })
@@ -62,13 +57,16 @@ const
 
   signInStatusChange = function(signedIn) {
     if(signedIn) {
-      // become the user
-      becomeSignedInUser()
-      // strategy for database selection
-      syncAll()
+      return Promise.all([
+        // become the user
+        becomeSignedInUser(),
+        // strategy for database selection
+        syncAll()
+      ])
     } else {
       // wipe vuex
       vuex.commit("resetState")
+      unsyncAll()
     }
   },
 
@@ -98,7 +96,6 @@ const
       .then(loadDriveIntoVuex)
       .then(syncVuexToDrive)
       .then(() => {
-        unsyncAllOnLogout()
         return startApplication()
       })
   },
@@ -183,28 +180,6 @@ const
     })
   },
 
-  // Watch Vuex for logins in order to initiate syncing
-  syncAllOnLogin = function() {
-    let loginSubscriptionCanceler = vuex.subscribe(({ type }) => {
-      if(type === "become") {
-        // Disable this watcher
-        loginSubscriptionCanceler()
-        // Fire up and return the syncing Promise cascade
-        return syncAll()
-      }
-    })
-  },
-
-  // Watch Vuex for logout in order to disable syncing
-  unsyncAllOnLogout = function() {
-    let logoutSubscriptionCanceler = vuex.subscribe(({ type }) => {
-      if(type === "logout") {
-        unsyncAll()
-        // Disable this watcher
-        logoutSubscriptionCanceler()
-      }
-    })
-  },
 
   // Tell the Store it's ready to go
   startApplication = function() {
