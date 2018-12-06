@@ -11,20 +11,22 @@ const setCachedImage = (md5, content) => {
 }
 
 const getImageById = function(imageId) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     // lookup image in index
     const imageRecord = store.getters.findImage(imageId)
 
     if(imageRecord) {
       resolve(imageRecord)
     } else {
-      // not there? request and index
-      return store.dispatch("googleGetRecord", imageId).then(
-        (imageRecord) => {
-          // TODO: store record in index
-          resolve(imageRecord)
-        }
-      )
+      reject(new Error(`No image in index with ${imageId}`))
+
+      // // not there? request and index
+      // return store.dispatch("googleGetRecord", imageId).then(
+      //   (imageRecord) => {
+      //     // TODO: store record in index
+      //     resolve(imageRecord)
+      //   }
+      // )
     }
   }).then(getImageByRecord)
 }

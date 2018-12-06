@@ -43,12 +43,11 @@ const
             fields: "id,name,md5Checksum,mimeType"
           }).then(
             ({ result }) => {
-              console.log(result)
               resolve({
-                id:       result.file.id,
-                name:     result.file.name,
-                md5:      result.file.md5Checksum,
-                mimeType: result.file.mimeType
+                id:       result.id,
+                name:     result.name,
+                md5:      result.md5Checksum,
+                mimeType: result.mimeType
               })
             },
 

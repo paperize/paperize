@@ -23,6 +23,10 @@ const GoogleModule = {
       Vue.set(state.trackedRequests, id, request)
     },
 
+    errorTrackedRequest(state, { requestId, requestError }) {
+      state.trackedRequests[requestId].error = `${requestError.fileName}:${requestError.lineNumber} - ${requestError.message}`
+    },
+
     clearTrackedRequest(state, requestId) {
       Vue.set(state.completedRequests, requestId, state.trackedRequests[requestId])
       Vue.delete(state.trackedRequests, requestId)
@@ -49,9 +53,16 @@ const GoogleModule = {
     traceNetworkRequest({ commit }, { name, details, promise }) {
       const requestId = uuid()
       commit("addTrackedRequest", { id: requestId, name, details })
-      return promise.finally(() => {
-        commit("clearTrackedRequest", requestId)
-      })
+      return Promise.resolve(promise)
+        .catch((requestError) => {
+          // Track that error
+          commit("errorTrackedRequest", { requestId, requestError })
+          // We don't handle 'em, we just track 'em
+          throw requestError
+        })
+        .finally(() => {
+          commit("clearTrackedRequest", requestId)
+        })
     },
 
     googleGetRecord({ dispatch }, fileId) {
