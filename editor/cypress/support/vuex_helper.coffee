@@ -21,7 +21,9 @@ afterEach -> toReturn = null
 # grab the vuex store and all fixtures for fast-and-easy state fixturing!
 Cypress.Commands.add "vuexAndFixtures", (callback) ->
   if toReturn
-    cy.wrap(toReturn).then(callback)
+    cy.wrap(toReturn)
+      .then(callback)
+
   else
     toReturn = {}
 
@@ -40,15 +42,16 @@ Cypress.Commands.add "visitActiveGameAndComponent", ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
 Cypress.Commands.add "loginAndEditGame", ->
-  cy.vuexAndFixtures ({ vuex, fixtures: { users, games } }) ->
-    allGames = Cypress._.values(games)
+  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, sources, templates } }) ->
     loveLetter = games['loveLetter']
-    firstComponent = loveLetter.components[0]
 
     vuex.dispatch("become", users[0])
-    vuex.commit("setGames", allGames)
-    vuex.dispatch("setActiveGame", { gameId: loveLetter.id })
-    vuex.dispatch("setActiveComponent", { component: firstComponent })
+    vuex.commit("setGames", games)
+    vuex.commit("setComponents", components)
+    vuex.commit("setSources", sources)
+    vuex.commit("setTemplates", templates)
+    vuex.dispatch("setActiveGame", loveLetter.id)
+    vuex.dispatch("setActiveComponent", loveLetter.componentIds[0])
 
   .visitActiveGameAndComponent()
 
@@ -58,8 +61,8 @@ Cypress.Commands.add "login", ->
 
 Cypress.Commands.add "loadGamesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { games } }) ->
-    vuex.commit("setGames", Cypress._.values(games))
+    vuex.commit("setGames", games)
 
 Cypress.Commands.add "loadSourcesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { sources } }) ->
-    vuex.commit("setSources", Cypress._.values(sources))
+    vuex.commit("setSources", sources)

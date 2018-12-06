@@ -1,7 +1,6 @@
 describe "Game Manager page", ->
-
   context "when not logged in", ->
-    it "shows a message about logging in", ->
+    it "redirects home", ->
       cy.visit("/#/games")
       cy.url().should("match", /#\/$/)
 
@@ -14,32 +13,23 @@ describe "Game Manager page", ->
         cy.contains "Game Manager"
 
       it "lets me create a new game", ->
-        cy.contains("New Game").click()
-        cy.contains "Create a New Game"
+        cy.get("button").contains("New Game").click()
 
         cy.typeIntoSelectors
-          "input#game-title":           "Love Letter"
-          "textarea[name=description]": "The instant classic microgame from Seiji Kanai."
-          "input[name=player-count]":   "2-4"
-          "input[name=age-range]":      "6+"
-          "input[name=play-time]":      "5-45 minutes"
+          ".game-title input": "Love Letter"
 
-        cy.get("button[type=submit]").click()
+        cy.get("button").contains("Start Designing").click()
 
         cy.url().should("match", /games\/.+$/)
 
         cy.contains "Love Letter"
-        cy.contains "The instant classic"
-        cy.contains "2-4"
-        cy.contains "6+"
-        cy.contains "5-45 minutes"
 
       it "lets me create 3 games", ->
         cy.wrap(["Love Letter", "Carcassonne", "Pandemic"]).each (title) ->
           cy.contains("New Game").click()
-          cy.get("input[name=title]").invoke("val").should("eq", "")
-          cy.get("input[name=title]").type(title)
-          cy.get("button[type=submit]").click()
+          cy.get(".game-title input").invoke("val").should("eq", "")
+          cy.get(".game-title input").type(title)
+          cy.get("button").contains("Start Designing").click()
           cy.contains(title)
 
           cy.visit("/#/games")
@@ -63,6 +53,10 @@ describe "Game Manager page", ->
       it "lets me delete an existing game", ->
         cy.get("#game-carcassonne")
           .contains("Delete")
+          .click()
+
+        cy.get("button")
+          .contains("Yes")
           .click()
 
         cy.get("#game-carcassonne").should("not.exist")

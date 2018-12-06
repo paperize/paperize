@@ -1,55 +1,87 @@
-import { find } from 'lodash'
 import uuid from 'uuid/v4'
+import { find, includes } from 'lodash'
+import { generateCrud } from './util/vuex_resource'
 
-const GamesModule = {
-  state: {
-    games: [],
+const GameModel = {
+  name: 'games',
+
+  relationships: [
+    { relation: 'hasMany', model: 'component', dependent: true }
+  ],
+
+  create(newGame={}) {
+    return {
+      // Defaults
+      id:          uuid(),
+      title:       "",
+      folderId:    null,
+      description: "",
+      coverArt:    "",
+      playerCount: "",
+      playTime:    "",
+      ageRange:    "",
+      componentIds:  [ ],
+      // Override with given
+      ...newGame
+    }
   },
 
   getters: {
-    games: state => state.games,
+    findAllGameComponents: (_, __, ___, rootGetters) => game => {
+      return rootGetters.findAllComponents(game.componentIds)
+    },
 
-    findGame: state => id => {
-      let foundGame = find(state.games, { id })
-      if(!foundGame){
-        throw new Error(`No game found with id: ${ id }`)
-      } else {
-        return foundGame
-      }
+    findGameByComponentId: (state) => componentId => {
+      return find(state.games, (game) => {
+        return includes(game.componentIds, componentId)
+      })
+    },
+
+    getGameFolderId: (_, __, ___, rootGetters) => game => {
+      return game.folderId || rootGetters.workingDirectoryId
     }
   },
 
   mutations: {
-    setGames(state, games) {
-      state.games = games
+    pushGameComponentId(state, { game, componentId }) {
+      game.componentIds.push(componentId)
     },
 
-    createGame(state, { game }) {
-      game.id = game.id || uuid()
-      state.games.push(game)
-    },
-
-    updateGame(state, { gameToUpdate, gameToCopy }) {
-      Object.assign(gameToUpdate, gameToCopy)
-    },
-
-    deleteGame(state, { game }) {
-      state.games.splice(state.games.indexOf(game), 1)
-    },
+    spliceGameComponentId(state, { game, componentId }) {
+      // remove the component in question
+      game.componentIds.splice(game.componentIds.indexOf(componentId), 1)
+    }
   },
 
   actions: {
-    updateGame({ commit, state, getters }, { game }) {
-      let gameToUpdate = getters.findGame(game.id)
-
-      commit("updateGame", { gameToUpdate, gameToCopy: game })
+    createGameAndDriveFolder({ dispatch, getters }, game) {
+      return dispatch("createGame", game)
+        .then((gameId) => {
+          const workingDirectoryId = getters.workingDirectoryId
+          return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
+            .then((folderId) => {
+              const savedGame = getters.findGame(gameId)
+              return dispatch("updateGame", { ...savedGame, folderId })
+            })
+        })
     },
 
-    deleteGame({ commit, dispatch }, { game }) {
-      dispatch("clearActiveGame")
-      commit("deleteGame", { game })
-    },
+    createGameComponent({ dispatch, commit }, { game, component }) {
+      return dispatch("createComponent", component)
+        .then((componentId) => {
+          commit("pushGameComponentId", { game, componentId })
+          return componentId
+        })
+    },   
+
+    destroyGameComponent({ dispatch, commit }, { game, component }) {
+      dispatch("destroyComponent", component).then((componentId) => {
+        commit("spliceGameComponentId", { game, componentId })
+      })
+    }
   }
 }
+
+const GamesModule = generateCrud(GameModel)
 
 export default GamesModule

@@ -1,33 +1,38 @@
-import Promise from 'bluebird'
+/* global process */
+import { keys, pick } from 'lodash'
+
 import Vue  from 'vue'
 import Vuex from 'vuex'
 
 import user       from './user'
+import database   from './database'
+import ui         from './ui'
 import games      from './games'
 import components from './components'
 import sources    from './sources'
 import templates  from './templates'
 import layers     from './layers'
 import dimensions from './dimensions'
-import assets     from './assets'
+import images     from './images'
 import print      from './print'
 import google     from './google'
-import ui         from './ui'
 
 Vue.use(Vuex)
 
+
 const INITIAL_STATE = {
   user:       user.state,
+  database:   database.state,
+  ui:         ui.state,
   games:      games.state,
   components: components.state,
   sources:    sources.state,
   templates:  templates.state,
   layers:     layers.state,
   dimensions: dimensions.state,
-  assets:     assets.state,
+  images:     images.state,
   print:      print.state,
   google:     google.state,
-  ui:         ui.state,
 }
 
 // Feeling hacky here, but having trouble with Observers contaminating my statics
@@ -44,16 +49,39 @@ const INITIALIZATION_PROMISE = new Promise((resolve) => {
 let store = new Vuex.Store({
   // Throw errors if state is touched outside of mutations
   strict: process.env.NODE_ENV !== 'production',
+
   // All state established inside modules
   state: newInitialState(),
-  modules: { user, games, components, sources, templates, layers, dimensions, assets, print, google, ui },
+
+  modules: {
+    user,
+    database,
+    ui,
+    games,
+    components,
+    sources,
+    templates,
+    layers,
+    dimensions,
+    images,
+    print,
+    google
+  },
+
   mutations: {
     resetState(state, newState={}) {
-      Object.assign(state, { ...newInitialState(), ...newState })
+      // Create an empty default state from scratch
+      let initialState = newInitialState(),
+        // Wash the given state of any unexpected top-level keys
+        groomedNewState = pick(newState, keys(initialState))
+      // Overwrite the store's state
+      Object.assign(state, { ...initialState, ...groomedNewState })
     }
   },
 
   actions: {
+    // These are hacks to make routes work better
+    // TODO: make routes work better without hacks
     whenStoreReady() {
       return INITIALIZATION_PROMISE
     },
@@ -63,5 +91,10 @@ let store = new Vuex.Store({
     }
   }
 })
+
+store.subscribe((mutation, state) => {
+  ui.subscribe(store, mutation, state)
+})
+
 
 export default store

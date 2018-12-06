@@ -1,38 +1,43 @@
 <template lang="pug">
-.grid-x.grid-padding-x
-  .small-12.cell
-    h4 Template Editor
-    hr
+v-card
+  v-card-title
+    .headline Template Editor
+    v-spacer
+    v-btn(small fab color="red" @click="$emit('close-dialog')")
+      v-icon close
 
-  .small-4.cell
-    template(v-if="editingSize")
-      h5
-        a(@click="editingSize = false")
-          i.fas.fa-pencil-alt
-        |  Component Size
-      template-size-editor(:template="component.template")
+  v-divider
 
-    h5(v-else)
-      a(@click="editingSize = true")
-        i.fas.fa-pencil-alt
-      |  Component Size {{ sizeLabel }}
+  v-card-text
+    v-container(ma-0 pa-0 grid-list-md fluid)
+      v-layout(row)
+        v-flex(xs4)
+          .subheading(v-if="editingSize")
+            a(@click="editingSize = false")
+              i.fas.fa-pencil-alt
+            |  Component Size
 
-    hr
+            template-size-editor(:template="componentTemplate")
 
-    layer-manager(:template="component.template")
+          .subheading(v-else)
+            a(@click="editingSize = true")
+              i.fas.fa-pencil-alt
+            |  Component Size {{ sizeLabel }}
 
-  .small-4.cell
-    h5 Layer Config
+          layer-manager(:template="componentTemplate")
 
-    template(v-if="activeLayer")
-      layer-editor(:layer="activeLayer" :source="component.source")
-    template(v-else)
-      p No Layer Selected
+        v-flex(xs4)
+          .subheading Layer Config
 
-  .small-4.cell
-    h5 Preview
+          template(v-if="activeLayer")
+            layer-editor(:layer="activeLayer" :source="componentSource" :template="componentTemplate")
+          template(v-else)
+            p Create or select a layer
 
-    template-previewer.inline-preview(:game="activeGame" :component="component")
+        v-flex(xs4)
+          .subheading Preview
+
+          template-previewer.inline-preview(:game="activeGame" :component="component")
 </template>
 
 <script>
@@ -47,20 +52,38 @@
     props: ["component"],
 
     components: {
-      "template-previewer": TemplatePreviewer,
-      "template-size-editor": TemplateSizeEditor,
-      "layer-manager": LayerManager,
-      "layer-editor": LayerEditor
+      TemplatePreviewer,
+      TemplateSizeEditor,
+      LayerManager,
+      LayerEditor
     },
 
     data() {
       return {
-        editingSize: false,
-        sizeLabel: `(${this.component.template.size.w}in x ${this.component.template.size.h}in)`
+        editingSize: false
       }
     },
 
-    computed: mapGetters(["activeGame", "activeLayer"]),
+    computed: {
+      ...mapGetters([
+        "activeGame",
+        "activeLayer",
+        "findComponentSource",
+        "findComponentTemplate"
+      ]),
+
+      componentSource() {
+        return this.findComponentSource(this.component)
+      },
+
+      componentTemplate() {
+        return this.findComponentTemplate(this.component)
+      },
+
+      sizeLabel() {
+        return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
+      }
+    },
 
     methods: { }
   }

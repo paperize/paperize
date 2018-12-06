@@ -1,0 +1,19 @@
+{
+  "characterDeck": {
+    "id": "characterDeck",
+    "title": "Character Deck",
+    "sourceId": "loveLetter",
+    "templateId": "loveLetter",
+    "quantityProperty": null
+  },
+  "instructionBook": {
+    "id": "instructionBook",
+    "title": "Instruction Book",
+    "quantityProperty": null
+  },
+  "pointCubes": {
+    "id": "pointCubes",
+    "title": "Point Cubes",
+    "quantityProperty": null
+  }
+}

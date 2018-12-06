@@ -1,30 +1,30 @@
 <template lang="pug">
-.component-panel.grid-y
-  component-form(mode='create')
-  .small-12.cell
-    h4 Components
+v-layout(column).component-panel
+  v-flex(sm12)
+    .headline Components
 
-    ul.menu
-      li
-        a(@click="$modal.show('create-component-modal')") New Component
+    v-dialog(v-model="showEditDialog" max-width="500" lazy)
+      v-btn(small slot="activator" @click="editComponent = {}") New Component
+      component-form(@close-dialog="showEditDialog = false" :component="editComponent")
 
-    .grid-x
-      component-card(v-for="component in components" :key="component.id" :component="component")
+  component-card(v-for="component in components" :key="component.id" :component="component" @edit-me="showEditDialog = true; editComponent = component")
 </template>
 
 <script>
-  import ComponentForm from './ComponentForm.vue'
+  import { mapGetters } from 'vuex'
   import ComponentCard from './ComponentCard.vue'
+  import ComponentForm from './ComponentForm.vue'
 
   export default {
     props: ["components"],
 
-    components: {
-      "component-form": ComponentForm,
-      "component-card": ComponentCard
-    }
+    components: { ComponentCard, ComponentForm },
+
+    data() {
+      return {
+        editComponent: {},
+        showEditDialog: false
+      }
+    },
   }
 </script>
-
-<style>
-</style>

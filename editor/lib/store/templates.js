@@ -1,58 +1,41 @@
-import { find, map, max, forEach, clone, filter, orderBy } from 'lodash'
-import Vue from 'vue'
+import { map, max, orderBy } from 'lodash'
+
+import { generateCrud } from './util/vuex_resource'
 
 import uuid from 'uuid/v4'
 
-const TemplatesModule = {
-  state: { },
+const TemplateModel = {
+  name: 'templates',
+
+  relationships: [
+    { relation: 'hasMany', model: 'layer', dependent: true }
+  ],
+
+  create() {
+    return {
+      id: uuid(),
+      layerIds: [],
+      size: {
+        w: 2.5,
+        h: 3.5
+      }
+    }
+  },
 
   getters: {
-    getTemplateLayers: (state, getters, rootState, rootGetters) => template => {
-      let layers = rootGetters.findLayers(template.layerIds)
-      // let layers = template.layerIds.map(layerId => rootGetters.findLayer(layerId))
-
+    findAllTemplateLayers: (_, __, ___, rootGetters) => template => {
+      let layers = rootGetters.findAllLayers(template.layerIds)
       return orderBy(layers, ["renderOrder"], ["asc"])
     },
 
-    getTemplateNextLayerOrder: (state, getters) => template => {
-      let layers = getters.getTemplateLayers(template)
+    getTemplateNextLayerOrder: (_, getters) => template => {
+      let layers = getters.findAllTemplateLayers(template)
       return (max(map(layers, "renderOrder")) + 1) || 0
     },
   },
 
-  mutations: {
-    setComponentTemplate(state, { component, template }) {
-      component.template = template
-    },
-
-    pushTemplateLayerId(state, { template, layerId }) {
-      template.layerIds.push(layerId)
-    },
-
-    setTemplateLayerIds(state, { template, layerIds }) {
-      template.layerIds = layerIds
-    },
-
-    updateTemplateSize(state, { template, size }) {
-      template.size = size
-    },
-
-    deleteTemplateLayer(state, { template, layer, layersToDecrement }) {
-      // remove the layer in question
-      template.layerIds.splice(template.layerIds.indexOf(layer.id), 1)
-    }
-  },
-
   actions: {
-    createComponentTemplate({ commit }, component) {
-      let template = {
-        layerIds: [], // this template's layer collection
-        size: { w: 2.5, h: 3.5 }
-      }
-      commit("setComponentTemplate", {component, template })
-    },
-
-    addTemplateLayer({ dispatch, commit, getters }, { template, layerType }) {
+    createTemplateLayer: ({ dispatch, commit, getters }, { template, layerType }) => {
       const renderOrder = getters.getTemplateNextLayerOrder(template)
 
       let layer = {
@@ -60,6 +43,7 @@ const TemplatesModule = {
         name: `[${layerType}] ${renderOrder}`,
         renderOrder
       }
+
       // Commit record to global collection begets an id
       dispatch("createLayer", layer).then((layerId) => {
         // Commit only the record id to referencing collections
@@ -67,13 +51,27 @@ const TemplatesModule = {
       })
     },
 
-    deleteTemplateLayer({ dispatch, commit, getters }, { template, layer }) {
+    destroyTemplateLayer: ({ dispatch, commit, getters }, { template, layer }) => {
       // Layers only exist in one template, so they get globally purged immediately
-      commit("deleteLayer", layer)
-      commit("deleteTemplateLayer", { template, layer })
-      dispatch("setLayersRenderOrder", getters.getTemplateLayers(template))
+      dispatch("destroyLayer", layer)
+      commit("destroyTemplateLayer", { template, layer })
+      dispatch("setLayersRenderOrder", getters.findAllTemplateLayers(template))
+    }
+  },
+
+  mutations: {
+    pushTemplateLayerId: (state, { template, layerId }) => {
+      template.layerIds.push(layerId)
+    },
+
+    destroyTemplateLayer: (state, { template, layer }) => {
+      // remove the layer in question
+      template.layerIds.splice(template.layerIds.indexOf(layer.id), 1)
     }
   }
 }
+
+
+const TemplatesModule = generateCrud(TemplateModel)
 
 export default TemplatesModule

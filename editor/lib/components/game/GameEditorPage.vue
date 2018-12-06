@@ -1,17 +1,19 @@
 <template lang="pug">
 div(v-if="!game")
   p no game selected
-.grid-container(v-else)
+
+v-container(v-else fluid grid-list-md)
   game-panel(:game="game")
 
-  .grid-x.grid-padding.x
-    .small-4.medium-3.large-2.cell
-      component-panel(:components="game.components")
+  v-divider
 
-    .small-8.medium-9.large-10.cell
-      .active-component
-        component-editor(v-if="activeComponent" :component="activeComponent")
-        h2(v-else) No Component Selected
+  v-layout(row)
+    v-flex(sm4 md3 lg2)
+      component-panel(:components="findAllGameComponents(game)")
+
+    v-flex.active-component(sm8 md9 lg10)
+      component-editor(v-if="activeComponent" :component="activeComponent")
+      .headline(v-else) No Component Selected
 </template>
 
 <script>
@@ -24,19 +26,12 @@ div(v-if="!game")
   export default {
     props: ['gameId'],
 
+    components: { GamePanel, ComponentPanel, ComponentEditor },
+
     computed: mapGetters({
+      findAllGameComponents: 'findAllGameComponents',
       activeComponent: 'activeComponent',
       game: 'activeGame'
     }),
-
-    components: {
-      "game-panel":       GamePanel,
-      "component-panel":  ComponentPanel,
-      "component-editor": ComponentEditor
-    }
   }
 </script>
-
-<style>
-
-</style>

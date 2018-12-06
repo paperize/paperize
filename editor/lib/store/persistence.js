@@ -4,11 +4,11 @@
 // Unfortunately, Webpack is still building in this environment, so I may
 // need to actually toy with custom Loaders to do it right.
 
-
+/* global process require */
 let pouchPersistence = {
   initializeAndWatchStore(store) {
     console.log("No persistence layer.")
-    store.subscribe(({ type }, state) => {
+    store.subscribe(({ type }) => {
       if(type === "become") {
         store.dispatch("setStoreReady")
       }

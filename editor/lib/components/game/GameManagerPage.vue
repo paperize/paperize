@@ -1,20 +1,20 @@
 <template lang="pug">
-.grid-container
-  .grid-x.grid-margin-x
-    .small-12.cell
-      h2 Game Manager
+v-container(fluid)
+  v-layout(row wrap)
+    v-flex(sm12)
+      .headline Game Manager
 
-      ul.menu
-        li
-          a Load Example
-        li
-          a(@click="$modal.show('create-game-modal')") New Game
+      v-tooltip(bottom)
+        v-btn(slot="activator" small disabled) Load Example
+        span Coming Soon!
 
-    .small-12.cell
-      .grid-x.grid-margin-x
-        game-card(v-for="game in games" :key="game.id" :game="game")
+      v-dialog(max-width="500" lazy)
+        v-btn(slot="activator" small) New Game
+        game-form
 
-    game-form(mode="create")
+    v-flex(sm12)
+      v-layout(row wrap)
+        game-card(v-for="game in allGames" :key="game.id" :game="game")
 </template>
 
 <script>
@@ -23,15 +23,9 @@
   import GameForm from './GameForm.vue'
 
   export default {
-    components: {
-      "game-card": GameCard,
-      "game-form": GameForm
-    },
+    components: { GameCard, GameForm },
 
-    computed: {
-      ...mapState(["user"]),
-      ...mapGetters(["games"])
-    }
+    computed: mapGetters(["allGames"])
   }
 
 </script>

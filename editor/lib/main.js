@@ -1,3 +1,4 @@
+/* global process */
 if(process.env.NODE_ENV !== "production") {
   console.log("Paperize Editor:", process.env.NODE_ENV)
 }
@@ -6,21 +7,26 @@ import Vue from 'vue'
 // in-memory store
 import store from './store'
 // long-term store
-import persistence from './store/persistence'
-persistence.initializeAndWatchStore(store)
+import storeSync from './services/store_sync'
+storeSync.initialize(store)
 // routing
 import router from './routes'
 
 // Vue extensions
-import Autocomplete from 'v-autocomplete'
-Vue.use(Autocomplete)
+import Vuetify from 'vuetify'
+import colors from 'vuetify/es5/util/colors'
+import 'vuetify/dist/vuetify.min.css'
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.blueGrey.lighten2,
+    secondary: colors.blueGrey.darken2,
+  }
+})
 
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
-import VModal from 'vue-js-modal'
-Vue.use(VModal, { dialog: true })
-
+// test-specific settings and globals
 if(process.env.NODE_ENV == 'test') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
@@ -28,19 +34,17 @@ if(process.env.NODE_ENV == 'test') {
   window.paperize = { store }
 }
 
-import TitleBar from './components/sitewide/TitleBar.vue'
+// Top-Level app layout
+import AppLayout from './components/layout/AppLayout.vue'
 
-let startApp = () => {
+// When the window loads: go!
+window.addEventListener('load', () => {
   // Top-level Vue component
-  const app = new Vue({
+  new Vue({
     router, store,
-    components: {
-      "title-bar": TitleBar
-    },
-    // Render the TitleBar outside the router view
-    render: (h) => { return h("div", [h("title-bar"), h("router-view"), h("v-dialog")]); }
-    // Mount it here in the index.html
-  }).$mount('#paperize-app')
-}
-
-window.addEventListener('load', startApp)
+    el: '#paperize-app',
+    components: { AppLayout },
+    // Render function instead of compiling templates in production
+    render: (h) => h("app-layout")
+  })
+})

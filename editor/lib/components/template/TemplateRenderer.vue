@@ -7,7 +7,7 @@
   import { mapGetters } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
 
-  const RENDER_DELAY_MS = 800
+  const RENDER_DELAY_MS = 600
 
   export default {
     props: ["game", "component", "item"],
@@ -30,7 +30,7 @@
       layerFillColor() { return (this.activeLayer && this.activeLayer.fillColor) },
 
       layerImageNameStatic() { return (this.activeLayer && this.activeLayer.imageNameStatic) },
-      layerImageName() { return (this.activeLayer && this.activeLayer.imageName) },
+      layerImageId() { return (this.activeLayer && this.activeLayer.imageId) },
       layerImageNamePrefix() { return (this.activeLayer && this.activeLayer.imageNamePrefix) },
       layerImageNameProperty() { return (this.activeLayer && this.activeLayer.imageNameProperty) },
       layerImageNameSuffix() { return (this.activeLayer && this.activeLayer.imageNameSuffix) },
@@ -43,7 +43,8 @@
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
       templateLayers() {
-        return this.$store.getters.getTemplateLayers(this.component.template)
+        let template = this.$store.getters.findTemplate(this.component.templateId)
+        return this.$store.getters.findAllTemplateLayers(template)
       }
     },
 
@@ -79,7 +80,7 @@
         pdfRenderer.renderItemToPdf(this.game, this.component, this.item).then((pdf) => {
           this.pdfBlob = pdf
         })
-      }, RENDER_DELAY_MS, { leading: true })
+      }, RENDER_DELAY_MS)
     }
   }
 
@@ -87,6 +88,7 @@
 
 <style scoped>
   iframe {
+    width: 100%;
     min-height: 400px;
   }
 </style>

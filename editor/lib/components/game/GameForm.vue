@@ -1,77 +1,59 @@
 <template lang="pug">
-modal.game-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
-  form(method="post" v-on:submit.prevent="submitForm")
-    .grid-x.grid-padding-x
-      .small-12.cell
-        h2 {{ mode === 'edit' ? 'Edit' : 'Create a New' }} Game
+v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
+  v-card
+    v-card-title
+      .headline {{ headlineText }}
 
-      .small-4.cell
-        label(for="game-title") Title:
-      .small-8.cell
-        input(type="text" id="game-title" name="title" v-model="gameClone.title")
-      .small-4.cell
-        button.button.small.alert(type="button" @click="closeModal") Cancel
-      .small-8.cell
-        button.button.small.success(type="submit") {{ mode === 'edit' ? 'Edit' : 'Create' }} Game
+    v-card-text
+      v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
+      v-checkbox(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this game?")
 
-
-    button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-      span(aria-hidden="true") &times;
+    v-card-actions
+      v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
 </template>
 
 <script>
-  import Game from '../../models/game'
+  import { mapActions } from 'vuex'
 
   export default {
     props: {
-      mode: {
-        default: 'edit',
-        type: String,
-        validator: (mode) => mode == 'edit' || mode == 'create'
-      },
       game: {
-        default: Game.factory
+        default() { return {} }
       }
     },
 
     data() {
       return {
-        gameClone: { ...this.game },
-        modalName: `${this.mode}-game-modal`
+        gameTitle: this.game.title,
+        createDriveFolder: true,
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     },
 
-    methods: {
-      submitForm() {
-        // Add or update the game in the store
-        if(this.mode === 'edit') {
-          this.$store.dispatch("updateGame", { game: this.gameClone })
-        } else if(this.mode === 'create') {
-          this.$store.commit("createGame", { game: this.gameClone })
-          this.$router.push({ name: "gameEditor", params: { gameId: this.gameClone.id }})
-        }
-        // Close the modal
-        this.closeModal()
-        // Alert our parents we've submitted
-        this.$emit("submitted")
-        // Reset the model
-        this.gameClone = { ...this.game }
-      },
+    computed: {
+      isSaved() { return !!this.game.id },
+      headlineText() { return this.isSaved ? `Editing ${this.game.title}` : "Design a New Game" },
+      submitButtonText() { return this.isSaved ? `Update` : "Start Designing" },
+    },
 
-      closeModal() {
-        this.$modal.hide(this.modalName)
+    methods: {
+      ...mapActions(["createGame", "createGameAndDriveFolder", "updateGame"]),
+
+      submitGame() {
+        if(this.$refs.gameForm.validate()) {
+          if(this.isSaved) {
+            this.updateGame({ ...this.game, title: this.gameTitle })
+          } else if(this.createDriveFolder){
+            this.createGameAndDriveFolder({ title: this.gameTitle })
+          } else {
+            this.createGame({ title: this.gameTitle })
+          }
+
+          this.$emit("close-dialog")
+        }
       }
     }
   }
 </script>
-
-<style scoped>
-  h2 {
-    text-decoration: underline;
-  }
-
-  label {
-    font-size: 1.25em;
-    text-align: right;
-  }
-</style>

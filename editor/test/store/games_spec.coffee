@@ -1,15 +1,20 @@
 import store from "../../lib/store"
-import { loveLetter } from "../../cypress/fixtures/games"
+import gameFixtures from "../../cypress/fixtures/games"
+import componentFixtures from "../../cypress/fixtures/components"
+import templateFixtures from "../../cypress/fixtures/templates"
 import assert from 'assert'
 
 describe "Games Store", ->
   context "deleting a game", ->
     it "clears activeComponent", ->
-      store.commit("setGames", [loveLetter])
+      loveLetter = gameFixtures.loveLetter
 
-      store.dispatch("setActiveGame", { gameId: loveLetter.id })
-      store.dispatch("setActiveComponent", { component: loveLetter.components[0] })
+      store.commit("setGames", gameFixtures)
+      store.commit("setComponents", componentFixtures)
+      store.commit("setTemplates", templateFixtures)
 
-      store.dispatch("deleteGame", { loveLetter })
+      store.dispatch("setActiveGame", loveLetter.id)
+      store.dispatch("setActiveComponent", store.getters.findAllGameComponents(loveLetter)[0].id)
 
-      assert.equal(null, store.getters.activeComponent)
+      store.dispatch("destroyGame", loveLetter).then ->
+        assert.equal(null, store.getters.activeComponent)

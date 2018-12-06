@@ -1,52 +1,124 @@
-import Promise from 'bluebird'
 import Vue from 'vue'
-import auth from '../auth'
-import googleSheets from '../google_sheets'
+import { keys, sortBy, reverse } from 'lodash'
+import uuid from 'uuid/v4'
+import { auth, sheets, drive } from '../services/google'
 
 const GoogleModule = {
   state: {
-    showSpinner: false
+    loginStatus: "",
+    trackedRequests: {},
+    completedRequests: {}
   },
 
   getters: {
-    showSpinner: state => state.showSpinner
+    showSpinner: state => keys(state.trackedRequests).length > 0,
+    loginStatus: state => state.loginStatus,
+    trackedRequests: state => reverse(sortBy(state.trackedRequests, "timestamp")),
+    completedRequests: state => reverse(sortBy(state.completedRequests, "timestamp"))
   },
 
   mutations: {
-    setShowSpinner(state, showOrNot) {
-      state.showSpinner = showOrNot
+    addTrackedRequest(state, { id, name, details="" }) {
+      let request = { id, name, details, timestamp: Date.now() }
+      Vue.set(state.trackedRequests, id, request)
+    },
+
+    errorTrackedRequest(state, { requestId, requestError }) {
+      state.trackedRequests[requestId].error = `${requestError.fileName}:${requestError.lineNumber} - ${requestError.message}`
+    },
+
+    clearTrackedRequest(state, requestId) {
+      Vue.set(state.completedRequests, requestId, state.trackedRequests[requestId])
+      Vue.delete(state.trackedRequests, requestId)
+    },
+
+    setLoginStatus(state, newStatusMessage) {
+      state.loginStatus = `${newStatusMessage}\n`
+    },
+
+    appendLoginStatus(state, nextStatusMessage) {
+      state.loginStatus += `${nextStatusMessage}\n`
     }
   },
 
   actions: {
-    googleLoginFlow({ commit }) {
-      return new Promise((resolve, reject) => {
-        auth.getAuth2((auth2) => {
-          auth2.signIn().then(
-            (googleUser) => { resolve(googleUser) },
-            (error) => { reject(new Error(error.error)) }
-          )
-        })
-      })
+    googleLogin() {
+      return auth.signIn()
     },
 
     googleLogout() {
-      auth.getAuth2(auth2 => auth2.signOut())
+      return auth.signOut()
     },
 
-    fetchSheets({ commit }) {
-      commit("setShowSpinner", true)
-      return googleSheets
-        .fetchSheets()
-        .finally(() => commit("setShowSpinner", false))
+    traceNetworkRequest({ commit }, { name, details, promise }) {
+      const requestId = uuid()
+      commit("addTrackedRequest", { id: requestId, name, details })
+      return Promise.resolve(promise)
+        .catch((requestError) => {
+          // Track that error
+          commit("errorTrackedRequest", { requestId, requestError })
+          // We don't handle 'em, we just track 'em
+          throw requestError
+        })
+        .finally(() => {
+          commit("clearTrackedRequest", requestId)
+        })
     },
 
-    fetchSheetById({ commit }, sourceId) {
-      commit("setShowSpinner", true)
-      return googleSheets
-        .fetchSheetById(sourceId)
-        .finally(() => commit("setShowSpinner", false))
-    }
+    googleGetRecord({ dispatch }, fileId) {
+      return dispatch("traceNetworkRequest",
+        { name: "Get Record.",
+          details: fileId,
+          promise: drive.getRecord(fileId) })
+    },
+
+    googleGetIndex({ dispatch }, { folderId, options }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Get Index.`,
+          details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
+          promise: drive.getIndex(folderId, options) })
+    },
+
+    googleGetImageFolder({ dispatch }, folderLink) {
+      return dispatch("traceNetworkRequest",
+        { name: `Get Folder.`,
+          details: folderLink,
+          promise: drive.getFolder(folderLink) })
+    },
+
+    googleCreateFolder({ dispatch }, { parentId, name }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Create Folder.`,
+          details: `Named: "${name}" in folder ${parentId}`,
+          promise: drive.createFolder(name, { parentId }) })
+    },
+
+    googleUpdateFile({ dispatch }, { fileId, contents }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Update File.`,
+          details: fileId,
+          promise: drive.updateFile(fileId, contents) })
+    },
+
+    googleDownloadFile({ dispatch }, fileId) {
+      return dispatch("traceNetworkRequest",
+        { name: `Download File.`,
+          details: fileId,
+          promise: drive.downloadFile(fileId) })
+    },
+
+    googleFetchSheets({ dispatch }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Fetch Sheets.`,
+          promise: sheets.fetchSheets() })
+    },
+
+    googleFetchSheetById({ dispatch }, sourceId) {
+      return dispatch("traceNetworkRequest",
+        { name: `Fetch Sheet.`,
+          details: sourceId,
+          promise: sheets.fetchSheetById(sourceId) })
+    },
   }
 }
 

@@ -13,8 +13,7 @@ const computedVModelUpdate = function(objectName, actionName, propertyToUpdate) 
     set(propertyValue) {
       let keyValueObject = {}
       keyValueObject[propertyToUpdate] = propertyValue
-      let actionPayload = { keyValueObject }
-      actionPayload[objectName] = this[objectName],
+      let actionPayload = { ...this[objectName], ...keyValueObject }
       this[actionName](actionPayload)
     }
   }

@@ -1,40 +1,27 @@
 <template lang="pug">
-.text-layer-fields
-  fieldset.fieldset
-    legend Text Look &amp; Feel
+v-layout(column)
+  v-flex
+    .subheading Text Look &amp; Feel
 
-    .grid-x.grid-margin-x
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="text-color")
-              strong Text Color
-          input.input-group-field(id="text-color" type="color" v-model="textColor")
+  v-flex
+    v-text-field(v-model="textColor" type="color" label="Text Color")
+  v-flex
+    v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="text-size")
-              strong Text Size
-          select.input-group-field(id="text-size" v-model="textSize")
-            option(v-for="size in [5, 6, 7, 8, 9, 10, 12, 16, 20, 24, 32, 48, 64, 72]" :value="size") {{ size }}
+  v-flex
+    .subheading Text Content
 
-
-  fieldset.fieldset
-    legend Text Content
-
+  v-flex
     p(v-pre) Use curly brackets to reference columns, like: {{Name}}
 
-    .grid-x.grid-margin-x
-      .auto.cell
-        strong From Template:
-        textarea(v-model="textContentTemplate")
+  v-flex
+    v-textarea.text-content(v-model="textContentTemplate" label="Text Template")
 </template>
 
 <script>
   import { debounce } from 'lodash'
   import { mapActions } from 'vuex'
-  import { computedVModelUpdateAll } from '../../../store/component_helper'
+  import { computedVModelUpdateAll } from '../../util/component_helper'
 
   export default {
     props: ["layer", "source"],
@@ -55,8 +42,8 @@
     },
 
     methods: {
-      updateLayer: debounce(function({ layer, keyValueObject }) {
-        this.$store.dispatch("updateLayer", { layer, keyValueObject })
+      updateLayer: debounce(function(layer) {
+        this.$store.dispatch("updateLayer", layer)
       }, 650, { leading: true }),
     }
   }

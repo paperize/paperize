@@ -1,13 +1,11 @@
 <template lang="pug">
-form(@submit.stop.prevent="$emit('next')")
-  input(v-model="imageName" ref="nameInput" type="text" @keydown.shift.tab.stop.prevent="$emit('previous')" @keydown.tab.exact.stop.prevent="$emit('next')")
+v-form(@submit.stop.prevent="$emit('next')")
+  v-text-field(v-model="imageName" autofocus type="text" @keydown.shift.tab.stop.prevent="$emit('previous')" @keydown.tab.exact.stop.prevent="$emit('next')")
 </template>
 
 <script>
   export default {
     props: ["image"],
-
-    mounted() { this.$refs.nameInput.select() },
 
     computed: {
       imageName: {
