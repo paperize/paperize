@@ -32,7 +32,6 @@ module.exports = {
   },
   plugins: [
     new webpack.EnvironmentPlugin({
-      'NODE_ENV': 'development',
       'GIT_SHA': gitSha,
       'GIT_CHANGE_INFO': gitChanges
     }),
