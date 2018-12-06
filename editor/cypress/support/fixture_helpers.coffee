@@ -10,4 +10,4 @@ Cypress.Commands.add "fixtures", (fixtureNames) ->
 
 # shorthand for loading all fixtures
 Cypress.Commands.add "allFixtures", ->
-  cy.fixtures(["users", "games", "sources"])
+  cy.fixtures(["users", "games", "components", "sources", "templates"])

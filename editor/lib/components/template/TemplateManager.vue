@@ -1,41 +1,39 @@
 <template lang="pug">
-div(v-if="component.template")
-  template-editor(:component="component")
-div(v-else)
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Template Manager
-      hr
+template-editor(v-if="findComponentTemplate(component)" :component="component" @close-dialog="$emit('close-dialog')")
 
-    .small-4.cell
-      h5 Create a new Template
-      a.button(@click="createComponentTemplate(component)") Create
+v-card(v-else)
+  v-card-title
+    .headline Template Manager
 
-    .small-4.cell
-      h5 Load a Paperize Template
-      p
-        em Coming soon...
+  v-card-text
+    v-layout(row)
+      v-flex(sm4)
+        .subheading Create a new Template
+        v-btn(@click="createComponentTemplate(component)") Create
 
-    .small-4.cell
-      h5 Copy another Template
-      p
-        em Coming soon...
+      v-flex(sm4)
+        .subheading Load a Paperize Template
+        p
+          em Coming soon...
+
+      v-flex(sm4)
+        .subheading Copy another Template
+        p
+          em Coming soon...
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateEditor from './TemplateEditor.vue'
 
   export default {
     props: ["component"],
 
-    components: {
-      "template-editor": TemplateEditor
-    },
+    components: { TemplateEditor },
 
     data() { return { } },
 
-    computed: { },
+    computed: mapGetters(["findComponentTemplate"]),
 
     methods: mapActions(["createComponentTemplate"])
   }

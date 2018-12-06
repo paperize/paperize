@@ -3,12 +3,16 @@ const UsersModule = {
     idToken: null,
     authenticated: false,
     name: '',
-    avatarSrc: '',
+    avatarSrc: null,
     loginError: null
   },
 
   getters: {
-    loginError: state => state.loginError
+    loggedIn: state => state.authenticated,
+    loginError: state => state.loginError,
+    userId: state => state.idToken,
+    userName: state => state.name,
+    userAvatar: state => state.avatarSrc || "/images/blank-avatar.png"
   },
 
   mutations: {
@@ -34,25 +38,15 @@ const UsersModule = {
 
     login({ dispatch, commit }) {
       commit("setLoginError", null)
-      return dispatch("googleLoginFlow")
-        .then((googleUser) => {
-          return dispatch("become", {
-            idToken:   googleUser.getBasicProfile().getEmail(),
-            name:      googleUser.getBasicProfile().getName(),
-            email:     googleUser.getBasicProfile().getEmail(),
-            avatarSrc: googleUser.getBasicProfile().getImageUrl()
-          })
-        })
-
+      // call the Google auth pop-up
+      return dispatch("googleLogin")
         .catch((error) => {
           commit("setLoginError", error.message)
           return null
         })
     },
 
-    logout({ commit, dispatch }) {
-      commit("resetState")
-      commit("logout")
+    logout({ dispatch }) {
       dispatch("googleLogout")
     }
   }

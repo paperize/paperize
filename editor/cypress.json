@@ -1,6 +1,6 @@
 {
   "baseUrl": "http://localhost:8080",
   "defaultCommandTimeout": 2000,
-  "videoRecording": false,
+  "video": false,
   "watchForFileChanges": false
 }

@@ -87,13 +87,22 @@ router.beforeEach((to, from, next) => {
 store.subscribe(({ type, payload }, state) => {
   if(type === 'become' && router.currentRoute.name === 'splash') {
     router.push({ name: 'gameManager' })
-  } else if(type === 'logout') {
+
+  } else if(type === 'resetState') {
+    // No reason to be at a non-root URL if we're resetting state
     router.push({ name: 'splash' })
-  } else if(type === 'deleteGame') {
+
+  } else if(type === 'createGame') {
+    router.push({ name: "gameEditor", params: { gameId: payload.id }})
+
+  } else if(type === 'destroyGame') {
     router.push({ name: 'gameManager' })
-  } else if(type === 'createGameComponent') {
-    router.push({ name: 'componentEditor', params: { gameId: payload.game.id, componentId: payload.component.id } })
-  } else if(type === 'deleteGameComponent') {
+
+  } else if(type === 'createComponent') {
+    router.push({ name: 'componentEditor', params: { gameId: state.ui.activeGameId, componentId: payload.id } })
+
+  } else if(type === 'destroyComponent' && router.currentRoute.name === 'splash') {
+    // if we just destroyed the component we're editing, route back up to gameEditor
     router.push({ name: 'gameEditor', params: { gameId: state.ui.activeGameId }})
   }
 })

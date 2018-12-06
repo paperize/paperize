@@ -1,8 +1,10 @@
-import Promise from 'bluebird'
+
 import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
 import { percentOfParent } from './helpers'
+
+// Keep renderers in their own files
 import shape from './shape_renderer'
 import text from './text_renderer'
 import image from './image_renderer'
@@ -13,9 +15,10 @@ const RENDERERS = { shape, text, image, code }
 const api = {
   renderItemToPdf(game, component, item) {
     const doc = this.startNewDocument()
-    this.addPage(doc, component.template.size)
+    const template = store.getters.findTemplate(component.templateId)
+    this.addPage(doc, template.size)
 
-    return this.renderItem(doc, game, component, item, component.template.size).then(() => {
+    return this.renderItem(doc, game, component, item, template.size, 0, 1).then(() => {
       // if(store.getters.activeLayer) {
       //   TODO: render a rectangle around the active layer
       // }
@@ -24,21 +27,9 @@ const api = {
     })
   },
 
-  // renderComponentToPdf(game, component) {
-  //   const doc = this.startNewDocument()
-  //   const items = this.sortItems(component)
-  //
-  //   return Promise.each(items, (item) => {
-  //     addPage(doc, template, game)
-  //     return this.renderItem(doc, template, item, items, game)
-  //   }).then(() => {
-  //     return doc.output('bloburi')
-  //   })
-  // },
-
   renderGameToPdf(game) {
     const doc = this.startNewDocument()
-    const components = game.components
+    const components = store.getters.findAllGameComponents(game)
 
     let printSettings = store.getters.getPrintSettings,
       pageSize = { w: printSettings.width, h: printSettings.height },
@@ -56,8 +47,9 @@ const api = {
     // TODO: gather all items' layouts
     // generate a layout with locations mapped to dimensions
     let componentSizes = components.map((component) => {
+      const template = store.getters.findTemplate(component.templateId)
       return {
-        size: component.template.size,
+        size: template.size,
         name: component.id,
         quantity: store.getters.getComponentItems(component).length
       }
@@ -110,13 +102,13 @@ const api = {
     return Promise.each(components, (component) => {
       const items = store.getters.getComponentItems(component)
 
-      return Promise.each(items, (item) => {
+      return Promise.each(items, (item, itemIndex, totalItems) => {
 
         let parentDimensions = itemLocations[component.id].shift()
         // what page is this item's location on?
         doc.setPage(parentDimensions.page)
 
-        return this.renderItem(doc, game, component, item, parentDimensions)
+        return this.renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
       })
     }).then(() => {
       return doc.save("game.pdf") //output('bloburi')
@@ -143,11 +135,12 @@ const api = {
     doc.setFillColor(0)
   },
 
-  renderItem(doc, game, component, item, parentDimensions) {
+  renderItem(doc, game, component, item, parentDimensions, index, total) {
     // get transforms for this component
-    let layers = store.getters.getTemplateLayers(component.template)
+    let template = store.getters.findTemplate(component.templateId)
+    let layers = store.getters.findAllTemplateLayers(template)
     // render each transform upon this item
-    console.log(`Rendering ${layers.length} layers...`, layers)
+    console.log(`Rendering Item ${index+1}/${total} with ${layers.length} layers...`, layers)
 
     return Promise.each(layers, layer => {
       // TODO: modify with layout dimensions
@@ -156,7 +149,8 @@ const api = {
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
 
-      return RENDERERS[layer.type].render(doc, layer, layerDimensions, item)
+      // Type-specific layer renderers
+      return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
     })
   },
 }

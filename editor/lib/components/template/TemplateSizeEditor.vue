@@ -3,59 +3,32 @@ fieldset.fieldset
   legend
     strong Component Size
 
-  .grid-x.grid-padding-x
-    .small-12.cell
-      ul.menu
-        li.menu-text Using:
-        li(:class="{ 'is-active': paperMode == 'standard' }")
-          a(@click="setPaperMode('standard')") Standard Sizes
-        li(:class="{ 'is-active': paperMode == 'custom' }")
-          a(@click="setPaperMode('custom')") Custom Size
+  v-btn-toggle(v-model="paperMode")
+    v-btn(flat value="standard") Standard
+    v-btn(flat value="custom") Custom
 
-      hr
+  v-divider
 
-    //- Standard Sizes
-    template(v-if="paperMode == 'standard'")
-      .small-12.cell
-        p Select from some common component sizes.
+  //- Standard Sizes
+  template(v-if="paperMode == 'standard'")
+    p Select from some common component sizes.
 
-      .small-12.cell
-        .input-group
-          span.input-group-label(title="inches") Size
-          select.input-group-field(id="paper-format" @change="updatePageDimensions" v-model="paperFormat")
-            option()
-            option(v-for="componentOption in standardComponentOptions" :value="componentOption.value") {{ componentOption.name }}
+    v-select.paper-format(label="Size" :items="componentOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperFormat")
+    v-select.paper-orientation(label="Orientation" :items="orientationOptions" item-text="name" item-value="value"  @change="updatePageDimensions" v-model="paperOrientation")
 
-      .small-12.cell
-        .input-group
-          span.input-group-label(title="inches") Orientation
-          select.input-group-field(id="paper-orientation" @change="updatePageDimensions" v-model="paperOrientation")
-            option(value="portrait") Portrait
-            option(value="landscape") Landscape
+  //- Custom Size
+  template(v-else)
+    p Set your own custom component size in inches.
 
-    //- Custom Size
-    template(v-else)
-      .small-12.cell
-        p Set your own custom component size in inches.
-
-      .small-12.cell
-        .input-group
-          span.input-group-label(title="inches") Width
-          input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateWidth")
-          span.input-group-label(title="inches") in.
-
-      .small-12.cell
-        .input-group
-          span.input-group-label Height
-          input.input-group-field(id="paper-width" type="number" step="0.01" min="0" v-model.number="templateHeight")
-          span.input-group-label(title="inches") in.
+    v-text-field.paper-width(label="Width" suffix="in." type="number" step="0.01" min="0" v-model.number="templateWidth")
+    v-text-field.paper-height(label="Height" suffix="in." type="number" step="0.01" min="0" v-model.number="templateHeight")
 </template>
 
 <script>
   import { debounce, isString, find } from 'lodash'
   import { mapMutations } from 'vuex'
 
-  const standardComponentOptions = [
+  const componentOptions = [
     { value: 'poker', name: 'Poker-sized Cards',
       width: 2.5, height: 3.5 },
     { value: 'a4', name: 'Whole Page (A4)',
@@ -66,12 +39,18 @@ fieldset.fieldset
       width: 8.3, height: 11 },
   ]
 
+  const orientationOptions = [
+    { name: "Portrait", value: 'portrait' },
+    { name: "Landscape", value: 'landscape' }
+  ]
+
   export default {
     props: ["template"],
 
     data() {
       return {
-        standardComponentOptions,
+        componentOptions,
+        orientationOptions,
         paperMode: 'standard',
         paperFormat: '',
         paperOrientation: 'portrait',
@@ -84,7 +63,7 @@ fieldset.fieldset
         set(newWidth) {
           if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
           const newSize = { ...this.template.size, w: newWidth  }
-          this.updateTemplateSize({ template: this.template, size: newSize })
+          this.updateTemplate({ ...this.template, size: newSize })
         }
       },
 
@@ -93,14 +72,14 @@ fieldset.fieldset
         set(newHeight) {
           if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
           const newSize = { ...this.template.size, h: newHeight }
-          this.updateTemplateSize({ template: this.template, size: newSize })
+          this.updateTemplate({ ...this.template, size: newSize })
         }
       }
     },
 
     methods: {
-      updateTemplateSize: debounce(function(payload) {
-        this.$store.commit("updateTemplateSize", payload)
+      updateTemplate: debounce(function(payload) {
+        this.$store.commit("updateTemplate", payload)
       }, 200),
 
       setPaperMode(mode) {
@@ -115,15 +94,15 @@ fieldset.fieldset
       updatePageDimensions() {
         if(this.paperFormat.length == 0) { return }
 
-        let format = find(standardComponentOptions, { value: this.paperFormat })
+        let format = find(componentOptions, { value: this.paperFormat })
           , width = format.width
           , height = format.height
           , smallerDimension = Math.min(width, height)
           , largerDimension = Math.max(width, height)
 
         if(this.paperOrientation == 'portrait') {
-          this.updateTemplateSize({
-            template: this.template,
+          this.updateTemplate({
+            ...this.template,
             size: {
               w: smallerDimension,
               h: largerDimension
@@ -131,8 +110,8 @@ fieldset.fieldset
           })
 
         } else if(this.paperOrientation == 'landscape') {
-          this.updateTemplateSize({
-            template: this.template,
+          this.updateTemplate({
+            ...this.template,
             size: {
               w: largerDimension,
               h: smallerDimension

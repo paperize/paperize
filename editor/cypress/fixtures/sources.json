@@ -1,6 +1,6 @@
 {
   "loveLetter": {
-    "id": "1UuBvFnNyeHpL7kq8b9J6N420-td9DFZ2GCcsvIdvxjU",
+    "id": "loveLetter",
     "name": "Love Letter Revisited",
     "data": {
       "majorDimension": "ROWS",
@@ -55,7 +55,7 @@
           "https://c2.staticflickr.com/2/1249/5115888573_1c5e582bb3_n.jpg"
         ],
         [
-          "2",
+          "1",
           "7",
           "Countess",
           "If you have this card and the King or Prince in your hand, you must discard this card.",
@@ -72,27 +72,91 @@
     }
   },
   "carcassonne": {
-    "id": "carcassonne-source",
+    "id": "carcassonne",
     "name": "Carcassonne",
     "data": {
       "majorDimension": "ROWS",
       "range": "Sheet1!A1:AA1000",
       "values": [
         [
-          
+
         ]
       ]
     }
   },
   "pandemic": {
-    "id": "pandemic-source",
+    "id": "pandemic",
     "name": "Pandemic V2",
     "data": {
       "majorDimension": "ROWS",
       "range": "Sheet1!A1:AA1000",
       "values": [
         [
-          
+
+        ]
+      ]
+    }
+  },
+  "characters": {
+    "id": "characters",
+    "name": "Characters",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          "Name",
+          "Influence"
+        ],
+        [
+          "Guinevere",
+          10
+        ],
+        [
+          "Trog",
+          7
+        ],
+        [
+          "Felix",
+          1
+        ],
+        [
+          "Conrad",
+          3
+        ],
+        [
+          "Ripley",
+          5
+        ]
+      ]
+    }
+  },
+  "tokens": {
+    "id": "tokens",
+    "name": "Tokens",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [
+          "Quantity",
+          "Name",
+          "Abbr"
+        ],
+        [
+          20,
+          "Currency",
+          "$"
+        ],
+        [
+          50,
+          "Influence",
+          "I"
+        ],
+        [
+          100,
+          "Victory Points",
+          "VP"
         ]
       ]
     }

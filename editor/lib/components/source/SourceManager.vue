@@ -1,77 +1,50 @@
 <template lang="pug">
-#source-manager
-  .grid-x.grid-padding-x
-    .small-12.cell
-      h2 Source Manager
+v-card#source-manager
+  v-card-title
+    .headline Source Manager
 
-      hr
+  v-card-text(v-if="componentSource")
+    dl
+      dt Current Source:
+      dd {{ componentSource.name }}
 
-    template(v-if="componentSource")
-      .shrink.cell
-        dl
-          dt Current Source:
-          dd {{ componentSource.name }}
+    v-btn(small color="error" @click="unlinkComponentSource(component)")
+      v-icon(left) delete
+      | Change Now...
 
-      .auto.cell
-        a.button.small.alert(@click="unsetComponentSource({ component })")
-          i.fas.fa-times
-          |  Change Now...
+    v-btn(small @click="createOrUpdateSourceById(componentSource.id)")
+      v-icon(left) sync
+      | Refresh Now
 
-      .small-12.cell
-        dl
-          dt From:
-          dd Google Spreadsheets
+  template(v-else)
+    v-card-text
+      strong No source set.
 
-      .shrink.cell
-        dl
-          dt Last Updated:
-          dd a few minutes ago
+      v-list(dense)
+        v-list-tile.set-source(v-for="source in allSources" :key="source.name" @click="setSource(source)")
+          v-list-tile-content
+            v-list-tile-title {{ source.name }}
 
-      .auto.cell
-        a.button.small(@click="createOrUpdateSourceById(componentSource.id)")
-          i.fas.fa-sync
-          |  Refresh Now
+          v-list-tile-action.delete-source(@click.stop="confirmDeletion(source)")
+            v-icon delete
 
-    template(v-else)
-      .small-12.cell
-        strong You need to load a component source...
+      v-dialog(v-model="showSourceDeleteDialog" max-width="500" lazy)
+        v-card
+          v-card-title
+            .headline Are you sure you want to purge the source "{{ sourceToDelete.name }}" from Paperize?
+          v-card-text It is in use in X components across Y games.
+          v-card-actions
+            v-btn(@click="showSourceDeleteDialog = false") No
+            v-btn(@click="deleteSource") Yes
 
-      .small-4.cell
-        p ...from Paperize examples?
+    v-card-actions
+      v-btn(@click="showSourceExplorerDialog = true") Browse Google Sheets
+      v-dialog(v-model="showSourceExplorerDialog" max-width="500" lazy)
+        source-explorer(@close-dialog="showSourceExplorerDialog = false")
 
-      .small-4.cell
-        p ...from your past sources?
-
-        template(v-if="sources.length == 0")
-          p You have not imported any sources.
-
-        .grid-x(v-else)
-          template(v-for="source in sources")
-            .shrink.cell
-              ul.menu
-                li
-                  a.button.tiny.alert(@click="confirmDeletion(source)")
-                    i.fas.fa-times
-                li
-                  a.button.tiny.success(@click="setSource(source)")
-                    i.fas.fa-check
-            .small-8.cell
-              p {{ source.name }}
-
-      .small-4.cell
-        p ...from Google Sheets?
-        .grid-x
-          .auto.cell
-          .shrink.cell
-            a.button(@click="$modal.show('source-explorer')") Browse Google Sheets
-            source-explorer
-          .auto.cell
-        .grid-x
-          .auto.cell
-          .shrink.cell
-            a.button(@click="$modal.show('source-paste-form')") Paste a Link
-            source-paste-form
-          .auto.cell
+      v-btn(@click="showSourcePasteDialog = true") Paste a Link
+      v-dialog(v-model="showSourcePasteDialog" max-width="500" lazy)
+        source-paste-form(@close-dialog="showSourcePasteDialog = false")
 </template>
 
 <script>
@@ -82,53 +55,49 @@ import SourceExplorer from './SourceExplorer.vue'
 export default {
   props: ["component"],
 
-  components: {
-    'source-paste-form': SourcePasteForm,
-    'source-explorer': SourceExplorer
+  components: { SourcePasteForm, SourceExplorer },
+
+  data() {
+    return {
+      showSourceExplorerDialog: false,
+      showSourcePasteDialog: false,
+      showSourceDeleteDialog: false,
+      sourceToDelete: {}
+    }
   },
 
   computed: {
     ...mapGetters([
-      "sources",
+      "findComponentSource",
+      "allSources",
       "sourceProperties"
     ]),
 
-    componentSource() { return this.component.source }
+    componentSource() { return this.findComponentSource(this.component) }
   },
 
   methods: {
-    ...mapMutations([
-      "unsetComponentSource",
-      "deleteSource"
-    ]),
-
     ...mapActions([
-      "setComponentSource",
+      "destroySource",
+      "linkComponentSource",
+      "unlinkComponentSource",
       "createOrUpdateSourceById"
     ]),
 
     setSource(source) {
-      this.setComponentSource({ component: this.component, source })
-      this.$modal.hide("Source Manager")
+      this.linkComponentSource({ component: this.component, source })
+      this.$emit('close-dialog')
     },
 
     confirmDeletion(source) {
-      this.$modal.show('dialog', {
-        title: `Are you sure you want to purge the source "${source.name}" from Paperize?`,
-        text: "It is in use in X components across Y games.",
-        buttons: [
-          {
-            title: "No",
-            default: true
-          }, {
-            title: "Yes",
-            handler: () => {
-              this.deleteSource({ source })
-              this.$modal.hide('dialog')
-            }
-          }
-        ]
-      })
+      this.sourceToDelete = source
+      this.showSourceDeleteDialog = true
+    },
+
+    deleteSource() {
+      this.destroySource(this.sourceToDelete)
+      this.sourceToDelete = {}
+      this.showSourceDeleteDialog = false
     }
   }
 }

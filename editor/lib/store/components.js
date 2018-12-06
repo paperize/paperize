@@ -1,74 +1,109 @@
-import { find } from 'lodash'
+import { find, reduce, times } from 'lodash'
 import uuid from 'uuid/v4'
 
-const ComponentsModule = {
-  state: { },
+import { generateCrud } from './util/vuex_resource'
 
-  getters: {
-    findGameComponent: state => (game, componentId, throwOnFail=true) => {
-      let foundComponent = find(game.components, { id: componentId })
-      if(!foundComponent && throwOnFail) {
-        throw new Error(`No component found with id: ${componentId}`)
-      }
+const ComponentModel = {
+  name: 'components',
 
-      return foundComponent
-    },
+  relationships: [
+    { relation: 'hasOne', model: 'template', initialize: true, dependent: true },
+    { relation: 'hasOne', model: 'source' }
+  ],
 
-    getComponentItems: (state, getters) => component => {
-      if(!component.source) {
-        return []
-      } else {
-        return getters.getSourceItems(component.source)
-      }
+  create(newComponent) {
+    return {
+      id:            uuid(),
+      title:         "",
+      folderId:      null,
+      sourceId:      null,
+      templateId:    null,
+      quantityProperty: null,
+      // override with given
+      ...newComponent
     }
   },
 
-  mutations: {
-    createGameComponent(state, { game, component }) {
-      game.components.push(component)
+  getters: {
+    getComponentFolderId: (_, __, ___, rootGetters) => component => {
+      return component.folderId ||
+        rootGetters.getGameFolderId(
+          rootGetters.findGameByComponentId(component.id)
+        )
     },
 
-    updateComponent(state, { componentToUpdate, componentToCopy }) {
-      Object.assign(componentToUpdate, componentToCopy)
+    findComponentTemplate: (_, __, ___, rootGetters) => component => {
+      if(component.templateId) {
+        return rootGetters.findTemplate(component.templateId)
+      }
     },
 
-    deleteGameComponent(state, { game, component }) {
-      game.components.splice(game.components.indexOf(component), 1)
+    findComponentSource: (_, __, ___, rootGetters) => component => {
+      if(component.sourceId) {
+        return rootGetters.findSource(component.sourceId)
+      }
     },
+
+    getComponentItems: (state, getters) => component => {
+      const componentSource = getters.findComponentSource(component)
+      if(!componentSource) {
+        return []
+      } else {
+        let sourceItems = getters.getSourceItems(componentSource)
+        // Handle quantity expansion
+        if(!component.quantityProperty) {
+          return sourceItems
+        } else {
+          return reduce(sourceItems, (expandedItems, item) => {
+            let foundProperty = find(item, {key: component.quantityProperty}),
+              rawQuantity = (foundProperty || {}).value,
+              quantity = parseInt(rawQuantity, 10) || 1
+
+            times(quantity, () => expandedItems.push(item))
+
+            return expandedItems
+          }, [])
+        }
+      }
+    },
+
+    getItemQuantity: (state, getters) => component => {
+      return getters.getComponentItems(component).length
+    }
   },
 
   actions: {
-    createComponent({ commit, getters, rootGetters }, { component }) {
-      let game = rootGetters.activeGame
-      // get a new id if i don't have one or mine collides
-      if(!component.id || getters.findGameComponent(game, component.id, false)) {
-        component.id = uuid()
-      }
-      commit("createGameComponent", { game, component })
+    linkComponentSource({ commit }, { component, source }) {
+      commit("updateComponent", { ...component, sourceId: source.id })
     },
 
-    updateComponent({commit, rootGetters, getters}, { component }) {
-      let game = rootGetters.activeGame
-      let componentToUpdate = getters.findGameComponent(game, component.id)
-      commit("updateComponent", { componentToUpdate, componentToCopy: component })
+    unlinkComponentSource({ commit }, component) {
+      commit("updateComponent", { ...component, sourceId: null })
     },
 
-    deleteComponent({ commit, rootGetters }, { component }) {
-      if(rootGetters.activeComponent.id == component.id) {
-        commit("clearActiveComponent")
-      }
+    createComponentFolder({ getters, dispatch }, componentId) {
+      const game = getters.findGameByComponentId(componentId),
+        component = getters.findComponent(componentId),
+        gameFolderId = getters.getGameFolderId(game)
 
-      let game = rootGetters.activeGame
-      commit("deleteGameComponent", { game, component })
+      return dispatch("googleCreateFolder", { name: component.title, parentId: gameFolderId })
+        .then((folderId) => {
+          const savedComponent = getters.findComponent(componentId)
+          return dispatch("updateComponent", { ...savedComponent, folderId })
+        })
     },
 
-    setComponentSource({ state, commit, getters, rootGetters }, { component, source }) {
-      component = getters.findGameComponent(rootGetters.activeGame, component.id)
-      source = rootGetters.findSource(source)
+    createComponentImageFolder({ getters, dispatch }, componentId) {
+      const componentFolderId = getters.findComponent(componentId).folderId
 
-      commit("setComponentSource", { component, source })
-    },
+      return dispatch("googleCreateFolder", { name: "Images", parentId: componentFolderId })
+        .then((folderId) => {
+          return dispatch("addImageFolder", { id: folderId, name: "Images" })
+        })
+    }
   }
 }
+
+const ComponentsModule = generateCrud(ComponentModel)
 
 export default ComponentsModule

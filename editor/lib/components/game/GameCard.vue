@@ -1,16 +1,23 @@
 <template lang="pug">
-.game.card.small-6.medium-4.large-3.cell(:id="`game-${ game.id }`")
-  .card-divider
-    h4 {{ game.title || "[No title]" }}
+v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
+  v-card
+    v-card-title
+      .headline {{ game.title || "[No title]" }}
 
-  img(v-bind:src="game.coverArt")
+    v-responsive
+      img(:src="game.coverArt")
 
-  .card-section
-    ul.menu
-      li
-        router-link.small.button(:to="{ name: 'gameEditor', params: { gameId: game.id } }") Edit
-      li
-        a.small.button.alert(@click="confirmDeletion()") Delete
+    v-card-actions
+      v-btn(@click="$router.push({ name: 'gameEditor', params: { gameId: game.id }})") Edit
+      v-btn(@click="showDeleteDialog = true") Delete
+        v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
+          v-card
+            v-card-title
+              .headline Are you sure you want to delete the Game "{{ game.title }}"?
+            v-card-text It has X Components and was last printed Y.
+            v-card-actions
+              v-btn(@click="showDeleteDialog = false") No
+              v-btn(@click="destroyGame(game)") Yes
 </template>
 
 <script>
@@ -23,28 +30,13 @@
       }
     },
 
-    methods: {
-      ...mapActions(["deleteGame"]),
-      confirmDeletion() {
-        this.$modal.show('dialog', {
-          title: 'Are you sure you want to delete this game?',
-          text: 'It has X components and will be lost forever.',
-          buttons: [
-            {
-              title: 'No',
-              default: true
-            },
-            {
-              title: 'Yes',
-              handler: () => {
-                this.deleteGame({ game: this.game })
-                this.$modal.hide('dialog')
-              }
-            }
-         ]
-        })
+    data() {
+      return {
+        showDeleteDialog: false
       }
-    }
+    },
+
+    methods: mapActions(["destroyGame"]),
   }
 </script>
 

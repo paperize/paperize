@@ -1,25 +1,19 @@
 import { map, pick } from 'lodash'
-import Promise from 'bluebird'
-import auth from './auth'
 
-// Via: https://stackoverflow.com/questions/16840038/easiest-way-to-get-file-id-from-url-on-google-apps-script
-const GOOGLE_ID_REGEX = /[-\w]{25,}/
-let matchGoogleId = (url) => {
-  let match = url.match(GOOGLE_ID_REGEX)
-  return match && match[0]
-}
+import { getClient } from './auth'
+import { matchGoogleId } from './util'
 
 let BadIdError = function(sheetId) {
   this.message = `No Google Sheet ID detected in "${sheetId}"`
 }
-BadIdError.prototype = Object.create(Error.prototype);
+BadIdError.prototype = Object.create(Error.prototype)
 
 let NotFoundError = function(googleId) {
   this.message = `No Google Sheet found for ID: "${googleId}"`
   this.googleId = googleId
   return this
 }
-NotFoundError.prototype = Object.create(Error.prototype);
+NotFoundError.prototype = Object.create(Error.prototype)
 
 let api = {
   BadIdError, NotFoundError,
@@ -28,7 +22,7 @@ let api = {
 
   fetchSheets() {
     return new Promise((resolve, reject) => {
-      auth.getClient((client) => {
+      getClient((client) => {
         client.drive.files.list({
           // Query for spreadsheets only
           q: "mimeType='application/vnd.google-apps.spreadsheet'",
@@ -39,15 +33,15 @@ let api = {
           let fileIdsAndNames = map(driveResult.files, (file) => pick(file, [ "id", "name" ]) )
           resolve(fileIdsAndNames)
         }, (driveError) => {
-          reject(driveError)
+          reject(new Error(driveError.result.error.message))
         })
       })
     })
   },
 
   fetchSheetData(sheet) {
-    return new Promise((resolve, reject) => {
-      auth.getClient((client) => {
+    return new Promise((resolve) => {
+      getClient((client) => {
         return client.sheets.spreadsheets.values.get({
           spreadsheetId: sheet.id,
           range:         'Sheet1' // TODO: Can't rely on this in reality
@@ -72,7 +66,7 @@ let api = {
         return
       }
 
-      auth.getClient((client) => {
+      getClient((client) => {
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
@@ -94,7 +88,7 @@ let api = {
           if(error.status == 404) {
             reject(new NotFoundError(googleId))
           } else {
-            reject(error)
+            reject(new Error(error.result.error.message))
           }
         })
       })

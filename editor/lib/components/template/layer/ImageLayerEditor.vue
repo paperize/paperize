@@ -1,104 +1,58 @@
 <template lang="pug">
-.image-layer-fields
-  fieldset.fieldset
-    legend Image Name
+v-layout(column)
+  v-flex
+    .subheading Image Selection
 
-    .grid-x.grid-margin-x
-      .small-12.large-6.cell
-        input(type="radio" id="radio-static" :value="true" v-model="imageNameStatic")
-        label(for="radio-static") Static
+  v-flex(xs12)
+    v-radio-group(label="Selection Style:" v-model="imageNameStatic" row)
+      v-radio(color="primary" label="Static" :value="true")
+      v-radio(color="primary" label="Dynamic" :value="false")
 
-      .small-12.large-6.cell
-        input(type="radio" id="radio-dynamic" :value="false" v-model="imageNameStatic")
-        label(for="radio-dynamic") Dynamic
+  v-flex(xs12 v-if="imageNameStatic")
+    v-autocomplete(v-model="imageId" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
 
-    .grid-x.grid-margin-x(v-if="imageNameStatic")
-      .small-12.large-6.cell
-        label
-          strong Image Name:
-      .small-12.large-6.cell
-        v-autocomplete(:items="imageItems" v-model="imageName" :get-label="getImageLabel")
+  v-flex(xs12 v-else)
+    v-text-field(v-model="imageNamePrefix" label="Prefix")
+    v-select(v-model="imageNameProperty" :items="activeSourceProperties")
+    v-text-field(v-model="imageNameSuffix" label="Suffix")
+    v-text-field(disabled label="Looks like" :value="dynamicImageName")
 
-    .grid-x.grid-margin-x(v-else)
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="image-prefix")
-              strong Prefix
-          input.input-group-field(id="image-prefix" type="text" v-model="imageNamePrefix")
+  v-flex
+    .subheading Image Alignment
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="image-name-property")
-              strong Property
-          select.input-group-field(id="image-name-property" v-model="imageNameProperty")
-            option(v-for="property in activeSourceProperties" :value="property") {{ property }}
+  v-flex(xs12)
+    v-radio-group(label="Scaling:" v-model="imageScaling" row)
+      v-radio(color="primary" label="Fit" value="fitToBox")
+      v-radio(color="primary" label="Fill" value="fillToBox")
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="image-suffix")
-              strong Suffix
-          input.input-group-field(id="image-suffix" type="text" v-model="imageNameSuffix")
+  v-flex(xs12)
+    v-btn-toggle(label="Horizontal Alignment" v-model="horizontalAlignment")
+      v-btn(small flat value="left") Left
+      v-btn(small flat value="center") Center
+      v-btn(small flat value="right") Right
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label
-              strong Dynamic Name
-          input.input-group-field(type="text" disabled :value="dynamicImageName")
-
-  fieldset.fieldset
-    legend Image Alignment
-
-    .grid-x.grid-margin-x
-      .small-12.cell
-        label
-          strong Scaling:
-
-        input(type="radio" id="radio-fit" value="fitToBox" v-model="imageScaling")
-        label(for="radio-fit") Fit
-
-        input(type="radio" id="radio-fill" value="fillToBox" v-model="imageScaling")
-        label(for="radio-fill") Fill
-
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="horizontal-alignment")
-              strong Horizontal
-          select.input-group-field(id="horizontal-alignment" v-model="horizontalAlignment")
-            option(value="left") Left
-            option(value="center") Center
-            option(value="right") Right
-
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(for="vertical-alignment")
-              strong Vertical
-          select.input-group-field(id="vertical-alignment" v-model="verticalAlignment")
-            option(value="top") Top
-            option(value="middle") Middle
-            option(value="bottom") Bottom
+  v-flex(xs12)
+    v-btn-toggle(label="Vertical Alignment" v-model="verticalAlignment")
+      v-btn(small flat value="top") Top
+      v-btn(small flat value="middle") Middle
+      v-btn(small flat value="bottom") Bottom
 </template>
 
 <script>
   import Vue from 'vue'
   import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
-  import { computedVModelUpdateAll } from '../../../store/component_helper'
+  import { computedVModelUpdateAll } from '../../util/component_helper'
 
   export default {
     props: ["layer"],
 
     computed: {
-      ...mapGetters(["activeSourceProperties"]),
+      ...mapGetters(["activeSourceProperties", "imageIndex"]),
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
-        "imageName",
+        "imageId",
         "imageNamePrefix",
         "imageNameProperty",
         "imageNameSuffix",
@@ -106,10 +60,6 @@
         "horizontalAlignment",
         "verticalAlignment",
       ]),
-
-      imageItems() {
-        return this.$store.getters.images.map((image) => image.name)
-      },
 
       dynamicImageName() {
         return `${this.layer.imageNamePrefix}[${this.layer.imageNameProperty}]${this.layer.imageNameSuffix}`
@@ -119,58 +69,9 @@
     methods: {
       getImageLabel(imageItem) { return imageItem },
 
-      updateLayer: debounce(function({ layer, keyValueObject }) {
-        this.$store.dispatch("updateLayer", { layer, keyValueObject})
+      updateLayer: debounce(function(layerUpdate) {
+        this.$store.dispatch("updateLayer", layerUpdate)
       }, 400, { leading: true })
     }
   }
 </script>
-
-<style>
-/* .v-autocomplete .v-autocomplete-input-group .v-autocomplete-input{
-  font-size: 1.5em;
-  padding: 10px 15px;
-  box-shadow: none;
-  border: 1px solid #157977;
-  width: 80%;
-  outline: none;
-  background-color: #eee;
-}
-.v-autocomplete .v-autocomplete-input-group.v-autocomplete-selected .v-autocomplete-input {
-  color: green;
-  background-color: #f2fff2;
-} */
-
-.v-autocomplete .v-autocomplete-list {
-  width: 100%;
-  text-align: left;
-  border: none;
-  border-top: none;
-  max-height: 400px;
-  overflow-y: auto;
-  border-bottom: 1px solid #157977;
-}
-
-.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item {
-  cursor: pointer;
-  background-color: #fff;
-  padding: 10px;
-  border-bottom: 1px solid #157977;
-  border-left: 1px solid #157977;
-  border-right: 1px solid #157977;
-}
-
-.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:last-child {
-  border-bottom: none;
-}
-
-.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item:hover{
-  background-color: #eee;
-}
-.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item abbr {
-  opacity: 0.8;
-  font-size: 0.8em;
-  display: block;
-  font-family: sans-serif;
-}
-</style>

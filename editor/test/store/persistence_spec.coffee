@@ -33,9 +33,9 @@ describe "Persistence", ->
     store.dispatch("become", userFixture)
     expect(p.openDatabase).to.be.calledWith(userFixture.idToken)
 
-    store.commit("createGame", { game: gameFixture })
+    store.commit("createGame", gameFixture)
     expect(p.saveState).to.be.calledOnce
     expect(p.saveState).to.be.calledWith(store.state)
 
-    store.commit("createGame", { game: gameFixture })
+    store.commit("createGame", gameFixture)
     expect(p.saveState).to.be.calledTwice

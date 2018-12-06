@@ -1,91 +1,92 @@
 <template lang="pug">
-modal.component-form(:name="modalName" height="auto" :pivotY="0.25" :scrollable="true")
-  form(method="post" v-on:submit.prevent="submitForm")
-    .grid-x.grid-padding-x
-      .small-12.cell
-        h1 {{ titleLabel }}
-        hr
+v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
+  v-card
+    v-card-title
+      .headline Component: {{ component.title }}
 
-      .small-12.cell
-        .input-group
-          span.input-group-label
-            label(:for="`component-title-${component.id}`") Title
-          input.input-group-field.component-title-new(type="text" :id="`component-title-${component.id}`" name="title" v-model="componentClone.title")
+    v-card-text
+      v-text-field.component-title(v-model="title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
+      v-checkbox(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this component?")
+      template-size-editor(v-if="isSaved" :template="findComponentTemplate(component)")
 
-      .small-12.cell
-        template-size-editor(:template="componentClone.template")
-
-      .small-4.cell
-        button.small.button.alert(type="button" @click="closeModal") Cancel
-      .small-8.cell
-        button.small.button.success(type="submit") {{ submitLabel }}
-
-
-  button.close-button(aria-label="Close modal" type="button" @click="closeModal")
-    span(aria-hidden="true") &times;
+    v-card-actions
+      v-btn(small success @click="submitComponent") {{ submitButtonText }}
 </template>
 
 <script>
-  import Component from '../../models/component'
+  import { mapGetters, mapActions } from 'vuex'
+  import { computedVModelUpdate } from '../util/component_helper'
   import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
+
+  const getSet = computedVModelUpdate("component", "updateComponent", "title"),
+    savedTitleGet = getSet.get,
+    savedTitleSet = getSet.set
 
   export default {
     props: {
-      mode: {
-        default: 'edit',
-        type: String,
-        validator: (mode) => mode == 'edit' || mode == 'create'
-      },
-
       component: {
-        default() {
-          let component = Component.factory()
-          this.$store.dispatch("createComponentTemplate", component)
-          return component
-        }
+        default() { return {} }
       }
     },
 
-    components: {
-      "template-size-editor": TemplateSizeEditor,
-    },
+    components: { TemplateSizeEditor },
 
     data() {
       return {
-        componentClone: { ...this.component },
-        submitLabel: this.mode === 'edit' ? 'Edit Component' : 'Create Component',
-        titleLabel: this.mode === 'edit' ? `Edit ${this.component.title}` : 'Add a Component'
+        createDriveFolder: true,
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     },
 
     computed: {
-      modalName() {
-        if(this.mode == 'create') {
-          return "create-component-modal"
-        } else if(this.mode == 'edit') {
-          return `edit-component-modal-${this.component.id}`
+      ...mapGetters(["activeGame", "findComponentTemplate"]),
+
+      title: {
+        get() {
+          if(this.isSaved) { return savedTitleGet.call(this) }
+          else { this.component.title }
+        },
+
+        set(newTitle) {
+          if(this.isSaved) { return savedTitleSet.call(this, newTitle) }
+          else { this.component.title = newTitle }
         }
-      }
+      },
+
+      isSaved() { return !!this.component.id },
+
+      submitButtonText() { return this.isSaved ? "Done" : "Create Component" },
     },
 
     methods: {
-      submitForm() {
-        // Add or update the component in the store
-        if(this.mode === 'edit') {
-          this.$store.dispatch("updateComponent", { component: this.componentClone })
-        } else if(this.mode === 'create') {
-          this.$store.dispatch("createComponent", { component: this.componentClone })
-        }
-        // Close the modal
-        this.closeModal()
-        // Alert our parents we've submitted
-        this.$emit("submitted")
-        // Reset the model
-        this.componentClone = { ...this.component }
-      },
+      ...mapActions(["createGameComponent", "createComponentImageFolder", "createComponentFolder", "updateComponent"]),
 
-      closeModal() {
-        this.$modal.hide(this.modalName)
+      submitComponent() {
+        if(this.$refs.componentForm.validate()) {
+          if(!this.isSaved) {
+            const gameAndComponent = { game: this.activeGame, component: { title: this.component.title } }
+            let createComponentPromise
+
+            createComponentPromise = this.createGameComponent(gameAndComponent)
+
+            if(this.createDriveFolder) {
+              createComponentPromise.then((componentId) => {
+                return this.createComponentFolder(componentId)
+                  .then(() => {
+                    return this.createComponentImageFolder(componentId)
+                  })
+              })
+            }
+
+            createComponentPromise.then((componentId) => {
+              this.$store.dispatch("setActiveComponent", componentId)
+            })
+          }
+
+          this.$emit("close-dialog")
+        }
       }
     }
   }

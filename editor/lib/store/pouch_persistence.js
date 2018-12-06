@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+
 
 import PouchDB from '../services/pouch'
 
@@ -8,23 +8,32 @@ const STATE_KEY = 'state'
 const IGNORED_MUTATIONS = [
   "resetState",
   "setLoginError",
+  "setLoginStatus",
+  "appendLoginStatus",
   "setActiveGame",
   "clearActiveGame",
   "setActiveComponent",
   "clearActiveComponent",
-  "setShowSpinner"
+  "setActiveLayer",
+  "clearActiveLayer"
 ]
+
+const LOCAL_STORAGE_DOUBLE = {
+  setItem() { },
+  getItem() { },
+  removeItem() { }
+}
 
 let api = {
   db: null,
   initializeAndWatchStore(store) {
+    // call api.on for every store event
     store.subscribe(({ type }, state) => {
       api.on(store, type, state)
     })
 
     // Load existing persisted state if present
     let idToken = api.getLocalStorage().getItem(ID_TOKEN_KEY)
-
     if(idToken) {
       store.dispatch("become", { idToken })
     }
@@ -32,20 +41,18 @@ let api = {
 
   getLocalStorage() {
     if(typeof localStorage === 'undefined') {
-      return {
-        setItem() { },
-        getItem() { },
-        removeItem() { }
-      }
+      // TODO: shouldn't this just be an error?
+      return LOCAL_STORAGE_DOUBLE
     } else {
       return localStorage
     }
   },
 
   openDatabase(dbName) {
-    return new Promise((resolve, reject) => {
-      // Close existing database and squelch error if it's not open
+    return new Promise((resolve) => {
+      // Close existing database
       this.closeDatabase().catch((error) => {
+        // Squelch the error if it wasn't actually open
         if(error.message !== "database is closed") {
           throw error
         }
@@ -76,12 +83,12 @@ let api = {
       // Add the record ID and revision
       let record = { _id: STATE_KEY, _rev: lastRev, ...stateObject }
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         return this.db.put(record)
           .then((response) => {
             resolve(response.rev)
           })
-      }).catch({status: 409}, (error) => {
+      }).catch({status: 409}, () => {
         console.error("PouchDB conflict saving record:", record)
       })
     })
@@ -101,8 +108,8 @@ let api = {
 
           resolve(record)
         })
-        .catch((error) => { reject(error) })
-    }).catch({status: 404}, (error) => {
+        .catch(reject)
+    }).catch({status: 404}, () => {
       return null
     })
   },
