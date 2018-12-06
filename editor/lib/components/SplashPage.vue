@@ -1,39 +1,53 @@
 <template lang="pug">
-v-layout(row fluid)
-  v-flex(xs6)
-    .headline Get Started!
+v-container(grid-list-xl fluid)
+  v-layout(row fluid wrap justify-space-around)
+    v-flex(sm8 md4)
+      p.display-1.text-xs-center Get Involved!
 
-    v-btn(color="success") Sign in with Google
-  v-flex(xs6)
-    .headline What is Paperize?
+      p.headline.text-xs-center Patreon
 
-    p Paperize is the free-as-in-free tabletop game prototyping tool for kids, teachers, facilitators, and game design professionals.
+      p.body-2 Paperize is supported in part with generous contributions from people like you!
 
-    v-btn(href="https://patreon.com/paperize") Learn More
-//- vue-embed(v-if="notInTest" id="gist" :options="{ emoji: true }")
-//-   p.gist https://gist.github.com/lorennorman/9d0f3d7df597756a3bc14de4288e7c45.js
+      p.body-2
+        a(href="https://www.patreon.com/bePatron?u=67763" data-patreon-widget-type="become-patron-button")
+          v-img(src="/images/become_a_patron_button@2x.png" contain max-height="51")
+
+      p.headline.text-xs-center Discord
+
+      p.body-2 The Paperize community is growing. You can join us on the Paperize.io Discord server to get help, give feedback, request features, and design games together with other Paperize users.
+
+      v-layout(justify-space-around)
+        v-flex(xs10)
+          iframe(src="https://discordapp.com/widget?id=335061144311955456&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0")
+
+    v-flex(sm8 md4)
+      p.display-1.text-xs-center What is Paperize.io?
+
+      p.headline.text-xs-center Paperize is a Paper Prototyping Tool
+
+      p.body-2 With Paperize, your ideas get out of your head and onto the tabletop, <em>fast</em>.
+
+      p.body-2 Demo coming soon.
+
+      p.headline.text-xs-center Paperize is Free (as in Free)
+
+      p.body-2 Paperize is "free as in beer", which means "you can have this piece of software to use as you wish."
+
+      p.body-2 Paperize is "free as in speech", which means "you can inspect, modify, and distribute the source code of this software." (Not actually open source yet, but coming soon.)
+
+      p.body-2 Paperize is "free from surveillance", which means it doesn't track you around the web, or access the data you trust it with.
+
+      p.body-2 Paperize is "free from ads", which means it's clean to look at and a pleasure to use.
+
+    v-flex(sm8 md4)
+      p.display-1.text-xs-center Get Started!
+
+      p.body-2 You only need a Google account to log in and get started creating games right away! Just click "Sign In" above and to the right.
 </template>
 
 <script>
-  import VueEmbed from './shared/VueEmbed.vue'
 
   export default {
-    computed: {
-      notInTest: () => false // process.env.NODE_ENV !== 'test'
-    },
 
-    components: { VueEmbed },
-
-    methods: {
-      getStarted() {
-
-      }
-    }
   }
 </script>
-
-<style>
-  .gist {
-    display: none;
-  }
-</style>

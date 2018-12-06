@@ -4,8 +4,8 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip
-      span.caption(slot="activator")= " ver.A4"
-      | Alpha 4 "Prodigious Electromancer " {{ gitSha }}
+      span.caption(slot="activator")= " ver.A5"
+      | Alpha 5 "Reclusive Scrivener " {{ gitSha }}
 
   v-spacer
 
@@ -25,8 +25,8 @@ v-toolbar(app)
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
 
-    template(v-else)
-      v-btn(flat) About
+    //- template(v-else)
+    //-   v-btn(flat) About
     profile
 </template>
 
