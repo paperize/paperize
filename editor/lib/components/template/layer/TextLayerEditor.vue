@@ -4,7 +4,7 @@ v-layout(column)
     .subheading Text Look &amp; Feel
 
   v-flex
-    v-text-field(v-model="textColor" type="color" label="Text Color")
+    color-picker(v-model="textColor")
   v-flex
     v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
 
@@ -22,9 +22,12 @@ v-layout(column)
   import { debounce } from 'lodash'
   import { mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
+  import ColorPicker from '../../shared/ColorPicker.vue'
 
   export default {
     props: ["layer", "source"],
+
+    components: { ColorPicker },
 
     computed: {
       propertyNames() {
