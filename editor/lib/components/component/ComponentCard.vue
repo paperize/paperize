@@ -1,12 +1,12 @@
 <template lang="pug">
-v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive")
+v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isActiveComponent() }" @click="setActive")
   v-card
     v-card-title
       .headline {{ component.title || "[No title]" }} ({{ totalItems }})
 
     v-card-actions
-      v-btn(@click="$emit('edit-me')") Edit
-      v-btn(color="red" @click.stop="showDeleteDialog = true") Delete
+      v-btn(small @click="$emit('edit-me')") Edit
+      v-btn(small color="red" @click.stop="showDeleteDialog = true") Delete
   v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
     v-card.delete-component
       v-card-title
@@ -62,3 +62,13 @@ v-flex.component(sm10 :class="{ active: isActiveComponent() }" @click="setActive
     }
   }
 </script>
+
+<style scoped>
+  .component {
+    cursor: pointer;
+  }
+
+  .component.active {
+    cursor: default;
+  }
+</style>
