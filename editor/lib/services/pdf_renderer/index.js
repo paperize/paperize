@@ -111,7 +111,8 @@ const api = {
         return this.renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
       })
     }).then(() => {
-      return doc.save("game.pdf") //output('bloburi')
+      const filenameOfDownload = `${game.title || "Game"}.pdf`
+      return doc.save(filenameOfDownload)
     })
   },
 

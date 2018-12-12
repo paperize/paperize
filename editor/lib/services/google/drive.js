@@ -61,6 +61,7 @@ const
     // Build the query
     let queryParts = []
     queryParts.push(`'${folderId}' in parents`)
+    queryParts.push(`trashed = false`)
     if(options.mimeType == 'IMAGE') {
       // Only looking for image files
       queryParts.push(`mimeType contains 'image/'`)
@@ -94,7 +95,7 @@ const
       getClient((client) => {
         client.drive.files.list({
           // Query for by the given name
-          q: `mimeType = 'application/vnd.google-apps.folder' and name = '${ folderName }'`,
+          q: `mimeType = 'application/vnd.google-apps.folder' and name = '${ folderName }' and trashed = false`,
         })
 
           .then(
@@ -145,7 +146,8 @@ const
 
   findFile = function(filename, mimeType, foldersToSearch) {
     const nameClause = `name = '${filename}'`,
-      mimeTypeClause = `mimeType = '${mimeType}'`
+      mimeTypeClause = `mimeType = '${mimeType}'`,
+      trashedClause  = 'trashed = false'
 
     let foundDatabaseId = null,
       foundInParentId = null
@@ -160,7 +162,7 @@ const
       return new Promise((resolve, reject) => {
         getClient((client) => {
           client.drive.files.list({
-            q: `${folderClause} and ${mimeTypeClause} and ${nameClause}`
+            q: `${folderClause} and ${mimeTypeClause} and ${nameClause} and ${trashedClause}`
           }).then(
             // Success callback
             ({ result }) => {
