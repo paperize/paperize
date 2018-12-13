@@ -145,8 +145,7 @@ export default {
     return imagePromise.then((image) => {
       return imageBox(doc, image, layerDimensions, { horizontalAlignment, verticalAlignment, scaleMode: imageScaling })
     }).catch((e) => {
-      console.log(`Failed to add image.`)
-      console.log(e)
+      console.warn(e.message)
     })
   }
 }

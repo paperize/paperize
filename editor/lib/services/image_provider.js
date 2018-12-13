@@ -7,7 +7,15 @@ const getCachedImage = (md5) => {
 }
 
 const setCachedImage = (md5, content) => {
-  getLocalStorage().setItem(md5, content)
+  try {
+    getLocalStorage().setItem(md5, content)
+  } catch(error) {
+    if(error.code == 22) {
+      console.warn("Failed to cache image: Local Storage Image Cache is full.")
+    } else {
+      throw error
+    }
+  }
 }
 
 const getImageById = function(imageId) {
@@ -48,13 +56,15 @@ const getImageByRecord = function({ id, md5, mimeType }) {
 }
 
 const getImageByName = function(name) {
-  const imageRecord = store.getters.findImageByName(name)
+  return Promise.try(() => {
+    const imageRecord = store.getters.findImageByName(name)
 
-  if(!imageRecord) {
-    throw new Error(`No image found with name: ${name}`)
-  }
+    if(!imageRecord) {
+      throw new Error(`No image found with name: ${name}`)
+    }
 
-  return getImageByRecord(imageRecord)
+    return getImageByRecord(imageRecord)
+  })
 }
 
 const getImageWithSrc = function(imageSource) {
