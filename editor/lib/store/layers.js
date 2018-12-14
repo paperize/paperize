@@ -120,3 +120,4 @@ const LayersModule = generateCrud(LayerModel)
 
 
 export default LayersModule
+export { LAYER_DEFAULTS }
