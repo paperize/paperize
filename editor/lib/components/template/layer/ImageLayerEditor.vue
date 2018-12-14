@@ -26,13 +26,15 @@ v-layout(column)
       v-radio(color="primary" label="Fill" value="fillToBox")
 
   v-flex(xs12)
-    v-btn-toggle(label="Horizontal Alignment" v-model="horizontalAlignment")
+    p Horizontal Alignment
+    v-btn-toggle(v-model="horizontalAlignment")
       v-btn(small flat value="left") Left
       v-btn(small flat value="center") Center
       v-btn(small flat value="right") Right
 
   v-flex(xs12)
-    v-btn-toggle(label="Vertical Alignment" v-model="verticalAlignment")
+    p Vertical Alignment
+    v-btn-toggle(v-model="verticalAlignment")
       v-btn(small flat value="top") Top
       v-btn(small flat value="middle") Middle
       v-btn(small flat value="bottom") Bottom
