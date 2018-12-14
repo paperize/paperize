@@ -145,20 +145,7 @@ const
   },
 
   loadDriveIntoVuex = function() {
-    return google.drive.downloadFile(databaseFileId)
-      .then((databaseContent) => {
-        let loadedState = JSON.parse(databaseContent)
-        if(loadedState) {
-          // at this point the vuex user is newer data
-          loadedState.user = vuex.state.user
-          loadedState.database = vuex.state.database
-          loadedState.google = vuex.state.google
-
-          // foist it onto the store
-          vuex.commit("resetState", loadedState)
-          return null
-        }
-      })
+    return vuex.dispatch("loadFromDrive")
   },
 
   autoSave = debounce(function() {
