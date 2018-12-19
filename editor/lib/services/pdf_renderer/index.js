@@ -57,9 +57,12 @@ const api = {
 
     let lastX = marginLeft,
       lastY = marginTop,
-      currentPage = 1
+      currentPage = 0
 
     let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
+      lastX = marginLeft
+      lastY = marginTop
+      currentPage += 1
       locations[name] = locations[name] || []
       while(quantity > 0){
         let thisX = lastX,
