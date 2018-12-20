@@ -34,11 +34,12 @@ LAYER_DEFAULTS[TEXT] =
     type:                TEXT,
     renderOrder:         0,
     dimensionId:         null,
-    // textFontId:            null
+    textFontName:        "helvetica",
+    textFontStyle:       "normal",
     textContentTemplate: "",
     textColor:           "#000000",
     textSize:            16,
-    horizontalAlignment: "right"
+    horizontalAlignment: "left"
   }
 LAYER_DEFAULTS[IMAGE] =
   {

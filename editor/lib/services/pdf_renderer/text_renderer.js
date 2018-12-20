@@ -26,6 +26,8 @@ const textBox = function(doc, text, boxDimensions, options) {
 
 export default {
   render(doc, layer, layerDimensions, item, index, total) {
+    doc.setFont(layer.textFontName)
+    doc.setFontStyle(layer.textFontStyle)
     doc.setFontSize(layer.textSize)
     const { r, g, b } = hexToRGB(layer.textColor)
     doc.setTextColor(r, g, b)

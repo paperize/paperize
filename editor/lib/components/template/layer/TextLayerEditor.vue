@@ -4,6 +4,12 @@ v-layout(column)
     .subheading Text Look &amp; Feel
 
   v-flex
+    v-select(label="Font Family" v-model="textFontName" :items="availableFontNames")
+
+  v-flex
+    v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles")
+
+  v-flex
     color-picker(v-model="textColor")
   v-flex
     v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
@@ -35,14 +41,21 @@ v-layout(column)
 
     components: { ColorPicker },
 
+    data() {
+      return {
+        availableFontNames: ["courier", "times", "helvetica"],
+        availableFontStyles: ["normal", "bold", "italic", "bolditalic"]
+      }
+    },
+
     computed: {
       propertyNames() {
         return this.$store.getters.sourceProperties(this.source)
       },
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
-        // "textContentProperty",
-        // "textContentProperty",
+        "textFontName",
+        "textFontStyle",
         "textContentTemplate",
         "textColor",
         "textSize",
