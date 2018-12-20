@@ -34,10 +34,12 @@ LAYER_DEFAULTS[TEXT] =
     type:                TEXT,
     renderOrder:         0,
     dimensionId:         null,
+    textFontName:        "helvetica",
+    textFontStyle:       "normal",
     textContentTemplate: "",
     textColor:           "#000000",
     textSize:            16,
-    // textFontId:            null
+    horizontalAlignment: "left"
   }
 LAYER_DEFAULTS[IMAGE] =
   {
@@ -119,3 +121,4 @@ const LayersModule = generateCrud(LayerModel)
 
 
 export default LayersModule
+export { LAYER_DEFAULTS }

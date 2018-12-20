@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import { debounce, reduce } from 'lodash'
+  import { debounce } from 'lodash'
   import { mapGetters } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
 
@@ -21,7 +21,12 @@
     },
 
     computed: {
-      ...mapGetters(["activeDimensions", "activeLayer"]),
+      ...mapGetters([
+        "activeDimensions",
+        "activeLayer",
+        "findTemplate",
+        "findAllTemplateLayers"
+      ]),
 
       layerStrokePresent() { return (this.activeLayer && this.activeLayer.strokePresent) },
       layerStrokeWidth() { return (this.activeLayer && this.activeLayer.strokeWidth) },
@@ -43,8 +48,8 @@
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
       templateLayers() {
-        let template = this.$store.getters.findTemplate(this.component.templateId)
-        return this.$store.getters.findAllTemplateLayers(template)
+        const template = this.findTemplate(this.component.templateId)
+        return this.findAllTemplateLayers(template)
       }
     },
 

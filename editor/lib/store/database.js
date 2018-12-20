@@ -1,4 +1,5 @@
-import { omit } from 'lodash'
+import { each, pick, omit } from 'lodash'
+import { LAYER_DEFAULTS } from './layers'
 
 const DatabaseModule = {
   state: {
@@ -25,6 +26,10 @@ const DatabaseModule = {
 
     databaseState: (_, __, rootState) => {
       return omit(rootState, ["user", "database", "ui", "google"])
+    },
+
+    nonPersistedState: (_, __, rootState) => {
+      return pick(rootState, ["user", "database", "ui", "google"])
     }
   },
 
@@ -46,6 +51,46 @@ const DatabaseModule = {
         fileId: getters.databaseFileId,
         contents: getters.databaseState
       })
+    },
+
+    loadFromDrive({ getters, dispatch, commit  }) {
+      return dispatch("googleDownloadFile", getters.databaseFileId)
+        .then((databaseContent) => {
+          if(!databaseContent) {
+            throw new Error(`Failed to load database: ${getters.databaseFileId}`)
+          }
+
+          let loadedState = JSON.parse(databaseContent)
+
+          if(!loadedState) {
+            throw new Error(`Downloaded database didn't JSON parse: ${databaseContent}`)
+          } else {
+            // Migrate the database up to current
+            return dispatch("migrate", loadedState)
+              .then((migratedState) => {
+                // Load the database up!
+                commit("resetState", migratedState)
+              })
+          }
+        })
+    },
+
+    migrate({ getters }, dbState) {
+      // combine the loaded data with the local stuff that doesn't get persisted
+      const { user, database, google } = getters.nonPersistedState
+      dbState.user = user
+      dbState.database = database
+      dbState.google = google
+
+      // Add missing data to layers
+      each(dbState.layers.layers, (layer) => {
+        each(LAYER_DEFAULTS[layer.type], (value, key) => {
+          // Default each property as needed
+          layer[key] = layer[key] || value
+        })
+      })
+
+      return dbState
     }
   }
 }
