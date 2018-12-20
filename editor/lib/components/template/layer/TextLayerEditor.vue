@@ -4,7 +4,7 @@ v-layout(column)
     .subheading Text Look &amp; Feel
 
   v-flex
-    v-select(label="Font Family" v-model="textFontName" :items="availableFontNames")
+    v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()")
 
   v-flex
     v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles")
@@ -31,7 +31,7 @@ v-layout(column)
 </template>
 
 <script>
-  import { debounce } from 'lodash'
+  import { debounce, keys } from 'lodash'
   import { mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import ColorPicker from '../../shared/ColorPicker.vue'
@@ -43,12 +43,25 @@ v-layout(column)
 
     data() {
       return {
-        availableFontNames: ["courier", "times", "helvetica"],
-        availableFontStyles: ["normal", "bold", "italic", "bolditalic"]
+        availableFonts: {
+          "helvetica": ["normal", "bold", "italic", "bolditalic"],
+          "courier": ["normal", "bold", "italic", "bolditalic"],
+          "times": ["normal", "bold", "italic", "bolditalic"],
+          "symbol": ["normal"],
+          "zapfdingbats": ["normal"],
+        }
       }
     },
 
     computed: {
+      availableFontNames() {
+        return keys(this.availableFonts)
+      },
+
+      availableFontStyles() {
+        return this.availableFonts[this.textFontName]
+      },
+
       propertyNames() {
         return this.$store.getters.sourceProperties(this.source)
       },
@@ -68,6 +81,17 @@ v-layout(column)
       updateLayer: debounce(function(layer) {
         this.$store.dispatch("updateLayer", layer)
       }, 650, { leading: true }),
+
+      ensureValidStyle() {
+        // Wait for styles to be reactively updated
+        this.$nextTick(() => {
+          // If our selected style vanished
+          if(this.availableFontStyles.indexOf(this.textFontStyle) == -1) {
+            // Default to a working style
+            this.textFontStyle = this.availableFontStyles[0]
+          }
+        })
+      },
     }
   }
 </script>
