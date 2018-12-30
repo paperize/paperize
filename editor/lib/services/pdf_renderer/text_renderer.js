@@ -1,55 +1,78 @@
-import { defaults, reduce } from 'lodash'
+import { reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
 import { hexToRGB } from './helpers'
 
-const textBox = function(doc, text, boxDimensions, options) {
-  options = defaults(options, {
-    horizontalAlignment: "center"
-  })
-
-  let alignmentOffsetX = 0
-
-  if(options.horizontalAlignment == "center") {
-    alignmentOffsetX += boxDimensions.w/2
-  } else if(options.horizontalAlignment == "right") {
-    alignmentOffsetX += boxDimensions.w
-  }
-
-  // Line Height Formula: fontSize * lineHeight / ptsPerInch
-  const oneLineHeight = doc.internal.getFontSize() * 1.2 / 72,
-    finalX = boxDimensions.x + alignmentOffsetX,
-    finalY = boxDimensions.y + oneLineHeight
-
-  text = doc.splitTextToSize(text, boxDimensions.w)
-  doc.text(text, finalX, finalY, { align: options.horizontalAlignment })
-}
+const PTS_PER_INCH = 72,
+  LINE_HEIGHT = 1.2
 
 export default {
   render(doc, layer, layerDimensions, item, index, total) {
+    const
+      // Extract color channels
+      { r, g, b } = hexToRGB(layer.textColor),
+
+      // Build-in some helper functions to the template variables
+      defaultTemplateVars = {
+        n0: (index).toString(),
+        n: (index+1).toString(),
+        q: total.toString()
+      },
+
+      // Add in the user-generated template variables (source properties)
+      textContentTemplateVars = reduce(item, (kvObject, itemPair) => {
+        kvObject[itemPair.key] = itemPair.value
+        return kvObject
+      }, defaultTemplateVars),
+
+      // Render the template to a string
+      renderedText = mustache(layer.textContentTemplate, textContentTemplateVars)
+
+    // Configure text settings before writing
+    doc.setTextColor(r, g, b)
     doc.setFont(layer.textFontName)
     doc.setFontStyle(layer.textFontStyle)
     doc.setFontSize(layer.textSize)
-    const { r, g, b } = hexToRGB(layer.textColor)
-    doc.setTextColor(r, g, b)
 
-    // Expose some tools to the user via built-in template variables
-    const defaultTemplateVars = {
-      n0: (index).toString(),
-      n: (index+1).toString(),
-      q: total.toString()
+    // Convert horizontal alignment setting to an X offset
+    const horizontalAlignment = layer.horizontalAlignment || "left"
+    let alignmentOffsetX = 0
+    if(horizontalAlignment == "center") {
+      alignmentOffsetX += layerDimensions.w/2
+    } else if(horizontalAlignment == "right") {
+      alignmentOffsetX += layerDimensions.w
     }
 
-    // Add in the user-generated template variables (source properties)
-    const textContentTemplateVars = reduce(item, (kvObject, itemPair) => {
-      kvObject[itemPair.key] = itemPair.value
-      return kvObject
-    }, defaultTemplateVars)
+    let fontSize = doc.internal.getFontSize(),
+      finalX = layerDimensions.x + alignmentOffsetX,
+      finalY,
+      splitText
 
-    // Render the template to a string
-    const textContentTemplate = mustache(layer.textContentTemplate, textContentTemplateVars),
-      horizontalAlignment = layer.horizontalAlignment
+    while(fontSize > 0) {
+      // Line Height Formula: fontSize * lineHeight / ptsPerInch
+      const oneLineHeight = fontSize * LINE_HEIGHT / PTS_PER_INCH
+      splitText = doc.splitTextToSize(renderedText, layerDimensions.w)
+      const textHeight = splitText.length * oneLineHeight
 
-    // Draw the string to the PDF
-    textBox(doc, textContentTemplate, layerDimensions, { horizontalAlignment })
+      if(textHeight <= layerDimensions.h) {
+        // We're good! Convert vertical alignment to a Y offset
+        const verticalAlignment = layer.verticalAlignment || "top"
+        let alignmentOffsetY = 0
+        if(verticalAlignment == "middle") {
+          alignmentOffsetY = (layerDimensions.h - textHeight)/2
+        } else if(verticalAlignment == "bottom") {
+          alignmentOffsetY = layerDimensions.h - textHeight
+        }
+        // Finalize the Y position
+        finalY = layerDimensions.y + oneLineHeight*5/6 + alignmentOffsetY
+        break
+
+      } else {
+        // Text doesn't fit yet, reduce font size and try again
+        fontSize -= 1
+        doc.setFontSize(fontSize)
+      }
+    }
+
+    doc.text(splitText, finalX, finalY, { align: horizontalAlignment })
   }
 }
