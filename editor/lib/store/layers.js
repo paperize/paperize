@@ -39,7 +39,8 @@ LAYER_DEFAULTS[TEXT] =
     textContentTemplate: "",
     textColor:           "#000000",
     textSize:            16,
-    horizontalAlignment: "left"
+    horizontalAlignment: "left",
+    verticalAlignment:   "top"
   }
 LAYER_DEFAULTS[IMAGE] =
   {
