@@ -48,9 +48,19 @@ export default {
       splitText
 
     while(fontSize > 0) {
+      try {
+        splitText = doc.splitTextToSize(renderedText, layerDimensions.w)
+      } catch(e) {
+        if(e.message == "Long word getting split!") {
+          // Text doesn't fit yet, reduce font size and try again
+          fontSize -= 1
+          doc.setFontSize(fontSize)
+          continue
+        }
+      }
+
       // Line Height Formula: fontSize * lineHeight / ptsPerInch
       const oneLineHeight = fontSize * LINE_HEIGHT / PTS_PER_INCH
-      splitText = doc.splitTextToSize(renderedText, layerDimensions.w)
       const textHeight = splitText.length * oneLineHeight
 
       if(textHeight <= layerDimensions.h) {
