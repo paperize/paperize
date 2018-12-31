@@ -31,16 +31,17 @@ export default {
 
       // Outside the dimensions?
       // TODO when we need to support options
+
+      let { r: sr, g: sg, b: sb } = hexToRGB(layer.strokeColor)
+      doc.setDrawColor(sr, sg, sb)
+      doc.setLineWidth(layer.strokeWidth)
     }
 
-    // Set colors and line width based on layer settings
-    let { r: fr, g: fg, b: fb } = hexToRGB(layer.fillColor)
-    doc.setFillColor(fr, fg, fb)
-
-    let { r: sr, g: sg, b: sb } = hexToRGB(layer.strokeColor)
-    doc.setDrawColor(sr, sg, sb)
-
-    doc.setLineWidth(layer.strokeWidth)
+    if(layer.fillPresent) {
+      // Set colors and line width based on layer settings
+      let { r: fr, g: fg, b: fb } = hexToRGB(layer.fillColor)
+      doc.setFillColor(fr, fg, fb)
+    }
 
     // Stroke fill
     let strokeFillMode

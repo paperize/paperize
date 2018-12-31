@@ -20,11 +20,11 @@ v-flex#template-editor(sm8 md6)
         em You need to set a data Source before you can get started with Templates.
 
   v-dialog(v-model="showTemplateManager" fullscreen lazy)
-    template-manager(:component="component" @close-dialog="showTemplateManager = false")
+    template-manager(:component="component" @close-dialog="shutdownTemplateManager()")
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import TemplateManager from './TemplateManager.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
 
@@ -50,6 +50,15 @@ v-flex#template-editor(sm8 md6)
       componentSource() { return this.findComponentSource(this.component) },
 
       componentTemplate() { return this.findComponentTemplate(this.component) }
+    },
+
+    methods: {
+      ...mapMutations(["clearActiveLayer"]),
+
+      shutdownTemplateManager() {
+        this.showTemplateManager = false
+        this.clearActiveLayer()
+      }
     }
   }
 </script>
