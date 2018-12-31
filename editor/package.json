@@ -73,7 +73,7 @@
     "bluebird": "^3.5.0",
     "embed-js": "^4.2.1",
     "event-emitter": "^0.3.4",
-    "jspdf": "^1.4.1",
+    "jspdf": "github:lorennorman/jspdf#no-split-long-words",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "md5": "^2.2.1",

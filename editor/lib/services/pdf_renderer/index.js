@@ -98,7 +98,7 @@ const api = {
 
     // Add all needed pages to doc up front
     _.times(currentPage, () => {
-      doc.addPage(pageSize.w, pageSize.h)
+      doc.addPage([pageSize.w, pageSize.h])
     })
 
     return Promise.each(components, (component) => {
@@ -128,7 +128,7 @@ const api = {
   },
 
   addPage(doc, size) {
-    doc.addPage(size.w, size.h)
+    doc.addPage([size.w, size.h])
   },
 
   restoreDocumentDefaults(doc) {
