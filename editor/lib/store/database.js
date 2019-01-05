@@ -82,13 +82,15 @@ const DatabaseModule = {
       dbState.database = database
       dbState.google = google
 
-      // Add missing data to layers
-      each(dbState.layers.layers, (layer) => {
-        each(LAYER_DEFAULTS[layer.type], (value, key) => {
-          // Default each property as needed
-          layer[key] = layer[key] || value
+      // Add missing data to layers if present
+      if(dbState.layers && dbState.layers.layers) {
+        each(dbState.layers.layers, (layer) => {
+          each(LAYER_DEFAULTS[layer.type], (value, key) => {
+            // Default each property as needed
+            layer[key] = layer[key] || value
+          })
         })
-      })
+      }
 
       return dbState
     }
