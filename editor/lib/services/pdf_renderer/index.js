@@ -155,7 +155,7 @@ const api = {
       // Type-specific layer renderers
       return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
     }).then(() => {
-      if(selectedLayer) {
+      if(selectedLayer && store.getters.layerHighlighting) {
         this.renderHighlightLayer(doc, selectedLayer, parentDimensions)
       }
     })

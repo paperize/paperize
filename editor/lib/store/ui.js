@@ -2,33 +2,36 @@ const UIModule = {
   state: {
     activeGameId:       null,
     activeComponentId:  null,
-    activeLayerId:      null
+    activeLayerId:      null,
+    layerHighlighting:  false
   },
 
   getters: {
-    activeGame(state, getters, rootState, rootGetters) {
+    activeGame(state, _, __, rootGetters) {
       return rootGetters.findGame(state.activeGameId, false)
     },
 
-    activeComponent(state, getters, rootState, rootGetters) {
+    activeComponent(state, _, __, rootGetters) {
       return rootGetters.findComponent(state.activeComponentId, false)
     },
 
-    activeSource: (state, getters, rootState, rootGetters) => {
+    activeSource(_, getters, __, rootGetters) {
       if(getters.activeComponent) {
         return rootGetters.findComponentSource(getters.activeComponent, false)
       }
     },
 
-    activeLayer(state, getters, rootState, rootGetters) {
+    activeLayer(state, _, __, rootGetters) {
       return rootGetters.findLayer(state.activeLayerId, false)
     },
 
-    activeDimensions(state, getters, rootState, rootGetters) {
+    activeDimensions(_, getters, __, rootGetters) {
       if(getters.activeLayer) {
         return rootGetters.findDimension(getters.activeLayer.dimensionId, false)
       }
     },
+
+    layerHighlighting: (state) => state.layerHighlighting
   },
 
   mutations: {
@@ -61,6 +64,10 @@ const UIModule = {
       state.activeLayerId = null
       state.activeDimensionsId = null
     },
+
+    setLayerHighlighting(state, layerHighlighting) {
+      state.layerHighlighting = layerHighlighting
+    }
   },
 
   actions: {

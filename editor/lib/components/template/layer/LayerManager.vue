@@ -1,11 +1,14 @@
 <template lang="pug">
 v-layout(column)
   v-flex
-    .subheading
-      | Layers
+    v-layout.subheading
+      v-flex(xs4)
+        | Layers
 
-      v-btn(small fab color="primary" @click="showNewLayerDialog = true")
-        v-icon library_add
+        v-btn(small fab color="primary" @click="showNewLayerDialog = true")
+          v-icon library_add
+      v-flex(xs8)
+        v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting")
 
     v-dialog(v-model="showNewLayerDialog" max-width="500" lazy)
       v-card
@@ -60,7 +63,20 @@ v-layout(column)
     },
 
     computed: {
-      ...mapGetters(["findAllTemplateLayers", "activeLayer"]),
+      ...mapGetters([
+        "findAllTemplateLayers",
+        "activeLayer",
+      ]),
+
+      layerHighlighting: {
+        get() {
+          return this.$store.getters["layerHighlighting"]
+        },
+
+        set(newSetting) {
+          this.$store.commit("setLayerHighlighting", newSetting)
+        }
+      },
 
       editing: {
         get() {
