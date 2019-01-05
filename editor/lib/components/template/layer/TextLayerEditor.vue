@@ -13,12 +13,20 @@ v-layout(column)
     color-picker(v-model="textColor")
   v-flex
     v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
-  v-flex
+
+  v-flex(xs12)
     p Horizontal Alignment
     v-btn-toggle(v-model="horizontalAlignment")
       v-btn(small flat value="left") Left
       v-btn(small flat value="center") Center
       v-btn(small flat value="right") Right
+
+  v-flex(xs12)
+    p Vertical Alignment
+    v-btn-toggle(v-model="verticalAlignment")
+      v-btn(small flat value="top") Top
+      v-btn(small flat value="middle") Middle
+      v-btn(small flat value="bottom") Bottom
 
   v-flex
     .subheading Text Content
@@ -73,6 +81,7 @@ v-layout(column)
         "textColor",
         "textSize",
         "horizontalAlignment",
+        "verticalAlignment",
         // "textFont",
       ])
     },

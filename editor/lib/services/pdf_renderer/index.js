@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
@@ -99,7 +98,7 @@ const api = {
 
     // Add all needed pages to doc up front
     _.times(currentPage, () => {
-      doc.addPage(pageSize.w, pageSize.h)
+      doc.addPage([pageSize.w, pageSize.h])
     })
 
     return Promise.each(components, (component) => {
@@ -129,7 +128,7 @@ const api = {
   },
 
   addPage(doc, size) {
-    doc.addPage(size.w, size.h)
+    doc.addPage([size.w, size.h])
   },
 
   restoreDocumentDefaults(doc) {
@@ -140,23 +139,41 @@ const api = {
   },
 
   renderItem(doc, game, component, item, parentDimensions, index, total) {
-    // get transforms for this component
-    let template = store.getters.findTemplate(component.templateId)
-    let layers = store.getters.findAllTemplateLayers(template)
-    // render each transform upon this item
-    console.log(`Rendering Item ${index+1}/${total} with ${layers.length} layers...`, layers)
+    // get layers for this component
+    const template = store.getters.findTemplate(component.templateId),
+      layers = store.getters.findAllTemplateLayers(template),
+      selectedLayer = store.getters.activeLayer
 
+    // render each layer
     return Promise.each(layers, layer => {
       // TODO: modify with layout dimensions
-      let layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), parentDimensions)
+      const layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), parentDimensions)
 
       // Always revert to defaults
       this.restoreDocumentDefaults(doc)
 
       // Type-specific layer renderers
       return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
+    }).then(() => {
+      if(selectedLayer && store.getters.layerHighlighting) {
+        this.renderHighlightLayer(doc, selectedLayer, parentDimensions)
+      }
     })
   },
+
+  renderHighlightLayer(doc, selectedLayer, parentDimensions) {
+    const layerDimensions = percentOfParent(store.getters.getLayerDimensions(selectedLayer), parentDimensions),
+      // Minimum shape layer needed for a thin, red rectangle
+      highlightLayer = {
+        shape:         "rectangle",
+        strokePresent: true,
+        strokeWidth:   0.02,
+        strokeColor:   "#CC0000",
+        fillPresent:   false,
+      }
+
+    RENDERERS.shape.render(doc, highlightLayer, layerDimensions, {}, 0, 0)
+  }
 }
 
 export default api
