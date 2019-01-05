@@ -25,7 +25,8 @@ const
     "setActiveComponent",
     "clearActiveComponent",
     "setActiveLayer",
-    "clearActiveLayer"
+    "clearActiveLayer",
+    "setLayerHighlighting",
   ]
 
 let vuex,
