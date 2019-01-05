@@ -3,7 +3,8 @@ import mustache from '../../services/tiny-mustache'
 import { hexToRGB } from './helpers'
 
 const PTS_PER_INCH = 72,
-  LINE_HEIGHT = 1.2
+  LINE_HEIGHT = 1.2,
+  MIN_FONT_SIZE = 4
 
 export default {
   render(doc, layer, layerDimensions, item, index, total) {
@@ -47,23 +48,32 @@ export default {
       finalY,
       splitText
 
-    while(fontSize > 0) {
+    // Shrink-to-Fit: detect when text is too wide or tall for the box and
+    // back off the font size until it fits, or we hit the minimum size
+    while(fontSize >= MIN_FONT_SIZE) {
+      // Do horizontal fit first
       try {
-        splitText = doc.splitTextToSize(renderedText, layerDimensions.w)
+        const options = {
+          throwOnWordSplit: fontSize != MIN_FONT_SIZE
+        }
+        splitText = doc.splitTextToSize(renderedText, layerDimensions.w, options)
       } catch(e) {
-        if(e.message == "Long word getting split!") {
+        if(e.message == "Splitting a word") {
           // Text doesn't fit yet, reduce font size and try again
           fontSize -= 1
           doc.setFontSize(fontSize)
           continue
+        } else {
+          throw e
         }
       }
 
       // Line Height Formula: fontSize * lineHeight / ptsPerInch
-      const oneLineHeight = fontSize * LINE_HEIGHT / PTS_PER_INCH
-      const textHeight = splitText.length * oneLineHeight
+      const oneLineHeight = fontSize * LINE_HEIGHT / PTS_PER_INCH,
+        textHeight = splitText.length * oneLineHeight
 
-      if(textHeight <= layerDimensions.h) {
+      // Now do vertical fit
+      if(textHeight <= layerDimensions.h || fontSize == MIN_FONT_SIZE) {
         // We're good! Convert vertical alignment to a Y offset
         const verticalAlignment = layer.verticalAlignment || "top"
         let alignmentOffsetY = 0

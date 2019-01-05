@@ -9,12 +9,6 @@ import text from './text_renderer'
 import image from './image_renderer'
 import code from './code_renderer'
 
-(function(API) {
-  API.splitLongWord = function() {
-    throw new Error("Long word getting split!")
-  }
-})(jsPDF.API)
-
 const RENDERERS = { shape, text, image, code }
 
 const api = {
