@@ -6,9 +6,10 @@
   "scripts": {
     "clean": "rm -rf build",
     "start": "concurrently \"npm run webpack-watch\" \"npm run server\"",
+    "start-no-sync": "concurrently \"npm run webpack-watch -- --env.NO_SYNC=true\" \"npm run server\"",
     "server": "http-server build",
     "webpack-watch": "webpack --watch --mode=development",
-    "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm start\" \"cypress open\"",
+    "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-no-sync\" \"cypress open\"",
     "dev-mocha": "NODE_ENV=test concurrently --kill-others \"webpack --config webpack.test.config.js --watch\" \"mocha test/build/test.js --watch\"",
     "test-unit": "NODE_ENV=test webpack --config webpack.test.config.js && mocha test/build/test.js",
     "build-test-integration": "npm run clean && NODE_ENV=test webpack --mode=development",
