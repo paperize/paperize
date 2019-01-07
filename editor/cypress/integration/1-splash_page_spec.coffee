@@ -1,15 +1,9 @@
 describe "Splash Page", ->
-  beforeEach ->
+  it "has a bunch of stuff on the splash page", ->
     cy.visit("/")
-
-  it "has Benefits", ->
-    cy.contains("Benefits")
-
-  it "has Get Started call-to-action", ->
-    cy.contains("Get Started")
-
-  it "has Sign In", ->
-    cy.contains("Sign In")
-
-  it "has Paperize.io", ->
+    # The name of the app
     cy.contains("Paperize.io")
+    # A helpful call to action for newbies
+    cy.contains("Get Started")
+    # Obvious place to sign in for old pros
+    cy.contains("Sign In")
