@@ -19,7 +19,6 @@ v-layout(column)
           v-btn(flat @click="createLayer('text')") Text
           v-btn(flat @click="createLayer('image')") Image
           v-btn(flat @click="createLayer('shape')") Shape
-          v-btn(flat @click="createLayer('code')") Code
 
   v-list
     draggable(v-model="templateLayers")
