@@ -1,45 +1,48 @@
 <template lang="pug">
-#dimension-editor
-  .subheading Dimensions
+v-expansion-panel-content
+  div(slot="header") Dimensions
+  v-card
+    v-card-text
+      v-layout#dimension-editor(column)
+          v-flex
+            label Coordinate Mode:
+            v-btn-toggle(v-model="dimensionMode" mandatory)
+              v-btn(small flat value="xywh") XYWH
+              v-btn(small flat value="inset") Inset
 
-  v-layout(column)
-    v-flex
-      v-btn-toggle(v-model="dimensionMode" mandatory)
-        v-btn(small flat value="xywh") XYWH
-        v-btn(small flat value="inset") Inset
+          v-flex
+            p Units:
+            v-btn-toggle(v-model="unitMode" mandatory)
+              v-btn(small flat value="percent") %
+              v-btn(small flat value="inches") in
+              v-btn(small flat value="millimeters") mm
+              v-btn(small flat value="pixels") px
 
-    v-flex
-      v-btn-toggle(v-model="unitMode" mandatory)
-        v-btn(small flat value="percent") %
-        v-btn(small flat value="inches") in
-        v-btn(small flat value="millimeters") mm
-        v-btn(small flat value="pixels") px
+          v-flex(v-if="modeXYWH")
+            v-layout(row wrap)
+              v-flex
+                p Expressed as {{ unitDescription }} from the top left corner.
+              v-flex(xs12 md6)
+                v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" box)
 
-    v-flex(v-if="modeXYWH")
-      v-layout(row wrap)
-        v-flex
-          p Expressed as {{ unitDescription }} from the top left corner.
-        v-flex(xs12 md6)
-          v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX")
-        v-flex(xs12 md6)
-          v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY")
-        v-flex(xs12 md6)
-          v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW")
-        v-flex(xs12 md6)
-          v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH")
-
-    v-flex(v-else-if="modeInset")
-      v-layout(row wrap)
-        v-flex
-          p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
-        v-flex(xs12)
-          v-text-field#dim-t(prefix="T" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT")
-        v-flex(xs12 md6)
-          v-text-field#dim-l(prefix="L" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL")
-        v-flex(xs12 md6)
-          v-text-field#dim-r(prefix="R" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR")
-        v-flex(xs12)
-          v-text-field#dim-b(prefix="B" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB")
+          v-flex(v-else-if="modeInset")
+            v-layout(row wrap)
+              v-flex
+                p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
+              v-flex(xs12)
+                v-text-field#dim-t(prefix="T" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-l(prefix="L" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-r(prefix="R" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR" box)
+              v-flex(xs12)
+                v-text-field#dim-b(prefix="B" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB" box)
 </template>
 
 <script>

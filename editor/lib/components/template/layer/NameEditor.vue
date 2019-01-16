@@ -1,5 +1,9 @@
 <template lang="pug">
-  v-text-field(v-model="name" label="Name")
+v-expansion-panel-content
+  div(slot="header") Layer Name: "{{ name }}"
+  v-card
+    v-card-text
+      v-text-field(v-model="name" label="Name" box)
 </template>
 
 <script>

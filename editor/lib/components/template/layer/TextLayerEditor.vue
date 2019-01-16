@@ -1,28 +1,20 @@
 <template lang="pug">
 v-expansion-panel(popout)
-  v-expansion-panel-content
-    div(slot="header") Layer Name: {{ layer.name }}
-    v-card
-      v-card-text
-        name-editor(:layer="layer")
+  name-editor(:layer="layer")
 
-  v-expansion-panel-content
-    div(slot="header") Dimensions
-    v-card
-      v-card-text
-        dimension-editor(:layer="layer")
+  dimension-editor(:layer="layer")
 
   v-expansion-panel-content
     div(slot="header") Font
     v-card
       v-card-text
-        v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()")
+        v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()" box)
 
-        v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles")
+        v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
+
+        v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size" box)
 
         color-picker(v-model="textColor")
-
-        v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
 
   v-expansion-panel-content
     div(slot="header") Text Alignment
@@ -46,7 +38,7 @@ v-expansion-panel(popout)
       v-card-text
         p(v-pre) Use curly brackets to reference columns, like: {{Name}}
 
-        v-textarea.text-content(v-model="textContentTemplate" label="Text Template")
+        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box)
 </template>
 
 <script>

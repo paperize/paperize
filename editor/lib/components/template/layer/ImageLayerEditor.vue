@@ -1,16 +1,8 @@
 <template lang="pug">
 v-expansion-panel(popout)
-  v-expansion-panel-content
-    div(slot="header") Layer Name: {{ layer.name }}
-    v-card
-      v-card-text
-        name-editor(:layer="layer")
+  name-editor(:layer="layer")
 
-  v-expansion-panel-content
-    div(slot="header") Dimensions
-    v-card
-      v-card-text
-        dimension-editor(:layer="layer")
+  dimension-editor(:layer="layer")
 
   v-expansion-panel-content
     div(slot="header") Image Selection
@@ -24,10 +16,10 @@ v-expansion-panel(popout)
           v-autocomplete(v-model="imageId" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
 
         template(v-else)
-          v-text-field(v-model="imageNamePrefix" label="Prefix")
-          v-select(v-model="imageNameProperty" :items="activeSourceProperties")
-          v-text-field(v-model="imageNameSuffix" label="Suffix")
-          v-text-field(disabled label="Looks like" :value="dynamicImageName")
+          v-text-field(v-model="imageNamePrefix" label="Prefix" box)
+          v-select(v-model="imageNameProperty" :items="activeSourceProperties" box)
+          v-text-field(v-model="imageNameSuffix" label="Suffix" box)
+          v-text-field(disabled label="Looks like" :value="dynamicImageName" box)
 
   v-expansion-panel-content
     div(slot="header") Image Alignment
@@ -37,13 +29,13 @@ v-expansion-panel(popout)
           v-radio(color="primary" label="Fit" value="fitToBox")
           v-radio(color="primary" label="Fill" value="fillToBox")
 
-        p Horizontal Alignment
+        p Horizontal:
         v-btn-toggle(v-model="horizontalAlignment")
           v-btn(small flat value="left") Left
           v-btn(small flat value="center") Center
           v-btn(small flat value="right") Right
 
-        p Vertical Alignment
+        p Vertical:
         v-btn-toggle(v-model="verticalAlignment")
           v-btn(small flat value="top") Top
           v-btn(small flat value="middle") Middle
