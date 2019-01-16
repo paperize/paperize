@@ -49,7 +49,7 @@
   const INPUT_DELAY_MS = 400
 
   export default {
-    props: ["layer", "size"],
+    props: ["layer"],
 
     data() {
       return {
@@ -59,15 +59,17 @@
     },
 
     computed: {
-      ...mapGetters(["getLayerDimensions"]),
+      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
 
-      modeXYWH() { return this.dimensionMode == 'xywh'},
-      modeInset() { return this.dimensionMode == 'inset'},
+      size() { return this.findTemplateByLayerId(this.layer.id).size },
 
-      modePercent() { return this.unitMode == 'percent'},
-      modeInches() { return this.unitMode == 'inches'},
-      modeMM() { return this.unitMode == 'millimeters'},
-      modePixels() { return this.unitMode == 'pixels'},
+      modeXYWH() { return this.dimensionMode == 'xywh' },
+      modeInset() { return this.dimensionMode == 'inset' },
+
+      modePercent() { return this.unitMode == 'percent' },
+      modeInches() { return this.unitMode == 'inches' },
+      modeMM() { return this.unitMode == 'millimeters' },
+      modePixels() { return this.unitMode == 'pixels' },
 
       unitStep() {
         switch(this.unitMode) {

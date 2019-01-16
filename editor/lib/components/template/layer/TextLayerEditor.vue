@@ -1,53 +1,70 @@
 <template lang="pug">
-v-layout(column)
-  v-flex
-    .subheading Text Look &amp; Feel
+v-expansion-panel(popout)
+  v-expansion-panel-content
+    div(slot="header") Layer Name: {{ layer.name }}
+    v-card
+      v-card-text
+        name-editor(:layer="layer")
 
-  v-flex
-    v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()")
+  v-expansion-panel-content
+    div(slot="header") Dimensions
+    v-card
+      v-card-text
+        dimension-editor(:layer="layer")
 
-  v-flex
-    v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles")
+  v-expansion-panel-content
+    div(slot="header") Font
+    v-card
+      v-card-text
+        v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()")
 
-  v-flex
-    color-picker(v-model="textColor")
-  v-flex
-    v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
+        v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles")
 
-  v-flex(xs12)
-    p Horizontal Alignment
-    v-btn-toggle(v-model="horizontalAlignment")
-      v-btn(small flat value="left") Left
-      v-btn(small flat value="center") Center
-      v-btn(small flat value="right") Right
+        color-picker(v-model="textColor")
 
-  v-flex(xs12)
-    p Vertical Alignment
-    v-btn-toggle(v-model="verticalAlignment")
-      v-btn(small flat value="top") Top
-      v-btn(small flat value="middle") Middle
-      v-btn(small flat value="bottom") Bottom
+        v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size")
 
-  v-flex
-    .subheading Text Content
+  v-expansion-panel-content
+    div(slot="header") Text Alignment
+    v-card
+      v-card-text
+        p Horizontal Alignment
+        v-btn-toggle(v-model="horizontalAlignment")
+          v-btn(small flat value="left") Left
+          v-btn(small flat value="center") Center
+          v-btn(small flat value="right") Right
 
-  v-flex
-    p(v-pre) Use curly brackets to reference columns, like: {{Name}}
+        p Vertical Alignment
+        v-btn-toggle(v-model="verticalAlignment")
+          v-btn(small flat value="top") Top
+          v-btn(small flat value="middle") Middle
+          v-btn(small flat value="bottom") Bottom
 
-  v-flex
-    v-textarea.text-content(v-model="textContentTemplate" label="Text Template")
+  v-expansion-panel-content
+    div(slot="header") Text Content
+    v-card
+      v-card-text
+        p(v-pre) Use curly brackets to reference columns, like: {{Name}}
+
+        v-textarea.text-content(v-model="textContentTemplate" label="Text Template")
 </template>
 
 <script>
   import { debounce, keys } from 'lodash'
   import { mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
+  import NameEditor from './NameEditor.vue'
+  import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
 
   export default {
     props: ["layer", "source"],
 
-    components: { ColorPicker },
+    components: {
+      NameEditor,
+      DimensionEditor,
+      ColorPicker,
+    },
 
     data() {
       return {
@@ -82,7 +99,6 @@ v-layout(column)
         "textSize",
         "horizontalAlignment",
         "verticalAlignment",
-        // "textFont",
       ])
     },
 
