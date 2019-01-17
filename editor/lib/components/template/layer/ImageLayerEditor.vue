@@ -1,5 +1,5 @@
 <template lang="pug">
-v-expansion-panel(popout)
+v-expansion-panel#image-layer-editor(popout)
   name-editor(:layer="layer")
 
   dimension-editor(:layer="layer")

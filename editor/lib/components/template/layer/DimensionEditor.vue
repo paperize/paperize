@@ -1,9 +1,9 @@
 <template lang="pug">
-v-expansion-panel-content
+v-expansion-panel-content#dimension-editor
   div(slot="header") Dimensions
   v-card
     v-card-text
-      v-layout#dimension-editor(column)
+      v-layout(column)
           v-flex
             label Coordinate Mode:
             v-btn-toggle(v-model="dimensionMode" mandatory)

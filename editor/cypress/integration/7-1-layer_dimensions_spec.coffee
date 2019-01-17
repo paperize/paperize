@@ -6,6 +6,7 @@ describe "Layer Dimensions", ->
 
     cy.contains("library_add").click()
     cy.contains("Shape").click()
+    cy.contains('Dimensions').click()
 
   it "let's me set inches as the unit of measure", ->
     cy.get("#dimension-editor").within ->
