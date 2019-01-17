@@ -1,6 +1,14 @@
 import { each, pick, omit } from 'lodash'
 import { LAYER_DEFAULTS } from './layers'
 
+const UNPERSISTED_STATE_KEYS = [
+  "user",
+  "database",
+  "ui",
+  "ui_print",
+  "google"
+]
+
 const DatabaseModule = {
   state: {
     workingDirectory: {
@@ -25,11 +33,11 @@ const DatabaseModule = {
     driveUrl: () => driveId => `https://drive.google.com/file/d/${driveId}/edit?usp=sharing`,
 
     databaseState: (_, __, rootState) => {
-      return omit(rootState, ["user", "database", "ui", "google"])
+      return omit(rootState, UNPERSISTED_STATE_KEYS)
     },
 
     nonPersistedState: (_, __, rootState) => {
-      return pick(rootState, ["user", "database", "ui", "google"])
+      return pick(rootState, UNPERSISTED_STATE_KEYS)
     }
   },
 
