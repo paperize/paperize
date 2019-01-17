@@ -3,6 +3,7 @@ import { keys, pick } from 'lodash'
 
 import Vue  from 'vue'
 import Vuex from 'vuex'
+Vue.use(Vuex)
 
 import user       from './user'
 import database   from './database'
@@ -15,9 +16,8 @@ import layers     from './layers'
 import dimensions from './dimensions'
 import images     from './images'
 import print      from './print'
+import uiPrint    from './ui_print'
 import google     from './google'
-
-Vue.use(Vuex)
 
 
 const INITIAL_STATE = {
@@ -32,6 +32,7 @@ const INITIAL_STATE = {
   dimensions: dimensions.state,
   images:     images.state,
   print:      print.state,
+  uiPrint:    uiPrint.state,
   google:     google.state,
 }
 
@@ -57,6 +58,7 @@ let store = new Vuex.Store({
     user,
     database,
     ui,
+    uiPrint,
     games,
     components,
     sources,

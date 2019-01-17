@@ -7,9 +7,8 @@ import { percentOfParent } from './helpers'
 import shape from './shape_renderer'
 import text from './text_renderer'
 import image from './image_renderer'
-import code from './code_renderer'
 
-const RENDERERS = { shape, text, image, code }
+const RENDERERS = { shape, text, image }
 
 const api = {
   renderItemToPdf(game, component, item) {
@@ -27,6 +26,7 @@ const api = {
   },
 
   renderGameToPdf(game) {
+    store.dispatch("startNewPrintJob")
     const doc = this.startNewDocument()
     const components = store.getters.findAllGameComponents(game)
 
@@ -45,14 +45,15 @@ const api = {
 
     // TODO: gather all items' layouts
     // generate a layout with locations mapped to dimensions
-    let componentSizes = components.map((component) => {
+    let componentSizes = _.compact(components.map((component) => {
+      if(!component.templateId) { return null }
       const template = store.getters.findTemplate(component.templateId)
       return {
         size: template.size,
         name: component.id,
         quantity: store.getters.getComponentItems(component).length
       }
-    })
+    }))
 
     let lastX = marginLeft,
       lastY = marginTop,
@@ -101,11 +102,17 @@ const api = {
       doc.addPage([pageSize.w, pageSize.h])
     })
 
+    const numPages = currentPage,
+      numComponents = componentSizes.length,
+      numItems = _.sum(_.map(componentSizes, "quantity"))
+
+    store.dispatch("printJobStatusUpdate", `Layout Complete: ${numPages} pages, ${numComponents} components, ${numItems} items`)
     return Promise.each(components, (component) => {
       const items = store.getters.getComponentItems(component)
+      store.dispatch("printJobStatusUpdate", `Starting Component: "${component.title}", ${items.length} items`)
 
       return Promise.each(items, (item, itemIndex, totalItems) => {
-
+        store.dispatch("printJobStatusUpdate", `${component.title} ${itemIndex+1}`)
         let parentDimensions = itemLocations[component.id].shift()
         // what page is this item's location on?
         doc.setPage(parentDimensions.page)
@@ -114,7 +121,10 @@ const api = {
       })
     }).then(() => {
       const filenameOfDownload = `${game.title || "Game"}.pdf`
+      store.dispatch("printJobStatusUpdate", `Finished render, exporting file: ${filenameOfDownload}`)
       return doc.save(filenameOfDownload)
+    }).finally(() => {
+      store.dispatch("finishPrintJob")
     })
   },
 
