@@ -48,8 +48,6 @@ const publicApi = {
         return Promise.each(items, (item, itemIndex, totalItems) => {
           store.dispatch("printJobStatusUpdate", `${component.title} ${itemIndex+1}`)
           let parentDimensions = itemLocations[component.id].shift()
-          // what page is this item's location on?
-          doc.setPage(parentDimensions.page)
 
           return renderApi.renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
         })
@@ -90,49 +88,77 @@ const publicApi = {
         }
 
       let
-        lastX = marginLeft,
-        lastY = marginTop,
+        lastX = 0,
+        lastY = 0,
         currentPage = 0,
         itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
-          lastX = marginLeft
-          lastY = marginTop
+          lastX = 0
+          lastY = 0
           // new page on new component
           // TODO: "component mingling" print setting, for the paper-conscious
           currentPage += 1
-          // make sure there's
+          // make sure there's a slot for this kind of component
           locations[name] = locations[name] || []
-          // once per item
-          while(quantity > 0){
-            let thisX = lastX,
-              thisY = lastY
 
-            if(thisX + size.w > printablePageSize.w + marginLeft) {
-              // new row detected
-              // if x is past width (right side of medium page), reset x and increment y
-              thisX = lastX = marginLeft
-              thisY = lastY = lastY + size.h
+          if(size.w > printablePageSize.w || size.h > printablePageSize.h) {
+            // component is larger than the print medium
+            // stripe the component across multiple pages
 
-              if(thisY + size.h > printablePageSize.h + marginTop) {
-                // new page detected
-                // if y is past height (bottom of medium page), reset y and increment page
-                thisY = lastY = marginTop
-                currentPage += 1
+            while(quantity > 0) {
+              const horizontalPages = Math.ceil(size.w / printablePageSize.w),
+                verticalPages = Math.ceil(size.h / printablePageSize.h)
+
+              let locationCollection = []
+              for(let pageY = 0; pageY < verticalPages; pageY ++) {
+                for(let pageX = 0; pageX < horizontalPages; pageX ++) {
+                  locationCollection.push({
+                    page: currentPage,
+                    ...size, // { w, h }
+                    x: marginLeft - (pageX * printablePageSize.w),
+                    y: marginRight - (pageY * printablePageSize.h)
+                  })
+
+                  currentPage += 1
+                }
               }
 
-              // TODO: "rasturbate mode"
-              // TODO: component is larger than the physical page itself and must
-              //  be striped across multiple physical pages and reconstructed at
-              //  "PnP-time" (vs "Data-time", "Print-time", etc?)
+              locations[name].push(locationCollection)
+
+              quantity -= 1
             }
+          } else {
+            // the component fits into the print medium
+            // lay it out in rows and columns
 
-            locations[name].push({
-              page: currentPage,
-              ...size, // { w, h }
-              x: thisX, y: thisY
-            })
+            // once per item
+            while(quantity > 0){
+              let thisX = lastX,
+                thisY = lastY
 
-            lastX += size.w
-            quantity -= 1
+              if(thisX + size.w > printablePageSize.w) {
+                // new row detected
+                // if x is past width (right side of medium page), reset x and increment y
+                thisX = lastX = 0
+                thisY = lastY = lastY + size.h
+
+                if(thisY + size.h > printablePageSize.h) {
+                  // new page detected
+                  // if y is past height (bottom of medium page), reset y and increment page
+                  thisY = lastY = 0
+                  currentPage += 1
+                }
+              }
+
+              locations[name].push({
+                page: currentPage,
+                ...size, // { w, h }
+                x: marginLeft + thisX,
+                y: marginTop + thisY
+              })
+
+              lastX += size.w
+              quantity -= 1
+            }
           }
 
           return locations
@@ -198,14 +224,25 @@ const publicApi = {
 
       // render each layer
       return Promise.each(layers, layer => {
-        // TODO: modify with layout dimensions
-        const layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), parentDimensions)
-
-        // Always revert to defaults
+        // Always revert to defaults (so layer styles don't bleed into each other)
         this.layerDefaults(doc)
 
-        // Type-specific layer renderers
-        return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
+        if(!_.isArray(parentDimensions)) {
+          parentDimensions = [ parentDimensions ]
+        } else {
+          console.log(parentDimensions)
+        }
+
+        return Promise.each(parentDimensions, (dimensions) => {
+          // what page is this item's location on?
+          doc.setPage(dimensions.page)
+
+          // TODO: modify with layout dimensions
+          const layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), dimensions)
+
+          // Type-specific layer renderers
+          return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
+        })
       }).then(() => {
         if(selectedLayer && store.getters.layerHighlighting) {
           this.renderHighlightLayer(doc, selectedLayer, parentDimensions)
