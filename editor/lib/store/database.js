@@ -1,5 +1,8 @@
 import { each, pick, omit } from 'lodash'
 import { LAYER_DEFAULTS } from './layers'
+import PrintModule from './print'
+
+const PRINT_DEFAULT_STATE = PrintModule.state
 
 const UNPERSISTED_STATE_KEYS = [
   "user",
@@ -99,6 +102,10 @@ const DatabaseModule = {
           })
         })
       }
+
+      each(PRINT_DEFAULT_STATE, (value, key) => {
+        dbState.print[key] = dbState.print[key]  || value
+      })
 
       return dbState
     }
