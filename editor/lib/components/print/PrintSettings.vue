@@ -4,47 +4,63 @@ v-card
     .headline Print Settings
 
   v-card-text
-    //- Paper Size
-    fieldset.fieldset
-      legend
+    //- Layout Modes
+    v-radio-group(v-model="printMode")
+      strong(slot="label") Layout Mode
+
+      v-tooltip(bottom)
+        span(slot="activator")
+          v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
+        span This is for most users who want to specify their paper size and have Paperize lay everything out.
+
+      v-tooltip(bottom)
+        span(slot="activator")
+          v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
+        p This allows advanced users to do their own layout.
+        span Paperize will place each component onto a page of its own, sized exactly to the component with no margins. Advanced users can then do their own layout.
+
+    template(v-if="printMode == MODE_AUTO_LAYOUT")
+      //- Paper Size
+      v-label
         strong Paper Size
 
-      v-btn-toggle(v-model="paperMode")
-        v-btn(flat value="standard") Standard Sizes
-        v-btn(flat value="custom") Custom Size
+      div
+        v-btn-toggle(v-model="paperMode")
+          v-btn(flat value="standard") Standard Sizes
+          v-btn(flat value="custom") Custom Size
 
       v-divider
 
       //- Standard Sizes
-      template(v-if="paperMode == 'standard'")
+      div(v-if="paperMode == 'standard'")
         p Most home printers use A4 or Letter paper. Select "Universal" if you'd like a print that will work on either.
 
-        v-select(label="Size" :items="printOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperFormat")
-        v-select(label="Orientation" :items="orientationOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperOrientation")
+        v-select(box label="Size" :items="printOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperFormat")
+        v-select(box label="Orientation" :items="orientationOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperOrientation")
 
       //- Custom Size
       template(v-else)
         p Set your own custom page size in inches.
 
-        v-text-field(v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
-        v-text-field(v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(box v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(box v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
 
-    //- Margins
-    fieldset.fieldset
-      legend
+      //- Margins
+      v-label
         strong Minimum Margins
 
       p How close to the edge will your printer allow you to print?
 
-      v-text-field(v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(box v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(box v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(box v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(box v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
 </template>
 
 <script>
   import { find, debounce } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
+  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE } from '../../store/print'
 
   const printOptions = [
     { value: 'a4', name: 'A4',
@@ -62,6 +78,8 @@ v-card
   export default {
     data() {
       return {
+        MODE_AUTO_LAYOUT,
+        MODE_COMPONENT_PER_PAGE,
         printOptions,
         orientationOptions,
         paperMode: 'standard',
@@ -72,6 +90,16 @@ v-card
 
     computed: {
       ...mapGetters(["getPrintSettings"]),
+
+      printMode: {
+        get() {
+          return this.getPrintSettings.mode
+        },
+
+        set(mode) {
+          this.updatePrintSettings({ mode })
+        },
+      },
 
       paperWidth: {
         get() {
