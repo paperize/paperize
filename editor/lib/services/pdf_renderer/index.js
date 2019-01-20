@@ -235,7 +235,4 @@ const publicApi = {
     }
   }
 
-export default {
-  renderItemToPdf: publicApi.renderItemToPdf,
-  renderGameToPdf: publicApi.renderGameToPdf
-}
+export default publicApi
