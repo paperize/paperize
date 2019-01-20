@@ -2,6 +2,7 @@ import jsPDF from 'jspdf'
 import store from '../../store'
 import _ from 'lodash'
 import { percentOfParent } from './helpers'
+import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE } from '../../store/print'
 
 // Keep renderers in their own files
 import shape from './shape_renderer'
@@ -27,82 +28,21 @@ const api = {
 
   renderGameToPdf(game) {
     store.dispatch("startNewPrintJob")
-    const doc = this.startNewDocument()
-    const components = store.getters.findAllGameComponents(game)
 
-    let printSettings = store.getters.getPrintSettings,
-      pageSize = { w: printSettings.width, h: printSettings.height },
-      marginTop = printSettings.marginTop,
-      marginRight = printSettings.marginRight,
-      marginBottom = printSettings.marginBottom,
-      marginLeft = printSettings.marginLeft,
-      totalHorizontalMargin = marginLeft + marginRight,
-      totalVerticalMargin = marginTop + marginBottom,
-      printablePageSize = {
-        w: (pageSize.w - totalHorizontalMargin),
-        h: (pageSize.h - totalVerticalMargin)
-      }
-
-    // TODO: gather all items' layouts
-    // generate a layout with locations mapped to dimensions
-    let componentSizes = _.compact(components.map((component) => {
-      if(!component.templateId) { return null }
-      const template = store.getters.findTemplate(component.templateId)
-      return {
-        size: template.size,
-        name: component.id,
-        quantity: store.getters.getComponentItems(component).length
-      }
-    }))
-
-    let lastX = marginLeft,
-      lastY = marginTop,
-      currentPage = 0
-
-    let itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
-      lastX = marginLeft
-      lastY = marginTop
-      currentPage += 1
-      locations[name] = locations[name] || []
-      while(quantity > 0){
-        let thisX = lastX,
-          thisY = lastY
-
-        if(thisX + size.w > printablePageSize.w + marginLeft) {
-          // if x is past width (right side of medium page), reset x and increment y
-          thisX = lastX = marginLeft
-          thisY = lastY = lastY + size.h
-
-          if(thisY + size.h > printablePageSize.h + marginTop) {
-            // if y is past height (bottom of medium page), reset y and increment page
-            thisY = lastY = marginTop
-            currentPage += 1
-          }
-
-          // TODO: "rasturbate mode"
-          // TODO: component is larger than the physical page itself and must
-          //  be striped across multiple physical pages and reconstructed at
-          //  "PnP-time" (vs "Data-time", "Print-time", etc?)
+    const components = store.getters.findAllGameComponents(game),
+      componentSizes = _.compact(components.map((component) => {
+        if(!component.templateId) { return null }
+        const template = store.getters.findTemplate(component.templateId)
+        return {
+          size: template.size,
+          name: component.id,
+          quantity: store.getters.getComponentItems(component).length
         }
-
-        locations[name].push({
-          ...size,
-          page: currentPage,
-          x: thisX, y: thisY
-        })
-        lastX += size.w
-        quantity -= 1
-      }
-
-      return locations
-    }, {})
-
-    // Add all needed pages to doc up front
-    _.times(currentPage, () => {
-      doc.addPage([pageSize.w, pageSize.h])
-    })
-
-    const numPages = currentPage,
+      })),
+      printSettings = store.getters.getPrintSettings,
+      { doc, itemLocations } = this.doLayout(componentSizes, printSettings),
+      // numPages = currentPage,
+      numPages = doc.getNumberOfPages(),
       numComponents = componentSizes.length,
       numItems = _.sum(_.map(componentSizes, "quantity"))
 
@@ -126,6 +66,104 @@ const api = {
     }).finally(() => {
       store.dispatch("finishPrintJob")
     })
+  },
+
+  doLayout(componentSizes, printSettings) {
+    const doc = this.startNewDocument()
+    let itemLocations
+    if(printSettings.mode == MODE_AUTO_LAYOUT) {
+      itemLocations = this.autoLayoutItems(doc, componentSizes, printSettings)
+    } else if(printSettings.mode == MODE_COMPONENT_PER_PAGE) {
+      itemLocations = this.componentPerPageItemLayout(doc, componentSizes, printSettings)
+    }
+
+    return { doc, itemLocations }
+  },
+
+  autoLayoutItems(doc, componentSizes, printSettings) {
+    const pageSize = {
+        w: printSettings.width,
+        h: printSettings.height
+      },
+      { marginTop, marginRight, marginBottom, marginLeft } = printSettings,
+      totalHorizontalMargin = marginLeft + marginRight,
+      totalVerticalMargin = marginTop + marginBottom,
+      printablePageSize = {
+        w: (pageSize.w - totalHorizontalMargin),
+        h: (pageSize.h - totalVerticalMargin)
+      }
+
+    let
+      lastX = marginLeft,
+      lastY = marginTop,
+      currentPage = 0,
+      itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
+        lastX = marginLeft
+        lastY = marginTop
+        currentPage += 1
+        locations[name] = locations[name] || []
+        while(quantity > 0){
+          let thisX = lastX,
+            thisY = lastY
+
+          if(thisX + size.w > printablePageSize.w + marginLeft) {
+            // if x is past width (right side of medium page), reset x and increment y
+            thisX = lastX = marginLeft
+            thisY = lastY = lastY + size.h
+
+            if(thisY + size.h > printablePageSize.h + marginTop) {
+              // if y is past height (bottom of medium page), reset y and increment page
+              thisY = lastY = marginTop
+              currentPage += 1
+            }
+
+            // TODO: "rasturbate mode"
+            // TODO: component is larger than the physical page itself and must
+            //  be striped across multiple physical pages and reconstructed at
+            //  "PnP-time" (vs "Data-time", "Print-time", etc?)
+          }
+
+          locations[name].push({
+            ...size,
+            page: currentPage,
+            x: thisX, y: thisY
+          })
+          lastX += size.w
+          quantity -= 1
+        }
+
+        return locations
+      }, {})
+
+    // Add all needed pages to doc up front
+    _.times(currentPage, () => {
+      doc.addPage([pageSize.w, pageSize.h])
+    })
+
+    return itemLocations
+  },
+
+  componentPerPageItemLayout(doc, componentSizes) {
+    let currentPage = 0
+    return componentSizes.reduce((locations, { size, name, quantity }) => {
+      // initialize a slot for this collection of components
+      locations[name] = locations[name] || []
+      // execute once per item
+      _.times(quantity,() => {
+        // add a page to the doc of the exact size (no margins)
+        doc.addPage([size.w, size.h])
+        // bump the page number
+        currentPage += 1
+        // add an item location...
+        locations[name].push({
+          ...size,
+          page: currentPage, // ...on the new page number...
+          x: 0, // ...at the top left
+          y: 0
+        })
+      })
+      return locations
+    }, {})
   },
 
   startNewDocument() {
