@@ -41,7 +41,6 @@ const api = {
       })),
       printSettings = store.getters.getPrintSettings,
       { doc, itemLocations } = this.doLayout(componentSizes, printSettings),
-      // numPages = currentPage,
       numPages = doc.getNumberOfPages(),
       numComponents = componentSizes.length,
       numItems = _.sum(_.map(componentSizes, "quantity"))
@@ -100,18 +99,24 @@ const api = {
       itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
         lastX = marginLeft
         lastY = marginTop
+        // new page on new component
+        // TODO: "component mingling" print setting, for the paper-conscious
         currentPage += 1
+        // make sure there's
         locations[name] = locations[name] || []
+        // once per item
         while(quantity > 0){
           let thisX = lastX,
             thisY = lastY
 
           if(thisX + size.w > printablePageSize.w + marginLeft) {
+            // new row detected
             // if x is past width (right side of medium page), reset x and increment y
             thisX = lastX = marginLeft
             thisY = lastY = lastY + size.h
 
             if(thisY + size.h > printablePageSize.h + marginTop) {
+              // new page detected
               // if y is past height (bottom of medium page), reset y and increment page
               thisY = lastY = marginTop
               currentPage += 1
@@ -124,10 +129,11 @@ const api = {
           }
 
           locations[name].push({
-            ...size,
             page: currentPage,
+            ...size, // { w, h }
             x: thisX, y: thisY
           })
+
           lastX += size.w
           quantity -= 1
         }
@@ -135,7 +141,7 @@ const api = {
         return locations
       }, {})
 
-    // Add all needed pages to doc up front
+    // Add all needed pages to doc
     _.times(currentPage, () => {
       doc.addPage([pageSize.w, pageSize.h])
     })
