@@ -1,9 +1,12 @@
 import massAssign from './util/mass_assign'
 
-const DEFAULT_MARGIN = .25
+export const DEFAULT_MARGIN = .25,
+  MODE_AUTO_LAYOUT = "auto_layout",
+  MODE_COMPONENT_PER_PAGE = "component_per_page"
 
 const PrintModule = {
   state: {
+    mode: MODE_AUTO_LAYOUT,
     width: 8.3,
     height: 11,
     marginTop: DEFAULT_MARGIN,
