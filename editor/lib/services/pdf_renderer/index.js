@@ -94,9 +94,7 @@ const publicApi = {
         itemLocations = componentSizes.reduce((locations, { size, name, quantity }) => {
           lastX = 0
           lastY = 0
-          // new page on new component
-          // TODO: "component mingling" print setting, for the paper-conscious
-          currentPage += 1
+
           // make sure there's a slot for this kind of component
           locations[name] = locations[name] || []
 
@@ -111,14 +109,14 @@ const publicApi = {
               let locationCollection = []
               for(let pageY = 0; pageY < verticalPages; pageY ++) {
                 for(let pageX = 0; pageX < horizontalPages; pageX ++) {
+                  currentPage += 1
+
                   locationCollection.push({
                     page: currentPage,
                     ...size, // { w, h }
                     x: marginLeft - (pageX * printablePageSize.w),
                     y: marginRight - (pageY * printablePageSize.h)
                   })
-
-                  currentPage += 1
                 }
               }
 
@@ -129,6 +127,10 @@ const publicApi = {
           } else {
             // the component fits into the print medium
             // lay it out in rows and columns
+
+            // new page on new component
+            // TODO: "component mingling" print setting, for the paper-conscious
+            currentPage += 1
 
             // once per item
             while(quantity > 0){
@@ -229,8 +231,6 @@ const publicApi = {
 
         if(!_.isArray(parentDimensions)) {
           parentDimensions = [ parentDimensions ]
-        } else {
-          console.log(parentDimensions)
         }
 
         return Promise.each(parentDimensions, (dimensions) => {
