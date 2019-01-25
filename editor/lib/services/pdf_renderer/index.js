@@ -98,6 +98,7 @@ const publicApi = {
           // make sure there's a slot for this kind of component
           locations[name] = locations[name] || []
 
+          // Multi-Page Component
           if(size.w > printablePageSize.w || size.h > printablePageSize.h) {
             // component is larger than the print medium
             // stripe the component across multiple pages
@@ -124,6 +125,8 @@ const publicApi = {
 
               quantity -= 1
             }
+
+          // Multi-Component Page
           } else {
             // the component fits into the print medium
             // lay it out in rows and columns
@@ -137,14 +140,15 @@ const publicApi = {
               let thisX = lastX,
                 thisY = lastY
 
+              // Start new row
               if(thisX + size.w > printablePageSize.w) {
-                // new row detected
                 // if x is past width (right side of medium page), reset x and increment y
                 thisX = lastX = 0
                 thisY = lastY = lastY + size.h
+                // TODO: + spacer if spacing enabled
 
+                // Start new page
                 if(thisY + size.h > printablePageSize.h) {
-                  // new page detected
                   // if y is past height (bottom of medium page), reset y and increment page
                   thisY = lastY = 0
                   currentPage += 1
@@ -159,6 +163,7 @@ const publicApi = {
               })
 
               lastX += size.w
+              // TODO: + spacer if spacing enabled
               quantity -= 1
             }
           }
