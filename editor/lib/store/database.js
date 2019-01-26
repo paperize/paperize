@@ -1,5 +1,5 @@
-import { each, pick, omit } from 'lodash'
 import { LAYER_DEFAULTS } from './layers'
+import { each, isNull, isUndefined, pick, omit } from 'lodash'
 import PrintModule from './print'
 
 const PRINT_DEFAULT_STATE = PrintModule.state
@@ -97,8 +97,10 @@ const DatabaseModule = {
       if(dbState.layers && dbState.layers.layers) {
         each(dbState.layers.layers, (layer) => {
           each(LAYER_DEFAULTS[layer.type], (value, key) => {
-            // Default each property as needed
-            layer[key] = layer[key] || value
+            if(isNull(layer[key]) || isUndefined(layer[key])) {
+              // Default each property as needed
+              layer[key] = layer[key] || value
+            }
           })
         })
       }
