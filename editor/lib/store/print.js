@@ -9,6 +9,7 @@ const PrintModule = {
     mode: MODE_AUTO_LAYOUT,
     width: 8.3,
     height: 11,
+    componentSpacing: false,
     marginTop: DEFAULT_MARGIN,
     marginRight: DEFAULT_MARGIN,
     marginBottom: DEFAULT_MARGIN,

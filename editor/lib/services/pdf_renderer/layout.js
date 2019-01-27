@@ -2,17 +2,19 @@ import { times } from 'lodash'
 import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE } from '../../store/print'
 import { startEmptyDocument } from './document'
 
+const COMPONENT_SPACING_AMOUNT = 0.08
+
 export function doLayout(componentSizes, printSettings) {
   const doc = startEmptyDocument()
-  let itemLocations, guideLocations
+  let itemLocations,
+    guideLocations = []
   if(printSettings.mode == MODE_AUTO_LAYOUT) {
     itemLocations = autoLayoutItems(doc, componentSizes, printSettings)
   } else if(printSettings.mode == MODE_COMPONENT_PER_PAGE) {
     itemLocations = componentPerPageItemLayout(doc, componentSizes, printSettings)
-    guideLocations = []
   }
 
-  return { doc, itemLocations }
+  return { doc, itemLocations, guideLocations }
 }
 
 export function autoLayoutItems(doc, componentSizes, printSettings) {
@@ -77,7 +79,7 @@ export function autoLayoutItems(doc, componentSizes, printSettings) {
         currentPage += 1
 
         // TODO: look up spacer settings
-        const spacer = .16
+        const spacer = printSettings.componentSpacing ? COMPONENT_SPACING_AMOUNT : 0
 
         // once per item
         while(quantity > 0){

@@ -19,17 +19,17 @@ v-card
         p This allows advanced users to do their own layout.
         span Paperize will place each component onto a page of its own, sized exactly to the component with no margins. Advanced users can then do their own layout.
 
+
     template(v-if="printMode == MODE_AUTO_LAYOUT")
       //- Paper Size
       v-label
         strong Paper Size
+      v-divider
 
       div
         v-btn-toggle(v-model="paperMode")
           v-btn(flat value="standard") Standard Sizes
           v-btn(flat value="custom") Custom Size
-
-      v-divider
 
       //- Standard Sizes
       div(v-if="paperMode == 'standard'")
@@ -45,9 +45,18 @@ v-card
         v-text-field(box v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
         v-text-field(box v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
 
+
+      v-label
+        strong Component Spacing
+      v-divider
+
+      v-checkbox(label="Enable Spacing?" v-model="componentSpacing")
+
+
       //- Margins
       v-label
         strong Minimum Margins
+      v-divider
 
       p How close to the edge will your printer allow you to print?
 
@@ -119,6 +128,16 @@ v-card
         set(height) {
           this.updatePrintSettings({ height })
         },
+      },
+
+      componentSpacing: {
+        get() {
+          return this.getPrintSettings.componentSpacing
+        },
+
+        set(componentSpacing) {
+          this.updatePrintSettings({ componentSpacing })
+        }
       },
 
       marginTop: {
