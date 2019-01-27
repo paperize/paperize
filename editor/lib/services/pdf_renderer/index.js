@@ -48,7 +48,7 @@ const publicApi = {
         return renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
       })
     }).then(() => {
-        "S")
+      // TODO: process guideLocations and render cut lines
 
     }).then(() => {
       const filenameOfDownload = `${game.title || "Game"}.pdf`
