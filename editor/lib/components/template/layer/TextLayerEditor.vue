@@ -9,12 +9,9 @@ v-expansion-panel#text-layer-editor(popout)
     v-card
       v-card-text
         v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()" box)
-
         v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
-
-        v-text-field.text-size(v-model="textSize" type="number" min="1" max="128" label="Text Size" box)
-
-        color-picker(v-model="textColor")
+        v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
+        color-picker(label="Text Color" v-model="textColor")
 
   v-expansion-panel-content
     div(slot="header") Text Alignment
