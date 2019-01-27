@@ -32,11 +32,11 @@ v-card
           v-btn(flat value="custom") Custom Size
 
       //- Standard Sizes
-      div(v-if="paperMode == 'standard'")
+      div(v-if="paperMode != 'custom'")
         p Most home printers use A4 or Letter paper. Select "Universal" if you'd like a print that will work on either.
 
-        v-select(box label="Size" :items="printOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperFormat")
-        v-select(box label="Orientation" :items="orientationOptions" item-text="name" item-value="value" @change="updatePageDimensions" v-model="paperOrientation")
+        v-select(box label="Size" :items="printOptions" item-text="name" item-value="value" v-model="paper")
+        v-select(box label="Orientation" :items="orientationOptions" item-text="name" item-value="value" v-model="orientation")
 
       //- Custom Size
       template(v-else)
@@ -67,22 +67,17 @@ v-card
 </template>
 
 <script>
-  import { find, debounce } from 'lodash'
+  import { capitalize, find, debounce, map } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
-  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE } from '../../store/print'
+  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS, ORIENTATIONS } from '../../store/print'
 
-  const printOptions = [
-    { value: 'a4', name: 'A4',
-      width: 8.3, height: 11.7 },
-    { value: 'letter', name: 'Letter',
-      width: 8.5, height: 11 },
-    { value: 'universal', name: 'Universal',
-      width: 8.3, height: 11 },
-  ],
-    orientationOptions = [
-      { value: 'portrait', name: 'Portrait' },
-      { value: 'landscape', name: 'Landscape' }
-  ]
+  // Construct form-friendly collections from the print sources in the store
+  const printOptions = map(PAGE_DIMENSIONS, (dimension, key) => {
+    return { ...dimension, value: key}
+  }),
+    orientationOptions = map(ORIENTATIONS, (orientation) => {
+      return { name: capitalize(orientation), value: orientation }
+    })
 
   export default {
     data() {
@@ -91,9 +86,6 @@ v-card
         MODE_COMPONENT_PER_PAGE,
         printOptions,
         orientationOptions,
-        paperMode: 'standard',
-        paperFormat: '',
-        paperOrientation: 'portrait',
       }
     },
 
@@ -110,13 +102,47 @@ v-card
         },
       },
 
+      paperMode: {
+        get() {
+          return this.paper === "custom" ? "custom" : "standard"
+        },
+
+        set(mode) {
+          if(mode === "custom") {
+            this.paper = "custom"
+          } else {
+            this.paper = "universal"
+          }
+        }
+      },
+
+      paper: {
+        get() {
+          return this.getPrintSettings.paper
+        },
+
+        set(paper) {
+          this.updatePrintSettings({ paper })
+        },
+      },
+
+      orientation: {
+        get() {
+          return this.getPrintSettings.orientation
+        },
+
+        set(orientation) {
+          this.updatePrintSettings({ orientation })
+        },
+      },
+
       paperWidth: {
         get() {
           return this.getPrintSettings.width
         },
 
         set(width) {
-          this.updatePrintSettings({ width })
+          this.updatePrintSettings({ customWidth: width })
         },
       },
 
@@ -126,7 +152,7 @@ v-card
         },
 
         set(height) {
-          this.updatePrintSettings({ height })
+          this.updatePrintSettings({ customHeight: height })
         },
       },
 
@@ -186,38 +212,6 @@ v-card
       updatePrintSettings: debounce(function(attributes) {
         this.$store.dispatch("updatePrintSettings", attributes)
       }, 200),
-
-      setPaperMode(mode) {
-        this.paperMode = mode
-
-        if(this.paperMode != "standard") {
-          this.paperFormat = ""
-          this.paperOrientation = "portrait"
-        }
-      },
-
-      updatePageDimensions() {
-        if(this.paperFormat.length == 0) { return }
-
-        let format = find(printOptions, { value: this.paperFormat })
-          , width = format.width
-          , height = format.height
-          , smallerDimension = Math.min(width, height)
-          , largerDimension = Math.max(width, height)
-
-        if(this.paperOrientation == 'portrait') {
-          this.updatePrintSettings({
-            width: smallerDimension,
-            height: largerDimension
-          })
-
-        } else if(this.paperOrientation == 'landscape') {
-          this.updatePrintSettings({
-            width: largerDimension,
-            height: smallerDimension
-          })
-        }
-      }
     }
   }
 </script>
