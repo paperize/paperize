@@ -1,4 +1,4 @@
-import { find, reduce, times } from 'lodash'
+import { find, isNaN, reduce, times } from 'lodash'
 import uuid from 'uuid/v4'
 
 import { generateCrud } from './util/vuex_resource'
@@ -57,7 +57,11 @@ const ComponentModel = {
           return reduce(sourceItems, (expandedItems, item) => {
             let foundProperty = find(item, {key: component.quantityProperty}),
               rawQuantity = (foundProperty || {}).value,
-              quantity = parseInt(rawQuantity, 10) || 1
+              quantity = parseInt(rawQuantity, 10)
+
+            if(isNaN(quantity)) {
+              quantity = 1
+            }
 
             times(quantity, () => expandedItems.push(item))
 
