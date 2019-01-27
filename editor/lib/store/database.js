@@ -105,9 +105,14 @@ const DatabaseModule = {
         })
       }
 
-      each(PRINT_DEFAULT_STATE, (value, key) => {
-        dbState.print[key] = dbState.print[key]  || value
-      })
+      // Print settings
+      if(dbState.print) {
+        each(PRINT_DEFAULT_STATE, (value, key) => {
+          dbState.print[key] = dbState.print[key]  || value
+        })
+        if(dbState.print.width) { delete dbState.print.width }
+        if(dbState.print.height) { delete dbState.print.height }
+      }
 
       return dbState
     }
