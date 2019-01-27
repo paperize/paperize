@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip
-      span.caption(slot="activator")= " ver.A5.3.1"
+      span.caption(slot="activator")= " ver.A5.4"
       | Alpha 5 "Reclusive Scrivener " {{ gitSha }}
 
   v-spacer
@@ -28,17 +28,25 @@ v-toolbar(app)
     //- template(v-else)
     //-   v-btn(flat) About
     profile
+    print-status
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import Profile from './Profile.vue'
   import ImageLibrary from '../image/ImageLibrary.vue'
+  import PrintStatus from '../print/PrintStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
   import NetworkManager from '../network/NetworkManager.vue'
 
   export default {
-    components: { Profile, DatabaseManager, ImageLibrary, NetworkManager },
+    components: {
+      Profile,
+      DatabaseManager,
+      PrintStatus,
+      ImageLibrary,
+      NetworkManager,
+    },
 
     data() {
       return {

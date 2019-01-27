@@ -8,7 +8,10 @@ import Vue from 'vue'
 import store from './store'
 // long-term store
 import storeSync from './services/store_sync'
-storeSync.initialize(store)
+// This comes from the webpack variables
+if(!process.env.NO_SYNC) {
+  storeSync.initialize(store)
+}
 // routing
 import router from './routes'
 
@@ -26,8 +29,11 @@ Vue.use(Vuetify, {
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
+import VueObserveVisibility from 'vue-observe-visibility'
+Vue.use(VueObserveVisibility)
+
 // test-specific settings and globals
-if(process.env.NODE_ENV == 'test') {
+if(process.env.NODE_ENV !== 'production') {
   Vue.config.productionTip = false
   Vue.config.devtools = false
 

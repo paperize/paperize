@@ -27,6 +27,8 @@ const
     "setActiveLayer",
     "clearActiveLayer",
     "setLayerHighlighting",
+    "setPrintJobStatus",
+    "setStatusWindowOpen",
   ]
 
 let vuex,

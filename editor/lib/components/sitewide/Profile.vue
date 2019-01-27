@@ -67,7 +67,12 @@ v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
         // Helpful information inside our app about the Google login process
         this.showPopupHelper = true
         // Start the Google login process
-        return this.login().then(() => this.showPopupHelper = false)
+        return this.login().then(() => {
+          if(!this.loginError) {
+            // Don't hide if there was an error to see
+            this.showPopupHelper = false
+          }
+        })
       },
     }
   }

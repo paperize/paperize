@@ -31,7 +31,7 @@ v-container(grid-list-xl fluid)
 
       p.headline.text-xs-center Paperize is Free (as in Free)
 
-      p.body-2 Paperize is "free as in beer", which means "you can have this piece of software to use as you wish."
+      p.body-2 Paperize is "free as in pizza", which means "you can have this piece of software to use as you wish."
 
       p.body-2 Paperize is "free as in speech", which means "you can inspect, modify, and distribute the source code of this software." (Not actually open source yet, but coming soon.)
 

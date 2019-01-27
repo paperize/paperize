@@ -15,6 +15,7 @@ describe "Text Layers", ->
     cy.contains("[text] 1")
 
   it "uses a template", ->
+    cy.contains("Text Content").click()
     cy.get(".text-content textarea")
       .type("""
         n: {{}{{}n}}

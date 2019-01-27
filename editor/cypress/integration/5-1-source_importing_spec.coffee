@@ -1,5 +1,3 @@
-Promise = require('bluebird')
-
 describe "Importing Sources", ->
   beforeEach ->
     cy.loginAndEditGame()

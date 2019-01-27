@@ -19,11 +19,10 @@ v-layout(column)
           v-btn(flat @click="createLayer('text')") Text
           v-btn(flat @click="createLayer('image')") Image
           v-btn(flat @click="createLayer('shape')") Shape
-          v-btn(flat @click="createLayer('code')") Code
 
   v-list
     draggable(v-model="templateLayers")
-      v-list-tile(avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })")
+      v-list-tile(ripple avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
         v-list-tile-avatar
           v-avatar(color="primary" size="36")
             span.white--text.headline.text-capitalize {{ layer.type[0] }}
@@ -128,3 +127,9 @@ v-layout(column)
     }
   }
 </script>
+
+<style scoped>
+  .selected {
+    background-color: lightgray;
+  }
+</style>

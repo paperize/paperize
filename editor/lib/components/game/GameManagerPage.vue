@@ -8,9 +8,9 @@ v-container(fluid)
         v-btn(slot="activator" small disabled) Load Example
         span Coming Soon!
 
-      v-dialog(max-width="500" lazy)
+      v-dialog(v-model="showGameForm" max-width="500" lazy)
         v-btn(slot="activator" small) New Game
-        game-form
+        game-form(@close-dialog="showGameForm = false")
 
     v-flex(sm12)
       v-layout(row wrap)
@@ -24,6 +24,12 @@ v-container(fluid)
 
   export default {
     components: { GameCard, GameForm },
+
+    data() {
+      return {
+        showGameForm: false
+      }
+    },
 
     computed: mapGetters(["allGames"])
   }

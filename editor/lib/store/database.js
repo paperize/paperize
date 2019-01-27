@@ -1,5 +1,16 @@
-import { each, pick, omit } from 'lodash'
 import { LAYER_DEFAULTS } from './layers'
+import { each, isNull, isUndefined, pick, omit } from 'lodash'
+import PrintModule from './print'
+
+const PRINT_DEFAULT_STATE = PrintModule.state
+
+const UNPERSISTED_STATE_KEYS = [
+  "user",
+  "database",
+  "ui",
+  "ui_print",
+  "google"
+]
 
 const DatabaseModule = {
   state: {
@@ -25,11 +36,11 @@ const DatabaseModule = {
     driveUrl: () => driveId => `https://drive.google.com/file/d/${driveId}/edit?usp=sharing`,
 
     databaseState: (_, __, rootState) => {
-      return omit(rootState, ["user", "database", "ui", "google"])
+      return omit(rootState, UNPERSISTED_STATE_KEYS)
     },
 
     nonPersistedState: (_, __, rootState) => {
-      return pick(rootState, ["user", "database", "ui", "google"])
+      return pick(rootState, UNPERSISTED_STATE_KEYS)
     }
   },
 
@@ -86,10 +97,21 @@ const DatabaseModule = {
       if(dbState.layers && dbState.layers.layers) {
         each(dbState.layers.layers, (layer) => {
           each(LAYER_DEFAULTS[layer.type], (value, key) => {
-            // Default each property as needed
-            layer[key] = layer[key] || value
+            if(isNull(layer[key]) || isUndefined(layer[key])) {
+              // Default each property as needed
+              layer[key] = layer[key] || value
+            }
           })
         })
+      }
+
+      // Print settings
+      if(dbState.print) {
+        each(PRINT_DEFAULT_STATE, (value, key) => {
+          dbState.print[key] = dbState.print[key]  || value
+        })
+        if(dbState.print.width) { delete dbState.print.width }
+        if(dbState.print.height) { delete dbState.print.height }
       }
 
       return dbState

@@ -52,12 +52,14 @@ Cypress.Commands.add "loginAndEditGame", ->
     vuex.commit("setTemplates", templates)
     vuex.dispatch("setActiveGame", loveLetter.id)
     vuex.dispatch("setActiveComponent", loveLetter.componentIds[0])
+    vuex.dispatch("setStoreReady")
 
   .visitActiveGameAndComponent()
 
 Cypress.Commands.add "login", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { users } }) ->
     vuex.dispatch("become", users[0])
+    vuex.dispatch("setStoreReady")
 
 Cypress.Commands.add "loadGamesIntoVuex", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { games } }) ->

@@ -24,48 +24,56 @@ if(gitChanges.length == 0) {
   }
 }
 
-module.exports = {
-  entry: './lib/main.js',
-  output: {
-    filename: 'editor.js',
-    path: path.resolve(__dirname, 'build')
-  },
-  plugins: [
-    new webpack.EnvironmentPlugin({
-      'GIT_SHA': gitSha,
-      'GIT_CHANGE_INFO': gitChanges
-    }),
+module.exports = (env) => {
+  env = env || {}
 
-    new CopyWebpackPlugin([
-      { context: 'static', from: '**' }
-    ]),
+  return {
+    entry: './lib/main.js',
 
-    new VueLoaderPlugin()
-  ],
-  module: {
-    noParse: /file-api/,
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        loader: 'babel-loader'
-      }, {
-        test: /\.vue$/,
-        exclude: /(node_modules)/,
-        loader: 'vue-loader'
-      }, {
-        test: /\.pug$/,
-        loader: 'pug-plain-loader'
-      }, {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'vue-style-loader'
-          }, {
-            loader: 'css-loader'
-          }
-        ]
-      }
-    ]
+    output: {
+      filename: 'editor.js',
+      path: path.resolve(__dirname, 'build')
+    },
+
+    plugins: [
+      new webpack.EnvironmentPlugin({
+        GIT_SHA: gitSha,
+        GIT_CHANGE_INFO: gitChanges,
+        NO_SYNC: !!env.NO_SYNC
+      }),
+
+      new CopyWebpackPlugin([
+        { context: 'static', from: '**' }
+      ]),
+
+      new VueLoaderPlugin()
+    ],
+
+    module: {
+      noParse: /file-api/,
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules)/,
+          loader: 'babel-loader'
+        }, {
+          test: /\.vue$/,
+          exclude: /(node_modules)/,
+          loader: 'vue-loader'
+        }, {
+          test: /\.pug$/,
+          loader: 'pug-plain-loader'
+        }, {
+          test: /\.css$/,
+          use: [
+            {
+              loader: 'vue-style-loader'
+            }, {
+              loader: 'css-loader'
+            }
+          ]
+        }
+      ]
+    }
   }
 }

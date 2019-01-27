@@ -1,4 +1,4 @@
-import { map, max, orderBy } from 'lodash'
+import { find, includes, map, max, orderBy } from 'lodash'
 
 import { generateCrud } from './util/vuex_resource'
 
@@ -31,6 +31,12 @@ const TemplateModel = {
     getTemplateNextLayerOrder: (_, getters) => template => {
       let layers = getters.findAllTemplateLayers(template)
       return (max(map(layers, "renderOrder")) + 1) || 0
+    },
+
+    findTemplateByLayerId: state => layerId => {
+      return find(state.templates, (template) => {
+        return includes(template.layerIds, layerId)
+      })
     },
   },
 

@@ -1,7 +1,4 @@
 require "./store/games_spec.coffee"
-require "./store/user_spec.coffee"
-require "./store/persistence_spec.coffee"
-require "./asset/image_library_spec.coffee"
 
 chai = require("chai")
 global.expect = chai.expect

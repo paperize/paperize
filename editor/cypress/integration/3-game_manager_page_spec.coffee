@@ -15,8 +15,8 @@ describe "Game Manager page", ->
       it "lets me create a new game", ->
         cy.get("button").contains("New Game").click()
 
-        cy.typeIntoSelectors
-          ".game-title input": "Love Letter"
+        cy.get(".game-title input").type("Love Letter")
+        cy.get(".game-create-drive-folder input").click(force: true)
 
         cy.get("button").contains("Start Designing").click()
 
@@ -29,6 +29,7 @@ describe "Game Manager page", ->
           cy.contains("New Game").click()
           cy.get(".game-title input").invoke("val").should("eq", "")
           cy.get(".game-title input").type(title)
+          cy.get(".game-create-drive-folder input").click(force: true)
           cy.get("button").contains("Start Designing").click()
           cy.contains(title)
 

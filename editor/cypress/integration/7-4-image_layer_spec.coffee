@@ -1,4 +1,4 @@
-describe "Text Layers", ->
+describe "Image Layers", ->
   beforeEach ->
     cy.loginAndEditGame()
     cy.get("#template-editor").within ->

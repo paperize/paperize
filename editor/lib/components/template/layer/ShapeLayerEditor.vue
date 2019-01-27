@@ -1,20 +1,36 @@
 <template lang="pug">
-#shape-settings
-  .subheading Shape
+v-expansion-panel#shape-layer-editor(popout)
+  name-editor(:layer="layer")
 
-  v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape")
+  dimension-editor(:layer="layer")
 
-  v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
-  color-picker(v-if="strokePresent" v-model="strokeColor")
-  v-text-field(v-if="strokePresent" type="number" step="0.01" v-model.number="strokeWidth")
+  v-expansion-panel-content
+    div(slot="header") Shape
+    v-card
+      v-card-text
+        v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" box)
 
-  v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
-  color-picker(v-if="fillPresent" v-model="fillColor")
+  v-expansion-panel-content
+    div(slot="header") Stroke
+    v-card
+      v-card-text
+        v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
+        v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" box)
+        color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
+
+  v-expansion-panel-content
+    div(slot="header") Fill
+    v-card
+      v-card-text
+        v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
+        color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" box)
 </template>
 
 <script>
   import { mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
+  import NameEditor from './NameEditor.vue'
+  import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
 
   const shapeOptions = [
@@ -26,7 +42,11 @@
   export default {
     props: ["layer"],
 
-    components: { ColorPicker },
+    components: {
+      NameEditor,
+      DimensionEditor,
+      ColorPicker,
+    },
 
     data() {
       return {

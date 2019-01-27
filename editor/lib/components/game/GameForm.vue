@@ -6,7 +6,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
-      v-checkbox(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this game?")
+      v-checkbox.game-create-drive-folder(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this game?")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}

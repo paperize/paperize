@@ -6,7 +6,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-      v-checkbox( v-model="createDriveFolder" label="Create a Google Drive Folder for this component?")
+      v-checkbox.component-create-drive-folder(v-model="createDriveFolder" label="Create a Google Drive Folder for this component?")
 
     v-card-actions
       v-btn(small success @click="submitComponent") Create Component

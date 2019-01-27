@@ -52,13 +52,10 @@ describe "Game Editor page", ->
       cy.contains("New Component").click()
 
       cy.get(".component-form").within ->
-        cy.contains("Component:")
+        cy.contains("New Component")
         cy.typeIntoSelectors ".component-title input": 'Random Encounters'
-        cy.get('.paper-format').click()
-
-      cy.contains('Poker-sized Cards').click()
-      cy.get(".component-form").within ->
-        cy.contains("Close").click()
+        cy.get(".component-create-drive-folder input").click(force: true)
+        cy.contains("Create Component").click()
 
       cy.get('.component.active .headline')
         .contains("Random Encounters")
@@ -77,7 +74,7 @@ describe "Game Editor page", ->
       cy.get('.paper-format').click()
       cy.contains('Whole Page (A4)').click()
       cy.get('.component-form')
-        .contains("Close")
+        .contains("Done")
         .click()
 
       cy.contains("Instruction Manual")
