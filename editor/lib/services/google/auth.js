@@ -1,6 +1,5 @@
 /* global gapi process */
 
-
 const CLIENT_ID      = "991093846081-9fps02e3ijk98hpetv0jvpjqm195as2m.apps.googleusercontent.com"
 const DISCOVERY_DOCS = [
   "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", // Drive
@@ -12,7 +11,7 @@ let clientLoadedPromise = null
 const ensureClientLoaded = function() {
   if(!clientLoadedPromise) {
     clientLoadedPromise = new Promise((resolve, reject) => {
-      gapi.load('client:auth2', {
+      gapi.load('client:auth2:picker', {
         callback() { // Handle gapi.client initialization.
           resolve()
         },
@@ -80,6 +79,15 @@ const isSignedIn = function() {
   })
 }
 
+const getAccessToken = function() {
+  return new Promise((resolve) => {
+    getCurrentUser().then((currentUser) => {
+      const authResponse = currentUser.getAuthResponse(true)
+      resolve(authResponse.access_token)
+    })
+  })
+}
+
 const googleUserProfileObject = function(googleUser) {
   const profile = googleUser.getBasicProfile()
   return {
@@ -131,5 +139,5 @@ if(process.env.NODE_ENV === 'test' && typeof window !== 'undefined') {
   window.auth = api
 }
 
-export default { getClient, registerSignInListener, isSignedIn, getCurrentUser, signIn, signOut }
-export { getClient, registerSignInListener, isSignedIn, getCurrentUser, signIn, signOut }
+export default { getClient, registerSignInListener, isSignedIn, getCurrentUser, getCurrentUserProfile, getAccessToken, signIn, signOut }
+export { getClient, registerSignInListener, isSignedIn, getCurrentUser, getCurrentUserProfile, getAccessToken, signIn, signOut }
