@@ -34,9 +34,6 @@ Vue.use(VueObserveVisibility)
 
 // test-specific settings and globals
 if(process.env.NODE_ENV !== 'production') {
-  Vue.config.productionTip = false
-  Vue.config.devtools = false
-
   window.paperize = { store }
 }
 
