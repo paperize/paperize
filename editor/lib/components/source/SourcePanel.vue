@@ -5,10 +5,16 @@ v-flex#source-editor(sm4 md6)
   template(v-if="componentSource")
     .subheading
       | {{ componentSource.name }}
-      v-btn(fab small @click="showSourceManager = true")
-        v-icon edit
+      v-tooltip(top)
+        v-btn(slot="activator" fab small @click="pickSheetFromDrive")
+          v-icon edit
+        span Select a different Source
+      v-tooltip(top)
+        v-btn(slot="activator" fab small @click="downloadAndSaveSource(componentSource.id)")
+          v-icon refresh
+        span Refresh (last refresh: {{ lastRefresh }})
 
-    v-tooltip(top)
+    v-tooltip(bottom)
       v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourceProperties")
       | A quantity property duplicates an item any number of times.
 
@@ -20,27 +26,18 @@ v-flex#source-editor(sm4 md6)
     p
       strong This component does not have a data Source set.
 
-    v-btn(small color="primary" @click="showSourceManager = true") Set a Source...
-
-  v-dialog(v-model="showSourceManager" lazy max-width="550")
-    source-manager(:component="component" @close-dialog="showSourceManager = false")
+    v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
+    v-btn(small color="primary" @click="") Create New Source
 </template>
 
 <script>
+  import moment from 'moment'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdate } from '../util/component_helper'
-  import SourceManager from './SourceManager.vue'
+  import { openDrivePicker } from '../../services/google/picker'
 
   export default {
     props: ["component"],
-
-    components: { SourceManager },
-
-    data() {
-      return {
-        showSourceManager: false
-      }
-    },
 
     computed: {
       ...mapGetters([
@@ -50,11 +47,28 @@ v-flex#source-editor(sm4 md6)
         "activeSourceProperties"
       ]),
 
+      lastRefresh() {
+        return moment(this.componentSource.refreshedAt).fromNow()
+      },
+
       quantityProperty: computedVModelUpdate("component", "updateComponent", "quantityProperty"),
 
       componentSource() { return this.findComponentSource(this.component) },
     },
 
-    methods: mapActions(["updateComponent"])
+    methods: {
+      ...mapActions(["updateComponent", "linkComponentSource", "downloadAndSaveSource"]),
+
+      pickSheetFromDrive() {
+        return openDrivePicker().then((pickedId) => {
+          if(pickedId) {
+            this.downloadAndSaveSource(pickedId)
+              .then((sourceId) => {
+                this.linkComponentSource({ component: this.component, source: sourceId })
+              })
+          }
+        })
+      }
+    }
   }
 </script>
