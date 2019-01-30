@@ -7,7 +7,7 @@ const SourceModel = {
 
   create(fetchedSource) {
     if(!fetchedSource.id) {
-      throw new Error("Attempted to import a remote source without and id.")
+      throw new Error("Attempted to import a remote source without an id.")
     }
 
     return fetchedSource
@@ -57,26 +57,27 @@ const SourceModel = {
         .then(sheets => commit("setRemoteSources", sheets))
     },
 
-    importRemoteSource({ dispatch }, remoteSourceId) {
-      return dispatch("createOrUpdateSourceById", remoteSourceId)
-    },
-
-    createOrUpdateSourceById({ getters, dispatch, commit }, remoteSourceId) {
+    downloadAndSaveSource({ dispatch }, remoteSourceId) {
       // fetch sheet from google
       return dispatch("googleFetchSheetById", remoteSourceId)
         .then((fetchedSource) => {
-          // check if it's new or existing
-          if(getters.sourceExists(fetchedSource.id)) {
-            // if we already have it, refresh it
-            commit("updateSource", fetchedSource)
-          } else {
-            // if we don't have it, add it
-            commit("createSource", fetchedSource)
-          }
-
-          dispatch("updateComponent", { ...getters.activeComponent, sourceId: fetchedSource.id })
-          return null
+          return dispatch("createOrUpdateSource", fetchedSource)
         })
+    },
+
+    createOrUpdateSource({ commit, getters }, source) {
+      // bump the refresh time
+      source.refreshedAt = Date.now()
+      // check if it's new or existing
+      if(getters.sourceExists(source.id)) {
+        // if we already have it, refresh it
+        commit("updateSource", source)
+      } else {
+        // if we don't have it, add it
+        commit("createSource", source)
+      }
+
+      return Promise.resolve(source.id)
     },
   }
 }
