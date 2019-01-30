@@ -2,26 +2,34 @@
 v-flex#source-editor(sm4 md6)
   .headline Source
 
+  //- We have a source to work with
   template(v-if="componentSource")
     .subheading
       | {{ componentSource.name }}
+
+      //- Change this source?
       v-tooltip(top)
         v-btn(slot="activator" fab small @click="pickSheetFromDrive")
           v-icon edit
         span Select a different Source
+
+      //- Refresh this source from Drive?
       v-tooltip(top)
         v-btn(slot="activator" fab small @click="downloadAndSaveSource(componentSource.id)")
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
+    //- Quantity Property
     v-tooltip(bottom)
       v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourceProperties")
       | A quantity property duplicates an item any number of times.
 
+    //- List of Properties
     .subheading Available Properties
     ul.source-properties
       li(v-for="property in sourceProperties(componentSource)") {{ property }}
 
+  //- We need to set a source
   template(v-else)
     p
       strong This component does not have a data Source set.
@@ -64,7 +72,7 @@ v-flex#source-editor(sm4 md6)
           if(pickedId) {
             this.downloadAndSaveSource(pickedId)
               .then((sourceId) => {
-                this.linkComponentSource({ component: this.component, source: sourceId })
+                this.linkComponentSource({ component: this.component, sourceId })
               })
           }
         })

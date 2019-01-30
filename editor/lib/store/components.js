@@ -77,8 +77,8 @@ const ComponentModel = {
   },
 
   actions: {
-    linkComponentSource({ commit }, { component, source }) {
-      commit("updateComponent", { ...component, sourceId: source.id })
+    linkComponentSource({ commit }, { component, sourceId }) {
+      commit("updateComponent", { ...component, sourceId })
     },
 
     unlinkComponentSource({ commit }, component) {
