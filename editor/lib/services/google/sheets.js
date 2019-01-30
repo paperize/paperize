@@ -1,4 +1,5 @@
-import { map, pick } from 'lodash'
+/* global process */
+import { map } from 'lodash'
 
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
