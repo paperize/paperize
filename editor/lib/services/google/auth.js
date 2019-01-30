@@ -92,10 +92,16 @@ const googleUserProfileObject = function(googleUser) {
 const getCurrentUser = function() {
   return new Promise((resolve) => {
     getAuth2((auth2) => {
-      // resolve(auth2.isSignedIn.get())
-      let googleUser = auth2.currentUser.get(),
-        profile = googleUserProfileObject(googleUser)
+      const googleUser = auth2.currentUser.get()
+      resolve(googleUser)
+    })
+  })
+}
 
+const getCurrentUserProfile = function() {
+  return new Promise((resolve) => {
+    getCurrentUser().then((googleUser) => {
+      const profile = googleUserProfileObject(googleUser)
       resolve(profile)
     })
   })
