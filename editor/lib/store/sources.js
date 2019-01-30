@@ -13,13 +13,9 @@ const SourceModel = {
     return fetchedSource
   },
 
-  state: {
-    remoteSources: []
-  },
+  state: { },
 
   getters: {
-    remoteSources: state => state.remoteSources,
-
     getSourceItems: (state, getters) => source => {
       const propertyNames = getters.sourceProperties(source),
         valuesWithoutHeader = source.data.values.slice(1)
@@ -44,19 +40,9 @@ const SourceModel = {
     }
   },
 
-  mutations: {
-    setRemoteSources(state, sources) {
-      state.remoteSources = sources
-    },
-  },
+  mutations: { },
 
   actions: {
-    fetchRemoteSources({ commit, dispatch }) {
-      // fetch listing from google
-      dispatch("googleFetchSheets")
-        .then(sheets => commit("setRemoteSources", sheets))
-    },
-
     downloadAndSaveSource({ dispatch }, remoteSourceId) {
       // fetch sheet from google
       return dispatch("googleFetchSheetById", remoteSourceId)

@@ -20,43 +20,6 @@ let api = {
 
   matchGoogleId,
 
-  fetchSheets() {
-    return new Promise((resolve, reject) => {
-      getClient((client) => {
-        client.drive.files.list({
-          // Query for spreadsheets only
-          q: "mimeType='application/vnd.google-apps.spreadsheet'",
-          // Order them by most recent (seems to be most relevant)
-          orderBy: "recency desc"
-        }).then((driveResponse) => {
-          let driveResult = driveResponse.result
-          let fileIdsAndNames = map(driveResult.files, (file) => pick(file, [ "id", "name" ]) )
-          resolve(fileIdsAndNames)
-        }, (driveError) => {
-          reject(new Error(driveError.result.error.message))
-        })
-      })
-    })
-  },
-
-  fetchSheetData(sheet) {
-    return new Promise((resolve) => {
-      getClient((client) => {
-        return client.sheets.spreadsheets.values.get({
-          spreadsheetId: sheet.id,
-          range:         'Sheet1' // TODO: Can't rely on this in reality
-        }).then((sheetsResponse) => {
-          let sheetsResult = sheetsResponse.result
-          // resolve with the sheet metadata and data
-          resolve({
-            ...sheet,
-            data: sheetsResult
-          })
-        })
-      })
-    })
-  },
-
   fetchSheetById(sheetId) {
     return new Promise((resolve, reject) => {
       let googleId = matchGoogleId(sheetId)

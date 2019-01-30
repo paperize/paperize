@@ -107,12 +107,6 @@ const GoogleModule = {
           promise: drive.downloadFile(fileId) })
     },
 
-    googleFetchSheets({ dispatch }) {
-      return dispatch("traceNetworkRequest",
-        { name: `Fetch Sheets.`,
-          promise: sheets.fetchSheets() })
-    },
-
     googleFetchSheetById({ dispatch }, sourceId) {
       return dispatch("traceNetworkRequest",
         { name: `Fetch Sheet.`,
