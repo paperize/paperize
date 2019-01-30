@@ -1,6 +1,7 @@
 /* global require, __dirname, module */
 var webpack = require('webpack')
   , CopyWebpackPlugin = require('copy-webpack-plugin')
+  , MomentLocalesPlugin = require('moment-locales-webpack-plugin')
   , VueLoaderPlugin = require('vue-loader/lib/plugin')
   , path = require('path')
   , shell = require('shelljs')
@@ -45,6 +46,8 @@ module.exports = (env) => {
       new CopyWebpackPlugin([
         { context: 'static', from: '**' }
       ]),
+
+      new MomentLocalesPlugin(),
 
       new VueLoaderPlugin()
     ],
