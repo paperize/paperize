@@ -33,11 +33,6 @@ const SourceModel = {
 
       return theProperties
     },
-
-    activeSourceProperties: (_, getters, __, rootGetters) => {
-      return rootGetters.activeSource &&
-        getters.sourceProperties(rootGetters.activeSource)
-    }
   },
 
   mutations: { },

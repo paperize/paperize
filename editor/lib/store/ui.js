@@ -21,6 +21,11 @@ const UIModule = {
       }
     },
 
+    activeSourceProperties: (_, getters, __, rootGetters) => {
+      return getters.activeSource &&
+        rootGetters.sourceProperties(getters.activeSource)
+    },
+
     activeLayer(state, _, __, rootGetters) {
       return rootGetters.findLayer(state.activeLayerId, false)
     },
