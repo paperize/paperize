@@ -80,11 +80,15 @@ const ComponentModel = {
 
   actions: {
     linkComponentSource({ commit }, { component, sourceId }) {
-      commit("updateComponent", { ...component, sourceId })
+      commit("updateComponent", { ...component, sourceId, worksheetId: null, quantityProperty: null })
+    },
+
+    setComponentWorksheet({ commit }, { component, worksheetId }) {
+      commit("updateComponent", { ...component, worksheetId, quantityProperty: null })
     },
 
     unlinkComponentSource({ commit }, component) {
-      commit("updateComponent", { ...component, sourceId: null })
+      commit("updateComponent", { ...component, sourceId: null, worksheetId: null, quantityProperty: null })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {

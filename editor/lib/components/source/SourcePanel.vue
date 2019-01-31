@@ -59,9 +59,13 @@ v-flex#source-editor(sm4 md6)
       ]),
 
       ...computedVModelUpdateAll("component", "updateComponent", [
-        "worksheetId",
         "quantityProperty"
       ]),
+
+      worksheetId: {
+        get() { return this.component.worksheetId },
+        set(worksheetId) { this.setComponentWorksheet({ component: this.component, worksheetId }) }
+      },
 
       activeSourcePropertiesWithNull() {
         return [ { text: 'No Quantity Expansion', value: null }, ...this.activeSourceProperties ]
@@ -79,7 +83,12 @@ v-flex#source-editor(sm4 md6)
     },
 
     methods: {
-      ...mapActions(["updateComponent", "linkComponentSource", "downloadAndSaveSource"]),
+      ...mapActions([
+        "updateComponent",
+        "linkComponentSource",
+        "downloadAndSaveSource",
+        "setComponentWorksheet"
+      ]),
 
       pickSheetFromDrive() {
         return openDrivePicker().then((pickedId) => {
