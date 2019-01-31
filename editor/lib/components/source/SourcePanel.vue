@@ -19,9 +19,11 @@ v-flex#source-editor(sm4 md6)
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
+      v-select(label="Worksheet" v-model="worksheetId" :items="worksheetNames")
+
     //- Quantity Property
     v-tooltip(bottom)
-      v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourceProperties")
+      v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourcePropertiesWithNull")
       | A quantity property duplicates an item any number of times.
 
     //- List of Properties
@@ -41,7 +43,7 @@ v-flex#source-editor(sm4 md6)
 <script>
   import moment from 'moment'
   import { mapGetters, mapActions } from 'vuex'
-  import { computedVModelUpdate } from '../util/component_helper'
+  import { computedVModelUpdateAll } from '../util/component_helper'
   import { openDrivePicker } from '../../services/google/picker'
 
   export default {
@@ -52,14 +54,26 @@ v-flex#source-editor(sm4 md6)
         "sourceProperties",
         "findComponentSource",
         "findComponentTemplate",
-        "activeSourceProperties"
+        "activeSourceProperties",
+        "getSourceWorksheetNames"
       ]),
+
+      ...computedVModelUpdateAll("component", "updateComponent", [
+        "worksheetId",
+        "quantityProperty"
+      ]),
+
+      activeSourcePropertiesWithNull() {
+        return [ { text: 'No Quantity Expansion', value: null }, ...this.activeSourceProperties ]
+      },
 
       lastRefresh() {
         return moment(this.componentSource.refreshedAt).fromNow()
       },
 
-      quantityProperty: computedVModelUpdate("component", "updateComponent", "quantityProperty"),
+      worksheetNames() {
+        return this.getSourceWorksheetNames(this.componentSource.id)
+      },
 
       componentSource() { return this.findComponentSource(this.component) },
     },

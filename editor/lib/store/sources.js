@@ -1,6 +1,25 @@
-import { map, zipWith } from 'lodash'
+import { find, map, zipWith } from 'lodash'
 
 import { generateCrud } from './util/vuex_resource'
+
+/*
+  sources: [
+    {
+      id: 'abc-google-id-xyz',
+      name: 'Spreadsheet Name'
+      worksheets: [
+        {
+          id: 'Worksheet Name',
+          values: [
+            ['row1value1', 'row1value2'],
+            ['row2value1', 'row2value2'],
+            ['row3value1', 'row3value2'],
+          ]
+        }
+      ]
+    }
+  ]
+*/
 
 const SourceModel = {
   name: 'sources',
@@ -16,9 +35,27 @@ const SourceModel = {
   state: { },
 
   getters: {
-    getSourceItems: (state, getters) => source => {
+    getSourceWorksheetNames: (state, getters) => sourceId => {
+      const source = getters.findSource(sourceId),
+        worksheetNames = map(source.worksheets, "id")
+
+      return worksheetNames
+    },
+
+    findSourceWorksheet: (state, getters) => (sourceId, worksheetId) => {
+      const source = getters.findSource(sourceId),
+        worksheet = find(source.worksheets, { id: worksheetId })
+
+      return worksheet
+    },
+
+    getSourceWorksheetItems: (state, getters) => (source, worksheetId) => {
+      // Default to first worksheet if none given
+      worksheetId = worksheetId || source.worksheets[0].id
+
       const propertyNames = getters.sourceProperties(source),
-        valuesWithoutHeader = source.data.values.slice(1)
+        worksheet = getters.findSourceWorksheet(source.id, worksheetId),
+        valuesWithoutHeader = worksheet.values.slice(1)
 
       return map(valuesWithoutHeader, (row) => {
         return zipWith(propertyNames, row, (key, value) => {
@@ -29,7 +66,7 @@ const SourceModel = {
 
     sourceProperties: (state, getters) => source => {
       source = getters.findSource(source.id)
-      let theProperties = source.data.values[0]
+      let theProperties = source.worksheets[0].values[0]
 
       return theProperties
     },

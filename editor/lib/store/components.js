@@ -17,6 +17,7 @@ const ComponentModel = {
       title:         "",
       folderId:      null,
       sourceId:      null,
+      worksheetId:   null,
       templateId:    null,
       quantityProperty: null,
       // override with given
@@ -44,12 +45,13 @@ const ComponentModel = {
       }
     },
 
-    getComponentItems: (state, getters) => component => {
+    getComponentItems: (state, getters, _, rootGetters) => component => {
       const componentSource = getters.findComponentSource(component)
+
       if(!componentSource) {
         return []
       } else {
-        let sourceItems = getters.getSourceItems(componentSource)
+        const sourceItems = rootGetters.getSourceWorksheetItems(componentSource, component.worksheetId)
         // Handle quantity expansion
         if(!component.quantityProperty) {
           return sourceItems

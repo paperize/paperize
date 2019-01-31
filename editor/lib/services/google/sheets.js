@@ -1,22 +1,24 @@
 /* global process */
-import { map } from 'lodash'
+import { map, reduce, take } from 'lodash'
 
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
-let BadIdError = function(sheetId) {
+const BadIdError = function(sheetId) {
   this.message = `No Google Sheet ID detected in "${sheetId}"`
 }
 BadIdError.prototype = Object.create(Error.prototype)
 
-let NotFoundError = function(googleId) {
+const NotFoundError = function(googleId) {
   this.message = `No Google Sheet found for ID: "${googleId}"`
   this.googleId = googleId
   return this
 }
 NotFoundError.prototype = Object.create(Error.prototype)
 
-let api = {
+const MAX_WORKSHEETS = 10
+
+const api = {
   BadIdError, NotFoundError,
 
   matchGoogleId,
@@ -31,23 +33,39 @@ let api = {
       }
 
       getClient((client) => {
+        // worksheet names
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
-          let spreadsheetName = result.properties.title
-          let sheetsNames = map(result.sheets, "properties.title")
-          return client.sheets.spreadsheets.values.get({
-            spreadsheetId: googleId,
-            range:         sheetsNames[0] // Entire first sheet
-          }).then((sheetsResponse) => {
-            let sheetsResult = sheetsResponse.result
-            // resolve with the sheet metadata and data
-            resolve({
-              id:   googleId,
-              name: spreadsheetName,
-              data: sheetsResult
+          // extract spreadsheet name and all worksheet names
+          const spreadsheetName = result.properties.title,
+            worksheetNames = take(map(result.sheets, "properties.title"), MAX_WORKSHEETS),
+
+            // construct batch query
+            params = {
+              spreadsheetId: googleId,
+              ranges: worksheetNames
+            }
+
+          return client.sheets.spreadsheets.values.batchGet(params)
+            .then(({ result }) => {
+              // creates:
+              // {
+              //   Sheet1: [['row1cell1', 'row1cell2'], ['row2cell1', 'row2cell2']]
+              // }
+              const worksheets = map(worksheetNames, (name, index) => {
+                return {
+                  id: name,
+                  values: result.valueRanges[index].values
+                }
+              })
+
+              resolve({
+                id:   result.spreadsheetId,
+                name: spreadsheetName,
+                worksheets
+              })
             })
-          })
         }, (error) => {
           if(error.status == 404) {
             reject(new NotFoundError(googleId))

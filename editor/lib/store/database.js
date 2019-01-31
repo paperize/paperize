@@ -1,5 +1,5 @@
 import { LAYER_DEFAULTS } from './layers'
-import { each, isNull, isUndefined, pick, omit } from 'lodash'
+import { each, isNull, isUndefined, pick, omit, take } from 'lodash'
 import PrintModule from './print'
 
 const PRINT_DEFAULT_STATE = PrintModule.state
@@ -105,6 +105,7 @@ const DatabaseModule = {
         })
       }
 
+      // 5.3 -> 5.4
       // Print settings
       if(dbState.print) {
         each(PRINT_DEFAULT_STATE, (value, key) => {
@@ -112,6 +113,46 @@ const DatabaseModule = {
         })
         if(dbState.print.width) { delete dbState.print.width }
         if(dbState.print.height) { delete dbState.print.height }
+      }
+
+      // 5.4 -> 5.5
+      // Components
+      if(dbState.components && dbState.components.components) {
+        each(dbState.components.components, (component) => {
+          // Needs worksheetId property
+          component.worksheetId = component.worksheetId || null
+        })
+      }
+
+      // Sources
+      if(dbState.sources) {
+        // No longer tracking remote sources ourselves
+        if(dbState.sources.remoteSources) {
+          delete dbState.sources.remoteSources
+        }
+
+        // Move to a multiple-worksheet world
+        if(dbState.sources.sources) {
+          each(dbState.sources.sources, (source) => {
+            // old data location
+            if(source.data) {
+              // construct a good worksheet id from the range's A1 format
+              let rangeChunks = source.data.range.split('!')
+              rangeChunks = take(rangeChunks, rangeChunks.length - 1)
+              const worksheetId = rangeChunks.join('!')
+
+              // make sure worksheets collection exists
+              source.worksheets = source.worksheets || []
+              // put this new worksheet in front so it is default
+              source.worksheets.unshift({
+                id: worksheetId,
+                values: source.data.values
+              })
+
+              delete source.data
+            }
+          })
+        }
       }
 
       return dbState
