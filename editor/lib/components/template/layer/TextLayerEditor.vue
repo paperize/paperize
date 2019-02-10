@@ -58,6 +58,7 @@ v-expansion-panel#text-layer-editor(popout)
     data() {
       return {
         availableFonts: {
+          "Arial": ["normal"],
           "helvetica": ["normal", "bold", "italic", "bolditalic"],
           "courier": ["normal", "bold", "italic", "bolditalic"],
           "times": ["normal", "bold", "italic", "bolditalic"],
