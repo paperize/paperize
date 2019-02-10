@@ -9,7 +9,7 @@ v-flex#source-editor(sm4 md6)
 
       //- Change this source?
       v-tooltip(top)
-        v-btn(slot="activator" fab small @click="pickSheetFromDrive")
+        v-btn(slot="activator" fab small @click="unlinkComponentSource(component)")
           v-icon edit
         span Select a different Source
 
@@ -86,6 +86,7 @@ v-flex#source-editor(sm4 md6)
       ...mapActions([
         "updateComponent",
         "linkComponentSource",
+        "unlinkComponentSource",
         "downloadAndSaveSource",
         "setComponentWorksheet"
       ]),
