@@ -7,7 +7,6 @@ const googlePickerKey = "AIzaSyDNdLi_27Z_vhtfKCJldF_PEDiytvux1WM",
     return new Promise((resolve) => {
       getAccessToken().then((oauthToken) => {
         const pickerCallback = function(data) {
-          console.log("come on back picker:", data)
           if(data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
             const doc = data[google.picker.Response.DOCUMENTS][0]
             resolve(doc[google.picker.Document.ID])
