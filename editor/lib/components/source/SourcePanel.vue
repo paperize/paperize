@@ -19,11 +19,11 @@ v-flex#source-editor(sm4 md6)
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
-      v-select(label="Worksheet" v-model="worksheetId" :items="worksheetNames")
+      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetNames")
 
     //- Quantity Property
     v-tooltip(bottom)
-      v-select.quantity-property(slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourcePropertiesWithNull")
+      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourcePropertiesWithNull")
       | A quantity property duplicates an item any number of times.
 
     //- List of Properties
@@ -38,6 +38,7 @@ v-flex#source-editor(sm4 md6)
 
     v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
     v-btn(small color="primary" @click="") Create New Source
+    v-select(box label="Select Existing Source" v-model="sourceId" :items="allSources" item-value="id" item-text="name")
 </template>
 
 <script>
@@ -55,12 +56,18 @@ v-flex#source-editor(sm4 md6)
         "findComponentSource",
         "findComponentTemplate",
         "activeSourceProperties",
-        "getSourceWorksheetNames"
+        "getSourceWorksheetNames",
+        "allSources"
       ]),
 
       ...computedVModelUpdateAll("component", "updateComponent", [
         "quantityProperty"
       ]),
+
+      sourceId: {
+        get() { return this.component.sourceId },
+        set(sourceId) { this.linkComponentSource({ component: this.component, sourceId }) }
+      },
 
       worksheetId: {
         get() { return this.component.worksheetId },
@@ -100,7 +107,7 @@ v-flex#source-editor(sm4 md6)
               })
           }
         })
-      }
+      },
     }
   }
 </script>
