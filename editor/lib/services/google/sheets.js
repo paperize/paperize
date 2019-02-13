@@ -16,7 +16,7 @@ const NotFoundError = function(googleId) {
 }
 NotFoundError.prototype = Object.create(Error.prototype)
 
-const MAX_WORKSHEETS = 10
+const MAX_WORKSHEETS = 20
 
 const api = {
   BadIdError, NotFoundError,
@@ -71,6 +71,40 @@ const api = {
             reject(new NotFoundError(googleId))
           } else {
             reject(new Error(error.result.error.message))
+          }
+        })
+      })
+    })
+  },
+
+  addSheetToSpreadsheet(spreadsheetId, sheetName) {
+    return new Promise((resolve, reject) => {
+      let googleId = matchGoogleId(spreadsheetId)
+      // error out from id parse failure
+      if(!googleId){
+        reject(new BadIdError(spreadsheetId))
+        return
+      }
+
+      getClient((client) => {
+        // worksheet names
+        return client.sheets.spreadsheets.batchUpdate({
+          spreadsheetId: googleId,
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: sheetName,
+                  index: 0
+                }
+              }
+            }
+          ]
+        }).then(({ status, statusText }) => {
+          if(status === 200){
+            resolve(true)
+          } else {
+            reject(new Error(statusText))
           }
         })
       })
