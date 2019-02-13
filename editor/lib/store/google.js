@@ -93,6 +93,32 @@ const GoogleModule = {
           promise: drive.createFolder(name, { parentId }) })
     },
 
+    googleCreateSpreadsheet({ dispatch }, { parentId, name }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Create Spreadsheet.`,
+          details: `Named: "${name}" in folder ${parentId}`,
+          promise: drive.createSpreadsheet(name, parentId)
+        })
+
+        .tap((spreadsheetId) => {
+          // Create our local version of this sheet
+          return dispatch("downloadAndSaveSource", spreadsheetId)
+        })
+    },
+
+    googleAddSheetToSpreadsheet({ dispatch }, { spreadsheetId, sheetName }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Add Sheet to Spreadsheet.`,
+          details: `Named: "${sheetName}"`,
+          promise: sheets.addSheetToSpreadsheet(spreadsheetId, sheetName)
+        })
+
+        .then(() => {
+          // Refresh our local version of this sheet
+          return dispatch("downloadAndSaveSource", spreadsheetId)
+        })
+    },
+
     googleUpdateFile({ dispatch }, { fileId, contents }) {
       return dispatch("traceNetworkRequest",
         { name: `Update File.`,
