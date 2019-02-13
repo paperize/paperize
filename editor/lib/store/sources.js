@@ -54,19 +54,27 @@ const SourceModel = {
       worksheetId = worksheetId || source.worksheets[0].id
 
       const propertyNames = getters.sourceProperties(source),
-        worksheet = getters.findSourceWorksheet(source.id, worksheetId),
-        valuesWithoutHeader = worksheet.values.slice(1)
+        worksheet = (propertyNames.length > 0) && getters.findSourceWorksheet(source.id, worksheetId),
+        valuesWithoutHeader = worksheet.values && worksheet.values.slice(1)
 
-      return map(valuesWithoutHeader, (row) => {
-        return zipWith(propertyNames, row, (key, value) => {
-          return { key, value }
+      if(valuesWithoutHeader) {
+        return map(valuesWithoutHeader, (row) => {
+          return zipWith(propertyNames, row, (key, value) => {
+            return { key, value }
+          })
         })
-      })
+      } else {
+        return []
+      }
     },
 
     sourceProperties: (state, getters) => source => {
       source = getters.findSource(source.id)
-      let theProperties = source.worksheets[0].values[0]
+      let theProperties = []
+
+      if(source.worksheets[0] && source.worksheets[0].values) {
+        theProperties = source.worksheets[0].values[0]
+      }
 
       return theProperties
     },
