@@ -1,5 +1,3 @@
-/* global process */
-
 import { capitalize, camelCase, map, zip, filter, values, isString, isNumber } from 'lodash'
 import Vue from 'vue'
 
