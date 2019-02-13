@@ -68,11 +68,10 @@ const GameModel = {
 
     createGameComponent({ dispatch, commit }, { game, component }) {
       return dispatch("createComponent", component)
-        .then((componentId) => {
+        .tap((componentId) => {
           commit("pushGameComponentId", { game, componentId })
-          return componentId
         })
-    },   
+    },
 
     destroyGameComponent({ dispatch, commit }, { game, component }) {
       dispatch("destroyComponent", component).then((componentId) => {
