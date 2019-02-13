@@ -116,32 +116,7 @@ const
   },
 
   createFolder = function(folderName, options={}) {
-    const fileMetadata = {
-      name: folderName,
-      mimeType: 'application/vnd.google-apps.folder'
-    }
-
-    if(options.parentId) {
-      fileMetadata.parents = [options.parentId]
-    }
-
-    return new Promise((resolve, reject) => {
-      getClient((client) => {
-        client.drive.files.create({
-          resource: fileMetadata,
-        }).then(
-          (successResponse) => {
-            if(successResponse.status == 200) {
-              resolve(successResponse.result.id)
-            } else {
-              reject(new Error(successResponse.statusText))
-            }
-          },
-
-          (failure) => { reject(failure) }
-        )
-      })
-    })
+    return this.createDriveItem(folderName, options.parentId, 'application/vnd.google-apps.folder')
   },
 
   findFile = function(filename, mimeType, foldersToSearch) {
@@ -256,6 +231,35 @@ const
     })
   },
 
+  createSpreadsheet = function(name, parentId) {
+    return this.createDriveItem(name, parentId, 'application/vnd.google-apps.spreadsheet')
+  },
+
+  createDriveItem = function(name, parentId, mimeType) {
+    const fileMetadata = {
+      name, mimeType,
+      parents: [parentId]
+    }
+
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.create({
+          resource: fileMetadata,
+        }).then(
+          (successResponse) => {
+            if(successResponse.status == 200) {
+              resolve(successResponse.result.id)
+            } else {
+              reject(new Error(successResponse.statusText))
+            }
+          },
+
+          (failure) => { reject(failure) }
+        )
+      })
+    })
+  },
+
   updateFile = function(fileId, contents) {
     return new Promise((resolve, reject) => {
       getClient((client) => {
@@ -282,4 +286,16 @@ const
     })
   }
 
-export default { getFolder, getRecord, getIndex, findFolders, createFolder, findFile, downloadFile, createFile, updateFile }
+export default {
+  getFolder,
+  getRecord,
+  getIndex,
+  findFolders,
+  createFolder,
+  findFile,
+  downloadFile,
+  createFile,
+  createDriveItem,
+  createSpreadsheet,
+  updateFile
+}
