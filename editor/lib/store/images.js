@@ -52,6 +52,13 @@ const ImagesModule = {
   },
 
   actions: {
+    createAndAddImageFolder({ dispatch }, { parentId, name = "Images" }) {
+      return dispatch("googleCreateFolder", { name, parentId })
+        .then((folderId) => {
+          return dispatch("addImageFolder", { id: folderId, name })
+        })
+    },
+
     addImageFolder({ dispatch, commit, getters }, { id, name }) {
       if(getters.folderExists(id)) {
         throw new Error("Attempted to add duplicate folder")
