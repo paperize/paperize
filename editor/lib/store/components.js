@@ -106,10 +106,7 @@ const ComponentModel = {
     createComponentImageFolder({ getters, dispatch }, componentId) {
       const componentFolderId = getters.findComponent(componentId).folderId
 
-      return dispatch("googleCreateFolder", { name: "Images", parentId: componentFolderId })
-        .then((folderId) => {
-          return dispatch("addImageFolder", { id: folderId, name: "Images" })
-        })
+      return dispatch("createAndAddImageFolder", { parentId: componentFolderId })
     }
   }
 }
