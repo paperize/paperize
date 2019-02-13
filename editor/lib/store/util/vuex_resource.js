@@ -27,6 +27,7 @@ export function generateCrud(model) {
   const createModelName   = camelCase(`create ${singularModelName}`) // createModel
   const setModelName      = camelCase(`set ${pluralModelName}`) // setModels
   const updateModelName   = camelCase(`update ${singularModelName}`) // updateModel
+  const patchModelName    = camelCase(`patch ${singularModelName}`) // patchModel
   const destroyModelName  = camelCase(`destroy ${singularModelName}`) // destroyModel
 
 
@@ -141,6 +142,15 @@ export function generateCrud(model) {
     getters[findModelName](modelToUpdate.id)
 
     commit(updateModelName, modelToUpdate)
+  }
+
+  actions[patchModelName] = ({ getters, commit }, modelToPatch) => {
+    debug("Action:", patchModelName, modelToPatch)
+
+    const existingModel = getters[findModelName](modelToPatch.id)
+
+    // Still calls update but with all original values intact
+    commit(updateModelName, { ...existingModel, ...modelToPatch})
   }
 
   actions[destroyModelName] = ({ getters, dispatch, commit }, modelToDestroy) => {
