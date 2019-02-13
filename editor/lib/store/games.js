@@ -12,14 +12,15 @@ const GameModel = {
   create(newGame={}) {
     return {
       // Defaults
-      id:          uuid(),
-      title:       "",
-      folderId:    null,
-      description: "",
-      coverArt:    "",
-      playerCount: "",
-      playTime:    "",
-      ageRange:    "",
+      id:            uuid(),
+      title:         "",
+      folderId:      null,
+      description:   "",
+      coverArt:      "",
+      playerCount:   "",
+      playTime:      "",
+      ageRange:      "",
+      sourceId:      null,
       componentIds:  [ ],
       // Override with given
       ...newGame
@@ -54,15 +55,72 @@ const GameModel = {
   },
 
   actions: {
-    createGameAndDriveFolder({ dispatch, getters }, game) {
+    createGameAndDriveArtifacts({ dispatch, getters }, { game, gameFolder, componentSpreadsheet, imageFolder }) {
+      let outerGameId,
+        outerFolderId
+
+      // Create the game in our local collection
       return dispatch("createGame", game)
         .then((gameId) => {
-          const workingDirectoryId = getters.workingDirectoryId
-          return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
-            .then((folderId) => {
-              const savedGame = getters.findGame(gameId)
-              return dispatch("updateGame", { ...savedGame, folderId })
+          // Optional: Create a folder in Google Drive for the game
+          outerGameId = gameId
+          if(gameFolder) {
+            const workingDirectoryId = getters.workingDirectoryId
+            return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
+          }
+        })
+        .then((folderId) => {
+          outerFolderId = folderId
+          let promises = []
+          if(folderId && componentSpreadsheet) {
+            // Optional: Create a spreadsheet on Google Drive to hold components
+            promises.push(dispatch("googleCreateSpreadsheet", {
+              parentId: folderId,
+              name: game.title
+            }))
+          } else {
+            promises.push(Promise.resolve(null))
+          }
+
+          if(folderId && imageFolder) {
+            // Optional: Create a folder inside the game folder for images
+            promises.push(dispatch("createAndAddImageFolder", { parentId: folderId }))
+          } else {
+            promises.push(Promise.resolve(null))
+          }
+
+          return Promise.all(promises)
+        })
+
+        .spread((spreadsheetId) => {
+          if(gameFolder) {
+            // Re-save the game with the new remote ids
+            return dispatch("patchGame", {
+              id: outerGameId,
+              folderId: outerFolderId,
+              sourceId: spreadsheetId // may be null, don't care
             })
+          }
+        })
+    },
+
+    createGameComponentAndDriveArtifacts({ dispatch }, { game, component, addSheetToSource }) {
+      return dispatch("createGameComponent", { game, component })
+        .tap((componentId) => {
+          if(addSheetToSource && game.sourceId) {
+            return dispatch("googleAddSheetToSpreadsheet", {
+              spreadsheetId: game.sourceId,
+              sheetName: component.title
+            })
+
+              .then(() => {
+                return dispatch("patchComponent", {
+                  id: componentId,
+                  sourceId: game.sourceId,
+                  worksheetId: component.title
+                })
+              })
+          }
         })
     },
 
