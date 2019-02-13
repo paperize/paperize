@@ -246,11 +246,11 @@ const
         client.drive.files.create({
           resource: fileMetadata,
         }).then(
-          (successResponse) => {
-            if(successResponse.status == 200) {
-              resolve(successResponse.result.id)
+          ({ status, statusText, result}) => {
+            if(status == 200) {
+              resolve(result.id)
             } else {
-              reject(new Error(successResponse.statusText))
+              reject(new Error(statusText))
             }
           },
 
