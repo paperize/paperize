@@ -37,8 +37,15 @@ v-flex#source-editor(sm4 md6)
       strong This component does not have a data Source set.
 
     v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
-    v-btn(small color="primary" @click="") Create New Source
+    v-btn(small color="primary" @click="createSourceDialog = true") Create New Source
     v-select(box label="Select Existing Source" v-model="sourceId" :items="allSources" item-value="id" item-text="name")
+
+    v-dialog(v-model="createSourceDialog" max-width="500" lazy)
+      v-card
+        v-card-text
+          p Create a new Google Sheet named "{{ component.title }}" in the game folder?
+
+          v-btn(success @click="createSpreadsheetAndSetSourceId") Go
 </template>
 
 <script>
@@ -50,6 +57,12 @@ v-flex#source-editor(sm4 md6)
   export default {
     props: ["component"],
 
+    data() {
+      return {
+        createSourceDialog: false
+      }
+    },
+
     computed: {
       ...mapGetters([
         "sourceProperties",
@@ -57,6 +70,7 @@ v-flex#source-editor(sm4 md6)
         "findComponentTemplate",
         "activeSourceProperties",
         "getSourceWorksheetNames",
+        "getComponentFolderId",
         "allSources"
       ]),
 
@@ -106,6 +120,20 @@ v-flex#source-editor(sm4 md6)
                 this.linkComponentSource({ component: this.component, sourceId })
               })
           }
+        })
+      },
+
+      createSpreadsheetAndSetSourceId() {
+        return this.$store.dispatch("googleCreateSpreadsheet", {
+          name: this.component.title,
+          parentId: this.getComponentFolderId(this.component),
+        })
+
+        .then((spreadsheetId) => {
+          return this.$store.dispatch("patchComponent", {
+            id: this.component.id,
+            sourceId: spreadsheetId
+          })
         })
       },
     }
