@@ -3,6 +3,10 @@ v-layout(row fluid).game-panel
   v-flex(xs12 md4)
     .headline {{ game.title || "[No title]" }}
 
+    folder-icon(:folderId="game.folderId")
+    //- image-folder-icon(:folderId="game.folderId")
+    sheet-icon(:sheetId="game.sourceId")
+
   v-flex(xs12 md8)
     v-layout(row fluid)
       v-flex(sm12)
@@ -42,12 +46,21 @@ v-layout(row fluid).game-panel
   import { mapActions } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
+  import FolderIcon from '../icons/FolderIcon.vue'
+  import ImageFolderIcon from '../icons/ImageFolderIcon.vue'
+  import SheetIcon from '../icons/SheetIcon.vue'
   import PrintSettings from '../print/PrintSettings.vue'
 
   export default {
     props: ["game"],
 
-    components: { GameForm, PrintSettings },
+    components: {
+      GameForm,
+      FolderIcon,
+      ImageFolderIcon,
+      SheetIcon,
+      PrintSettings,
+    },
 
     data() {
       return {
