@@ -119,6 +119,8 @@ const DatabaseModule = {
       // Components
       if(dbState.components && dbState.components.components) {
         each(dbState.components.components, (component) => {
+          // Doesn't need the folderId property
+          delete component.folderId
           // Needs worksheetId property
           component.worksheetId = component.worksheetId || null
         })

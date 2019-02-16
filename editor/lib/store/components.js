@@ -15,7 +15,6 @@ const ComponentModel = {
     return {
       id:            uuid(),
       title:         "",
-      folderId:      null,
       sourceId:      null,
       worksheetId:   null,
       templateId:    null,
