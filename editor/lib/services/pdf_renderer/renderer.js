@@ -15,14 +15,14 @@ export function renderItem(doc, game, component, item, parentDimensions, index, 
     layers = store.getters.findAllTemplateLayers(template),
     selectedLayer = store.getters.activeLayer
 
+  if(!isArray(parentDimensions)) {
+    parentDimensions = [ parentDimensions ]
+  }
+
   // render each layer
   return Promise.each(layers, layer => {
     // Always revert to defaults (so layer styles don't bleed into each other)
     layerDefaults(doc)
-
-    if(!isArray(parentDimensions)) {
-      parentDimensions = [ parentDimensions ]
-    }
 
     return Promise.each(parentDimensions, (dimensions) => {
       // what page is this item's location on?
@@ -36,7 +36,7 @@ export function renderItem(doc, game, component, item, parentDimensions, index, 
     })
   }).then(() => {
     if(selectedLayer && store.getters.layerHighlighting) {
-      renderHighlightLayer(doc, selectedLayer, parentDimensions)
+      renderHighlightLayer(doc, selectedLayer, parentDimensions[0])
     }
   })
 }
