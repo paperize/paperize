@@ -27,6 +27,8 @@
   "author": "Loren Norman <loren@oilandrope.com>",
   "license": "ISC",
   "devDependencies": {
+    "@mdi/font": "^3.4.93",
+    "@mdi/js": "^3.4.93",
     "@vue/test-utils": "^1.0.0-beta.25",
     "ajv": "^5.2.3",
     "aws-sdk": "^2.88.0",
@@ -50,6 +52,7 @@
     "eslint-plugin-vue": "^4.3.0",
     "express": "^4.14.1",
     "file-api": "^0.10.4",
+    "file-loader": "^3.0.1",
     "http-server": "^0.10.0",
     "leveldown": "^3.0.2",
     "mime-types": "^2.1.14",

@@ -1,9 +1,9 @@
 <template lang="pug">
 v-tooltip(v-if="folderId" top)
   a(slot="activator" :href="driveLink" target="_blank")
-    v-icon image
+    v-icon mdi-image
   p {{ folderId }}
-  span An image folder on Google Drive
+  span An image on Google Drive
 </template>
 
 <script>

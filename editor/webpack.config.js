@@ -68,13 +68,10 @@ module.exports = (env) => {
           loader: 'pug-plain-loader'
         }, {
           test: /\.css$/,
-          use: [
-            {
-              loader: 'vue-style-loader'
-            }, {
-              loader: 'css-loader'
-            }
-          ]
+          use: [ 'vue-style-loader', 'css-loader' ]
+        }, {
+          test: /\.(eot|svg|ttf|woff|woff2)$/,
+          use: 'file-loader?name=[name].[ext]'
         }
       ]
     }
