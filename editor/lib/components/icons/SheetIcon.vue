@@ -22,4 +22,8 @@ v-tooltip(v-if="sheetId" top)
   a {
     text-decoration: none;
   }
+
+  a:hover i {
+    color: rgb(17,146,78);
+  }
 </style>
