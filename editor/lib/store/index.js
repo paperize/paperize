@@ -8,6 +8,7 @@ Vue.use(Vuex)
 import user       from './user'
 import database   from './database'
 import ui         from './ui'
+import folders    from './folders'
 import games      from './games'
 import components from './components'
 import sources    from './sources'
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
   user:       user.state,
   database:   database.state,
   ui:         ui.state,
+  folders:    folders.state,
   games:      games.state,
   components: components.state,
   sources:    sources.state,
@@ -59,6 +61,7 @@ let store = new Vuex.Store({
     database,
     ui,
     uiPrint,
+    folders,
     games,
     components,
     sources,

@@ -72,9 +72,18 @@ const GoogleModule = {
           promise: drive.getRecord(fileId) })
     },
 
-    googleGetIndex({ dispatch }, { folderId, options }) {
+    googleGetTrackedFileIndex({ dispatch }, folderId) {
+      // we track folders, sheets, and images
+      return Promise.props({
+        folders: dispatch("googleGetIndex", { folderId, options: { indexType: 'FOLDER' }}),
+        sheets: dispatch("googleGetIndex", { folderId, options: { indexType: 'SHEET' }}),
+        images: dispatch("googleGetIndex", { folderId, options: { indexType: 'IMAGE' }}),
+      })
+    },
+
+    googleGetIndex({ dispatch }, { folderId, options={} }) {
       return dispatch("traceNetworkRequest",
-        { name: `Get Index.`,
+        { name: `Get ${options.indexType} Index.`,
           details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
           promise: drive.getIndex(folderId, options) })
     },
