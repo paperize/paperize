@@ -1,7 +1,10 @@
 <template lang="pug">
 v-card
-  v-card-title
-    h2.subheading Drive Explorer
+  v-toolbar
+    v-toolbar-title Drive Explorer
+    v-spacer
+    v-btn(icon @click="refreshDriveIndex")
+      v-icon refresh
   v-card-text
     v-treeview(v-model="tree" :items="items" item-key="name" open-on-click)
       template(slot="prepend" slot-scope="{ item }")
@@ -11,6 +14,7 @@ v-card
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   import FolderIcon from "../icons/FolderIcon.vue"
   import ImageIcon from "../icons/ImageIcon.vue"
   import SheetIcon from "../icons/SheetIcon.vue"
@@ -57,6 +61,10 @@ v-card
           },
         ]
       }
-    }
+    },
+
+    computed: {},
+
+    methods: mapActions(["refreshDriveIndex"])
   }
 </script>
