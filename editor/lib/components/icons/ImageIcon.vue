@@ -1,18 +1,18 @@
 <template lang="pug">
-v-tooltip(v-if="folderId" top)
+v-tooltip(v-if="imageId" top)
   a(slot="activator" :href="driveLink" target="_blank")
     v-icon mdi-image
-  p {{ folderId }}
+  p {{ imageId }}
   span An image on Google Drive
 </template>
 
 <script>
   export default {
-    props: ["folderId"],
+    props: ["imageId"],
 
     computed: {
       driveLink() {
-        return `https://drive.google.com/drive/folders/${this.folderId}`
+        return `https://drive.google.com/open?id=${this.imageId}`
       }
     }
   }
