@@ -59,15 +59,32 @@ const
 
   getIndex = function(folderId, options={}) {
     // Build the query
-    let queryParts = []
+    const queryParts = []
+    // Only files in the given folder
     queryParts.push(`'${folderId}' in parents`)
+    // No trashed files
     queryParts.push(`trashed = false`)
-    if(options.mimeType == 'IMAGE') {
-      // Only looking for image files
-      queryParts.push(`mimeType contains 'image/'`)
+
+    // Only a certain type of files
+    let mimeType
+    if(options.indexType == 'FOLDER') {
+      // Folders
+      mimeType = 'application/vnd.google-apps.folder'
+    } else if(options.indexType == 'SHEET') {
+      // Sheets
+      mimeType = 'application/vnd.google-apps.spreadsheet'
+    } else if(options.indexType == 'IMAGE') {
+      // Image formats
+      mimeType = 'image/'
     }
+
+    if(mimeType) {
+      queryParts.push(`mimeType contains '${mimeType}'`)
+    }
+
     const query = queryParts.join(' and ')
 
+    // Make the request
     return new Promise((resolve, reject) => {
       getClient((client) => {
         client.drive.files.list({
