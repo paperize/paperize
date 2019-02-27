@@ -11,6 +11,10 @@ v-toolbar(app)
 
   v-toolbar-items
     template(v-if="loggedIn")
+      v-btn(@click="showDriveExplorer = true") Drive Explorer
+      v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
+        drive-explorer
+
       v-btn(@click="showImageManager = true") Images
       v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
         image-library
@@ -34,6 +38,7 @@ v-toolbar(app)
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import Profile from './Profile.vue'
+  import DriveExplorer from '../drive/DriveExplorer.vue'
   import ImageLibrary from '../image/ImageLibrary.vue'
   import PrintStatus from '../print/PrintStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
@@ -44,6 +49,7 @@ v-toolbar(app)
       Profile,
       DatabaseManager,
       PrintStatus,
+      DriveExplorer,
       ImageLibrary,
       NetworkManager,
     },
@@ -52,6 +58,7 @@ v-toolbar(app)
       return {
         gitSha: process.env.GIT_SHA,
         gitChanges: process.env.GIT_CHANGE_INFO,
+        showDriveExplorer: false,
         showImageManager: false,
         showDatabaseManager: false,
         showNetworkManager: false,
