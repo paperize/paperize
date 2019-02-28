@@ -89,7 +89,7 @@ const
       getClient((client) => {
         client.drive.files.list({
           q: query,
-          fields: "files(id,name,md5Checksum,mimeType)"
+          fields: "files(id,name,md5Checksum,mimeType,parents)"
         }).then(
           ({ result }) => {
             resolve(map(result.files, (file) => {
@@ -97,7 +97,8 @@ const
                 id:       file.id,
                 name:     file.name,
                 md5:      file.md5Checksum,
-                mimeType: file.mimeType
+                mimeType: file.mimeType,
+                parents:  file.parents
               }
             }))
           },
