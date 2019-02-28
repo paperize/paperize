@@ -9,13 +9,14 @@ import user       from './user'
 import database   from './database'
 import ui         from './ui'
 import folders    from './folders'
+import sheets     from './sheets'
+import images     from './images'
 import games      from './games'
 import components from './components'
 import sources    from './sources'
 import templates  from './templates'
 import layers     from './layers'
 import dimensions from './dimensions'
-import images     from './images'
 import print      from './print'
 import uiPrint    from './ui_print'
 import google     from './google'
@@ -26,13 +27,14 @@ const INITIAL_STATE = {
   database:   database.state,
   ui:         ui.state,
   folders:    folders.state,
+  sheets:     sheets.state,
+  images:     images.state,
   games:      games.state,
   components: components.state,
   sources:    sources.state,
   templates:  templates.state,
   layers:     layers.state,
   dimensions: dimensions.state,
-  images:     images.state,
   print:      print.state,
   uiPrint:    uiPrint.state,
   google:     google.state,
@@ -62,13 +64,14 @@ let store = new Vuex.Store({
     ui,
     uiPrint,
     folders,
+    sheets,
+    images,
     games,
     components,
     sources,
     templates,
     layers,
     dimensions,
-    images,
     print,
     google
   },
