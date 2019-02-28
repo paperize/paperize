@@ -157,6 +157,13 @@ const DatabaseModule = {
         }
       }
 
+      if(dbState.images) {
+        // ensure the old imageFolders is gone
+        delete dbState.images.imageFolders
+        // ensure the new images collection is present
+        dbState.images.images = dbState.images.images || {}
+      }
+
       return dbState
     }
   }
