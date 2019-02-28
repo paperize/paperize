@@ -1,4 +1,4 @@
-import { flatten, includes, map, pick, take, times } from 'lodash'
+import { each, flatten, includes, map, pick, take, times } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
 // const MAX_FOLDERS_AUTO_INDEX = 2,
@@ -19,32 +19,38 @@ const FolderModel = {
   getters: {
     workingFolder(_, getters, __, rootGetters) {
       if(rootGetters.workingDirectoryId) {
-        return getters.findFolder(rootGetters.workingDirectoryId)
+        return getters.findFolder(rootGetters.workingDirectoryId, false)
       }
     },
 
-    lookupChildrenOfNode: (_, getters, __, rootGetters) => (folderId) => {
-      const folderNodes = map(
-          getters.searchFolders((folder) => {
-            return includes(folder.parents, folderId)
-          }), ({ id, name }) => {
+    searchModelForParents: (_, __, ___, rootGetters) => (modelName, parentId) => {
+      return rootGetters[`search${modelName}`]((model) => {
+        return includes(model.parents, parentId)
+      })
+    },
+
+    lookupChildrenOfNode: (_, getters) => (folderId) => {
+      // A search and a transformation for each child type
+      const
+        folderNodes = map(
+          getters.searchModelForParents("Folders", folderId),
+          ({ id, name }) => {
             return { id, name, type: 'folder', children: getters.lookupChildrenOfNode(id) }
           }),
 
         sheetNodes = map(
-          rootGetters.searchSheets((sheet) => {
-            return includes(sheet.parents, folderId)
-          }), ({ id, name }) => {
+          getters.searchModelForParents("Sheets", folderId),
+          ({ id, name }) => {
             return { id, name, type: 'sheet'}
           }),
 
         imageNodes = map(
-          rootGetters.searchImages((image) => {
-            return includes(image.parents, folderId)
-          }), ({ id, name, md5 }) => {
+          getters.searchModelForParents("Images", folderId),
+          ({ id, name, md5 }) => {
             return { id, name, md5, type: 'image' }
           })
 
+      // Combine them into a single, flat array
       return flatten([folderNodes, sheetNodes, imageNodes])
     },
 
@@ -76,11 +82,12 @@ const FolderModel = {
   actions: {
     refreshDriveIndex({ dispatch, rootGetters }) {
       // Nesting: 1 (for root folder) + X (folders deep)
-      let nesting = 3,
+      const nesting = 3,
         // get working directory id
-        workingDirectory = rootGetters.workingDirectory,
-        // start by getting the tracked index of the root directory
-        currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", workingDirectory.id)])
+        workingDirectory = rootGetters.workingDirectory
+
+      // start by getting the tracked index of the root directory
+      let currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", workingDirectory.id)])
 
       // Insert the working folder manually
       dispatch("createFolder", { ...workingDirectory, parents: [] })
@@ -94,9 +101,9 @@ const FolderModel = {
             images = flatten(map(indexes, "images"))
 
           // stuff each into appropriate store modules
-          map(folders, (folder) => { dispatch("createFolder", folder) })
-          map(sheets, (sheet) => { dispatch("createSheet", sheet) })
-          map(images, (image) => { dispatch("createImage", image) })
+          each(folders, (folder) => { dispatch("createFolder", folder) })
+          each(sheets, (sheet) => { dispatch("createSheet", sheet) })
+          each(images, (image) => { dispatch("createImage", image) })
 
           if(depth < nesting-1) {
             // gradually run tracked indexes on each of the child folders
@@ -108,6 +115,7 @@ const FolderModel = {
         })
       })
 
+      // TODO: purge (or flag?) orphaned files and folders
       return currentPromise
     }
   }
