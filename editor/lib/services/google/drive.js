@@ -89,7 +89,8 @@ const
       getClient((client) => {
         client.drive.files.list({
           q: query,
-          fields: "files(id,name,md5Checksum,mimeType,parents)"
+          fields: "files(id,name,md5Checksum,mimeType,parents)",
+          pageSize: 1000, // Maximum, so we don't have to paginate yet
         }).then(
           ({ result }) => {
             resolve(map(result.files, (file) => {
