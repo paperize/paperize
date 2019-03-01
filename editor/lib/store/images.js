@@ -5,13 +5,17 @@ const ImageModel = {
   name: 'images',
 
   create(newImage) {
-    return pick(newImage, [
-      "id",
-      "name",
-      "md5",
-      "mimeType",
-      "parents"
-    ])
+    return {
+      ...pick(newImage, [
+        "id",
+        "name",
+        "md5",
+        "mimeType",
+        "parents"
+      ]),
+
+      refreshedAt: Date.now()
+    }
   },
 
   getters: { },

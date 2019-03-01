@@ -9,11 +9,15 @@ const FolderModel = {
   name: 'folders',
 
   create(newFolder) {
-    return pick(newFolder, [
-      "id",
-      "name",
-      "parents"
-    ])
+    return {
+      ...pick(newFolder, [
+        "id",
+        "name",
+        "parents"
+      ]),
+
+      refreshedAt: Date.now()
+    }
   },
 
   getters: {

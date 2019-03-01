@@ -5,11 +5,15 @@ const SheetModel = {
   name: 'sheets',
 
   create(newSheet) {
-    return pick(newSheet, [
-      "id",
-      "name",
-      "parents"
-    ])
+    return {
+      ...pick(newSheet, [
+        "id",
+        "name",
+        "parents"
+      ]),
+
+      refreshedAt: Date.now()
+    }
   },
 
   getters: { },
