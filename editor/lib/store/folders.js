@@ -1,9 +1,9 @@
 import { each, flatten, includes, map, pick, take, times } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
-// const MAX_FOLDERS_AUTO_INDEX = 2,
 const MAX_FOLDERS_AUTO_INDEX = 10,
-  DELAY_BETWEEN_INDEXES = 3000
+  DELAY_BETWEEN_INDEXES = 1500,
+  INDEX_CONCURRENCY = 3
 
 const FolderModel = {
   name: 'folders',
@@ -90,11 +90,12 @@ const FolderModel = {
         // get working directory id
         workingDirectory = rootGetters.workingDirectory
 
-      // start by getting the tracked index of the root directory
-      let currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", workingDirectory.id)])
-
       // Insert the working folder manually
-      dispatch("createFolder", { ...workingDirectory, parents: [] })
+      let currentPromise = dispatch("createFolder", { ...workingDirectory, parents: [] })
+        .then(() => {
+          // Get the tracked index of the root directory
+          return Promise.all([dispatch("googleGetTrackedFileIndex", workingDirectory.id)])
+        })
 
       // manage nesting depth
       times(nesting, (depth) => {
@@ -102,20 +103,24 @@ const FolderModel = {
           // Flatten multiple promise results to single collections
           const folders = flatten(map(indexes, "folders")),
             sheets = flatten(map(indexes, "sheets")),
-            images = flatten(map(indexes, "images"))
+            images = flatten(map(indexes, "images")),
+            keepGoing = depth < nesting-1 // Calculate this now to be checked later
 
           // stuff each into appropriate store modules
-          each(folders, (folder) => { dispatch("createFolder", folder) })
-          each(sheets, (sheet) => { dispatch("createSheet", sheet) })
-          each(images, (image) => { dispatch("createImage", image) })
-
-          if(depth < nesting-1) {
-            // gradually run tracked indexes on each of the child folders
-            return Promise.map(take(folders, MAX_FOLDERS_AUTO_INDEX), (folder) => {
-              return dispatch("googleGetTrackedFileIndex", folder.id)
-                .delay(DELAY_BETWEEN_INDEXES) // Delay between requests keeps Google happy
-            }, { concurrency: 1 }) // One index at a time keeps Google happy
-          }
+          return Promise.all([
+            Promise.all(each(folders, (folder) => dispatch("createFolder", folder))),
+            Promise.all(each(sheets, (sheet) => dispatch("createSheet", sheet))),
+            Promise.all(each(images, (image) => dispatch("createImage", image)))
+          ]).then(() => {
+            // Entering the next depth level...
+            if(keepGoing) {
+              // gradually run tracked indexes on each of the child folders
+              return Promise.map(take(folders, MAX_FOLDERS_AUTO_INDEX), (folder) => {
+                return dispatch("googleGetTrackedFileIndex", folder.id)
+                  .delay(DELAY_BETWEEN_INDEXES) // Delay between requests keeps Google happy
+              }, { concurrency: INDEX_CONCURRENCY }) // Fewer concurrent API calls keeps Google happy
+            }
+          })
         })
       })
 

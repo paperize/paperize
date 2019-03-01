@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { keys, sortBy, reverse } from 'lodash'
+import { filter, includes, keys, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
@@ -73,12 +73,16 @@ const GoogleModule = {
     },
 
     googleGetTrackedFileIndex({ dispatch }, folderId) {
-      // we track folders, sheets, and images
-      return Promise.props({
-        folders: dispatch("googleGetIndex", { folderId, options: { indexType: 'FOLDER' }}),
-        sheets: dispatch("googleGetIndex", { folderId, options: { indexType: 'SHEET' }}),
-        images: dispatch("googleGetIndex", { folderId, options: { indexType: 'IMAGE' }}),
-      })
+      // Get the full index
+      return dispatch("googleGetIndex", { folderId })
+        .then((files) => {
+          return {
+            // split the response into the file types we care about
+            folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
+            sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
+            images: filter(files, file => includes(file.mimeType, "image/") ),
+          }
+        })
     },
 
     googleGetIndex({ dispatch }, { folderId, options={} }) {
