@@ -15,10 +15,6 @@ v-toolbar(app)
       v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
         drive-explorer
 
-      v-btn(@click="showImageManager = true") Images
-      v-dialog(v-model="showImageManager" @close-dialog="showImageManager = false" max-width="500" lazy)
-        image-library
-
       v-btn(@click="showDatabaseManager = true") Database
       v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         database-manager
@@ -39,7 +35,6 @@ v-toolbar(app)
   import { mapGetters, mapActions } from 'vuex'
   import Profile from './Profile.vue'
   import DriveExplorer from '../drive/DriveExplorer.vue'
-  import ImageLibrary from '../image/ImageLibrary.vue'
   import PrintStatus from '../print/PrintStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
   import NetworkManager from '../network/NetworkManager.vue'
@@ -50,7 +45,6 @@ v-toolbar(app)
       DatabaseManager,
       PrintStatus,
       DriveExplorer,
-      ImageLibrary,
       NetworkManager,
     },
 
@@ -59,7 +53,6 @@ v-toolbar(app)
         gitSha: process.env.GIT_SHA,
         gitChanges: process.env.GIT_CHANGE_INFO,
         showDriveExplorer: false,
-        showImageManager: false,
         showDatabaseManager: false,
         showNetworkManager: false,
       }
