@@ -56,6 +56,7 @@ const GameModel = {
 
   actions: {
     createGameAndDriveArtifacts({ dispatch, getters }, { game, gameFolder, componentSpreadsheet, imageFolder }) {
+      const workingDirectoryId = getters.workingDirectoryId
       let outerGameId,
         outerFolderId
 
@@ -65,10 +66,20 @@ const GameModel = {
           // Optional: Create a folder in Google Drive for the game
           outerGameId = gameId
           if(gameFolder) {
-            const workingDirectoryId = getters.workingDirectoryId
-            return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
+            return dispatch("googleCreateFolder", {
+              name: game.title,
+              parentId: workingDirectoryId
+            }).tap((folderId) => {
+              return dispatch("createFolder", {
+                id: folderId,
+                name: game.title,
+                parents: [workingDirectoryId]}
+              )
+            })
           }
         })
+
+        // Add index entry for the folder we just created.
         .then((folderId) => {
           outerFolderId = folderId
           let promises = []
@@ -77,6 +88,12 @@ const GameModel = {
             promises.push(dispatch("googleCreateSpreadsheet", {
               parentId: folderId,
               name: game.title
+            }).then((sheetId) => {
+              return dispatch("createSheet", {
+                id: sheetId,
+                name: game.title,
+                parents: [folderId]}
+              )
             }))
           } else {
             promises.push(Promise.resolve(null))
@@ -84,7 +101,17 @@ const GameModel = {
 
           if(folderId && imageFolder) {
             // Optional: Create a folder inside the game folder for images
-            promises.push(dispatch("createAndAddImageFolder", { parentId: folderId }))
+            promises.push(dispatch("googleCreateFolder", {
+              name: 'Images',
+              parentId: folderId
+            }).then((imageFolderId) => {
+              return dispatch("createFolder", {
+                id: imageFolderId,
+                name: "Images",
+                parents: [folderId]}
+              )
+            })
+            )
           } else {
             promises.push(Promise.resolve(null))
           }

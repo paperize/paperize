@@ -64,6 +64,7 @@ const FolderModel = {
       let node = {
         id: folder.id,
         name: folder.name,
+        type: 'folder',
         children: getters.lookupChildrenOfNode(folder.id),
       }
 
