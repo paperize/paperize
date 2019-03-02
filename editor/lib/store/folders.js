@@ -38,20 +38,20 @@ const FolderModel = {
       const
         folderNodes = map(
           getters.searchModelForParents("Folders", folderId),
-          ({ id, name }) => {
-            return { id, name, type: 'folder', children: getters.lookupChildrenOfNode(id) }
+          ({ id, name, refreshedAt }) => {
+            return { id, name, refreshedAt, type: 'folder', children: getters.lookupChildrenOfNode(id) }
           }),
 
         sheetNodes = map(
           getters.searchModelForParents("Sheets", folderId),
-          ({ id, name }) => {
-            return { id, name, type: 'sheet'}
+          ({ id, name, refreshedAt }) => {
+            return { id, name, refreshedAt, type: 'sheet'}
           }),
 
         imageNodes = map(
           getters.searchModelForParents("Images", folderId),
-          ({ id, name, md5 }) => {
-            return { id, name, md5, type: 'image' }
+          ({ id, name, refreshedAt, md5 }) => {
+            return { id, name, refreshedAt, md5, type: 'image' }
           })
 
       // Combine them into a single, flat array
