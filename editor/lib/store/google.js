@@ -87,7 +87,7 @@ const GoogleModule = {
 
     googleGetIndex({ dispatch }, { folderId, options={} }) {
       return dispatch("traceNetworkRequest",
-        { name: `Get ${options.indexType} Index.`,
+        { name: `Get Index.`,
           details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
           promise: drive.getIndex(folderId, options) })
     },
