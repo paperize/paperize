@@ -25,8 +25,6 @@ v-toolbar(app)
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
 
-    //- template(v-else)
-    //-   v-btn(flat) About
     profile
     print-status
 </template>
