@@ -10,6 +10,8 @@ const FolderModel = {
 
   create(newFolder) {
     return {
+      parents: [],
+
       ...pick(newFolder, [
         "id",
         "name",
@@ -85,18 +87,22 @@ const FolderModel = {
   },
 
   actions: {
-    refreshDriveIndex({ dispatch, rootGetters }) {
+    refreshRootFolderIndex({ dispatch, rootGetters }) {
       // Nesting: 1 (for root folder) + X (folders deep)
       const nesting = 3,
         // get working directory id
         workingDirectory = rootGetters.workingDirectory
 
       // Insert the working folder manually
-      let currentPromise = dispatch("createFolder", { ...workingDirectory, parents: [] })
+      return dispatch("createFolder", { ...workingDirectory, parents: [] })
         .then(() => {
-          // Get the tracked index of the root directory
-          return Promise.all([dispatch("googleGetTrackedFileIndex", workingDirectory.id)])
+          return dispatch("refreshFolderIndex", { folderId: workingDirectory.id, nesting })
         })
+    },
+
+    refreshFolderIndex({ dispatch }, { folderId, nesting = 1 }) {
+      // prefetch the first item but treat it as if it's a collection of items
+      let currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", folderId)])
 
       // manage nesting depth
       times(nesting, (depth) => {

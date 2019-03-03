@@ -6,21 +6,22 @@ v-card
       |  Drive Explorer
 
   v-card-text
-    v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id" open-on-click)
+    v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id")
       template(slot="prepend" slot-scope="{ item }")
         //- Folders
         template(v-if="item.type == 'folder'")
           folder-icon(:folderId="item.id")
-          v-tooltip(top)
-            v-icon(slot="activator") refresh
-            span refreshed {{ lastRefresh(item.refreshedAt) }}
+          a(@click="refreshFolder(item.id)")
+            v-tooltip(top)
+              v-icon(slot="activator") refresh
+              span refreshed {{ lastRefresh(item.refreshedAt) }}
 
         //- Sheets
         template(v-else-if="item.type == 'sheet'")
           sheet-icon(:sheetId="item.id")
-          v-tooltip(top)
-            v-icon(slot="activator") refresh
-            span refreshed {{ lastRefresh(item.refreshedAt) }}
+            v-tooltip(top)
+              v-icon(slot="activator") refresh
+              span refreshed {{ lastRefresh(item.refreshedAt) }}
 
         //- Images
         image-icon(v-else-if="item.type == 'image'" :imageId="item.id")
@@ -46,10 +47,18 @@ v-card
       }
     },
 
-    computed: mapGetters(["completeIndexAsTree"]),
+    computed: mapGetters(["workingDirectoryId", "completeIndexAsTree"]),
 
     methods: {
-      ...mapActions(["refreshDriveIndex"]),
+      ...mapActions(["refreshRootFolderIndex", "refreshFolderIndex"]),
+
+      refreshFolder(folderId) {
+        if(folderId == this.workingDirectoryId) {
+          return this.refreshRootFolderIndex()
+        } else {
+          return this.refreshFolderIndex({ folderId })
+        }
+      },
 
       lastRefresh(refreshedAt) {
         return moment(refreshedAt).fromNow()
