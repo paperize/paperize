@@ -23,7 +23,8 @@ const
                 resolve([driveResult.id, driveResult.name])
               }
             },
-            reject
+
+            ({ result }) => reject(new Error(result.error.message))
           )
         })
       }
@@ -51,7 +52,8 @@ const
               })
             },
 
-            reject)
+            ({ result }) => reject(new Error(result.error.message))
+          )
         })
       }
     })
@@ -104,7 +106,8 @@ const
             }))
           },
 
-          reject)
+          ({ result }) => reject(new Error(result.error.message))
+        )
       })
     })
   },
@@ -126,9 +129,7 @@ const
               resolve(folderIds)
             },
             // Failure callback
-            (driveError) => {
-              reject(driveError)
-            }
+            ({ result }) => reject(new Error(result.error.message))
           )
       })
     })
@@ -170,9 +171,8 @@ const
             },
 
             // Error callback
-            (driveError) => {
-              reject(driveError)
-            })
+            ({ result }) => reject(new Error(result.error.message))
+          )
         })
       })
     }).then(() => {
@@ -192,9 +192,8 @@ const
             resolve(result.body)
           },
 
-          (driveError) => {
-            reject(driveError)
-          })
+          ({ result }) => reject(new Error(result.error.message))
+        )
       })
     })
   },
@@ -242,9 +241,7 @@ const
               }
             },
 
-            (failureResponse) => {
-              reject(failureResponse)
-            }
+            ({ result }) => reject(new Error(result.error.message))
           )
       })
     })
@@ -273,7 +270,7 @@ const
             }
           },
 
-          (failure) => { reject(failure) }
+          ({ result }) => reject(new Error(result.error.message))
         )
       })
     })
@@ -297,9 +294,7 @@ const
             }
           },
 
-          (failureResponse) => {
-            reject(failureResponse)
-          }
+          ({ result }) => reject(new Error(result.error.message))
         )
       })
     })
