@@ -13,7 +13,7 @@ v-expansion-panel#image-layer-editor(popout)
           v-radio(color="primary" label="Dynamic" :value="false")
 
         template(v-if="imageNameStatic")
-          v-autocomplete(v-model="imageId" :items="imageIndex" item-text="name" item-value="id" box label="Select an Image")
+          v-autocomplete(v-model="imageId" :items="allImages" item-text="name" item-value="id" box label="Select an Image")
 
         template(v-else)
           v-text-field(v-model="imageNamePrefix" label="Prefix" box)
@@ -59,7 +59,7 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     computed: {
-      ...mapGetters(["activeSourceProperties", "imageIndex"]),
+      ...mapGetters(["activeSourceProperties", "allImages"]),
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",

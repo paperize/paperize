@@ -57,7 +57,7 @@ const getImageByRecord = function({ id, md5, mimeType }) {
 
 const getImageByName = function(name) {
   return Promise.try(() => {
-    const imageRecord = store.getters.findImageByName(name)
+    const imageRecord = store.getters.searchImages({ name })[0]
 
     if(!imageRecord) {
       throw new Error(`No image found with name: ${name}`)
