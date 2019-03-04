@@ -6,11 +6,12 @@ v-card
       |  Drive Explorer
 
   v-card-text
+    h2.subheading Primary Index
     v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id")
       template(slot="prepend" slot-scope="{ item }")
         //- Folders
         template(v-if="item.type == 'folder'")
-          folder-icon(:folderId="item.id")
+          folder-icon(:folderId="item.id" :color="refreshColor(item)")
           a(@click="refreshFolder(item.id)")
             v-tooltip(top)
               v-icon(slot="activator") refresh
@@ -25,6 +26,9 @@ v-card
 
         //- Images
         image-icon(v-else-if="item.type == 'image'" :imageId="item.id")
+
+    h2.subheading Orphaned Items
+    v-treeview(v-model="tree" :items="orphanedItemsAsTree" item-key="id")
 </template>
 
 <script>
@@ -47,7 +51,11 @@ v-card
       }
     },
 
-    computed: mapGetters(["workingDirectoryId", "completeIndexAsTree"]),
+    computed: mapGetters([
+      "workingDirectoryId",
+      "completeIndexAsTree",
+      "orphanedItemsAsTree"
+    ]),
 
     methods: {
       ...mapActions(["refreshRootFolderIndex", "refreshFolderIndex"]),
@@ -62,6 +70,16 @@ v-card
 
       lastRefresh(refreshedAt) {
         return refreshedAt ? moment(refreshedAt).fromNow() : 'never'
+      },
+
+      neverRefreshed(item) {
+        return !item.refreshedAt
+      },
+
+      refreshColor(item) {
+        if(!item.refreshedAt) {
+          return 'rgb(200, 200, 200)'
+        }
       }
     }
   }

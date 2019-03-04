@@ -1,4 +1,4 @@
-import { each, flatten, includes, map, pick, take, times } from 'lodash'
+import { each, every, flatten, includes, map, pick, take, times, without } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
 const MAX_FOLDERS_AUTO_INDEX = 10,
@@ -50,21 +50,19 @@ const FolderModel = {
 
     lookupChildrenOfNode: (_, getters) => (folderId) => {
       // A search and a transformation for each child type
-      const
-        folderNodes = map(
+      return flatten([
+        map(
           getters.searchModelForParents("Folders", folderId),
           getters.folderToNode),
 
-        sheetNodes = map(
+        map(
           getters.searchModelForParents("Sheets", folderId),
           getters.sheetToNode),
 
-        imageNodes = map(
+        map(
           getters.searchModelForParents("Images", folderId),
           getters.imageToNode)
-
-      // Combine them into a single, flat array
-      return flatten([folderNodes, sheetNodes, imageNodes])
+      ])
     },
 
     lookupNode: (_, getters) => (folderId) => {
@@ -83,6 +81,46 @@ const FolderModel = {
       } else {
         return []
       }
+    },
+
+    orphanedFolders(_, getters, __, rootGetters) {
+      const orphanedFolders = rootGetters.searchFolders((folder) => {
+        // every parent not found
+        return every(map(folder.parents, (parent) => {
+          // this parent not found
+          return !rootGetters.findFolder(parent, false)
+        }))
+      })
+
+      return without(orphanedFolders, getters.workingFolder)
+    },
+
+    orphanedSheets(_, __, ___, rootGetters) {
+      return rootGetters.searchSheets((sheet) => {
+        // every parent not found
+        return every(map(sheet.parents, (parent) => {
+          // this parent not found
+          return !rootGetters.findFolder(parent, false)
+        }))
+      })
+    },
+
+    orphanedImages(_, __, ___, rootGetters) {
+      return rootGetters.searchImages((image) => {
+        // every parent not found
+        return every(map(image.parents, (parent) => {
+          // this parent not found
+          return !rootGetters.findFolder(parent, false)
+        }))
+      })
+    },
+
+    orphanedItemsAsTree(_, getters) {
+      return flatten([
+        map(getters.orphanedFolders, getters.folderToNode),
+        map(getters.orphanedSheets, getters.sheetToNode),
+        map(getters.orphanedImages, getters.imageToNode),
+      ])
     }
   },
 

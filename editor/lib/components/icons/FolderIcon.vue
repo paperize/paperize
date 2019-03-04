@@ -1,14 +1,14 @@
 <template lang="pug">
 v-tooltip(v-if="folderId" top)
   a(slot="activator" :href="driveLink" target="_blank")
-    v-icon mdi-folder-google-drive
+    v-icon(:color="color") mdi-folder-google-drive
   p {{ folderId }}
   span A folder on Google Drive
 </template>
 
 <script>
   export default {
-    props: ["folderId"],
+    props: ["folderId", "color"],
 
     computed: {
       driveLink() {
