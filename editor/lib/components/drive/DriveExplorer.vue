@@ -62,7 +62,9 @@ v-card
 
       refreshFolder(folderId) {
         if(folderId == this.workingDirectoryId) {
-          return this.refreshRootFolderIndex()
+          if(confirm("Refresh the working directory?")) {
+            return this.refreshRootFolderIndex()
+          }
         } else {
           return this.refreshFolderIndex({ folderId })
         }
@@ -84,3 +86,9 @@ v-card
     }
   }
 </script>
+
+<style scoped>
+  .subheading {
+    text-decoration: underline;
+  }
+</style>
