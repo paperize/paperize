@@ -19,9 +19,9 @@ v-card
         //- Sheets
         template(v-else-if="item.type == 'sheet'")
           sheet-icon(:sheetId="item.id")
-            v-tooltip(top)
-              v-icon(slot="activator") refresh
-              span refreshed {{ lastRefresh(item.refreshedAt) }}
+          v-tooltip(top)
+            v-icon(slot="activator") refresh
+            span refreshed {{ lastRefresh(item.refreshedAt) }}
 
         //- Images
         image-icon(v-else-if="item.type == 'image'" :imageId="item.id")
@@ -61,7 +61,7 @@ v-card
       },
 
       lastRefresh(refreshedAt) {
-        return moment(refreshedAt).fromNow()
+        return refreshedAt ? moment(refreshedAt).fromNow() : 'never'
       }
     }
   }

@@ -64,6 +64,11 @@ const DatabaseModule = {
       })
     },
 
+    prepareRootItems({ commit }, { workingDirectory, databaseFile }) {
+      commit("setWorkingDirectory", workingDirectory)
+      commit("setDatabaseFile", databaseFile)
+    },
+
     loadFromDrive({ getters, dispatch, commit  }) {
       return dispatch("googleDownloadFile", getters.databaseFileId)
         .then((databaseContent) => {
@@ -81,6 +86,8 @@ const DatabaseModule = {
               .then((migratedState) => {
                 // Load the database up!
                 commit("resetState", migratedState)
+
+                return dispatch("ensureWorkingFolder")
               })
           }
         })

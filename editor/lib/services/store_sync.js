@@ -142,8 +142,10 @@ const
       })
 
       .then(() => {
-        vuex.commit("setWorkingDirectory", { id: workingDirectoryId, name: FOLDER_NAME })
-        vuex.commit("setDatabaseFile", { id: databaseFileId, name: DATABASE_NAME })
+        return vuex.dispatch("prepareRootItems", {
+          workingDirectory: { id: workingDirectoryId, name: FOLDER_NAME },
+          databaseFile: { id: databaseFileId, name: DATABASE_NAME }
+        })
       })
   },
 

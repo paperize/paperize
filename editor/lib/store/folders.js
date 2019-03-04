@@ -9,17 +9,11 @@ const FolderModel = {
   name: 'folders',
 
   create(newFolder) {
-    return {
-      parents: [],
-
-      ...pick(newFolder, [
-        "id",
-        "name",
-        "parents"
-      ]),
-
-      refreshedAt: Date.now()
-    }
+    return pick(newFolder, [
+      "id",
+      "name",
+      "parents"
+    ])
   },
 
   getters: {
@@ -35,26 +29,39 @@ const FolderModel = {
       })
     },
 
+    folderToNode: (_, getters) => ({ id, name, refreshedAt }) => {
+      return {
+        id, name, refreshedAt,
+        type: 'folder',
+        children: getters.lookupChildrenOfNode(id)
+      }
+    },
+
+    sheetToNode: () => ({ id, name, refreshedAt }) => {
+      return {
+        id, name, refreshedAt,
+        type: 'sheet'
+      }
+    },
+
+    imageToNode: () => ({ id, name, refreshedAt, md5 }) => {
+      return { id, name, refreshedAt, md5, type: 'image' }
+    },
+
     lookupChildrenOfNode: (_, getters) => (folderId) => {
       // A search and a transformation for each child type
       const
         folderNodes = map(
           getters.searchModelForParents("Folders", folderId),
-          ({ id, name, refreshedAt }) => {
-            return { id, name, refreshedAt, type: 'folder', children: getters.lookupChildrenOfNode(id) }
-          }),
+          getters.folderToNode),
 
         sheetNodes = map(
           getters.searchModelForParents("Sheets", folderId),
-          ({ id, name, refreshedAt }) => {
-            return { id, name, refreshedAt, type: 'sheet'}
-          }),
+          getters.sheetToNode),
 
         imageNodes = map(
           getters.searchModelForParents("Images", folderId),
-          ({ id, name, refreshedAt, md5 }) => {
-            return { id, name, refreshedAt, md5, type: 'image' }
-          })
+          getters.imageToNode)
 
       // Combine them into a single, flat array
       return flatten([folderNodes, sheetNodes, imageNodes])
@@ -63,14 +70,7 @@ const FolderModel = {
     lookupNode: (_, getters) => (folderId) => {
       const folder = getters.findFolder(folderId)
 
-      let node = {
-        id: folder.id,
-        name: folder.name,
-        type: 'folder',
-        children: getters.lookupChildrenOfNode(folder.id),
-      }
-
-      return node
+      return getters.folderToNode(folder)
     },
 
     completeIndexAsTree(_, getters) {
@@ -87,22 +87,33 @@ const FolderModel = {
   },
 
   actions: {
+    ensureWorkingFolder({ getters, rootGetters, dispatch }) {
+      if(!getters.workingFolder) {
+        return dispatch("createFolder", {
+          ...rootGetters.workingDirectory,
+          parents: []
+        })
+      }
+    },
+
     refreshRootFolderIndex({ dispatch, rootGetters }) {
       // Nesting: 1 (for root folder) + X (folders deep)
       const nesting = 3,
         // get working directory id
-        workingDirectory = rootGetters.workingDirectory
+        workingDirectoryId = rootGetters.workingDirectoryId
 
       // Insert the working folder manually
-      return dispatch("createFolder", { ...workingDirectory, parents: [] })
-        .then(() => {
-          return dispatch("refreshFolderIndex", { folderId: workingDirectory.id, nesting })
-        })
+      return dispatch("ensureWorkingFolder").then(() => {
+        return dispatch("refreshFolderIndex", { folderId: workingDirectoryId, nesting })
+      })
     },
 
     refreshFolderIndex({ dispatch }, { folderId, nesting = 1 }) {
       // prefetch the first item but treat it as if it's a collection of items
       let currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", folderId)])
+        .tap(() => { // Set refresh timestamp only AFTER the index comes in.
+          return dispatch("patchFolder", { id: folderId, refreshedAt: Date.now() })
+        })
 
       // manage nesting depth
       times(nesting, (depth) => {
@@ -111,7 +122,7 @@ const FolderModel = {
           const folders = flatten(map(indexes, "folders")),
             sheets = flatten(map(indexes, "sheets")),
             images = flatten(map(indexes, "images")),
-            keepGoing = depth < nesting-1 // Calculate this now to be checked later
+            keepGoing = depth < nesting - 1 // Calculate this now to be checked later
 
           // stuff each into appropriate store modules
           return Promise.all([
@@ -125,6 +136,10 @@ const FolderModel = {
               return Promise.map(take(folders, MAX_FOLDERS_AUTO_INDEX), (folder) => {
                 return dispatch("googleGetTrackedFileIndex", folder.id)
                   .delay(DELAY_BETWEEN_INDEXES) // Delay between requests keeps Google happy
+
+                  .tap(() => { // Set refresh timestamp only AFTER the index comes in.
+                    return dispatch("patchFolder", { id: folder.id, refreshedAt: Date.now() })
+                  })
               }, { concurrency: INDEX_CONCURRENCY }) // Fewer concurrent API calls keeps Google happy
             }
           })
