@@ -1,9 +1,9 @@
 <template lang="pug">
-v-tooltip(v-if="sheetId" top)
-  a(slot="activator" :href="driveLink" target="_blank")
-    v-icon mdi-google-spreadsheet
-  p {{ sheetId }}
-  span A spreadsheet on Google Drive
+  v-tooltip(v-if="sheetId" top)
+    | {{ sheetId }}
+
+    a(slot="activator" :href="driveLink" target="_blank")
+      v-icon mdi-google-spreadsheet
 </template>
 
 <script>

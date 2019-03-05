@@ -22,7 +22,17 @@ const ImageModel = {
 
   mutations: { },
 
-  actions: { }
+  actions: {
+    refreshImageRecord({ dispatch }, imageId) {
+      return dispatch("googleGetRecord", imageId)
+        .then((imageRecord) => {
+          return dispatch("updateImage", {
+            ...imageRecord,
+            refreshedAt: Date.now()
+          })
+        })
+    }
+  }
 }
 
 const ImagesModule = generateCrud(ImageModel)
