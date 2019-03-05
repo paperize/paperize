@@ -53,7 +53,7 @@ v-flex#source-editor(sm4 md6)
   import moment from 'moment'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
-  import { openDrivePicker } from '../../services/google/picker'
+  import { openSheetPicker } from '../../services/google/picker'
   import SheetIcon from '../icons/SheetIcon.vue'
 
   export default {
@@ -71,6 +71,7 @@ v-flex#source-editor(sm4 md6)
 
     computed: {
       ...mapGetters([
+        "workingDirectoryId",
         "sourceProperties",
         "findComponentSource",
         "findComponentTemplate",
@@ -119,7 +120,7 @@ v-flex#source-editor(sm4 md6)
       ]),
 
       pickSheetFromDrive() {
-        return openDrivePicker().then((pickedId) => {
+        return openSheetPicker(this.workingDirectoryId).then((pickedId) => {
           if(pickedId) {
             this.downloadAndSaveSource(pickedId)
               .then((sourceId) => {

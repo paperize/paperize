@@ -13,7 +13,8 @@ v-expansion-panel#image-layer-editor(popout)
           v-radio(color="primary" label="Dynamic" :value="false")
 
         template(v-if="imageNameStatic")
-          v-autocomplete(v-model="imageId" :items="allImages" item-text="name" item-value="id" box label="Select an Image")
+          v-btn(@click="pickImageFromDrive") Pick Image...
+          //- v-autocomplete(v-model="imageId" :items="allImages" item-text="name" item-value="id" box label="Select an Image")
 
         template(v-else)
           v-text-field(v-model="imageNamePrefix" label="Prefix" box)
@@ -47,6 +48,7 @@ v-expansion-panel#image-layer-editor(popout)
   import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
   import { computedVModelUpdateAll } from '../../util/component_helper'
+  import { openImagePicker } from '../../../services/google/picker'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
 
@@ -59,7 +61,7 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     computed: {
-      ...mapGetters(["activeSourceProperties", "allImages"]),
+      ...mapGetters(["activeSourceProperties", "allImages", "workingDirectoryId"]),
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
@@ -82,7 +84,14 @@ v-expansion-panel#image-layer-editor(popout)
 
       updateLayer: debounce(function(layerUpdate) {
         this.$store.dispatch("updateLayer", layerUpdate)
-      }, 400, { leading: true })
+      }, 400, { leading: true }),
+
+      pickImageFromDrive() {
+        return openImagePicker(this.workingDirectoryId)
+          .then((imageId) => {
+            this.imageId = imageId
+          })
+      }
     }
   }
 </script>
