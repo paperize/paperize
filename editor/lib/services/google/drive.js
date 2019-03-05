@@ -41,15 +41,10 @@ const
         getClient((client) => {
           client.drive.files.get({
             fileId,
-            fields: "id,name,md5Checksum,mimeType"
+            fields: "id,name,md5Checksum,mimeType,parents"
           }).then(
-            ({ result }) => {
-              resolve({
-                id:       result.id,
-                name:     result.name,
-                md5:      result.md5Checksum,
-                mimeType: result.mimeType
-              })
+            ({ result: { id, name, mimeType, parents, md5Checksum } }) => {
+              resolve({ id, name, mimeType, parents, md5: md5Checksum })
             },
 
             ({ result }) => reject(new Error(result.error.message))

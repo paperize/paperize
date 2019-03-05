@@ -85,10 +85,19 @@ const SourceModel = {
   actions: {
     downloadAndSaveSource({ dispatch }, remoteSourceId) {
       // fetch sheet from google
-      return dispatch("googleFetchSheetById", remoteSourceId)
-        .then((fetchedSource) => {
-          return dispatch("createOrUpdateSource", fetchedSource)
-        })
+      return Promise.all([
+        dispatch("googleFetchSheetById", remoteSourceId)
+          .then((fetchedSource) => {
+            return dispatch("createOrUpdateSource", fetchedSource)
+          }),
+
+        dispatch("googleGetRecord", remoteSourceId)
+          .then((sheetRecord) => {
+            return dispatch("createSheet", sheetRecord)
+          })
+      ]).spread((sourceId) => {
+        return sourceId
+      })
     },
 
     createOrUpdateSource({ commit, getters }, source) {
