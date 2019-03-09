@@ -1,15 +1,6 @@
 import store from '../store'
 
-import { get, set } from 'idb-keyval'
-
-const
-  getCachedImage = function(key) {
-    return get(key)
-  },
-
-  setCachedImage = function(key, value) {
-    return set(key, value)
-  }
+import { getCachedImage, setCachedImage } from './image_cache'
 
 const getImageById = function(imageId) {
   return new Promise((resolve, reject) => {
