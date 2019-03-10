@@ -160,7 +160,7 @@ const FolderModel = {
           const folders = flatten(map(indexes, "folders")),
             sheets = flatten(map(indexes, "sheets")),
             images = flatten(map(indexes, "images")),
-            keepGoing = depth < nesting - 1 // Calculate this now to be checked later
+            goDeeper = depth < nesting - 1 // Calculate this now to be checked later
 
           // stuff each into appropriate store modules
           return Promise.all([
@@ -169,7 +169,7 @@ const FolderModel = {
             Promise.all(each(images, (image) => dispatch("createImage", image)))
           ]).then(() => {
             // Entering the next depth level...
-            if(keepGoing) {
+            if(goDeeper) {
               // gradually run tracked indexes on each of the child folders
               return Promise.map(take(folders, MAX_FOLDERS_AUTO_INDEX), (folder) => {
                 return dispatch("googleGetTrackedFileIndex", folder.id)

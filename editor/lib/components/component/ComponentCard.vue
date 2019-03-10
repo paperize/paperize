@@ -34,7 +34,11 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
     },
 
     computed: {
-      ...mapGetters(["activeGame", "activeComponent", "getItemQuantity"]),
+      ...mapGetters([
+        "activeGame",
+        "activeComponent",
+        "getItemQuantity"
+      ]),
 
       totalItems() {
         return this.getItemQuantity(this.component)
@@ -46,7 +50,7 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
 
       setActive() {
         if(this.isActiveComponent()) { return }
-        let gameId = this.$store.getters.activeGame.id,
+        let gameId = this.activeGame.id,
           componentId = this.component.id
         this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
       },
