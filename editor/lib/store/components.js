@@ -8,14 +8,14 @@ const ComponentModel = {
 
   relationships: [
     { relation: 'hasOne', model: 'template', initialize: true, dependent: true },
-    { relation: 'hasOne', model: 'source' }
+    { relation: 'hasOne', model: 'sheet' }
   ],
 
   create(newComponent) {
     return {
       id:            uuid(),
       title:         "",
-      sourceId:      null,
+      sheetId:       null,
       worksheetId:   null,
       templateId:    null,
       quantityProperty: null,
@@ -38,24 +38,22 @@ const ComponentModel = {
       }
     },
 
-    findComponentSource: (_, __, ___, rootGetters) => component => {
-      if(component.sourceId) {
-        return rootGetters.findSource(component.sourceId)
-      }
+    findComponentSheet: (_, __, ___, rootGetters) => component => {
+      return rootGetters.findSheet(component.sheetId, false)
     },
 
     getComponentItems: (state, getters, _, rootGetters) => component => {
-      const componentSource = getters.findComponentSource(component)
-
-      if(!componentSource) {
+      if(!component.sheetId) {
         return []
       } else {
-        const sourceItems = rootGetters.getSourceWorksheetItems(componentSource, component.worksheetId)
-        // Handle quantity expansion
+        const sheetItems = rootGetters.worksheetItems(component.sheetId, component.worksheetId)
+
+        // Check for quantity expansion
         if(!component.quantityProperty) {
-          return sourceItems
+          return sheetItems
         } else {
-          return reduce(sourceItems, (expandedItems, item) => {
+          // Handle quantity expansion
+          return reduce(sheetItems, (expandedItems, item) => {
             let foundProperty = find(item, {key: component.quantityProperty}),
               rawQuantity = (foundProperty || {}).value,
               quantity = parseInt(rawQuantity, 10)
@@ -78,16 +76,16 @@ const ComponentModel = {
   },
 
   actions: {
-    linkComponentSource({ commit }, { component, sourceId }) {
-      commit("updateComponent", { ...component, sourceId, worksheetId: null, quantityProperty: null })
+    linkComponentSheet({ commit }, { component, sheetId }) {
+      commit("updateComponent", { ...component, sheetId, worksheetId: null, quantityProperty: null })
     },
 
     setComponentWorksheet({ commit }, { component, worksheetId }) {
       commit("updateComponent", { ...component, worksheetId, quantityProperty: null })
     },
 
-    unlinkComponentSource({ commit }, component) {
-      commit("updateComponent", { ...component, sourceId: null, worksheetId: null, quantityProperty: null })
+    unlinkComponentSheet({ commit }, component) {
+      commit("updateComponent", { ...component, sheetId: null, worksheetId: null, quantityProperty: null })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {

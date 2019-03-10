@@ -68,12 +68,12 @@ v-card
       ...mapGetters([
         "activeGame",
         "activeLayer",
-        "findComponentSource",
+        "findComponentSheet",
         "findComponentTemplate"
       ]),
 
       componentSource() {
-        return this.findComponentSource(this.component)
+        return this.findComponentSheet(this.component)
       },
 
       componentTemplate() {

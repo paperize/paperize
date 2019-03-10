@@ -13,7 +13,6 @@ import sheets     from './sheets'
 import images     from './images'
 import games      from './games'
 import components from './components'
-import sources    from './sources'
 import templates  from './templates'
 import layers     from './layers'
 import dimensions from './dimensions'
@@ -31,7 +30,6 @@ const INITIAL_STATE = {
   images:     images.state,
   games:      games.state,
   components: components.state,
-  sources:    sources.state,
   templates:  templates.state,
   layers:     layers.state,
   dimensions: dimensions.state,
@@ -68,7 +66,6 @@ let store = new Vuex.Store({
     images,
     games,
     components,
-    sources,
     templates,
     layers,
     dimensions,

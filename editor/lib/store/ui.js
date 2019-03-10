@@ -15,15 +15,15 @@ const UIModule = {
       return rootGetters.findComponent(state.activeComponentId, false)
     },
 
-    activeSource(_, getters, __, rootGetters) {
+    activeSheet(_, getters, __, rootGetters) {
       if(getters.activeComponent) {
-        return rootGetters.findComponentSource(getters.activeComponent, false)
+        return rootGetters.findComponentSheet(getters.activeComponent, false)
       }
     },
 
-    activeSourceProperties: (_, getters, __, rootGetters) => {
-      return getters.activeSource &&
-        rootGetters.sourceProperties(getters.activeSource)
+    activeSheetProperties(_, getters, __, rootGetters) {
+      return getters.activeSheet &&
+        rootGetters.worksheetProperties(getters.activeSheet)
     },
 
     activeLayer(state, _, __, rootGetters) {

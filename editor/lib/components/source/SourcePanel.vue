@@ -3,20 +3,20 @@ v-flex#source-editor(sm4 md6)
   .headline Source
 
   //- We have a source to work with
-  template(v-if="componentSource")
+  template(v-if="componentSheet")
     .subheading
-      sheet-icon(:sheetId="componentSource.id")
-      | {{ componentSource.name }}
+      sheet-icon(:sheetId="componentSheet.id")
+      | {{ componentSheet.name }}
 
       //- Change this source?
       v-tooltip(top)
-        v-btn(slot="activator" fab small @click="unlinkComponentSource(component)")
+        v-btn(slot="activator" fab small @click="unlinkComponentSheet(component)")
           v-icon edit
         span Select a different Source
 
       //- Refresh this source from Drive?
       v-tooltip(top)
-        v-btn(slot="activator" fab small @click="downloadAndSaveSource(componentSource.id)")
+        v-btn(slot="activator" fab small @click="downloadAndSaveSource(componentSheet.id)")
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
@@ -24,29 +24,29 @@ v-flex#source-editor(sm4 md6)
 
     //- Quantity Property
     v-tooltip(bottom)
-      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSourcePropertiesWithNull")
+      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSheetPropertiesWithNull")
       | A quantity property duplicates an item any number of times.
 
     //- List of Properties
     .subheading Available Properties
     ul.source-properties
-      li(v-for="property in sourceProperties(componentSource)") {{ property }}
+      li(v-for="property in sheetProperties(componentSheet)") {{ property }}
 
   //- We need to set a source
   template(v-else)
     p
-      strong This component does not have a data Source set.
+      strong This component needs a Sheet to pull its items from.
 
     v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
-    v-btn(small color="primary" @click="createSourceDialog = true") Create New Source
-    v-select(box label="Select Existing Source" v-model="sourceId" :items="allSources" item-value="id" item-text="name")
+    v-btn(small color="primary" @click="createSheetDialog = true") Create New Source
+    v-select(box label="Select Existing Source" v-model="sheetId" :items="allSheets" item-value="id" item-text="name")
 
-    v-dialog(v-model="createSourceDialog" max-width="500" lazy)
+    v-dialog(v-model="createSheetDialog" max-width="500" lazy)
       v-card
         v-card-text
           p Create a new Google Sheet named "{{ component.title }}" in the game folder?
 
-          v-btn(success @click="createSpreadsheetAndSetSourceId") Go
+          v-btn(success @click="createSpreadsheetAndLinkSheet") Go
 </template>
 
 <script>
@@ -65,29 +65,29 @@ v-flex#source-editor(sm4 md6)
 
     data() {
       return {
-        createSourceDialog: false
+        createSheetDialog: false
       }
     },
 
     computed: {
       ...mapGetters([
         "workingDirectoryId",
-        "sourceProperties",
-        "findComponentSource",
+        "sheetProperties",
+        "findComponentSheet",
         "findComponentTemplate",
-        "activeSourceProperties",
-        "getSourceWorksheetNames",
+        "activeSheetProperties",
+        // "worksheetNames",
         "getComponentFolderId",
-        "allSources"
+        "allSheets"
       ]),
 
       ...computedVModelUpdateAll("component", "updateComponent", [
         "quantityProperty"
       ]),
 
-      sourceId: {
-        get() { return this.component.sourceId },
-        set(sourceId) { this.linkComponentSource({ component: this.component, sourceId }) }
+      sheetId: {
+        get() { return this.component.sheetId },
+        set(sheetId) { this.linkComponentSheet({ component: this.component, sheetId }) }
       },
 
       worksheetId: {
@@ -95,51 +95,52 @@ v-flex#source-editor(sm4 md6)
         set(worksheetId) { this.setComponentWorksheet({ component: this.component, worksheetId }) }
       },
 
-      activeSourcePropertiesWithNull() {
-        return [ { text: 'No Quantity Expansion', value: null }, ...this.activeSourceProperties ]
+      activeSheetPropertiesWithNull() {
+        return [ { text: 'No Quantity Expansion', value: null }, ...this.activeSheetProperties ]
       },
 
       lastRefresh() {
-        return moment(this.componentSource.refreshedAt).fromNow()
+        return moment(this.componentSheet.refreshedAt).fromNow()
       },
 
       worksheetNames() {
-        return this.getSourceWorksheetNames(this.componentSource.id)
+        return this.$store.getters.worksheetNames(this.componentSheet.id)
       },
 
-      componentSource() { return this.findComponentSource(this.component) },
+      componentSheet() { return this.findComponentSheet(this.component) },
     },
 
     methods: {
       ...mapActions([
         "updateComponent",
-        "linkComponentSource",
-        "unlinkComponentSource",
-        "downloadAndSaveSource",
-        "setComponentWorksheet"
+        "linkComponentSheet",
+        "unlinkComponentSheet",
+        "setComponentWorksheet",
+        "patchComponent",
+        "googleCreateSpreadsheet",
       ]),
 
       pickSheetFromDrive() {
-        return openSheetPicker(this.workingDirectoryId).then((pickedId) => {
-          if(pickedId) {
-            this.downloadAndSaveSource(pickedId)
-              .then((sourceId) => {
-                this.linkComponentSource({ component: this.component, sourceId })
-              })
-          }
-        })
+        return openSheetPicker(this.workingDirectoryId)
+          .then((sheetId) => {
+            if(!sheetId) { return Promise.reject(new Error("No sheet picked.")) }
+
+            return this.linkComponentSheet({
+              component: this.component,
+              sheetId
+            })
+          })
       },
 
-      createSpreadsheetAndSetSourceId() {
-        return this.$store.dispatch("googleCreateSpreadsheet", {
+      createSpreadsheetAndLinkSheet() {
+        return this.googleCreateSpreadsheet({
           name: this.component.title,
           parentId: this.getComponentFolderId(this.component),
         })
 
-        .then((spreadsheetId) => {
-          return this.$store.dispatch("patchComponent", {
-            id: this.component.id,
-            sourceId: spreadsheetId
+        .then((sheetId) => {
+          return this.patchComponent({
+            id: this.component.id, sheetId
           })
         })
       },
