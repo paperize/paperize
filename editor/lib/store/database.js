@@ -7,8 +7,9 @@ const PRINT_DEFAULT_STATE = PrintModule.state
 const UNPERSISTED_STATE_KEYS = [
   "user",
   "database",
+  "cache",
   "ui",
-  "ui_print",
+  "uiPrint",
   "google"
 ]
 

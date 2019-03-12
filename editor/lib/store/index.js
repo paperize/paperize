@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 import user       from './user'
 import database   from './database'
+import cache      from './cache'
 import ui         from './ui'
 import folders    from './folders'
 import sheets     from './sheets'
@@ -24,6 +25,7 @@ import google     from './google'
 const INITIAL_STATE = {
   user:       user.state,
   database:   database.state,
+  cache:      cache.state,
   ui:         ui.state,
   folders:    folders.state,
   sheets:     sheets.state,
@@ -59,6 +61,7 @@ let store = new Vuex.Store({
   modules: {
     user,
     database,
+    cache,
     ui,
     uiPrint,
     folders,
