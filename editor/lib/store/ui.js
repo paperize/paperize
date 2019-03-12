@@ -21,11 +21,6 @@ const UIModule = {
       }
     },
 
-    activeSheetProperties(_, getters, __, rootGetters) {
-      return getters.activeSheet &&
-        rootGetters.worksheetProperties(getters.activeSheet)
-    },
-
     activeLayer(state, _, __, rootGetters) {
       return rootGetters.findLayer(state.activeLayerId, false)
     },
@@ -86,10 +81,14 @@ const UIModule = {
       commit("clearActiveGame")
     },
 
-    setActiveComponent({ commit, rootGetters }, componentId) {
+    setActiveComponent({ dispatch, commit, rootGetters }, componentId) {
       let component = rootGetters.findComponent(componentId)
 
       commit("setActiveComponent", { component })
+
+      if(component.sheetId) {
+        return dispatch("ensureSheetRefreshed", component.sheetId)
+      }
     }
   },
 
