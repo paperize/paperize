@@ -135,7 +135,7 @@ const GoogleModule = {
 
         .then(() => {
           // Refresh our local version of this sheet
-          return dispatch("downloadAndSaveSource", spreadsheetId)
+          return dispatch("refreshSheetNow", spreadsheetId)
         })
     },
 

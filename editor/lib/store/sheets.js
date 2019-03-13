@@ -68,7 +68,30 @@ const SheetModel = {
 
   mutations: { },
 
-  actions: { }
+  actions: {
+    refreshSheetNow({ dispatch }, sheetId) {
+      return dispatch("googleFetchSheetById", sheetId)
+        .then(({ worksheets }) => {
+          // add the worksheet metadata to the sheet
+          return dispatch("patchSheet", {
+            id: sheetId,
+            worksheets: map(worksheets, (worksheet) => {
+              return pick(worksheet, ["id", "title"])
+            }),
+            refreshedAt: Date.now()
+
+          }).then(() => {
+            // specially cache the heavy part
+            return dispatch("cacheSheet", {
+              sheetId,
+              worksheets: map(worksheets, (worksheet) => {
+                return pick(worksheet, ["id", "values"])
+              })
+            })
+          })
+        })
+    }
+  }
 }
 
 const SheetsModule = generateCrud(SheetModel)
