@@ -1,5 +1,5 @@
 import { LAYER_DEFAULTS } from './layers'
-import { each, isNull, isUndefined, pick, omit, take } from 'lodash'
+import { each, isNull, isUndefined, pick, reduce, omit } from 'lodash'
 import PrintModule from './print'
 
 const PRINT_DEFAULT_STATE = PrintModule.state
@@ -150,11 +150,35 @@ const DatabaseModule = {
         delete dbState.sheets
       }
 
+      // Remove the old imageFolders image caching concept
       if(dbState.images) {
         // ensure the old imageFolders is gone
         delete dbState.images.imageFolders
         // ensure the new images collection is present
         dbState.images.images = dbState.images.images || {}
+      }
+
+      // Components
+      if(dbState.components && dbState.components.components) {
+        dbState.components.components = reduce(dbState.components.components, (components, component, id) => {
+          // No more sourceId
+          if(component.sourceId) {
+            if(!component.spreadsheetId) {
+              component.spreadsheetId = component.sourceId
+            }
+            delete component.sourceId
+          }
+          // No more sheetId
+          if(component.sheetId) {
+            if(!component.spreadsheetId) {
+              component.spreadsheetId = component.sheetId
+            }
+            delete component.sheetId
+          }
+
+          components[id] = component
+          return components
+        }, {})
       }
 
       return dbState
