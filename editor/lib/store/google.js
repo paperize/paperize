@@ -133,7 +133,7 @@ const GoogleModule = {
           promise: sheets.addSheetToSpreadsheet(spreadsheetId, sheetName)
         })
 
-        .then(() => {
+        .tap(() => {
           // Refresh our local version of this sheet
           return dispatch("refreshSheetIndex", spreadsheetId)
         })

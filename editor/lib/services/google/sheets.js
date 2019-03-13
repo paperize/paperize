@@ -95,6 +95,7 @@ const api = {
 
       getClient((client) => {
         // worksheet names
+        const sheetId = Date.now() % 2000000000
         return client.sheets.spreadsheets.batchUpdate({
           spreadsheetId: googleId,
           requests: [
@@ -102,14 +103,15 @@ const api = {
               addSheet: {
                 properties: {
                   title: sheetName,
-                  index: 0
+                  index: 0,
+                  sheetId
                 }
               }
             }
           ]
         }).then(({ status, statusText }) => {
           if(status === 200){
-            resolve(true)
+            resolve(sheetId.toString())
           } else {
             reject(new Error(statusText))
           }

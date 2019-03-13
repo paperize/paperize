@@ -134,11 +134,11 @@ const GameModel = {
               sheetName: component.title
             })
 
-              .then(() => {
+              .then((worksheetId) => {
                 return dispatch("patchComponent", {
                   id: componentId,
-                  worksheetId: component.title
                   spreadsheetId: game.spreadsheetId,
+                  worksheetId
                 })
               })
           }
