@@ -20,17 +20,17 @@ v-flex#source-editor(sm4 md6)
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
-      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetNames")
+      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title")
 
     //- Quantity Property
     v-tooltip(bottom)
-      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="activeSheetPropertiesWithNull")
+      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
       | A quantity property duplicates an item any number of times.
 
     //- List of Properties
     .subheading Available Properties
     ul.source-properties
-      li(v-for="property in sheetProperties(componentSheet)") {{ property }}
+      li(v-for="property in worksheetPropertyNames(sheetId, worksheetId)") {{ property }}
 
   //- We need to set a source
   template(v-else)
@@ -51,6 +51,7 @@ v-flex#source-editor(sm4 md6)
 
 <script>
   import moment from 'moment'
+  import { map, pick } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
@@ -72,11 +73,9 @@ v-flex#source-editor(sm4 md6)
     computed: {
       ...mapGetters([
         "workingDirectoryId",
-        "sheetProperties",
+        "worksheetPropertyNames",
         "findComponentSheet",
         "findComponentTemplate",
-        "activeSheetProperties",
-        // "worksheetNames",
         "getComponentFolderId",
         "allSheets"
       ]),
@@ -95,16 +94,17 @@ v-flex#source-editor(sm4 md6)
         set(worksheetId) { this.setComponentWorksheet({ component: this.component, worksheetId }) }
       },
 
-      activeSheetPropertiesWithNull() {
-        return [ { text: 'No Quantity Expansion', value: null }, ...this.activeSheetProperties ]
+      worksheetPropertyNamesWithNull() {
+        return [ { text: 'No Quantity Expansion', value: null },
+                 ...this.worksheetPropertyNames(this.sheetId, this.worksheetId) ]
       },
 
       lastRefresh() {
         return moment(this.componentSheet.refreshedAt).fromNow()
       },
 
-      worksheetNames() {
-        return this.$store.getters.worksheetNames(this.componentSheet.id)
+      worksheetOptions() {
+        return map(this.componentSheet.worksheets, (ws) => pick(ws, ["id", "title"]))
       },
 
       componentSheet() { return this.findComponentSheet(this.component) },
@@ -118,6 +118,7 @@ v-flex#source-editor(sm4 md6)
         "setComponentWorksheet",
         "patchComponent",
         "googleCreateSpreadsheet",
+        "refreshSheetNow",
       ]),
 
       pickSheetFromDrive() {

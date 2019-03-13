@@ -54,7 +54,7 @@ const ComponentModel = {
         } else {
           // Handle quantity expansion
           return reduce(sheetItems, (expandedItems, item) => {
-            let foundProperty = find(item, {key: component.quantityProperty}),
+            let foundProperty = find(item, { key: component.quantityProperty }),
               rawQuantity = (foundProperty || {}).value,
               quantity = parseInt(rawQuantity, 10)
 
@@ -77,15 +77,15 @@ const ComponentModel = {
 
   actions: {
     linkComponentSheet({ commit }, { component, sheetId }) {
-      commit("updateComponent", { ...component, sheetId, worksheetId: null, quantityProperty: null })
+      commit("patchComponent", { id: component.id, sheetId, worksheetId: null, quantityProperty: null })
     },
 
     setComponentWorksheet({ commit }, { component, worksheetId }) {
-      commit("updateComponent", { ...component, worksheetId, quantityProperty: null })
+      commit("patchComponent", { id: component.id, worksheetId, quantityProperty: null })
     },
 
     unlinkComponentSheet({ commit }, component) {
-      commit("updateComponent", { ...component, sheetId: null, worksheetId: null, quantityProperty: null })
+      commit("patchComponent", { id: component.id, sheetId: null, worksheetId: null, quantityProperty: null })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {

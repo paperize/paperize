@@ -39,24 +39,23 @@ const api = {
         }).then(({ result }) => {
           // extract spreadsheet name and all worksheet names
           const spreadsheetName = result.properties.title,
-            worksheetNames = take(map(result.sheets, "properties.title"), MAX_WORKSHEETS),
+            worksheetIds = take(map(result.sheets, "properties.sheetId"), MAX_WORKSHEETS),
+            worksheetTitles = take(map(result.sheets, "properties.title"), MAX_WORKSHEETS),
 
             // construct batch query
             params = {
               spreadsheetId: googleId,
-              ranges: worksheetNames
+              // A sheet title is a valid A1 query
+              ranges: worksheetTitles
             }
 
           return client.sheets.spreadsheets.values.batchGet(params)
             .then(({ result }) => {
-              // creates:
-              // {
-              //   Sheet1: [['row1cell1', 'row1cell2'], ['row2cell1', 'row2cell2']]
-              // }
-              const worksheets = map(worksheetNames, (name, index) => {
+              const worksheets = map(result.valueRanges, ({ values = [] }, index) => {
                 return {
-                  id: name,
-                  values: result.valueRanges[index].values
+                  id: worksheetIds[index],
+                  title: worksheetTitles[index],
+                  values
                 }
               })
 

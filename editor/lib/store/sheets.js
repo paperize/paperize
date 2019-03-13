@@ -12,63 +12,75 @@ const SheetModel = {
         "parents"
       ]),
 
-      refreshedAt: Date.now()
+      refreshedAt: null, /* starts unrefreshed */
+      worksheets: [/* empty til refreshed */],
     }
   },
 
   getters: {
-    findWorksheet: (state, getters) => (sheetId, worksheetId) => {
-      const sheet = getters.findSheet(sheetId)
-
-      if(worksheetId) {
-        return find(sheet.worksheets, { id: worksheetId })
-      } else {
-        return sheet.worksheets[0]
-      }
+    worksheetValues: (state, getters, _, rootGetters) => (sheetId, worksheetId) => {
+      return rootGetters.sheetValues(sheetId, worksheetId)
+        || []
     },
 
-    worksheetNames: (state, getters) => sheetId => {
-      const sheet = getters.findSheet(sheetId),
-        worksheetNames = map(sheet.worksheets, "id")
+    worksheetTitles: (state, getters) => sheetId => {
+      const { worksheets } = getters.findSheet(sheetId),
+        worksheetTitles = map(worksheets, "title")
 
-      return worksheetNames
+      return worksheetTitles
     },
 
-    worksheetProperties: (state, getters) => (sheetId, worksheetId) => {
-      const worksheet = getters.findWorksheet(sheetId, worksheetId)
-      let theProperties = []
+    worksheetPropertyNames: (state, getters) => (sheetId, worksheetId) => {
+      const values = getters.worksheetValues(sheetId, worksheetId)
 
-      if(worksheet && worksheet.values) {
-        // First row is the property names
-        theProperties = worksheet.values[0]
+      // First row is the property names
+      return values[0] || []
+    },
+
+    worksheetPropertyValues: (state, getters) => (sheetId, worksheetId) => {
+      if(!sheetId || (!worksheetId && worksheetId != 0)) { return }
+      const values = getters.worksheetValues(sheetId, worksheetId)
+
+      // Every row after the first are the value rows
+      if(values.length > 1) {
+        return values.slice(1) || []
       }
 
-      return theProperties
+      return []
     },
 
     worksheetItems: (state, getters) => (sheetId, worksheetId) => {
-      // Default to first worksheet if none given
-      // worksheetId = worksheetId || sheet.worksheets[0].id
+      const propertyNames = getters.worksheetPropertyNames(sheetId, worksheetId),
+        propertyValues = getters.worksheetPropertyValues(sheetId, worksheetId)
 
-      const propertyNames = getters.worksheetProperties(sheetId, worksheetId),
-        worksheet = (propertyNames.length > 0) && getters.findWorksheet(sheetId, worksheetId),
-        valuesWithoutHeader = worksheet.values && worksheet.values.slice(1)
-
-      if(valuesWithoutHeader) {
-        return map(valuesWithoutHeader, (row) => {
-          return zipWith(propertyNames, row, (key, value) => {
-            return { key, value }
-          })
+      return map(propertyValues, (row) => {
+        return zipWith(propertyNames, row, (key, value) => {
+          return { key, value }
         })
-      } else {
-        return []
-      }
+      })
     },
   },
 
   mutations: { },
 
   actions: {
+    ensureSheetRefreshed({ dispatch, getters, rootGetters }, sheetId) {
+      const sheet = getters.findSheet(sheetId)
+      // check the store cache
+      if(rootGetters.allSheetsCached(sheet)){
+        return
+      } else {
+        // check the idb cache
+        return dispatch("loadIDBCache", sheet)
+          .then((success) => {
+            if(!success) {
+              // fetch from web
+              return dispatch("refreshSheetNow", sheetId)
+            }
+          })
+      }
+    },
+
     refreshSheetNow({ dispatch }, sheetId) {
       return dispatch("googleFetchSheetById", sheetId)
         .then(({ worksheets }) => {
