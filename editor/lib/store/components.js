@@ -76,16 +76,16 @@ const ComponentModel = {
   },
 
   actions: {
-    linkComponentSheet({ commit }, { component, sheetId }) {
-      commit("patchComponent", { id: component.id, sheetId, worksheetId: null, quantityProperty: null })
+    linkComponentSheet({ dispatch }, { component, spreadsheetId }) {
+      dispatch("patchComponent", { id: component.id, spreadsheetId, worksheetId: null, quantityProperty: null })
     },
 
-    setComponentWorksheet({ commit }, { component, worksheetId }) {
-      commit("patchComponent", { id: component.id, worksheetId, quantityProperty: null })
+    setComponentWorksheet({ dispatch }, { component, worksheetId }) {
+      dispatch("patchComponent", { id: component.id, worksheetId, quantityProperty: null })
     },
 
-    unlinkComponentSheet({ commit }, component) {
-      commit("patchComponent", { id: component.id, sheetId: null, worksheetId: null, quantityProperty: null })
+    unlinkComponentSheet({ dispatch }, component) {
+      dispatch("patchComponent", { id: component.id, spreadsheetId: null, worksheetId: null, quantityProperty: null })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {
