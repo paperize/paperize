@@ -5,7 +5,7 @@ v-flex#source-editor(sm4 md6)
   //- We have a source to work with
   template(v-if="componentSheet")
     .subheading
-      sheet-icon(:spreadsheetId="componentSheet.id")
+      spreadsheet-icon(:spreadsheetId="componentSheet.id")
       | {{ componentSheet.name }}
 
       //- Change this source?
@@ -55,13 +55,13 @@ v-flex#source-editor(sm4 md6)
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
-  import SheetIcon from '../icons/SheetIcon.vue'
+  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
 
   export default {
     props: ["component"],
 
     components: {
-      SheetIcon
+      SpreadsheetIcon
     },
 
     data() {

@@ -19,7 +19,7 @@ v-card
 
         //- Sheets
         template(v-else-if="item.type == 'sheet'")
-          sheet-icon(:spreadsheetId="item.id")
+          spreadsheet-icon(:spreadsheetId="item.id")
           a(@click="refreshSheetRecord(item.id)")
             v-tooltip(top)
               v-icon(slot="activator") refresh
@@ -42,13 +42,13 @@ v-card
   import moment from 'moment'
   import FolderIcon from "../icons/FolderIcon.vue"
   import ImageIcon from "../icons/ImageIcon.vue"
-  import SheetIcon from "../icons/SheetIcon.vue"
+  import SpreadsheetIcon from "../icons/SpreadsheetIcon.vue"
 
   export default {
     components: {
       FolderIcon,
       ImageIcon,
-      SheetIcon
+      SpreadsheetIcon
     },
 
     data() {

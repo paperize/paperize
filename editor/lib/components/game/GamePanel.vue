@@ -4,7 +4,7 @@ v-layout(row fluid).game-panel
     .headline {{ game.title || "[No title]" }}
 
     folder-icon(:folderId="game.folderId")
-    sheet-icon(:spreadsheetId="game.spreadsheetId")
+    spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
   v-flex(xs12 md8)
     v-layout(row fluid)
@@ -46,7 +46,7 @@ v-layout(row fluid).game-panel
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'
-  import SheetIcon from '../icons/SheetIcon.vue'
+  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
   import PrintSettings from '../print/PrintSettings.vue'
 
   export default {
@@ -55,7 +55,7 @@ v-layout(row fluid).game-panel
     components: {
       GameForm,
       FolderIcon,
-      SheetIcon,
+      SpreadsheetIcon,
       PrintSettings,
     },
 
