@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-tooltip(v-if="sheetId" top)
-    | {{ sheetId }}
+  v-tooltip(v-if="spreadsheetId" top)
+    | {{ spreadsheetId }}
 
     a(slot="activator" :href="driveLink" target="_blank")
       v-icon mdi-google-spreadsheet
@@ -8,11 +8,11 @@
 
 <script>
   export default {
-    props: ["sheetId"],
+    props: ["spreadsheetId"],
 
     computed: {
       driveLink() {
-        return `https://docs.google.com/spreadsheets/d/${this.sheetId}/edit`
+        return `https://docs.google.com/spreadsheets/d/${this.spreadsheetId}/edit`
       }
     }
   }

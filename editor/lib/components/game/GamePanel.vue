@@ -4,7 +4,7 @@ v-layout(row fluid).game-panel
     .headline {{ game.title || "[No title]" }}
 
     folder-icon(:folderId="game.folderId")
-    sheet-icon(:sheetId="game.sourceId")
+    sheet-icon(:spreadsheetId="game.sourceId")
 
   v-flex(xs12 md8)
     v-layout(row fluid)

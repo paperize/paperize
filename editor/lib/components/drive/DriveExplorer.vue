@@ -19,7 +19,7 @@ v-card
 
         //- Sheets
         template(v-else-if="item.type == 'sheet'")
-          sheet-icon(:sheetId="item.id")
+          sheet-icon(:spreadsheetId="item.id")
           a(@click="refreshSheetRecord(item.id)")
             v-tooltip(top)
               v-icon(slot="activator") refresh

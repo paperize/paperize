@@ -5,7 +5,7 @@ v-flex#source-editor(sm4 md6)
   //- We have a source to work with
   template(v-if="componentSheet")
     .subheading
-      sheet-icon(:sheetId="componentSheet.id")
+      sheet-icon(:spreadsheetId="componentSheet.id")
       | {{ componentSheet.name }}
 
       //- Change this source?
@@ -30,7 +30,7 @@ v-flex#source-editor(sm4 md6)
     //- List of Properties
     .subheading Available Properties
     ul.source-properties
-      li(v-for="property in worksheetPropertyNames(sheetId, worksheetId)") {{ property }}
+      li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
 
   //- We need to set a source
   template(v-else)
@@ -39,7 +39,7 @@ v-flex#source-editor(sm4 md6)
 
     v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
     v-btn(small color="primary" @click="createSheetDialog = true") Create New Source
-    v-select(box label="Select Existing Source" v-model="sheetId" :items="allSheets" item-value="id" item-text="name")
+    v-select(box label="Select Existing Source" v-model="spreadsheetId" :items="allSheets" item-value="id" item-text="name")
 
     v-dialog(v-model="createSheetDialog" max-width="500" lazy)
       v-card
@@ -84,9 +84,9 @@ v-flex#source-editor(sm4 md6)
         "quantityProperty"
       ]),
 
-      sheetId: {
-        get() { return this.component.sheetId },
-        set(sheetId) { this.linkComponentSheet({ component: this.component, sheetId }) }
+      spreadsheetId: {
+        get() { return this.component.spreadsheetId },
+        set(spreadsheetId) { this.linkComponentSheet({ component: this.component, spreadsheetId }) }
       },
 
       worksheetId: {
@@ -96,7 +96,7 @@ v-flex#source-editor(sm4 md6)
 
       worksheetPropertyNamesWithNull() {
         return [ { text: 'No Quantity Expansion', value: null },
-                 ...this.worksheetPropertyNames(this.sheetId, this.worksheetId) ]
+                 ...this.worksheetPropertyNames(this.spreadsheetId, this.worksheetId) ]
       },
 
       lastRefresh() {
@@ -123,12 +123,12 @@ v-flex#source-editor(sm4 md6)
 
       pickSheetFromDrive() {
         return openSheetPicker(this.workingDirectoryId)
-          .then((sheetId) => {
-            if(!sheetId) { return Promise.reject(new Error("No sheet picked.")) }
+          .then((spreadsheetId) => {
+            if(!spreadsheetId) { return Promise.reject(new Error("No sheet picked.")) }
 
             return this.linkComponentSheet({
               component: this.component,
-              sheetId
+              spreadsheetId
             })
           })
       },
@@ -139,9 +139,9 @@ v-flex#source-editor(sm4 md6)
           parentId: this.getComponentFolderId(this.component),
         })
 
-        .then((sheetId) => {
+        .then((spreadsheetId) => {
           return this.patchComponent({
-            id: this.component.id, sheetId
+            id: this.component.id, spreadsheetId
           })
         })
       },

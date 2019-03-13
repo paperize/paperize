@@ -4,8 +4,8 @@ import { map, reduce, take } from 'lodash'
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
-const BadIdError = function(sheetId) {
-  this.message = `No Google Sheet ID detected in "${sheetId}"`
+const BadIdError = function(spreadsheetId) {
+  this.message = `No Google Sheet ID detected in "${spreadsheetId}"`
 }
 BadIdError.prototype = Object.create(Error.prototype)
 
@@ -23,12 +23,12 @@ const api = {
 
   matchGoogleId,
 
-  fetchSheetById(sheetId) {
+  fetchSheetById(spreadsheetId) {
     return new Promise((resolve, reject) => {
-      let googleId = matchGoogleId(sheetId)
+      let googleId = matchGoogleId(spreadsheetId)
       // error out from id parse failure
       if(!googleId){
-        reject(new BadIdError(sheetId))
+        reject(new BadIdError(spreadsheetId))
         return
       }
 

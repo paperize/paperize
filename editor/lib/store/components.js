@@ -15,7 +15,7 @@ const ComponentModel = {
     return {
       id:            uuid(),
       title:         "",
-      sheetId:       null,
+      spreadsheetId:       null,
       worksheetId:   null,
       templateId:    null,
       quantityProperty: null,
@@ -39,14 +39,14 @@ const ComponentModel = {
     },
 
     findComponentSheet: (_, __, ___, rootGetters) => component => {
-      return rootGetters.findSheet(component.sheetId, false)
+      return rootGetters.findSheet(component.spreadsheetId, false)
     },
 
     getComponentItems: (state, getters, _, rootGetters) => component => {
-      if(!component.sheetId) {
+      if(!component.spreadsheetId || !component.worksheetId) {
         return []
       } else {
-        const sheetItems = rootGetters.worksheetItems(component.sheetId, component.worksheetId)
+        const sheetItems = rootGetters.worksheetItems(component.spreadsheetId, component.worksheetId)
 
         // Check for quantity expansion
         if(!component.quantityProperty) {

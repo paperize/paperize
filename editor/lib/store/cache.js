@@ -8,19 +8,23 @@ const CacheModule = {
   },
 
   getters: {
-    allSheetsCached: (_, getters) => ({ id: sheetId, worksheets }) => {
+    allSheetsCached: (_, getters) => ({ id: spreadsheetId, worksheets }) => {
       // are all of this sheet's worksheets cached here already?
       return !isEmpty(worksheets) && every(worksheets, ({ id }) => {
-        return !!getters.sheetValues(sheetId, id)
+        return !!getters.sheetValues(spreadsheetId, id)
       })
     },
 
-    cacheKey: () => (sheetId, worksheetId) => {
-      return `${sheetId}-${worksheetId}`
+    cacheKey: () => (spreadsheetId, worksheetId) => {
+      const key = `${spreadsheetId}-${worksheetId}`
+      if(!spreadsheetId || !worksheetId) {
+        throw new Error(`Bad cacheKey! "${key}"`)
+      }
+      return key
     },
 
-    sheetValues: (state, getters) => (sheetId, worksheetId) => {
-      const key = getters.cacheKey(sheetId, worksheetId)
+    sheetValues: (state, getters) => (spreadsheetId, worksheetId) => {
+      const key = getters.cacheKey(spreadsheetId, worksheetId)
       return state.cache[key]
     }
   },
@@ -32,9 +36,9 @@ const CacheModule = {
   },
 
   actions: {
-    cacheSheet({ commit, getters }, { sheetId, worksheets }) {
+    cacheSheet({ commit, getters }, { spreadsheetId, worksheets }) {
       return Promise.map(worksheets, ({ id, values = [] }) => {
-        const key = getters.cacheKey(sheetId, id)
+        const key = getters.cacheKey(spreadsheetId, id)
         // we have our key and values
         // cache here in the store
         commit("cache", { key, values } )
@@ -43,9 +47,9 @@ const CacheModule = {
       })
     },
 
-    loadIDBCache({ commit, getters }, { id: sheetId, worksheets }) {
+    loadIDBCache({ commit, getters }, { id: spreadsheetId, worksheets }) {
       return !isEmpty(worksheets) && Promise.map(worksheets, ({ id }) => {
-        const key = getters.cacheKey(sheetId, id)
+        const key = getters.cacheKey(spreadsheetId, id)
 
         return getCachedWorksheet(key)
           .then((values) => {

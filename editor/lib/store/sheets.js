@@ -18,28 +18,29 @@ const SheetModel = {
   },
 
   getters: {
-    worksheetValues: (state, getters, _, rootGetters) => (sheetId, worksheetId) => {
-      return rootGetters.sheetValues(sheetId, worksheetId)
+    worksheetValues: (state, getters, _, rootGetters) => (spreadsheetId, worksheetId) => {
+      return rootGetters.sheetValues(spreadsheetId, worksheetId)
         || []
     },
 
-    worksheetTitles: (state, getters) => sheetId => {
-      const { worksheets } = getters.findSheet(sheetId),
+    worksheetTitles: (state, getters) => spreadsheetId => {
+      const { worksheets } = getters.findSheet(spreadsheetId),
         worksheetTitles = map(worksheets, "title")
 
       return worksheetTitles
     },
 
-    worksheetPropertyNames: (state, getters) => (sheetId, worksheetId) => {
-      const values = getters.worksheetValues(sheetId, worksheetId)
+    worksheetPropertyNames: (state, getters) => (spreadsheetId, worksheetId) => {
+      if(!spreadsheetId || !worksheetId) { return [] }
+      const values = getters.worksheetValues(spreadsheetId, worksheetId)
 
       // First row is the property names
       return values[0] || []
     },
 
-    worksheetPropertyValues: (state, getters) => (sheetId, worksheetId) => {
-      if(!sheetId || (!worksheetId && worksheetId != 0)) { return }
-      const values = getters.worksheetValues(sheetId, worksheetId)
+    worksheetPropertyValues: (state, getters) => (spreadsheetId, worksheetId) => {
+      if(!spreadsheetId || !worksheetId) { return [] }
+      const values = getters.worksheetValues(spreadsheetId, worksheetId)
 
       // Every row after the first are the value rows
       if(values.length > 1) {
@@ -49,9 +50,9 @@ const SheetModel = {
       return []
     },
 
-    worksheetItems: (state, getters) => (sheetId, worksheetId) => {
-      const propertyNames = getters.worksheetPropertyNames(sheetId, worksheetId),
-        propertyValues = getters.worksheetPropertyValues(sheetId, worksheetId)
+    worksheetItems: (state, getters) => (spreadsheetId, worksheetId) => {
+      const propertyNames = getters.worksheetPropertyNames(spreadsheetId, worksheetId),
+        propertyValues = getters.worksheetPropertyValues(spreadsheetId, worksheetId)
 
       return map(propertyValues, (row) => {
         return zipWith(propertyNames, row, (key, value) => {
@@ -75,18 +76,18 @@ const SheetModel = {
           .then((success) => {
             if(!success) {
               // fetch from web
-              return dispatch("refreshSheetNow", sheetId)
+              return dispatch("refreshSheetIndex", spreadsheetId)
             }
           })
       }
     },
 
-    refreshSheetNow({ dispatch }, sheetId) {
-      return dispatch("googleFetchSheetById", sheetId)
+    refreshSheetIndex({ dispatch }, spreadsheetId) {
+      return dispatch("googleFetchSheetById", spreadsheetId)
         .then(({ worksheets }) => {
           // add the worksheet metadata to the sheet
           return dispatch("patchSheet", {
-            id: sheetId,
+            id: spreadsheetId,
             worksheets: map(worksheets, (worksheet) => {
               return pick(worksheet, ["id", "title"])
             }),
@@ -95,7 +96,7 @@ const SheetModel = {
           }).then(() => {
             // specially cache the heavy part
             return dispatch("cacheSheet", {
-              sheetId,
+              spreadsheetId,
               worksheets: map(worksheets, (worksheet) => {
                 return pick(worksheet, ["id", "values"])
               })

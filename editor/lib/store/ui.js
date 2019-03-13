@@ -86,8 +86,8 @@ const UIModule = {
 
       commit("setActiveComponent", { component })
 
-      if(component.sheetId) {
-        return dispatch("ensureSheetRefreshed", component.sheetId)
+      if(component.spreadsheetId) {
+        return dispatch("ensureSheetIndexed", component.spreadsheetId)
       }
     }
   },
