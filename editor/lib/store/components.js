@@ -13,11 +13,11 @@ const ComponentModel = {
 
   create(newComponent) {
     return {
-      id:            uuid(),
-      title:         "",
-      spreadsheetId:       null,
-      worksheetId:   null,
-      templateId:    null,
+      id:               uuid(),
+      title:            "",
+      spreadsheetId:    null,
+      worksheetId:      null,
+      templateId:       null,
       quantityProperty: null,
       // override with given
       ...newComponent
