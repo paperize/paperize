@@ -39,7 +39,7 @@ const ComponentModel = {
     },
 
     findComponentSheet: (_, __, ___, rootGetters) => component => {
-      return rootGetters.findSheet(component.spreadsheetId, false)
+      return rootGetters.findSpreadsheet(component.spreadsheetId, false)
     },
 
     getComponentItems: (state, getters, _, rootGetters) => component => {

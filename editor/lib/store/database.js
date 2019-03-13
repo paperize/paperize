@@ -140,6 +140,16 @@ const DatabaseModule = {
         delete dbState.sources
       }
 
+      // Sheets -> Spreadsheets
+      if(dbState.sheets) {
+        if(!dbState.spreadsheets) {
+          dbState.spreadsheets = dbState.sheets
+          dbState.spreadsheets.spreadsheets = dbState.spreadsheets.sheets
+          delete dbState.spreadsheets.sheets
+        }
+        delete dbState.sheets
+      }
+
       if(dbState.images) {
         // ensure the old imageFolders is gone
         delete dbState.images.imageFolders

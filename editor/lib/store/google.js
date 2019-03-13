@@ -115,7 +115,7 @@ const GoogleModule = {
 
         .tap((spreadsheetId) => {
           // Add the Sheet
-          return dispatch("createSheet", {
+          return dispatch("createSpreadsheet", {
             id: spreadsheetId,
             name: name,
             parents: [parentId]

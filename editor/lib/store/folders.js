@@ -37,7 +37,7 @@ const FolderModel = {
       }
     },
 
-    sheetToNode: () => ({ id, name, refreshedAt }) => {
+    spreadsheetToNode: () => ({ id, name, refreshedAt }) => {
       return {
         id, name, refreshedAt,
         type: 'sheet'
@@ -56,8 +56,8 @@ const FolderModel = {
           getters.folderToNode),
 
         map(
-          getters.searchModelForParents("Sheets", folderId),
-          getters.sheetToNode),
+          getters.searchModelForParents("Spreadsheets", folderId),
+          getters.spreadsheetToNode),
 
         map(
           getters.searchModelForParents("Images", folderId),
@@ -95,8 +95,8 @@ const FolderModel = {
       return without(orphanedFolders, getters.workingFolder)
     },
 
-    orphanedSheets(_, __, ___, rootGetters) {
-      return rootGetters.searchSheets((sheet) => {
+    orphanedSpreadsheets(_, __, ___, rootGetters) {
+      return rootGetters.searchSpreadsheets((sheet) => {
         // every parent not found
         return every(map(sheet.parents, (parent) => {
           // this parent not found
@@ -118,7 +118,7 @@ const FolderModel = {
     orphanedItemsAsTree(_, getters) {
       return flatten([
         map(getters.orphanedFolders, getters.folderToNode),
-        map(getters.orphanedSheets, getters.sheetToNode),
+        map(getters.orphanedSpreadsheets, getters.spreadsheetToNode),
         map(getters.orphanedImages, getters.imageToNode),
       ])
     }
@@ -165,7 +165,7 @@ const FolderModel = {
           // stuff each into appropriate store modules
           return Promise.all([
             Promise.all(each(folders, (folder) => dispatch("createFolder", folder))),
-            Promise.all(each(sheets, (sheet) => dispatch("createSheet", sheet))),
+            Promise.all(each(sheets, (sheet) => dispatch("createSpreadsheet", sheet))),
             Promise.all(each(images, (image) => dispatch("createImage", image)))
           ]).then(() => {
             // Entering the next depth level...

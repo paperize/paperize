@@ -9,8 +9,8 @@ const pickFieldsFromResponse = function(givenSheet) {
   ])
 }
 
-const SheetModel = {
-  name: 'sheets',
+const SpreadsheetModel = {
+  name: 'spreadsheets',
 
   create(newSheet) {
     return {
@@ -27,7 +27,7 @@ const SheetModel = {
     },
 
     worksheetTitles: (state, getters) => spreadsheetId => {
-      const { worksheets } = getters.findSheet(spreadsheetId),
+      const { worksheets } = getters.findSpreadsheet(spreadsheetId),
         worksheetTitles = map(worksheets, "title")
 
       return worksheetTitles
@@ -71,7 +71,7 @@ const SheetModel = {
     refreshSheetRecord({ dispatch }, spreadsheetId) {
       return dispatch("googleGetRecord", spreadsheetId)
         .then((sheetRecord) => {
-          return dispatch("patchSheet", pickFieldsFromResponse(sheetRecord))
+          return dispatch("patchSpreadsheet", pickFieldsFromResponse(sheetRecord))
         })
 
         .then(() => {
@@ -80,7 +80,7 @@ const SheetModel = {
     },
 
     ensureSheetIndexed({ dispatch, getters, rootGetters }, spreadsheetId) {
-      const sheet = getters.findSheet(spreadsheetId)
+      const sheet = getters.findSpreadsheet(spreadsheetId)
       // check the store cache
       if(rootGetters.allSheetsCached(sheet)){
         return
@@ -100,7 +100,7 @@ const SheetModel = {
       return dispatch("googleFetchSheetById", spreadsheetId)
         .then(({ worksheets }) => {
           // add the worksheet metadata to the sheet
-          return dispatch("patchSheet", {
+          return dispatch("patchSpreadsheet", {
             id: spreadsheetId,
             worksheets: map(worksheets, (worksheet) => {
               return pick(worksheet, ["id", "title"])
@@ -121,6 +121,6 @@ const SheetModel = {
   }
 }
 
-const SheetsModule = generateCrud(SheetModel)
+const SpreadsheetModule = generateCrud(SpreadsheetModel)
 
-export default SheetsModule
+export default SpreadsheetModule
