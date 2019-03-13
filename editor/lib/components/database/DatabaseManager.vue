@@ -31,7 +31,7 @@ v-card.database-manager
       ...mapGetters([
         "allGames",
         "allComponents",
-        "allSheets",
+        "allSpreadsheets",
         "allTemplates",
         "allLayers",
         "allDimensions",

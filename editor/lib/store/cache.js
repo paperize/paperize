@@ -8,7 +8,7 @@ const CacheModule = {
   },
 
   getters: {
-    allSheetsCached: (_, getters) => ({ id: spreadsheetId, worksheets }) => {
+    allSpreadsheetsCached: (_, getters) => ({ id: spreadsheetId, worksheets }) => {
       // are all of this sheet's worksheets cached here already?
       return !isEmpty(worksheets) && every(worksheets, ({ id }) => {
         return !!getters.sheetValues(spreadsheetId, id)

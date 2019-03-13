@@ -39,7 +39,7 @@ v-flex#source-editor(sm4 md6)
 
     v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
     v-btn(small color="primary" @click="createSheetDialog = true") Create New Source
-    v-select(box label="Select Existing Source" v-model="spreadsheetId" :items="allSheets" item-value="id" item-text="name")
+    v-select(box label="Select Existing Source" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
 
     v-dialog(v-model="createSheetDialog" max-width="500" lazy)
       v-card
@@ -77,7 +77,7 @@ v-flex#source-editor(sm4 md6)
         "findComponentSheet",
         "findComponentTemplate",
         "getComponentFolderId",
-        "allSheets"
+        "allSpreadsheets"
       ]),
 
       ...computedVModelUpdateAll("component", "updateComponent", [

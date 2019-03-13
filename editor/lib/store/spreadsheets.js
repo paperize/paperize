@@ -82,7 +82,7 @@ const SpreadsheetModel = {
     ensureSheetIndexed({ dispatch, getters, rootGetters }, spreadsheetId) {
       const sheet = getters.findSpreadsheet(spreadsheetId)
       // check the store cache
-      if(rootGetters.allSheetsCached(sheet)){
+      if(rootGetters.allSpreadsheetsCached(sheet)){
         return
       } else {
         // check the idb cache
