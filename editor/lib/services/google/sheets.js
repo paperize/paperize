@@ -1,5 +1,5 @@
 /* global process */
-import { map, reduce, take } from 'lodash'
+import { chain, map, take } from 'lodash'
 
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
@@ -37,11 +37,19 @@ const api = {
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
-          // extract spreadsheet name and all worksheet names
+          // extract spreadsheet name
           const spreadsheetName = result.properties.title,
-            worksheetIds = take(map(result.sheets, "properties.sheetId"), MAX_WORKSHEETS),
-            worksheetTitles = take(map(result.sheets, "properties.title"), MAX_WORKSHEETS),
-
+            // extract worksheet ids
+            worksheetIds = chain(result.sheets)
+              .take(MAX_WORKSHEETS)
+              .map("properties.sheetId")
+              .invokeMap("toString")
+              .value(),
+            // extract worksheet titles
+            worksheetTitles = chain(result.sheets)
+              .take(MAX_WORKSHEETS)
+              .map("properties.title")
+              .value(),
             // construct batch query
             params = {
               spreadsheetId: googleId,
