@@ -158,9 +158,20 @@ const DatabaseModule = {
         dbState.images.images = dbState.images.images || {}
       }
 
+      // Games
+      if(dbState.games && dbState.games.games) {
+        each(dbState.games.games, (game) => {
+          // No more sourceId
+          if(game.sourceId){
+            game.spreadsheetId = game.sourceId
+            delete game.sourceId
+          }
+        })
+      }
+
       // Components
       if(dbState.components && dbState.components.components) {
-        dbState.components.components = reduce(dbState.components.components, (components, component, id) => {
+        dbState.components.components = each(dbState.components.components, (component) => {
           // No more sourceId
           if(component.sourceId) {
             if(!component.spreadsheetId) {
@@ -175,10 +186,7 @@ const DatabaseModule = {
             }
             delete component.sheetId
           }
-
-          components[id] = component
-          return components
-        }, {})
+        })
       }
 
       return dbState

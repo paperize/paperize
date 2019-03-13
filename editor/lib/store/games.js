@@ -20,7 +20,7 @@ const GameModel = {
       playerCount:   "",
       playTime:      "",
       ageRange:      "",
-      sourceId:      null,
+      spreadsheetId: null,
       componentIds:  [ ],
       // Override with given
       ...newGame
@@ -119,7 +119,7 @@ const GameModel = {
             return dispatch("patchGame", {
               id: outerGameId,
               folderId: outerFolderId,
-              sourceId: spreadsheetId // may be null, don't care
+              spreadsheetId // may be null, don't care
             })
           }
         })
@@ -128,17 +128,17 @@ const GameModel = {
     createGameComponentAndDriveArtifacts({ dispatch }, { game, component, addSheetToSource }) {
       return dispatch("createGameComponent", { game, component })
         .tap((componentId) => {
-          if(addSheetToSource && game.sourceId) {
+          if(addSheetToSource && game.spreadsheetId) {
             return dispatch("googleAddSheetToSpreadsheet", {
-              spreadsheetId: game.sourceId,
+              spreadsheetId: game.spreadsheetId,
               sheetName: component.title
             })
 
               .then(() => {
                 return dispatch("patchComponent", {
                   id: componentId,
-                  sourceId: game.sourceId,
                   worksheetId: component.title
+                  spreadsheetId: game.spreadsheetId,
                 })
               })
           }

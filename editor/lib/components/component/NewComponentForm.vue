@@ -30,7 +30,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       ...mapGetters(["activeGame"]),
 
       gameHasSource() {
-        return !!this.activeGame.sourceId
+        return !!this.activeGame.spreadsheetId
       }
     },
 
