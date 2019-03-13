@@ -16,7 +16,7 @@ v-flex#source-editor(sm4 md6)
 
       //- Refresh this source from Drive?
       v-tooltip(top)
-        v-btn(slot="activator" fab small @click="refreshSheetNow(componentSheet.id)")
+        v-btn(slot="activator" fab small @click="refreshSheetIndex(componentSheet.id)")
           v-icon refresh
         span Refresh (last refresh: {{ lastRefresh }})
 
@@ -118,7 +118,7 @@ v-flex#source-editor(sm4 md6)
         "setComponentWorksheet",
         "patchComponent",
         "googleCreateSpreadsheet",
-        "refreshSheetNow",
+        "refreshSheetIndex",
       ]),
 
       pickSheetFromDrive() {

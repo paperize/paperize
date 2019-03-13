@@ -1,17 +1,20 @@
 import { map, pick, zipWith } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
+const pickFieldsFromResponse = function(givenSheet) {
+  return pick(givenSheet, [
+    "id",
+    "name",
+    "parents"
+  ])
+}
+
 const SheetModel = {
   name: 'sheets',
 
   create(newSheet) {
     return {
-      ...pick(newSheet, [
-        "id",
-        "name",
-        "parents"
-      ]),
-
+      ...pickFieldsFromResponse(newSheet),
       refreshedAt: null, /* starts unrefreshed */
       worksheets: [/* empty til refreshed */],
     }
@@ -65,8 +68,19 @@ const SheetModel = {
   mutations: { },
 
   actions: {
-    ensureSheetRefreshed({ dispatch, getters, rootGetters }, sheetId) {
-      const sheet = getters.findSheet(sheetId)
+    refreshSheetRecord({ dispatch }, spreadsheetId) {
+      return dispatch("googleGetRecord", spreadsheetId)
+        .then((sheetRecord) => {
+          return dispatch("patchSheet", pickFieldsFromResponse(sheetRecord))
+        })
+
+        .then(() => {
+          return dispatch("refreshSheetIndex", spreadsheetId)
+        })
+    },
+
+    ensureSheetIndexed({ dispatch, getters, rootGetters }, spreadsheetId) {
+      const sheet = getters.findSheet(spreadsheetId)
       // check the store cache
       if(rootGetters.allSheetsCached(sheet)){
         return

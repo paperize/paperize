@@ -121,7 +121,7 @@ const GoogleModule = {
             parents: [parentId]
           }).then(() => {
             // Index the Sheet
-            return dispatch("refreshSheetNow", spreadsheetId)
+            return dispatch("refreshSheetIndex", spreadsheetId)
           })
         })
     },
@@ -135,7 +135,7 @@ const GoogleModule = {
 
         .then(() => {
           // Refresh our local version of this sheet
-          return dispatch("refreshSheetNow", spreadsheetId)
+          return dispatch("refreshSheetIndex", spreadsheetId)
         })
     },
 
