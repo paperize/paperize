@@ -88,12 +88,6 @@ const GameModel = {
             promises.push(dispatch("googleCreateSpreadsheet", {
               parentId: folderId,
               name: game.title
-            }).then((sheetId) => {
-              return dispatch("createSheet", {
-                id: sheetId,
-                name: game.title,
-                parents: [folderId]}
-              )
             }))
           } else {
             promises.push(Promise.resolve(null))

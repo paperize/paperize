@@ -114,8 +114,15 @@ const GoogleModule = {
         })
 
         .tap((spreadsheetId) => {
-          // Create our local version of this sheet
-          return dispatch("downloadAndSaveSource", spreadsheetId)
+          // Add the Sheet
+          return dispatch("createSheet", {
+            id: spreadsheetId,
+            name: name,
+            parents: [parentId]
+          }).then(() => {
+            // Index the Sheet
+            return dispatch("refreshSheetNow", spreadsheetId)
+          })
         })
     },
 
