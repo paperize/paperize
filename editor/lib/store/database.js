@@ -136,33 +136,8 @@ const DatabaseModule = {
 
       // Sources
       if(dbState.sources) {
-        // No longer tracking remote sources ourselves
-        if(dbState.sources.remoteSources) {
-          delete dbState.sources.remoteSources
-        }
-
-        // Move to a multiple-worksheet world
-        if(dbState.sources.sources) {
-          each(dbState.sources.sources, (source) => {
-            // old data location
-            if(source.data) {
-              // construct a good worksheet id from the range's A1 format
-              let rangeChunks = source.data.range.split('!')
-              rangeChunks = take(rangeChunks, rangeChunks.length - 1)
-              const worksheetId = rangeChunks.join('!')
-
-              // make sure worksheets collection exists
-              source.worksheets = source.worksheets || []
-              // put this new worksheet in front so it is default
-              source.worksheets.unshift({
-                id: worksheetId,
-                values: source.data.values
-              })
-
-              delete source.data
-            }
-          })
-        }
+        // No longer using sources, use spreadsheets instead
+        delete dbState.sources
       }
 
       if(dbState.images) {
