@@ -23,6 +23,7 @@ import google       from './google'
 
 
 const INITIAL_STATE = {
+  version:      "5.5a",
   user:         user.state,
   database:     database.state,
   cache:        cache.state,
