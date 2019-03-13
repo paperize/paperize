@@ -18,7 +18,7 @@ v-expansion-panel#image-layer-editor(popout)
 
         template(v-else)
           v-text-field(v-model="imageNamePrefix" label="Prefix" box)
-          v-select(v-model="imageNameProperty" :items="activeSourceProperties" box)
+          v-select(v-model="imageNameProperty" :items="activeSheetProperties" box)
           v-text-field(v-model="imageNameSuffix" label="Suffix" box)
           v-text-field(disabled label="Looks like" :value="dynamicImageName" box)
 
@@ -61,7 +61,7 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     computed: {
-      ...mapGetters(["activeSourceProperties", "allImages", "workingDirectoryId"]),
+      ...mapGetters(["activeSheetProperties", "allImages", "workingDirectoryId"]),
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",

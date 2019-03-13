@@ -15,9 +15,12 @@ const UIModule = {
       return rootGetters.findComponent(state.activeComponentId, false)
     },
 
-    activeSheet(_, getters, __, rootGetters) {
-      if(getters.activeComponent) {
-        return rootGetters.findComponentSheet(getters.activeComponent, false)
+    activeSheetProperties(_, getters, __, rootGetters) {
+      const ac = getters.activeComponent
+      if(ac && ac.spreadsheetId && ac.worksheetId) {
+        return rootGetters.worksheetPropertyNames(ac.spreadsheetId, ac.worksheetId)
+      } else {
+        return []
       }
     },
 
