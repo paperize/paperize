@@ -1,5 +1,9 @@
 import jsPDF from 'jspdf'
 
+// Fonts
+import arialNormal from './fonts/Arial-normal'
+arialNormal(jsPDF.API)
+
 export function singlePageDocOfSize(size) {
   const doc = startEmptyDocument()
 
