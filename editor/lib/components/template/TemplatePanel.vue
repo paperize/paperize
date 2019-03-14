@@ -43,11 +43,11 @@ v-flex#template-editor(sm8 md6)
       ...mapGetters([
         "activeGame",
         "activeComponent",
-        "findComponentSource",
+        "findComponentSheet",
         "findComponentTemplate"
       ]),
 
-      componentSource() { return this.findComponentSource(this.component) },
+      componentSource() { return this.findComponentSheet(this.component) },
 
       componentTemplate() { return this.findComponentTemplate(this.component) }
     },

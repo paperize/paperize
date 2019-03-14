@@ -15,9 +15,12 @@ const UIModule = {
       return rootGetters.findComponent(state.activeComponentId, false)
     },
 
-    activeSource(_, getters, __, rootGetters) {
-      if(getters.activeComponent) {
-        return rootGetters.findComponentSource(getters.activeComponent, false)
+    activeSheetProperties(_, getters, __, rootGetters) {
+      const ac = getters.activeComponent
+      if(ac && ac.spreadsheetId && ac.worksheetId) {
+        return rootGetters.worksheetPropertyNames(ac.spreadsheetId, ac.worksheetId)
+      } else {
+        return []
       }
     },
 
@@ -81,10 +84,14 @@ const UIModule = {
       commit("clearActiveGame")
     },
 
-    setActiveComponent({ commit, rootGetters }, componentId) {
+    setActiveComponent({ dispatch, commit, rootGetters }, componentId) {
       let component = rootGetters.findComponent(componentId)
 
       commit("setActiveComponent", { component })
+
+      if(component.spreadsheetId) {
+        return dispatch("ensureSheetIndexed", component.spreadsheetId)
+      }
     }
   },
 

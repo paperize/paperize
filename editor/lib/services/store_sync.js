@@ -80,7 +80,7 @@ const
 
   becomeSignedInUser = function() {
     // Already signed in so we immediately get the user object
-    return google.auth.getCurrentUser()
+    return google.auth.getCurrentUserProfile()
       // Pull the goodies out of the user object
       .then(({ email, name, imageUrl }) => {
         // Transform them into what Paperize needs
@@ -142,8 +142,10 @@ const
       })
 
       .then(() => {
-        vuex.commit("setWorkingDirectory", { id: workingDirectoryId, name: FOLDER_NAME })
-        vuex.commit("setDatabaseFile", { id: databaseFileId, name: DATABASE_NAME })
+        return vuex.dispatch("prepareRootItems", {
+          workingDirectory: { id: workingDirectoryId, name: FOLDER_NAME },
+          databaseFile: { id: databaseFileId, name: DATABASE_NAME }
+        })
       })
   },
 

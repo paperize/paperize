@@ -12,14 +12,15 @@ const GameModel = {
   create(newGame={}) {
     return {
       // Defaults
-      id:          uuid(),
-      title:       "",
-      folderId:    null,
-      description: "",
-      coverArt:    "",
-      playerCount: "",
-      playTime:    "",
-      ageRange:    "",
+      id:            uuid(),
+      title:         "",
+      folderId:      null,
+      description:   "",
+      coverArt:      "",
+      playerCount:   "",
+      playTime:      "",
+      ageRange:      "",
+      spreadsheetId: null,
       componentIds:  [ ],
       // Override with given
       ...newGame
@@ -54,25 +55,102 @@ const GameModel = {
   },
 
   actions: {
-    createGameAndDriveFolder({ dispatch, getters }, game) {
+    createGameAndDriveArtifacts({ dispatch, getters }, { game, gameFolder, componentSpreadsheet, imageFolder }) {
+      const workingDirectoryId = getters.workingDirectoryId
+      let outerGameId,
+        outerFolderId
+
+      // Create the game in our local collection
       return dispatch("createGame", game)
         .then((gameId) => {
-          const workingDirectoryId = getters.workingDirectoryId
-          return dispatch("googleCreateFolder", { name: game.title, parentId: workingDirectoryId })
-            .then((folderId) => {
-              const savedGame = getters.findGame(gameId)
-              return dispatch("updateGame", { ...savedGame, folderId })
+          // Optional: Create a folder in Google Drive for the game
+          outerGameId = gameId
+          if(gameFolder) {
+            return dispatch("googleCreateFolder", {
+              name: game.title,
+              parentId: workingDirectoryId
+            }).tap((folderId) => {
+              return dispatch("createFolder", {
+                id: folderId,
+                name: game.title,
+                parents: [workingDirectoryId]}
+              )
             })
+          }
+        })
+
+        // Add index entry for the folder we just created.
+        .then((folderId) => {
+          outerFolderId = folderId
+          let promises = []
+          if(folderId && componentSpreadsheet) {
+            // Optional: Create a spreadsheet on Google Drive to hold components
+            promises.push(dispatch("googleCreateSpreadsheet", {
+              parentId: folderId,
+              name: game.title
+            }))
+          } else {
+            promises.push(Promise.resolve(null))
+          }
+
+          if(folderId && imageFolder) {
+            // Optional: Create a folder inside the game folder for images
+            promises.push(dispatch("googleCreateFolder", {
+              name: 'Images',
+              parentId: folderId
+            }).then((imageFolderId) => {
+              return dispatch("createFolder", {
+                id: imageFolderId,
+                name: "Images",
+                parents: [folderId]}
+              )
+            })
+            )
+          } else {
+            promises.push(Promise.resolve(null))
+          }
+
+          return Promise.all(promises)
+        })
+
+        .spread((spreadsheetId) => {
+          if(gameFolder) {
+            // Re-save the game with the new remote ids
+            return dispatch("patchGame", {
+              id: outerGameId,
+              folderId: outerFolderId,
+              spreadsheetId // may be null, don't care
+            })
+          }
+        })
+    },
+
+    createGameComponentAndDriveArtifacts({ dispatch }, { game, component, addSheetToSource }) {
+      return dispatch("createGameComponent", { game, component })
+        .tap((componentId) => {
+          if(addSheetToSource && game.spreadsheetId) {
+            return dispatch("googleAddSheetToSpreadsheet", {
+              spreadsheetId: game.spreadsheetId,
+              sheetName: component.title
+            })
+
+              .then((worksheetId) => {
+                return dispatch("patchComponent", {
+                  id: componentId,
+                  spreadsheetId: game.spreadsheetId,
+                  worksheetId
+                })
+              })
+          }
         })
     },
 
     createGameComponent({ dispatch, commit }, { game, component }) {
       return dispatch("createComponent", component)
-        .then((componentId) => {
+        .tap((componentId) => {
           commit("pushGameComponentId", { game, componentId })
-          return componentId
         })
-    },   
+    },
 
     destroyGameComponent({ dispatch, commit }, { game, component }) {
       dispatch("destroyComponent", component).then((componentId) => {

@@ -6,7 +6,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-      v-checkbox.component-create-drive-folder(v-model="createDriveFolder" label="Create a Google Drive Folder for this component?")
+      v-checkbox.component-add-sheet-to-source(v-if="gameHasSource" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
 
     v-card-actions
       v-btn(small success @click="submitComponent") Create Component
@@ -19,7 +19,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     data() {
       return {
         component: { title: "" },
-        createDriveFolder: true,
+        addSheetToSource: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -28,28 +28,29 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     computed: {
       ...mapGetters(["activeGame"]),
+
+      gameHasSource() {
+        return !!this.activeGame.spreadsheetId
+      }
     },
 
     methods: {
-      ...mapActions(["createGameComponent", "createComponentFolder", "createComponentImageFolder"]),
+      ...mapActions([
+        "createGameComponent",
+        "createComponentFolder",
+        "createComponentImageFolder",
+        "createGameComponentAndDriveArtifacts"
+      ]),
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {
-          const gameAndComponent = { game: this.activeGame, component: this.component }
-          let createComponentPromise
+          this.createGameComponentAndDriveArtifacts({
+            game: this.activeGame,
+            component: this.component,
+            addSheetToSource: this.gameHasSource && this.addSheetToSource
+          })
 
-          createComponentPromise = this.createGameComponent(gameAndComponent)
-
-          if(this.createDriveFolder) {
-            createComponentPromise.then((componentId) => {
-              return this.createComponentFolder(componentId)
-                .then(() => {
-                  return this.createComponentImageFolder(componentId)
-                })
-            })
-          }
-
-          createComponentPromise.then((componentId) => {
+          .then((componentId) => {
             // stop validating this form
             this.$refs.componentForm.reset()
             // reset the title

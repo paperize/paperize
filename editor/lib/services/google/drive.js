@@ -23,7 +23,8 @@ const
                 resolve([driveResult.id, driveResult.name])
               }
             },
-            reject
+
+            ({ result }) => reject(new Error(result.error.message))
           )
         })
       }
@@ -40,18 +41,14 @@ const
         getClient((client) => {
           client.drive.files.get({
             fileId,
-            fields: "id,name,md5Checksum,mimeType"
+            fields: "id,name,md5Checksum,mimeType,parents"
           }).then(
-            ({ result }) => {
-              resolve({
-                id:       result.id,
-                name:     result.name,
-                md5:      result.md5Checksum,
-                mimeType: result.mimeType
-              })
+            ({ result: { id, name, mimeType, parents, md5Checksum } }) => {
+              resolve({ id, name, mimeType, parents, md5: md5Checksum })
             },
 
-            reject)
+            ({ result }) => reject(new Error(result.error.message))
+          )
         })
       }
     })
@@ -59,20 +56,38 @@ const
 
   getIndex = function(folderId, options={}) {
     // Build the query
-    let queryParts = []
+    const queryParts = []
+    // Only files in the given folder
     queryParts.push(`'${folderId}' in parents`)
+    // No trashed files
     queryParts.push(`trashed = false`)
-    if(options.mimeType == 'IMAGE') {
-      // Only looking for image files
-      queryParts.push(`mimeType contains 'image/'`)
+
+    // Only a certain type of files
+    let mimeType
+    if(options.indexType == 'FOLDER') {
+      // Folders
+      mimeType = 'application/vnd.google-apps.folder'
+    } else if(options.indexType == 'SHEET') {
+      // Sheets
+      mimeType = 'application/vnd.google-apps.spreadsheet'
+    } else if(options.indexType == 'IMAGE') {
+      // Image formats
+      mimeType = 'image/'
     }
+
+    if(mimeType) {
+      queryParts.push(`mimeType contains '${mimeType}'`)
+    }
+
     const query = queryParts.join(' and ')
 
+    // Make the request
     return new Promise((resolve, reject) => {
       getClient((client) => {
         client.drive.files.list({
           q: query,
-          fields: "files(id,name,md5Checksum,mimeType)"
+          fields: "files(id,name,md5Checksum,mimeType,parents)",
+          pageSize: 1000, // Maximum, so we don't have to paginate yet
         }).then(
           ({ result }) => {
             resolve(map(result.files, (file) => {
@@ -80,12 +95,14 @@ const
                 id:       file.id,
                 name:     file.name,
                 md5:      file.md5Checksum,
-                mimeType: file.mimeType
+                mimeType: file.mimeType,
+                parents:  file.parents
               }
             }))
           },
 
-          reject)
+          ({ result }) => reject(new Error(result.error.message))
+        )
       })
     })
   },
@@ -107,41 +124,14 @@ const
               resolve(folderIds)
             },
             // Failure callback
-            (driveError) => {
-              reject(driveError)
-            }
+            ({ result }) => reject(new Error(result.error.message))
           )
       })
     })
   },
 
   createFolder = function(folderName, options={}) {
-    const fileMetadata = {
-      name: folderName,
-      mimeType: 'application/vnd.google-apps.folder'
-    }
-
-    if(options.parentId) {
-      fileMetadata.parents = [options.parentId]
-    }
-
-    return new Promise((resolve, reject) => {
-      getClient((client) => {
-        client.drive.files.create({
-          resource: fileMetadata,
-        }).then(
-          (successResponse) => {
-            if(successResponse.status == 200) {
-              resolve(successResponse.result.id)
-            } else {
-              reject(new Error(successResponse.statusText))
-            }
-          },
-
-          (failure) => { reject(failure) }
-        )
-      })
-    })
+    return this.createDriveItem(folderName, options.parentId, 'application/vnd.google-apps.folder')
   },
 
   findFile = function(filename, mimeType, foldersToSearch) {
@@ -176,9 +166,8 @@ const
             },
 
             // Error callback
-            (driveError) => {
-              reject(driveError)
-            })
+            ({ result }) => reject(new Error(result.error.message))
+          )
         })
       })
     }).then(() => {
@@ -198,9 +187,8 @@ const
             resolve(result.body)
           },
 
-          (driveError) => {
-            reject(driveError)
-          })
+          ({ result }) => reject(new Error(result.error.message))
+        )
       })
     })
   },
@@ -248,10 +236,37 @@ const
               }
             },
 
-            (failureResponse) => {
-              reject(failureResponse)
-            }
+            ({ result }) => reject(new Error(result.error.message))
           )
+      })
+    })
+  },
+
+  createSpreadsheet = function(name, parentId) {
+    return this.createDriveItem(name, parentId, 'application/vnd.google-apps.spreadsheet')
+  },
+
+  createDriveItem = function(name, parentId, mimeType) {
+    const fileMetadata = {
+      name, mimeType,
+      parents: [parentId]
+    }
+
+    return new Promise((resolve, reject) => {
+      getClient((client) => {
+        client.drive.files.create({
+          resource: fileMetadata,
+        }).then(
+          ({ status, statusText, result}) => {
+            if(status == 200) {
+              resolve(result.id)
+            } else {
+              reject(new Error(statusText))
+            }
+          },
+
+          ({ result }) => reject(new Error(result.error.message))
+        )
       })
     })
   },
@@ -274,12 +289,22 @@ const
             }
           },
 
-          (failureResponse) => {
-            reject(failureResponse)
-          }
+          ({ result }) => reject(new Error(result.error.message))
         )
       })
     })
   }
 
-export default { getFolder, getRecord, getIndex, findFolders, createFolder, findFile, downloadFile, createFile, updateFile }
+export default {
+  getFolder,
+  getRecord,
+  getIndex,
+  findFolders,
+  createFolder,
+  findFile,
+  downloadFile,
+  createFile,
+  createDriveItem,
+  createSpreadsheet,
+  updateFile
+}

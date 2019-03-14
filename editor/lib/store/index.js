@@ -5,35 +5,40 @@ import Vue  from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-import user       from './user'
-import database   from './database'
-import ui         from './ui'
-import games      from './games'
-import components from './components'
-import sources    from './sources'
-import templates  from './templates'
-import layers     from './layers'
-import dimensions from './dimensions'
-import images     from './images'
-import print      from './print'
-import uiPrint    from './ui_print'
-import google     from './google'
+import user         from './user'
+import database     from './database'
+import cache        from './cache'
+import ui           from './ui'
+import folders      from './folders'
+import spreadsheets from './spreadsheets'
+import images       from './images'
+import games        from './games'
+import components   from './components'
+import templates    from './templates'
+import layers       from './layers'
+import dimensions   from './dimensions'
+import print        from './print'
+import uiPrint      from './ui_print'
+import google       from './google'
 
 
 const INITIAL_STATE = {
-  user:       user.state,
-  database:   database.state,
-  ui:         ui.state,
-  games:      games.state,
-  components: components.state,
-  sources:    sources.state,
-  templates:  templates.state,
-  layers:     layers.state,
-  dimensions: dimensions.state,
-  images:     images.state,
-  print:      print.state,
-  uiPrint:    uiPrint.state,
-  google:     google.state,
+  version:      "5.5a",
+  user:         user.state,
+  database:     database.state,
+  cache:        cache.state,
+  ui:           ui.state,
+  folders:      folders.state,
+  spreadsheets: spreadsheets.state,
+  images:       images.state,
+  games:        games.state,
+  components:   components.state,
+  templates:    templates.state,
+  layers:       layers.state,
+  dimensions:   dimensions.state,
+  print:        print.state,
+  uiPrint:      uiPrint.state,
+  google:       google.state,
 }
 
 // Feeling hacky here, but having trouble with Observers contaminating my statics
@@ -57,15 +62,17 @@ let store = new Vuex.Store({
   modules: {
     user,
     database,
+    cache,
     ui,
     uiPrint,
+    folders,
+    spreadsheets,
+    images,
     games,
     components,
-    sources,
     templates,
     layers,
     dimensions,
-    images,
     print,
     google
   },

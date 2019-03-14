@@ -6,7 +6,10 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
-      v-checkbox.game-create-drive-folder(v-if="!isSaved" v-model="createDriveFolder" label="Create a Google Drive Folder for this game?")
+      template(v-if="!isSaved")
+        v-checkbox.game-create-game-folder(v-model="gameFolder" label="Create a Google Drive Folder for this game?")
+        v-checkbox.game-create-spreadsheet(v-model="componentSpreadsheet" label="Create a Google Sheet its components?")
+        v-checkbox.game-create-image-folder(v-model="imageFolder" label="Create a Folder for its images?")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
@@ -25,7 +28,9 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     data() {
       return {
         gameTitle: this.game.title,
-        createDriveFolder: true,
+        gameFolder: true,
+        componentSpreadsheet: true,
+        imageFolder: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -39,16 +44,23 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     methods: {
-      ...mapActions(["createGame", "createGameAndDriveFolder", "updateGame"]),
+      ...mapActions([
+        "createGame",
+        "createGameAndDriveArtifacts",
+        "updateGame"
+      ]),
 
       submitGame() {
         if(this.$refs.gameForm.validate()) {
           if(this.isSaved) {
             this.updateGame({ ...this.game, title: this.gameTitle })
-          } else if(this.createDriveFolder){
-            this.createGameAndDriveFolder({ title: this.gameTitle })
           } else {
-            this.createGame({ title: this.gameTitle })
+            this.createGameAndDriveArtifacts({
+              game: { title: this.gameTitle },
+              gameFolder: this.gameFolder,
+              componentSpreadsheet: this.componentSpreadsheet,
+              imageFolder: this.imageFolder
+            })
           }
 
           this.$emit("close-dialog")

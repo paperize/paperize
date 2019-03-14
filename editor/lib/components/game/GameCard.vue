@@ -2,7 +2,9 @@
 v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
   v-card
     v-card-title
-      .headline {{ game.title || "[No title]" }}
+      .headline
+        folder-icon(:folderId="game.folderId")
+        |  {{ game.title || "[No title]" }}
 
     v-responsive
       img(:src="game.coverArt")
@@ -22,6 +24,7 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
 
 <script>
   import { mapActions } from 'vuex'
+  import FolderIcon from '../icons/FolderIcon.vue'
 
   export default {
     props: {
@@ -29,6 +32,8 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
         required: true
       }
     },
+
+    components: { FolderIcon },
 
     data() {
       return {

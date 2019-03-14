@@ -1,94 +1,119 @@
-import { map, pick } from 'lodash'
+/* global process */
+import { chain, map, take } from 'lodash'
 
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
-let BadIdError = function(sheetId) {
-  this.message = `No Google Sheet ID detected in "${sheetId}"`
+const BadIdError = function(spreadsheetId) {
+  this.message = `No Google Sheet ID detected in "${spreadsheetId}"`
 }
 BadIdError.prototype = Object.create(Error.prototype)
 
-let NotFoundError = function(googleId) {
+const NotFoundError = function(googleId) {
   this.message = `No Google Sheet found for ID: "${googleId}"`
   this.googleId = googleId
   return this
 }
 NotFoundError.prototype = Object.create(Error.prototype)
 
-let api = {
+const MAX_WORKSHEETS = 20
+
+const api = {
   BadIdError, NotFoundError,
 
   matchGoogleId,
 
-  fetchSheets() {
+  fetchSheetById(spreadsheetId) {
     return new Promise((resolve, reject) => {
-      getClient((client) => {
-        client.drive.files.list({
-          // Query for spreadsheets only
-          q: "mimeType='application/vnd.google-apps.spreadsheet'",
-          // Order them by most recent (seems to be most relevant)
-          orderBy: "recency desc"
-        }).then((driveResponse) => {
-          let driveResult = driveResponse.result
-          let fileIdsAndNames = map(driveResult.files, (file) => pick(file, [ "id", "name" ]) )
-          resolve(fileIdsAndNames)
-        }, (driveError) => {
-          reject(new Error(driveError.result.error.message))
-        })
-      })
-    })
-  },
-
-  fetchSheetData(sheet) {
-    return new Promise((resolve) => {
-      getClient((client) => {
-        return client.sheets.spreadsheets.values.get({
-          spreadsheetId: sheet.id,
-          range:         'Sheet1' // TODO: Can't rely on this in reality
-        }).then((sheetsResponse) => {
-          let sheetsResult = sheetsResponse.result
-          // resolve with the sheet metadata and data
-          resolve({
-            ...sheet,
-            data: sheetsResult
-          })
-        })
-      })
-    })
-  },
-
-  fetchSheetById(sheetId) {
-    return new Promise((resolve, reject) => {
-      let googleId = matchGoogleId(sheetId)
+      let googleId = matchGoogleId(spreadsheetId)
       // error out from id parse failure
       if(!googleId){
-        reject(new BadIdError(sheetId))
+        reject(new BadIdError(spreadsheetId))
         return
       }
 
       getClient((client) => {
+        // worksheet names
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
-          let spreadsheetName = result.properties.title
-          let sheetsNames = map(result.sheets, "properties.title")
-          return client.sheets.spreadsheets.values.get({
-            spreadsheetId: googleId,
-            range:         sheetsNames[0] // Entire first sheet
-          }).then((sheetsResponse) => {
-            let sheetsResult = sheetsResponse.result
-            // resolve with the sheet metadata and data
-            resolve({
-              id:   googleId,
-              name: spreadsheetName,
-              data: sheetsResult
+          // extract spreadsheet name
+          const spreadsheetName = result.properties.title,
+            // extract worksheet ids
+            worksheetIds = chain(result.sheets)
+              .take(MAX_WORKSHEETS)
+              .map("properties.sheetId")
+              .invokeMap("toString")
+              .value(),
+            // extract worksheet titles
+            worksheetTitles = chain(result.sheets)
+              .take(MAX_WORKSHEETS)
+              .map("properties.title")
+              .value(),
+            // construct batch query
+            params = {
+              spreadsheetId: googleId,
+              // A sheet title is a valid A1 query
+              ranges: worksheetTitles
+            }
+
+          return client.sheets.spreadsheets.values.batchGet(params)
+            .then(({ result }) => {
+              const worksheets = map(result.valueRanges, ({ values = [] }, index) => {
+                return {
+                  id: worksheetIds[index],
+                  title: worksheetTitles[index],
+                  values
+                }
+              })
+
+              resolve({
+                id:   result.spreadsheetId,
+                name: spreadsheetName,
+                worksheets
+              })
             })
-          })
         }, (error) => {
           if(error.status == 404) {
             reject(new NotFoundError(googleId))
           } else {
             reject(new Error(error.result.error.message))
+          }
+        })
+      })
+    })
+  },
+
+  addSheetToSpreadsheet(spreadsheetId, sheetName) {
+    return new Promise((resolve, reject) => {
+      let googleId = matchGoogleId(spreadsheetId)
+      // error out from id parse failure
+      if(!googleId){
+        reject(new BadIdError(spreadsheetId))
+        return
+      }
+
+      getClient((client) => {
+        // worksheet names
+        const sheetId = Date.now() % 2000000000
+        return client.sheets.spreadsheets.batchUpdate({
+          spreadsheetId: googleId,
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: sheetName,
+                  index: 0,
+                  sheetId
+                }
+              }
+            }
+          ]
+        }).then(({ status, statusText }) => {
+          if(status === 200){
+            resolve(sheetId.toString())
+          } else {
+            reject(new Error(statusText))
           }
         })
       })
