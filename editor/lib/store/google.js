@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { keys, sortBy, reverse } from 'lodash'
+import { filter, includes, keys, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
@@ -72,7 +72,20 @@ const GoogleModule = {
           promise: drive.getRecord(fileId) })
     },
 
-    googleGetIndex({ dispatch }, { folderId, options }) {
+    googleGetTrackedFileIndex({ dispatch }, folderId) {
+      // Get the full index
+      return dispatch("googleGetIndex", { folderId })
+        .then((files) => {
+          return {
+            // split the response into the file types we care about
+            folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
+            sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
+            images: filter(files, file => includes(file.mimeType, "image/") ),
+          }
+        })
+    },
+
+    googleGetIndex({ dispatch }, { folderId, options={} }) {
       return dispatch("traceNetworkRequest",
         { name: `Get Index.`,
           details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
@@ -93,6 +106,39 @@ const GoogleModule = {
           promise: drive.createFolder(name, { parentId }) })
     },
 
+    googleCreateSpreadsheet({ dispatch }, { parentId, name }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Create Spreadsheet.`,
+          details: `Named: "${name}" in folder ${parentId}`,
+          promise: drive.createSpreadsheet(name, parentId)
+        })
+
+        .tap((spreadsheetId) => {
+          // Add the Sheet
+          return dispatch("createSpreadsheet", {
+            id: spreadsheetId,
+            name: name,
+            parents: [parentId]
+          }).then(() => {
+            // Index the Sheet
+            return dispatch("refreshSheetIndex", spreadsheetId)
+          })
+        })
+    },
+
+    googleAddSheetToSpreadsheet({ dispatch }, { spreadsheetId, sheetName }) {
+      return dispatch("traceNetworkRequest",
+        { name: `Add Sheet to Spreadsheet.`,
+          details: `Named: "${sheetName}"`,
+          promise: sheets.addSheetToSpreadsheet(spreadsheetId, sheetName)
+        })
+
+        .tap(() => {
+          // Refresh our local version of this sheet
+          return dispatch("refreshSheetIndex", spreadsheetId)
+        })
+    },
+
     googleUpdateFile({ dispatch }, { fileId, contents }) {
       return dispatch("traceNetworkRequest",
         { name: `Update File.`,
@@ -105,12 +151,6 @@ const GoogleModule = {
         { name: `Download File.`,
           details: fileId,
           promise: drive.downloadFile(fileId) })
-    },
-
-    googleFetchSheets({ dispatch }) {
-      return dispatch("traceNetworkRequest",
-        { name: `Fetch Sheets.`,
-          promise: sheets.fetchSheets() })
     },
 
     googleFetchSheetById({ dispatch }, sourceId) {

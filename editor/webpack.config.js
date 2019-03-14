@@ -1,6 +1,7 @@
 /* global require, __dirname, module */
 var webpack = require('webpack')
   , CopyWebpackPlugin = require('copy-webpack-plugin')
+  , MomentLocalesPlugin = require('moment-locales-webpack-plugin')
   , VueLoaderPlugin = require('vue-loader/lib/plugin')
   , path = require('path')
   , shell = require('shelljs')
@@ -46,6 +47,8 @@ module.exports = (env) => {
         { context: 'static', from: '**' }
       ]),
 
+      new MomentLocalesPlugin(),
+
       new VueLoaderPlugin()
     ],
 
@@ -65,13 +68,10 @@ module.exports = (env) => {
           loader: 'pug-plain-loader'
         }, {
           test: /\.css$/,
-          use: [
-            {
-              loader: 'vue-style-loader'
-            }, {
-              loader: 'css-loader'
-            }
-          ]
+          use: [ 'vue-style-loader', 'css-loader' ]
+        }, {
+          test: /\.(eot|svg|ttf|woff|woff2)$/,
+          use: 'file-loader?name=[name].[ext]'
         }
       ]
     }

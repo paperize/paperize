@@ -19,12 +19,17 @@ import router from './routes'
 import Vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
 import 'vuetify/dist/vuetify.min.css'
+import '@mdi/font/css/materialdesignicons.css'
+// import '@mdi/js'
 Vue.use(Vuetify, {
   theme: {
     primary: colors.blueGrey.lighten2,
     secondary: colors.blueGrey.darken2,
-  }
+  },
+  iconfont: 'mdi'
 })
+
+
 
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
@@ -34,9 +39,6 @@ Vue.use(VueObserveVisibility)
 
 // test-specific settings and globals
 if(process.env.NODE_ENV !== 'production') {
-  Vue.config.productionTip = false
-  Vue.config.devtools = false
-
   window.paperize = { store }
 }
 

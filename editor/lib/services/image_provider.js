@@ -1,22 +1,6 @@
 import store from '../store'
 
-const getLocalStorage = () => localStorage
-
-const getCachedImage = (md5) => {
-  return getLocalStorage().getItem(md5)
-}
-
-const setCachedImage = (md5, content) => {
-  try {
-    getLocalStorage().setItem(md5, content)
-  } catch(error) {
-    if(error.code == 22) {
-      console.warn("Failed to cache image: Local Storage Image Cache is full.")
-    } else {
-      throw error
-    }
-  }
-}
+import { getCachedImage, setCachedImage } from './image_cache'
 
 const getImageById = function(imageId) {
   return new Promise((resolve, reject) => {
@@ -27,37 +11,30 @@ const getImageById = function(imageId) {
       resolve(imageRecord)
     } else {
       reject(new Error(`No image in index with ${imageId}`))
-
-      // // not there? request and index
-      // return store.dispatch("googleGetRecord", imageId).then(
-      //   (imageRecord) => {
-      //     // TODO: store record in index
-      //     resolve(imageRecord)
-      //   }
-      // )
     }
   }).then(getImageByRecord)
 }
 
 const getImageByRecord = function({ id, md5, mimeType }) {
   return new Promise((resolve) => {
-    let imageDataURL = getCachedImage(md5)
-
-    if(imageDataURL) {
-      resolve(getImageWithSrc(imageDataURL))
-    } else {
-      return store.dispatch("googleDownloadFile", id).then((imageData) => {
-        const dataURL = `data:${mimeType};base64,${btoa(imageData)}`
-        setCachedImage(md5, dataURL)
-        resolve(getImageWithSrc(dataURL))
+    return getCachedImage(md5)
+      .then((imageDataURL) => {
+        if(imageDataURL) {
+          resolve(imageDataURL)
+        } else {
+          return store.dispatch("googleDownloadFile", id).then((imageData) => {
+            const dataURL = `data:${mimeType};base64,${btoa(imageData)}`
+            return setCachedImage(md5, dataURL)
+              .then(() => { resolve(dataURL) })
+          })
+        }
       })
-    }
-  })
+  }).then(getImageWithSrc)
 }
 
 const getImageByName = function(name) {
   return Promise.try(() => {
-    const imageRecord = store.getters.findImageByName(name)
+    const imageRecord = store.getters.searchImages({ name })[0]
 
     if(!imageRecord) {
       throw new Error(`No image found with name: ${name}`)

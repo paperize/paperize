@@ -8,16 +8,16 @@ const ComponentModel = {
 
   relationships: [
     { relation: 'hasOne', model: 'template', initialize: true, dependent: true },
-    { relation: 'hasOne', model: 'source' }
+    { relation: 'hasOne', model: 'sheet' }
   ],
 
   create(newComponent) {
     return {
-      id:            uuid(),
-      title:         "",
-      folderId:      null,
-      sourceId:      null,
-      templateId:    null,
+      id:               uuid(),
+      title:            "",
+      spreadsheetId:    null,
+      worksheetId:      null,
+      templateId:       null,
       quantityProperty: null,
       // override with given
       ...newComponent
@@ -38,24 +38,23 @@ const ComponentModel = {
       }
     },
 
-    findComponentSource: (_, __, ___, rootGetters) => component => {
-      if(component.sourceId) {
-        return rootGetters.findSource(component.sourceId)
-      }
+    findComponentSheet: (_, __, ___, rootGetters) => component => {
+      return rootGetters.findSpreadsheet(component.spreadsheetId, false)
     },
 
-    getComponentItems: (state, getters) => component => {
-      const componentSource = getters.findComponentSource(component)
-      if(!componentSource) {
+    getComponentItems: (state, getters, _, rootGetters) => component => {
+      if(!component.spreadsheetId || !component.worksheetId) {
         return []
       } else {
-        let sourceItems = getters.getSourceItems(componentSource)
-        // Handle quantity expansion
+        const sheetItems = rootGetters.worksheetItems(component.spreadsheetId, component.worksheetId)
+
+        // Check for quantity expansion
         if(!component.quantityProperty) {
-          return sourceItems
+          return sheetItems
         } else {
-          return reduce(sourceItems, (expandedItems, item) => {
-            let foundProperty = find(item, {key: component.quantityProperty}),
+          // Handle quantity expansion
+          return reduce(sheetItems, (expandedItems, item) => {
+            let foundProperty = find(item, { key: component.quantityProperty }),
               rawQuantity = (foundProperty || {}).value,
               quantity = parseInt(rawQuantity, 10)
 
@@ -77,12 +76,16 @@ const ComponentModel = {
   },
 
   actions: {
-    linkComponentSource({ commit }, { component, source }) {
-      commit("updateComponent", { ...component, sourceId: source.id })
+    linkComponentSheet({ dispatch }, { component, spreadsheetId }) {
+      dispatch("patchComponent", { id: component.id, spreadsheetId, worksheetId: null, quantityProperty: null })
     },
 
-    unlinkComponentSource({ commit }, component) {
-      commit("updateComponent", { ...component, sourceId: null })
+    setComponentWorksheet({ dispatch }, { component, worksheetId }) {
+      dispatch("patchComponent", { id: component.id, worksheetId, quantityProperty: null })
+    },
+
+    unlinkComponentSheet({ dispatch }, component) {
+      dispatch("patchComponent", { id: component.id, spreadsheetId: null, worksheetId: null, quantityProperty: null })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {
@@ -100,10 +103,7 @@ const ComponentModel = {
     createComponentImageFolder({ getters, dispatch }, componentId) {
       const componentFolderId = getters.findComponent(componentId).folderId
 
-      return dispatch("googleCreateFolder", { name: "Images", parentId: componentFolderId })
-        .then((folderId) => {
-          return dispatch("addImageFolder", { id: folderId, name: "Images" })
-        })
+      return dispatch("createAndAddImageFolder", { parentId: componentFolderId })
     }
   }
 }

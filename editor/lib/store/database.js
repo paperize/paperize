@@ -1,5 +1,5 @@
 import { LAYER_DEFAULTS } from './layers'
-import { each, isNull, isUndefined, pick, omit } from 'lodash'
+import { each, isNull, isUndefined, pick, reduce, omit } from 'lodash'
 import PrintModule from './print'
 
 const PRINT_DEFAULT_STATE = PrintModule.state
@@ -7,8 +7,9 @@ const PRINT_DEFAULT_STATE = PrintModule.state
 const UNPERSISTED_STATE_KEYS = [
   "user",
   "database",
+  "cache",
   "ui",
-  "ui_print",
+  "uiPrint",
   "google"
 ]
 
@@ -64,6 +65,11 @@ const DatabaseModule = {
       })
     },
 
+    prepareRootItems({ commit }, { workingDirectory, databaseFile }) {
+      commit("setWorkingDirectory", workingDirectory)
+      commit("setDatabaseFile", databaseFile)
+    },
+
     loadFromDrive({ getters, dispatch, commit  }) {
       return dispatch("googleDownloadFile", getters.databaseFileId)
         .then((databaseContent) => {
@@ -81,6 +87,8 @@ const DatabaseModule = {
               .then((migratedState) => {
                 // Load the database up!
                 commit("resetState", migratedState)
+
+                return dispatch("ensureWorkingFolder")
               })
           }
         })
@@ -105,6 +113,7 @@ const DatabaseModule = {
         })
       }
 
+      // 5.3 -> 5.4
       // Print settings
       if(dbState.print) {
         each(PRINT_DEFAULT_STATE, (value, key) => {
@@ -112,6 +121,72 @@ const DatabaseModule = {
         })
         if(dbState.print.width) { delete dbState.print.width }
         if(dbState.print.height) { delete dbState.print.height }
+      }
+
+      // 5.4 -> 5.5
+      // Components
+      if(dbState.components && dbState.components.components) {
+        each(dbState.components.components, (component) => {
+          // Doesn't need the folderId property
+          delete component.folderId
+          // Needs worksheetId property
+          component.worksheetId = component.worksheetId || null
+        })
+      }
+
+      // Sources
+      if(dbState.sources) {
+        // No longer using sources, use spreadsheets instead
+        delete dbState.sources
+      }
+
+      // Sheets -> Spreadsheets
+      if(dbState.sheets) {
+        if(!dbState.spreadsheets) {
+          dbState.spreadsheets = dbState.sheets
+          dbState.spreadsheets.spreadsheets = dbState.spreadsheets.sheets
+          delete dbState.spreadsheets.sheets
+        }
+        delete dbState.sheets
+      }
+
+      // Remove the old imageFolders image caching concept
+      if(dbState.images) {
+        // ensure the old imageFolders is gone
+        delete dbState.images.imageFolders
+        // ensure the new images collection is present
+        dbState.images.images = dbState.images.images || {}
+      }
+
+      // Games
+      if(dbState.games && dbState.games.games) {
+        each(dbState.games.games, (game) => {
+          // No more sourceId
+          if(game.sourceId){
+            game.spreadsheetId = game.sourceId
+            delete game.sourceId
+          }
+        })
+      }
+
+      // Components
+      if(dbState.components && dbState.components.components) {
+        dbState.components.components = each(dbState.components.components, (component) => {
+          // No more sourceId
+          if(component.sourceId) {
+            if(!component.spreadsheetId) {
+              component.spreadsheetId = component.sourceId
+            }
+            delete component.sourceId
+          }
+          // No more sheetId
+          if(component.sheetId) {
+            if(!component.spreadsheetId) {
+              component.spreadsheetId = component.sheetId
+            }
+            delete component.sheetId
+          }
+        })
       }
 
       return dbState
