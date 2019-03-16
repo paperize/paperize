@@ -25,13 +25,13 @@ v-toolbar(app)
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
 
-    profile
+    profile-menu
     print-status
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
-  import Profile from './Profile.vue'
+  import ProfileMenu from './ProfileMenu.vue'
   import DriveExplorer from '../drive/DriveExplorer.vue'
   import PrintStatus from '../print/PrintStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
@@ -39,7 +39,7 @@ v-toolbar(app)
 
   export default {
     components: {
-      Profile,
+      ProfileMenu,
       DatabaseManager,
       PrintStatus,
       DriveExplorer,
