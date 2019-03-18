@@ -1,0 +1,67 @@
+{
+  "loveLetter-000000001": [
+    [
+      "Quantity",
+      "Rank",
+      "Name",
+      "Image",
+      "Rule"
+    ],
+    [
+      "4",
+      "1",
+      "Guard",
+      "",
+      "Name a non-guard card, and choose another player. If that player has that card, he or she is out of the round."
+    ],
+    [
+      "3",
+      "2",
+      "Priest",
+      "",
+      "Look at another player's hand."
+    ],
+    [
+      "3",
+      "3",
+      "Baron",
+      "",
+      "You and another player secretl compare hands. The player with the lower value is out of the round."
+    ],
+    [
+      "2",
+      "4",
+      "Handmaid",
+      "",
+      "Until your next turn. Ignore all effects from other players' cards."
+    ],
+    [
+      "1",
+      "5",
+      "Prince",
+      "",
+      "Choose any player (including yourself) to discard his or her hadn and draw a new card."
+    ],
+    [
+      "1",
+      "6",
+      "King",
+      "",
+      "Trade hands with another player of your choice."
+    ],
+    [
+      "1",
+      "7",
+      "Countess",
+      "",
+      "If you have this card and the King of Prince in your hand, you must discard this card."
+    ],
+    [
+      "1",
+      "8",
+      "Princess",
+      "",
+      "If you discard this card, you are out of the round."
+    ]
+  ]
+}

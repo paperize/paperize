@@ -1,0 +1,25 @@
+{
+  "sheet-abc123": {
+    "id": "sheet-abc123",
+    "name": "Artifactizoid",
+    "parents": [
+      "folder-abc123"
+    ],
+    "refreshedAt": null,
+    "worksheets": []
+  },
+  "loveLetter": {
+    "id": "loveLetter",
+    "name": "Love Letter",
+    "parents": [
+      "folder-def456"
+    ],
+    "refreshedAt": 1552596999826,
+    "worksheets": [
+      {
+        "id": "000000001",
+        "title": "Character Deck"
+      }
+    ]
+  }
+}

@@ -1,3 +1,4 @@
+_ = require('lodash')
 
 vuexCache = null
 afterEach -> vuexCache = null
@@ -42,12 +43,15 @@ Cypress.Commands.add "visitActiveGameAndComponent", ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
 Cypress.Commands.add "loginAndEditGame", ->
-  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, templates } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates } }) ->
     loveLetter = games['loveLetter']
 
     vuex.dispatch("become", users[0])
     vuex.commit("setGames", games)
     vuex.commit("setComponents", components)
+    vuex.commit("setSpreadsheets", spreadsheets)
+    _.each(cache, (value, key) ->
+      vuex.commit("cache", { key: key, values: value }))
     vuex.commit("setTemplates", templates)
     vuex.dispatch("setActiveGame", loveLetter.id)
     vuex.dispatch("setActiveComponent", loveLetter.componentIds[0])
