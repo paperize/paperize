@@ -57,7 +57,9 @@ v-flex#template-editor(sm8 md6)
 
       shutdownTemplateManager() {
         this.showTemplateManager = false
-        this.clearActiveLayer()
+        this.$nextTick(() => {
+          this.clearActiveLayer()
+        })
       }
     }
   }
