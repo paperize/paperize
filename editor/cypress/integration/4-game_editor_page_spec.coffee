@@ -54,7 +54,7 @@ describe "Game Editor page", ->
       cy.get(".component-form").within ->
         cy.contains("New Component")
         cy.typeIntoSelectors ".component-title input": 'Random Encounters'
-        cy.get(".component-create-drive-folder input").click(force: true)
+        cy.get(".component-add-sheet-to-source input").should("not.exist")
         cy.contains("Create Component").click()
 
       cy.get('.component.active .headline')

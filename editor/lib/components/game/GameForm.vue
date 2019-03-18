@@ -8,8 +8,8 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
       template(v-if="!isSaved")
         v-checkbox.game-create-game-folder(v-model="gameFolder" label="Create a Google Drive Folder for this game?")
-        v-checkbox.game-create-spreadsheet(v-model="componentSpreadsheet" label="Create a Google Sheet its components?")
-        v-checkbox.game-create-image-folder(v-model="imageFolder" label="Create a Folder for its images?")
+        v-checkbox.game-create-spreadsheet(v-model="componentSpreadsheet" label="Create a Google Spreadsheet inside for its components?")
+        v-checkbox.game-create-image-folder(v-model="imageFolder" label="Create an Images Folder inside for its images?")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
