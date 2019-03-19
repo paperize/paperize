@@ -1,15 +1,12 @@
 <template lang="pug">
 div
-  template(v-if="!currentItem")
-    p Nothing to render.
+  v-pagination(v-model="currentItemIndex" :length="totalItems")
 
-  template(v-else)
-    v-pagination(v-model="currentItemIndex" :length="totalItems")
+  v-flex
+    template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+    p(v-else) Nothing to render.
 
-    v-flex
-      template-renderer(:game="game" :component="component" :item="currentItem")
-
-    v-pagination(v-model="currentItemIndex" :length="totalItems")
+  v-pagination(v-model="currentItemIndex" :length="totalItems")
 </template>
 
 <script>
