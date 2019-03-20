@@ -41,10 +41,12 @@ const
         getClient((client) => {
           client.drive.files.get({
             fileId,
-            fields: "id,name,md5Checksum,mimeType,parents"
+            fields: "id,name,md5Checksum,mimeType,parents,trashed"
           }).then(
-            ({ result: { id, name, mimeType, parents, md5Checksum } }) => {
-              resolve({ id, name, mimeType, parents, md5: md5Checksum })
+            ({ result: { id, name, mimeType, parents, md5Checksum, trashed } }) => {
+              trashed ?
+                reject(new Error(`File not found: ${fileId}.`)) :
+                resolve({ id, name, mimeType, parents, md5: md5Checksum })
             },
 
             ({ result }) => reject(new Error(result.error.message))

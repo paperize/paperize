@@ -25,11 +25,18 @@ const ImageModel = {
   actions: {
     refreshImageRecord({ dispatch }, imageId) {
       return dispatch("googleGetRecord", imageId)
+
+        // Found it, update our record
         .then((imageRecord) => {
           return dispatch("updateImage", {
             ...imageRecord,
             refreshedAt: Date.now()
           })
+        })
+
+        // Didn't find it, destroy our record
+        .catch({ message: `File not found: ${imageId}.`}, () => {
+          return dispatch("destroyImage", { id: imageId })
         })
     }
   }
