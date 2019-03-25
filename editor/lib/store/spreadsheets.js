@@ -80,12 +80,19 @@ const SpreadsheetModel = {
   actions: {
     refreshSheetRecord({ dispatch }, spreadsheetId) {
       return dispatch("googleGetRecord", spreadsheetId)
+
+        // Found it, patch our record
         .then((sheetRecord) => {
           return dispatch("patchSpreadsheet", pickFieldsFromResponse(sheetRecord))
         })
 
         .then(() => {
           return dispatch("refreshSheetIndex", spreadsheetId)
+        })
+
+        // Didn't find it, destroy our record
+        .catch({ message: `File not found: ${spreadsheetId}.`}, () => {
+          return dispatch("destroySpreadsheet", { id: spreadsheetId })
         })
     },
 

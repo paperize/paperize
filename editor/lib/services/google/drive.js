@@ -3,48 +3,22 @@ import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
 const
-  getFolder = function(folderIdInput) {
-    return new Promise((resolve, reject) => {
-      const folderId = matchGoogleId(folderIdInput)
-
-      if(!folderId) {
-        reject(new Error(`Invalid Google Drive resource: ${folderIdInput}`))
-      } else {
-        getClient((client) => {
-          client.drive.files.get({
-            fileId: folderId
-          }).then(
-            (folderResponse) => {
-              const driveResult = folderResponse.result
-
-              if(driveResult.mimeType !== "application/vnd.google-apps.folder") {
-                reject(new Error("Not a folder!"))
-              } else {
-                resolve([driveResult.id, driveResult.name])
-              }
-            },
-
-            ({ result }) => reject(new Error(result.error.message))
-          )
-        })
-      }
-    })
-  },
-
   getRecord = function(fileId) {
     return new Promise((resolve, reject) => {
       fileId = matchGoogleId(fileId || "")
 
       if(!fileId) {
-        reject(new Error("Invalid Google Id"))
+        reject(new Error(`Invalid Google ID: ${fileId}`))
       } else {
         getClient((client) => {
           client.drive.files.get({
             fileId,
-            fields: "id,name,md5Checksum,mimeType,parents"
+            fields: "id,name,md5Checksum,mimeType,parents,trashed"
           }).then(
-            ({ result: { id, name, mimeType, parents, md5Checksum } }) => {
-              resolve({ id, name, mimeType, parents, md5: md5Checksum })
+            ({ result: { id, name, mimeType, parents, md5Checksum, trashed } }) => {
+              trashed ?
+                reject(new Error(`File not found: ${fileId}.`)) :
+                resolve({ id, name, mimeType, parents, md5: md5Checksum })
             },
 
             ({ result }) => reject(new Error(result.error.message))
@@ -296,7 +270,6 @@ const
   }
 
 export default {
-  getFolder,
   getRecord,
   getIndex,
   findFolders,

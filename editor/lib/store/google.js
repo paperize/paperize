@@ -92,13 +92,6 @@ const GoogleModule = {
           promise: drive.getIndex(folderId, options) })
     },
 
-    googleGetImageFolder({ dispatch }, folderLink) {
-      return dispatch("traceNetworkRequest",
-        { name: `Get Folder.`,
-          details: folderLink,
-          promise: drive.getFolder(folderLink) })
-    },
-
     googleCreateFolder({ dispatch }, { parentId, name }) {
       return dispatch("traceNetworkRequest",
         { name: `Create Folder.`,
