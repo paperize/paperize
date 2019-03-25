@@ -91,6 +91,9 @@ const UIModule = {
 
       if(component.spreadsheetId) {
         return dispatch("ensureSheetIndexed", component.spreadsheetId)
+          .catch({ code: 'NOT_FOUND' }, () => {
+            return dispatch("unlinkComponentSheet", component)
+          })
       }
     }
   },
