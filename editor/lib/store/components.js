@@ -46,7 +46,8 @@ const ComponentModel = {
       if(!component.spreadsheetId || !component.worksheetId) {
         return []
       } else {
-        const sheetItems = rootGetters.worksheetItems(component.spreadsheetId, component.worksheetId)
+        const sheetItems = rootGetters.worksheetItems(component.spreadsheetId,
+          component.worksheetId, component.worksheetFirstRow, component.worksheetLastRow)
 
         // Check for quantity expansion
         if(!component.quantityProperty) {
@@ -72,7 +73,11 @@ const ComponentModel = {
 
     getItemQuantity: (state, getters) => component => {
       return getters.getComponentItems(component).length
-    }
+    },
+
+    getRowCount: (_, __, ___, rootGetters) => component => {
+      return rootGetters.worksheetItems(component.spreadsheetId, component.worksheetId).length
+    },
   },
 
   actions: {

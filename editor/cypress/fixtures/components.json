@@ -2,7 +2,8 @@
   "characterDeck": {
     "id": "characterDeck",
     "title": "Character Deck",
-    "sourceId": "loveLetter",
+    "spreadsheetId": "loveLetter",
+    "worksheetId": "000000001",
     "templateId": "loveLetter",
     "quantityProperty": null
   },

@@ -44,10 +44,3 @@ v-container(grid-list-xl fluid)
 
       p.body-2 You only need a Google account to log in and get started creating games right away! Just click "Sign In" above and to the right.
 </template>
-
-<script>
-
-  export default {
-
-  }
-</script>

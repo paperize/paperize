@@ -1,6 +1,6 @@
 <template lang="pug">
 v-flex#source-editor(sm4 md6)
-  .headline Source
+  .headline Spreadsheet
 
   //- We have a source to work with
   template(v-if="componentSheet")
@@ -21,6 +21,15 @@ v-flex#source-editor(sm4 md6)
         span Refresh (last refresh: {{ lastRefresh }})
 
       v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title")
+
+      v-btn(small v-if="showRowSelection" @click="disableRowSelect") Disable Row Selection
+      v-btn(small v-else @click="enableRowSelect") Enable Row Selection
+
+      v-layout(v-if="worksheetId && showRowSelection")
+        v-flex(xs-6)
+          v-text-field(box label="First Row" v-model="firstRow" type="number" min="2" :max="getRowCount(component)+1")
+        v-flex(xs-6)
+          v-text-field(box label="Last Row" v-model="lastRow" type="number" min="2" :max="getRowCount(component)+1")
 
     //- Quantity Property
     v-tooltip(bottom)
@@ -51,7 +60,7 @@ v-flex#source-editor(sm4 md6)
 
 <script>
   import moment from 'moment'
-  import { map, pick } from 'lodash'
+  import { map, max, min, pick } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
@@ -66,7 +75,11 @@ v-flex#source-editor(sm4 md6)
 
     data() {
       return {
-        createSheetDialog: false
+        createSheetDialog: false,
+        showRowSelection: this.component.worksheetFirstRow ||
+          this.component.worksheetFirstRow == 0            ||
+          this.component.worksheetLastRow                  ||
+          this.component.worksheetLastRow == 0
       }
     },
 
@@ -77,6 +90,7 @@ v-flex#source-editor(sm4 md6)
         "findComponentSheet",
         "findComponentTemplate",
         "getComponentFolderId",
+        "getRowCount",
         "allSpreadsheets"
       ]),
 
@@ -97,6 +111,36 @@ v-flex#source-editor(sm4 md6)
       worksheetPropertyNamesWithNull() {
         return [ { text: 'No Quantity Expansion', value: null },
                  ...this.worksheetPropertyNames(this.spreadsheetId, this.worksheetId) ]
+      },
+
+      firstRow: {
+        // 2 offset so the user can work in terms of spreadsheet row numbers
+        get() { return this.component.worksheetFirstRow+2 },
+
+        set(newFirstRow) {
+          // 2 offset so the user can work in terms of spreadsheet row numbers
+          newFirstRow -= 2
+          const patchProps = {
+            worksheetFirstRow: newFirstRow,
+            worksheetLastRow: max([this.component.worksheetLastRow, newFirstRow])
+          }
+          this.patchComponent({ ...this.component,  ...patchProps })
+        }
+      },
+
+      lastRow: {
+        // 2 offset so the user can work in terms of spreadsheet row numbers
+        get() { return this.component.worksheetLastRow+2 },
+
+        set(newLastRow) {
+          // 2 offset so the user can work in terms of spreadsheet row numbers
+          newLastRow -= 2
+          const patchProps = {
+            worksheetLastRow: newLastRow,
+            worksheetFirstRow: min([this.component.worksheetFirstRow, newLastRow])
+          }
+          this.patchComponent({ ...this.component,  ...patchProps })
+        }
       },
 
       lastRefresh() {
@@ -145,6 +189,24 @@ v-flex#source-editor(sm4 md6)
           })
         })
       },
+
+      enableRowSelect() {
+        this.showRowSelection = true
+        this.patchComponent({
+          ...this.component,
+          worksheetFirstRow: 0,
+          worksheetLastRow: this.getRowCount(this.component)-1
+        })
+      },
+
+      disableRowSelect() {
+        this.showRowSelection = false
+        this.patchComponent({
+          ...this.component,
+          worksheetFirstRow: null,
+          worksheetLastRow: null
+        })
+      }
     }
   }
 </script>

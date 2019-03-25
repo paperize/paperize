@@ -1,4 +1,4 @@
-import { map, pick, zipWith } from 'lodash'
+import { map, max, min, pick, slice, zipWith } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
 const pickFieldsFromResponse = function(givenSheet) {
@@ -53,11 +53,21 @@ const SpreadsheetModel = {
       return []
     },
 
-    worksheetItems: (state, getters) => (spreadsheetId, worksheetId) => {
+    worksheetItems: (state, getters) => (spreadsheetId, worksheetId, firstRow, lastRow) => {
+      firstRow = firstRow || 0
+      if(lastRow != 0){
+        lastRow = lastRow || Infinity
+      }
+
       const propertyNames = getters.worksheetPropertyNames(spreadsheetId, worksheetId),
         propertyValues = getters.worksheetPropertyValues(spreadsheetId, worksheetId)
 
-      return map(propertyValues, (row) => {
+      firstRow = max([0, firstRow])
+      lastRow = min([propertyValues.length, lastRow+1])
+
+      const slicedPropertyValues = slice(propertyValues, firstRow, lastRow)
+
+      return map(slicedPropertyValues, (row) => {
         return zipWith(propertyNames, row, (key, value) => {
           return { key, value }
         })
