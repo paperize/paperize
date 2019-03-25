@@ -82,15 +82,35 @@ const ComponentModel = {
 
   actions: {
     linkComponentSheet({ dispatch }, { component, spreadsheetId }) {
-      dispatch("patchComponent", { id: component.id, spreadsheetId, worksheetId: null, quantityProperty: null })
+      dispatch("patchComponent", {
+        id: component.id,
+        spreadsheetId,
+        worksheetId: null,
+        worksheetFirstRow: null,
+        worksheetLastRow: null,
+        quantityProperty: null
+      })
     },
 
     setComponentWorksheet({ dispatch }, { component, worksheetId }) {
-      dispatch("patchComponent", { id: component.id, worksheetId, quantityProperty: null })
+      dispatch("patchComponent", {
+        id: component.id,
+        worksheetId,
+        worksheetFirstRow: null,
+        worksheetLastRow: null,
+        quantityProperty: null
+      })
     },
 
     unlinkComponentSheet({ dispatch }, component) {
-      dispatch("patchComponent", { id: component.id, spreadsheetId: null, worksheetId: null, quantityProperty: null })
+      dispatch("patchComponent", {
+        id: component.id,
+        spreadsheetId: null,
+        worksheetId: null,
+        worksheetFirstRow: null,
+        worksheetLastRow: null,
+        quantityProperty: null
+      })
     },
 
     createComponentFolder({ getters, dispatch }, componentId) {

@@ -73,13 +73,14 @@ v-flex#source-editor(sm4 md6)
       SpreadsheetIcon
     },
 
+    updated() {
+      this.detectRowSelection()
+    },
+
     data() {
       return {
         createSheetDialog: false,
-        showRowSelection: this.component.worksheetFirstRow ||
-          this.component.worksheetFirstRow == 0            ||
-          this.component.worksheetLastRow                  ||
-          this.component.worksheetLastRow == 0
+        showRowSelection: false
       }
     },
 
@@ -188,6 +189,14 @@ v-flex#source-editor(sm4 md6)
             id: this.component.id, spreadsheetId
           })
         })
+      },
+
+      detectRowSelection() {
+        this.showRowSelection =
+          this.component.worksheetFirstRow      ||
+          this.component.worksheetFirstRow == 0 ||
+          this.component.worksheetLastRow       ||
+          this.component.worksheetLastRow == 0
       },
 
       enableRowSelect() {
