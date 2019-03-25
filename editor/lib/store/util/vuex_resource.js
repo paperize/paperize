@@ -51,7 +51,7 @@ export function generateCrud(model) {
       let foundModel = state[modelRepoName][modelId]
 
       if(!foundModel && throwOnFail) {
-        const notFoundError = new Error(`No ${model.name} found with id: ${modelId}`)
+        const notFoundError = new Error(`No ${pluralModelName} found with id: ${modelId}`)
         notFoundError.code = 'NOT_FOUND'
         throw notFoundError
 
