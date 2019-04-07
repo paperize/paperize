@@ -4,20 +4,29 @@
   "scripts": {
     "build": "gridsome build",
     "develop": "gridsome develop",
-    "explore": "gridsome explore"
+    "explore": "gridsome explore",
+    "deploy": "coffee deploy.coffee",
+    "bump-prod": "npm run build && npm run deploy"
   },
   "dependencies": {
     "gridsome": "^0.5.0",
+    "vue": "^2.6.10",
     "vuetify": "^1.5.9"
   },
   "devDependencies": {
     "@gridsome/source-filesystem": "^0.3.0",
     "@gridsome/transformer-remark": "^0.2.1",
+    "aws-sdk": "^2.437.0",
+    "bluebird": "^3.5.4",
+    "coffeescript": "^2.4.0",
     "eslint": "^4.18.1",
     "eslint-plugin-vue": "^4.3.0",
     "http-server": "^0.11.1",
+    "lodash": "^4.17.11",
+    "mime-types": "^2.1.22",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
+    "recursive-readdir": "^2.2.2",
     "webpack-node-externals": "^1.7.2"
   }
 }

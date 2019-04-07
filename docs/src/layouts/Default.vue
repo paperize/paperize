@@ -2,38 +2,31 @@
   v-app#paperize-docs
     v-navigation-drawer(v-model="showDrawer" fixed app)
       v-card(min-height="200")
-        v-card-content Recognized Patrons
+        v-card-text Recognized Patrons
 
-      v-list(dense)
+      v-list(dense subheader)
         //- Home
-        g-link(to="/")
-          v-list-tile(@click="" ripple)
-            v-list-tile-action
-              v-icon(medium) home
-            v-list-tile-content
-              v-list-tile-title Home
+        v-list-tile(ripple to="/" @click="")
+          v-list-tile-action
+            v-icon(medium) home
+          v-list-tile-content
+            v-list-tile-title Home
 
         //- Guides
-        v-list-group(prepend-icon="folder" value="true")
-          template(v-slot:activator)
-            v-list-tile
-              v-list-tile-title Guides
+        v-subheader(inset) Guides
+        v-divider
 
-          g-link(v-for="guide in guides" :to="guide.to" :key="guide.name")
-            v-list-tile(@click="" ripple)
-              v-list-tile-action
-              v-list-tile-title {{ guide.name }}
+        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" @click="" )
+          v-list-tile-action
+          v-list-tile-title {{ guide.name }}
 
         //- References
-        v-list-group(prepend-icon="folder" value="true")
-          template(v-slot:activator)
-            v-list-tile
-              v-list-tile-title References
+        v-subheader(inset) References
+        v-divider
 
-          g-link(v-for="reference in references" :to="reference.to" :key="reference.name")
-            v-list-tile(@click="" ripple)
-              v-list-tile-action
-              v-list-tile-title {{ reference.name }}
+        v-list-tile(ripple v-for="reference in references" :to="reference.to" :key="reference.name" @click="")
+          v-list-tile-action
+          v-list-tile-title {{ reference.name }}
 
     v-toolbar(fixed app)
       v-toolbar-side-icon(@click.stop="showDrawer = !showDrawer")
@@ -66,6 +59,7 @@ query {
     references = [
       { name: "Component", to: "/references/component" },
       { name: "Game", to: "/references/game" },
+      { name: "Google Authorization", to: "/references/google-authorization" },
       { name: "Image", to: "/references/image" },
       { name: "Image Layer", to: "/references/image-layer" },
       { name: "Shape Layer", to: "/references/shape-layer" },
@@ -82,11 +76,15 @@ query {
 </script>
 
 <style>
+  .v-subheader {
+    text-transform: uppercase;
+  }
+
   a {
     text-decoration: none;
   }
 
   a div {
-    color: #666;
+    color: inherit;
   }
 </style>
