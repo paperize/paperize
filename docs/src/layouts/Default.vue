@@ -1,6 +1,9 @@
 <template lang="pug">
   v-app#paperize-docs
     v-navigation-drawer(v-model="showDrawer" fixed app)
+      v-card(min-height="200")
+        v-card-content Recognized Patrons
+
       v-list(dense)
         //- Home
         g-link(to="/")
@@ -16,7 +19,7 @@
             v-list-tile
               v-list-tile-title Guides
 
-          g-link(v-for="guide in guides" :to="guide.to")
+          g-link(v-for="guide in guides" :to="guide.to" :key="guide.name")
             v-list-tile(@click="" ripple)
               v-list-tile-action
               v-list-tile-title {{ guide.name }}
@@ -27,7 +30,7 @@
             v-list-tile
               v-list-tile-title References
 
-          g-link(v-for="reference in references" :to="reference.to")
+          g-link(v-for="reference in references" :to="reference.to" :key="reference.name")
             v-list-tile(@click="" ripple)
               v-list-tile-action
               v-list-tile-title {{ reference.name }}
