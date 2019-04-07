@@ -9,6 +9,15 @@ module.exports = {
         typeName: 'Guide',
         route: '/guides/:slug'
       }
+    },
+    // Markdown-based Reference pages
+    {
+      use: '@gridsome/source-filesystem',
+      options: {
+        path: 'references/**/*.md',
+        typeName: 'Reference',
+        route: '/references/:slug'
+      }
     }
   ],
   chainWebpack: config => {
