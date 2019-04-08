@@ -1,5 +1,6 @@
 module.exports = {
   siteName: 'Paperize Documentation',
+  icon: 'favicon.ico',
   plugins: [
     // Markdown-based Guides
     {
