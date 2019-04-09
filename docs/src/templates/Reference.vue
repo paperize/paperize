@@ -1,6 +1,9 @@
 <template lang="pug">
 layout
   div(v-html="$page.reference.content")
+
+  div(v-if="noContent")
+    p ...coming soon...
 </template>
 
 <page-query>
@@ -17,6 +20,12 @@ export default {
   metaInfo () {
     return {
       title: this.$page.reference.title
+    }
+  },
+
+  computed: {
+    noContent() {
+      return this.$page.reference.content.length < 200
     }
   }
 }
