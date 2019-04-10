@@ -44,13 +44,42 @@ DATABASE_POPOVER_IMAGE
 
 ## Creating a New Game
 
-Click "New Game", fill in a title, and off we go.
+The first screen of Paperize lists our games, and since we have only just started, we have no games to list. Let's remedy that!
+
+We click the button titled "New Game" and fill in a title.
+
+NEW_GAME_BUTTON
+
+NEW_GAME_FORM
+
+We notice a handful of checkboxes related to Google Drive:
+- one creates a folder to go with this game
+- one creates an "Images" folder inside the game folder
+- one creates a Spreadsheet inside the game folder
+
+All of these are useful for rapidly putting a game together without tedious tasks, so we leave them checked.
+
+We click "Start Designing", the game is created as well as the Google Drive assets, and we are dropped into the game editor.
 
 [Learn more about the Game resource](/references/game)
 
 ## Creating a New Component
 
-Click "New Component", fill in the title of this component.
+In Paperize, our games are made up of components. A component is a deck of cards, a stack of tiles, player mats, even instruction manuals and promotional inserts could be modeled as components.
+
+We click the button titled "New Component" and fill in a title.
+
+NEW_COMPONENT_BUTTON
+
+NEW_COMPONENT_FORM
+
+Again we see a checkbox related to our assets in Google Drive: this one creates a new worksheet inside of this game's spreadsheet (remember, a spreadsheet was created for this game automatically in the last step.)
+
+Once again we agree that this is saving us time, so we leave it checked.
+
+We click "Create Component" and see the component appear on the left side of the screen, with its Spreadsheet and Template settings open in the middle and right of the screen.
+
+SELECTED_COMPONENT_SCREEN
 
 [Learn more about the Component resource](/references/component)
 
