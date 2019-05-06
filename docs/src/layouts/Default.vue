@@ -16,9 +16,13 @@
         v-subheader(inset) Guides
         v-divider
 
-        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" @click="" )
+        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" @click="")
           v-list-tile-action
+            //- empty on purpose, pads the title for alignment
           v-list-tile-title {{ guide.name }}
+          v-tooltip(v-if="guide.isNew" top)
+            span New content as of {{ guide.isNew }}!
+            v-icon(slot="activator" color="blue") new_releases
 
         //- References
         v-subheader(inset) References
@@ -51,7 +55,7 @@ query {
 <script>
   const
     guides = [
-      { name: "Getting Started", to: "/guides/getting-started" },
+      { name: "Getting Started", to: "/guides/getting-started", isNew: "April 2019" },
       { name: "Template Editor", to: "/guides/template-editor" },
       { name: "Google Drive Integration", to: "/guides/google-drive" },
     ],
