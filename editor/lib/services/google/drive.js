@@ -1,4 +1,4 @@
-import { map } from 'lodash'
+import { compact, map } from 'lodash'
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
@@ -223,7 +223,7 @@ const
   createDriveItem = function(name, parentId, mimeType) {
     const fileMetadata = {
       name, mimeType,
-      parents: [parentId]
+      parents: compact([parentId])
     }
 
     return new Promise((resolve, reject) => {
