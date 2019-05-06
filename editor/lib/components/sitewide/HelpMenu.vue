@@ -3,10 +3,9 @@ v-menu
   v-btn(flat slot="activator") Help
 
   v-list
-    v-list-tile
-      v-tooltip
-        | Coming Soon
-        v-list-tile-title(slot="activator") Documentation
+    v-list-tile(href="https://docs.paperize.io" target="_blank")
+      v-list-tile-title Documentation
+
     v-list-tile(href="https://discord.gg/9ggkkQp" target="_blank")
       v-list-tile-title Join Discord
 
