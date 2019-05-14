@@ -46,10 +46,8 @@ v-expansion-panel-content#dimension-editor
 </template>
 
 <script>
-  import { debounce, isString } from 'lodash'
+  import { isString } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
-
-  const INPUT_DELAY_MS = 400
 
   export default {
     props: ["layer"],
@@ -79,7 +77,7 @@ v-expansion-panel-content#dimension-editor
           case "percent": return "0.1"; break;
           case "inches": return "0.01"; break;
           case "millimeters": return "1"; break;
-          case "pixels": return "2"; break;
+          case "pixels": return "1"; break;
         }
       },
 
@@ -103,13 +101,15 @@ v-expansion-panel-content#dimension-editor
 
       dimensions() { return this.getLayerDimensions(this.layer) },
 
+      dimensionsId() { return this.dimensions.id },
+
       dimensionX: {
         get() { return this.toCurrentUnit(this.dimensions.x, 'w') },
 
         set(newX) {
           if(isString(newX) || newX < 0) { newX = 0 }
           newX = this.fromCurrentUnit(newX, 'w')
-          this.updateDimensionSlowly({ ...this.dimensions, x: newX })
+          this.patchDimension({ id: this.dimensionsId, x: newX })
         }
       },
 
@@ -119,7 +119,7 @@ v-expansion-panel-content#dimension-editor
         set(newY) {
           if(isString(newY) || newY < 0) { newY = 0 }
           newY = this.fromCurrentUnit(newY, 'h')
-          this.updateDimensionSlowly({ ...this.dimensions, y: newY })
+          this.patchDimension({ id: this.dimensionsId, y: newY })
         }
       },
 
@@ -129,7 +129,7 @@ v-expansion-panel-content#dimension-editor
         set(newW) {
           if(isString(newW) || newW < 0) { newW = 0 }
           newW = this.fromCurrentUnit(newW, 'w')
-          this.updateDimensionSlowly({ ...this.dimensions, w: newW })
+          this.patchDimension({ id: this.dimensionsId, w: newW })
         }
       },
 
@@ -139,7 +139,7 @@ v-expansion-panel-content#dimension-editor
         set(newH) {
           if(isString(newH) || newH < 0) { newH = 0 }
           newH = this.fromCurrentUnit(newH, 'h')
-          this.updateDimensionSlowly({ ...this.dimensions, h: newH })
+          this.patchDimension({ id: this.dimensionsId, h: newH })
         }
       },
 
@@ -150,7 +150,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newT) || newT < 0) { newT = 0 }
           newT = this.fromCurrentUnit(newT, 'h')
           let newHeight = (this.dimensions.h + this.dimensions.y) - newT
-          this.updateDimensionSlowly({ ...this.dimensions, y: newT, h: newHeight })
+          this.patchDimension({ id: this.dimensionsId, y: newT, h: newHeight })
         }
       },
 
@@ -161,7 +161,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newR) || newR < 0) { newR = 0 }
           newR = this.fromCurrentUnit(newR, 'w')
           let newWidth = 100 - newR - this.dimensions.x
-          this.updateDimensionSlowly({ ...this.dimensions, w: newWidth })
+          this.patchDimension({ id: this.dimensionsId, w: newWidth })
         }
       },
 
@@ -172,7 +172,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newB) || newB < 0) { newB = 0 }
           newB = this.fromCurrentUnit(newB, 'h')
           let newHeight = 100 - newB - this.dimensions.y
-          this.updateDimensionSlowly({ ...this.dimensions, h: newHeight })
+          this.patchDimension({ id: this.dimensionsId, h: newHeight })
         }
       },
 
@@ -183,13 +183,13 @@ v-expansion-panel-content#dimension-editor
           if(isString(newL) || newL < 0) { newL = 0 }
           newL = this.fromCurrentUnit(newL, 'w')
           let newWidth = (this.dimensions.w + this.dimensions.x) - newL
-          this.updateDimensionSlowly({ ...this.dimensions, x: newL, w: newWidth })
+          this.patchDimension({ id: this.dimensionsId, x: newL, w: newWidth })
         }
       },
     },
 
     methods: {
-      ...mapActions(["updateDimension"]),
+      ...mapActions(["patchDimension"]),
 
       fromCurrentUnit(measure, dimension, currentUnit=this.unitMode) {
         if(!this.size[dimension]) {
@@ -235,11 +235,7 @@ v-expansion-panel-content#dimension-editor
           default:
             throw new Error(`Unrecognized unit: ${measure}`)
         }
-      },
-
-      updateDimensionSlowly: debounce(function(dimensions) {
-        this.updateDimension(dimensions)
-      }, INPUT_DELAY_MS),
+      }
     }
   }
 </script>
