@@ -50,7 +50,7 @@ v-expansion-panel-content#dimension-editor
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    props: ["layer"],
+    props: ["dimensions"],
 
     data() {
       return {
@@ -60,9 +60,9 @@ v-expansion-panel-content#dimension-editor
     },
 
     computed: {
-      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
+      ...mapGetters(["activeTemplate"]),
 
-      size() { return this.findTemplateByLayerId(this.layer.id).size },
+      size() { return this.activeTemplate.size },
 
       modeXYWH() { return this.dimensionMode == 'xywh' },
       modeInset() { return this.dimensionMode == 'inset' },
@@ -98,8 +98,6 @@ v-expansion-panel-content#dimension-editor
           case "pixels": return "pixels"; break;
         }
       },
-
-      dimensions() { return this.getLayerDimensions(this.layer) },
 
       dimensionsId() { return this.dimensions.id },
 

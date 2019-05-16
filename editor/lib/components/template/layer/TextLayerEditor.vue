@@ -2,7 +2,7 @@
 v-expansion-panel#text-layer-editor(popout)
   name-editor(:layer="layer")
 
-  dimension-editor(:layer="layer")
+  dimension-editor(:dimensions="dimensions")
 
   v-expansion-panel-content
     div(slot="header") Font
@@ -40,7 +40,7 @@ v-expansion-panel#text-layer-editor(popout)
 
 <script>
   import { debounce, keys } from 'lodash'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
@@ -58,17 +58,21 @@ v-expansion-panel#text-layer-editor(popout)
     data() {
       return {
         availableFonts: {
-          "Arial": ["normal"],
-          "helvetica": ["normal", "bold", "italic", "bolditalic"],
-          "courier": ["normal", "bold", "italic", "bolditalic"],
-          "times": ["normal", "bold", "italic", "bolditalic"],
-          "symbol": ["normal"],
+          "Arial":        ["normal"],
+          "helvetica":    ["normal", "bold", "italic", "bolditalic"],
+          "courier":      ["normal", "bold", "italic", "bolditalic"],
+          "times":        ["normal", "bold", "italic", "bolditalic"],
+          "symbol":       ["normal"],
           "zapfdingbats": ["normal"],
         }
       }
     },
 
     computed: {
+      ...mapGetters(["getLayerDimensions"]),
+
+      dimensions() { return this.getLayerDimensions(this.layer) },
+
       availableFontNames() {
         return keys(this.availableFonts)
       },
