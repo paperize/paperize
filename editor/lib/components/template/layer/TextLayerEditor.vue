@@ -2,7 +2,7 @@
 v-expansion-panel#text-layer-editor(popout)
   name-editor(:layer="layer")
 
-  dimension-editor(:dimensions="dimensions")
+  dimension-editor(:dimensions="dimensions" :size="templateSize")
 
   v-expansion-panel-content
     div(slot="header") Font
@@ -69,9 +69,13 @@ v-expansion-panel#text-layer-editor(popout)
     },
 
     computed: {
-      ...mapGetters(["getLayerDimensions"]),
+      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
 
       dimensions() { return this.getLayerDimensions(this.layer) },
+
+      templateSize() {
+        return this.findTemplateByLayerId(this.layer.id).size
+      },
 
       availableFontNames() {
         return keys(this.availableFonts)

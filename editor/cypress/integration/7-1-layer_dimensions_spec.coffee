@@ -9,20 +9,32 @@ describe "Layer Dimensions", ->
     cy.contains('Dimensions').click()
 
   it "let's me set inches as the unit of measure", ->
-    cy.get("#dimension-editor").within ->
+    cy.get("#dimension-unit-selector").within ->
       cy.contains('in').click()
 
+    cy.get("#layout-xywh").within ->
+      cy.contains('in')
+
   it "let's me set millimeters as the unit of measure", ->
-    cy.get("#dimension-editor").within ->
+    cy.get("#dimension-unit-selector").within ->
       cy.contains('mm').click()
 
+    cy.get("#layout-xywh").within ->
+      cy.contains('mm')
+
   it "let's me set pixels as the unit of measure", ->
-    cy.get("#dimension-editor").within ->
+    cy.get("#dimension-unit-selector").within ->
       cy.contains('px').click()
 
+    cy.get("#layout-xywh").within ->
+      cy.contains('px')
+
   it "let's me set percent as the unit of measure", ->
-    cy.get("#dimension-editor").within ->
+    cy.get("#dimension-unit-selector").within ->
       cy.contains('%').click()
+
+    cy.get("#layout-xywh").within ->
+      cy.contains('%')
 
   it "works with fast editing of values", ->
     cy.get("#dimension-editor").within ->

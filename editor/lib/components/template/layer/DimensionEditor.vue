@@ -6,20 +6,20 @@ v-expansion-panel-content#dimension-editor
       v-layout(column)
           v-flex
             label Coordinate Mode:
-            v-btn-toggle(v-model="dimensionMode" mandatory)
-              v-btn(small flat value="xywh") XYWH
-              v-btn(small flat value="inset") Inset
+            v-btn-toggle(v-model="dimensionLayout" mandatory)
+              v-btn(small flat :value="XYWH") XYWH
+              v-btn(small flat :value="INSET") Inset
 
-          v-flex
+          v-flex#dimension-unit-selector
             p Units:
-            v-btn-toggle(v-model="unitMode" mandatory)
+            v-btn-toggle(v-model="dimensionUnits" mandatory)
               v-btn(small flat value="percent") %
               v-btn(small flat value="inches") in
               v-btn(small flat value="millimeters") mm
               v-btn(small flat value="pixels") px
 
           v-flex(v-if="modeXYWH")
-            v-layout(row wrap)
+            v-layout#layout-xywh(row wrap)
               v-flex
                 p Expressed as {{ unitDescription }} from the top left corner.
               v-flex(xs12 md6)
@@ -32,7 +32,7 @@ v-expansion-panel-content#dimension-editor
                 v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" box)
 
           v-flex(v-else-if="modeInset")
-            v-layout(row wrap)
+            v-layout#layout-inset(row wrap)
               v-flex
                 p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
               v-flex(xs12)
@@ -48,56 +48,64 @@ v-expansion-panel-content#dimension-editor
 <script>
   import { isString } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
+  import { XYWH, INSET,
+    PERCENT, PIXELS, INCHES, MILLIMETERS } from '../../../store/dimensions.js'
+
+  const VARIABLES = {}
+  VARIABLES[PERCENT] = {
+    step:        "0.1",
+    name:        "%",
+    description: "percentage of total width or height",
+  }
+  VARIABLES[PIXELS] = {
+    step:        "1",
+    name:        "px",
+    description: "pixels",
+  }
+  VARIABLES[INCHES] = {
+    step:        "0.01",
+    name:        "in",
+    description: "inches",
+  }
+  VARIABLES[MILLIMETERS] = {
+    step:        "1",
+    name:        "mm",
+    description: "millimeters",
+  }
 
   export default {
-    props: ["dimensions"],
+    props: ["dimensions", "size"],
 
     data() {
       return {
-        dimensionMode: 'xywh',
-        unitMode: 'percent'
+        XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS
       }
     },
 
     computed: {
-      ...mapGetters(["activeTemplate"]),
+      // ...mapGetters([]),
 
-      size() { return this.activeTemplate.size },
-
-      modeXYWH() { return this.dimensionMode == 'xywh' },
-      modeInset() { return this.dimensionMode == 'inset' },
-
-      modePercent() { return this.unitMode == 'percent' },
-      modeInches() { return this.unitMode == 'inches' },
-      modeMM() { return this.unitMode == 'millimeters' },
-      modePixels() { return this.unitMode == 'pixels' },
-
-      unitStep() {
-        switch(this.unitMode) {
-          case "percent": return "0.1"; break;
-          case "inches": return "0.01"; break;
-          case "millimeters": return "1"; break;
-          case "pixels": return "1"; break;
-        }
+      dimensionLayout: {
+        get() { return this.dimensions.layout },
+        set(newLayout) { this.updateDimension({ ...this.dimensions, layout: newLayout })}
       },
 
-      unitName() {
-        switch(this.unitMode) {
-          case "percent": return "%"; break;
-          case "inches": return "in"; break;
-          case "millimeters": return "mm"; break;
-          case "pixels": return "px"; break;
-        }
+      dimensionUnits: {
+        get() { return this.dimensions.units },
+        set(newUnits) { this.updateDimension({ ...this.dimensions, units: newUnits })}
       },
 
-      unitDescription() {
-        switch(this.unitMode) {
-          case "percent": return "percentage of total width or height"; break;
-          case "inches": return "inches"; break;
-          case "millimeters": return "millimeters"; break;
-          case "pixels": return "pixels"; break;
-        }
-      },
+      modeXYWH() { return this.dimensions.layout == XYWH },
+      modeInset() { return this.dimensions.layout == INSET },
+
+      modePercent() { return this.dimensions.units == PERCENT },
+      modeInches() { return this.dimensions.units == INCHES },
+      modeMM() { return this.dimensions.units == MILLIMETERS },
+      modePixels() { return this.dimensions.units == PIXELS },
+
+      unitStep() { return VARIABLES[this.dimensions.units].step },
+      unitName() { return VARIABLES[this.dimensions.units].name },
+      unitDescription() { return VARIABLES[this.dimensions.units].description },
 
       dimensionsId() { return this.dimensions.id },
 
@@ -187,9 +195,9 @@ v-expansion-panel-content#dimension-editor
     },
 
     methods: {
-      ...mapActions(["patchDimension"]),
+      ...mapActions(["patchDimension", "updateDimension"]),
 
-      fromCurrentUnit(measure, dimension, currentUnit=this.unitMode) {
+      fromCurrentUnit(measure, dimension, currentUnit=this.dimensions.units) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
@@ -212,7 +220,7 @@ v-expansion-panel-content#dimension-editor
         }
       },
 
-      toCurrentUnit(measure, dimension, currentUnit=this.unitMode) {
+      toCurrentUnit(measure, dimension, currentUnit=this.dimensions.units) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }

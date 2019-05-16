@@ -2,7 +2,7 @@
 v-expansion-panel#image-layer-editor(popout)
   name-editor(:layer="layer")
 
-  dimension-editor(:dimensions="dimensions")
+  dimension-editor(:dimensions="dimensions" :size="templateSize")
 
   v-expansion-panel-content
     div(slot="header") Image Selection
@@ -61,14 +61,13 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     computed: {
-      ...mapGetters([
-        "activeSheetProperties",
-        "allImages",
-        "workingDirectoryId",
-        "getLayerDimensions"
-      ]),
+      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
 
       dimensions() { return this.getLayerDimensions(this.layer) },
+
+      templateSize() {
+        return this.findTemplateByLayerId(this.layer.id).size
+      },
 
       ...computedVModelUpdateAll("layer", "updateLayer", [
         "imageNameStatic",
