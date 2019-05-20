@@ -86,26 +86,26 @@ v-expansion-panel-content#dimension-editor
       // ...mapGetters([]),
 
       dimensionLayout: {
-        get() { return this.dimensions.layout },
+        get() { return this.dimensions.layout || XYWH },
         set(newLayout) { this.updateDimension({ ...this.dimensions, layout: newLayout })}
       },
 
       dimensionUnits: {
-        get() { return this.dimensions.units },
+        get() { return this.dimensions.units || PERCENT },
         set(newUnits) { this.updateDimension({ ...this.dimensions, units: newUnits })}
       },
 
-      modeXYWH() { return this.dimensions.layout == XYWH },
-      modeInset() { return this.dimensions.layout == INSET },
+      modeXYWH() { return this.dimensionLayout == XYWH },
+      modeInset() { return this.dimensionLayout == INSET },
 
-      modePercent() { return this.dimensions.units == PERCENT },
-      modeInches() { return this.dimensions.units == INCHES },
-      modeMM() { return this.dimensions.units == MILLIMETERS },
-      modePixels() { return this.dimensions.units == PIXELS },
+      modePercent() { return this.dimensionUnits == PERCENT },
+      modeInches() { return this.dimensionUnits == INCHES },
+      modeMM() { return this.dimensionUnits == MILLIMETERS },
+      modePixels() { return this.dimensionUnits == PIXELS },
 
-      unitStep() { return VARIABLES[this.dimensions.units].step },
-      unitName() { return VARIABLES[this.dimensions.units].name },
-      unitDescription() { return VARIABLES[this.dimensions.units].description },
+      unitStep() { return VARIABLES[this.dimensionUnits].step },
+      unitName() { return VARIABLES[this.dimensionUnits].name },
+      unitDescription() { return VARIABLES[this.dimensionUnits].description },
 
       dimensionsId() { return this.dimensions.id },
 
@@ -197,7 +197,7 @@ v-expansion-panel-content#dimension-editor
     methods: {
       ...mapActions(["patchDimension", "updateDimension"]),
 
-      fromCurrentUnit(measure, dimension, currentUnit=this.dimensions.units) {
+      fromCurrentUnit(measure, dimension, currentUnit=this.dimensionUnits) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
@@ -220,7 +220,7 @@ v-expansion-panel-content#dimension-editor
         }
       },
 
-      toCurrentUnit(measure, dimension, currentUnit=this.dimensions.units) {
+      toCurrentUnit(measure, dimension, currentUnit=this.dimensionUnits) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
