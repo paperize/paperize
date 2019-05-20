@@ -24,6 +24,11 @@ const UIModule = {
       }
     },
 
+    activeTemplate(state, getters, __, rootGetters) {
+      const component = getters.activeComponent
+      return rootGetters.findComponentTemplate(component)
+    },
+
     activeLayer(state, _, __, rootGetters) {
       return rootGetters.findLayer(state.activeLayerId, false)
     },

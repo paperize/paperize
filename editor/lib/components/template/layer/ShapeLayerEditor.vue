@@ -2,7 +2,7 @@
 v-expansion-panel#shape-layer-editor(popout)
   name-editor(:layer="layer")
 
-  dimension-editor(:layer="layer")
+  dimension-editor(:dimensions="dimensions" :size="templateSize")
 
   v-expansion-panel-content
     div(slot="header") Shape
@@ -27,7 +27,7 @@ v-expansion-panel#shape-layer-editor(popout)
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
@@ -54,14 +54,24 @@ v-expansion-panel#shape-layer-editor(popout)
       }
     },
 
-    computed: computedVModelUpdateAll("layer", "updateLayer", [
-      "shape",
-      "strokePresent",
-      "strokeWidth",
-      "strokeColor",
-      "fillPresent",
-      "fillColor"
-    ]),
+    computed: {
+      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
+
+      dimensions() { return this.getLayerDimensions(this.layer) },
+
+      templateSize() {
+        return this.findTemplateByLayerId(this.layer.id).size
+      },
+
+      ...computedVModelUpdateAll("layer", "updateLayer", [
+        "shape",
+        "strokePresent",
+        "strokeWidth",
+        "strokeColor",
+        "fillPresent",
+        "fillColor"
+      ])
+    },
 
     methods: mapActions(["updateLayer"])
   }

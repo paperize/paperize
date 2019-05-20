@@ -1,4 +1,5 @@
-import { capitalize, camelCase, map, zip, filter, values, isString, isNumber } from 'lodash'
+import { capitalize, camelCase, debounce, filter, isString, isNumber, map,
+  memoize, values, without, wrap, zip } from 'lodash'
 import Vue from 'vue'
 
 const VERBOSE = false
@@ -142,13 +143,33 @@ export function generateCrud(model) {
     commit(updateModelName, modelToUpdate)
   }
 
-  actions[patchModelName] = ({ getters, commit }, modelToPatch) => {
-    debug("Action:", patchModelName, modelToPatch)
-
+  // Debounce Patch calls scoped to ID and the values being patched
+  const actualPatch = ({ getters, commit }, modelToPatch) => {
+    // Lookup existing
     const existingModel = getters[findModelName](modelToPatch.id)
-
-    // Still calls update but with all original values intact
+    // Do regular update and extend the patched items
     commit(updateModelName, { ...existingModel, ...modelToPatch})
+  }
+
+  const PATCH_DELAY_MS = 500
+  const debouncedPatch = wrap(memoize(
+    // Get a new debounced patch
+    () => {
+      return debounce(actualPatch, PATCH_DELAY_MS)
+    },
+    // Cache key: id-key1-key2-...-keyN
+    (_, modelToPatch) => {
+      const patchKeys = without(Object.keys(modelToPatch), "id").join("-")
+      return `${modelToPatch.id}-${patchKeys}`
+    }
+    // Pulls the appropriate memoized function then calls it
+  ), (func, store, model) => {
+    return func(store, model)(store, model)
+  })
+
+  actions[patchModelName] = (store, modelToPatch) => {
+    debug("Action:", patchModelName, modelToPatch)
+    debouncedPatch(store, modelToPatch)
   }
 
   actions[destroyModelName] = ({ getters, dispatch, commit }, modelToDestroy) => {
