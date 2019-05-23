@@ -59,6 +59,7 @@ v-expansion-panel#text-layer-editor(popout)
       return {
         availableFonts: {
           "Arial":        ["normal"],
+          "Indie Flower": ["normal"],
           "helvetica":    ["normal", "bold", "italic", "bolditalic"],
           "courier":      ["normal", "bold", "italic", "bolditalic"],
           "times":        ["normal", "bold", "italic", "bolditalic"],
