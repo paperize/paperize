@@ -36,7 +36,10 @@ const publicApi = {
       numItems = sum(map(componentSizes, "quantity"))
 
     store.dispatch("printJobStatusUpdate", `Layout Complete: ${numPages} pages, ${numComponents} components, ${numItems} items`)
-    return Promise.each(components, (component) => {
+    return Promise.try(() => {
+      // preload all fonts
+      // store.getters.allFontsInGame(game)
+    }).then(() => Promise.each(components, (component) => {
       // Render all items into the PDF via the given itemLocations
       const items = store.getters.getComponentItems(component)
       store.dispatch("printJobStatusUpdate", `Starting Component: "${component.title}", ${items.length} items`)
@@ -54,9 +57,8 @@ const publicApi = {
       const filenameOfDownload = `${game.title || "Game"}.pdf`
       store.dispatch("printJobStatusUpdate", `Finished render, exporting file: ${filenameOfDownload}`)
       return doc.save(filenameOfDownload)
-    }).finally(() => {
-      store.dispatch("finishPrintJob")
-    })
+
+    }).finally(() => store.dispatch("finishPrintJob") ))
   },
 }
 

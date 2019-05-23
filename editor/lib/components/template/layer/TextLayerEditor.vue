@@ -8,8 +8,8 @@ v-expansion-panel#text-layer-editor(popout)
     div(slot="header") Font
     v-card
       v-card-text
-        v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()" box)
-        v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
+        v-autocomplete(label="Font Family" v-model="textFontName" :items="availableFonts" item-value="family" item-text="family" box)
+        v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
         v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
         color-picker(label="Text Color" v-model="textColor")
 
@@ -39,12 +39,14 @@ v-expansion-panel#text-layer-editor(popout)
 </template>
 
 <script>
-  import { debounce, keys } from 'lodash'
+  import { debounce, find } from 'lodash'
   import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
+  import fontIndex from '../../../services/google/google_font_index.json'
+
 
   export default {
     props: ["layer", "source"],
@@ -57,15 +59,18 @@ v-expansion-panel#text-layer-editor(popout)
 
     data() {
       return {
-        availableFonts: {
-          "Arial":        ["normal"],
-          "Indie Flower": ["normal"],
-          "helvetica":    ["normal", "bold", "italic", "bolditalic"],
-          "courier":      ["normal", "bold", "italic", "bolditalic"],
-          "times":        ["normal", "bold", "italic", "bolditalic"],
-          "symbol":       ["normal"],
-          "zapfdingbats": ["normal"],
-        }
+        availableFonts: fontIndex.items
+        // built-in PDF fonts:
+        // [ { family: "helvetica",
+        //     variants: ["normal", "bold", "italic", "bolditalic"]},
+        //   { family: "courier",
+        //     variants: ["normal", "bold", "italic", "bolditalic"]},
+        //   { family: "times",
+        //     variants: ["normal", "bold", "italic", "bolditalic"]},
+        //   { family: "symbol",
+        //     variants: ["normal"]},
+        //   { family: "zapfdingbats",
+        //     variants: ["normal"]} ]
       }
     },
 
@@ -78,12 +83,8 @@ v-expansion-panel#text-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      availableFontNames() {
-        return keys(this.availableFonts)
-      },
-
       availableFontStyles() {
-        return this.availableFonts[this.textFontName]
+        return find(this.availableFonts, { family: this.textFontName }).variants
       },
 
       propertyNames() {
