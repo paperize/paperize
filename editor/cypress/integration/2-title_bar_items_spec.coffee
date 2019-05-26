@@ -9,18 +9,18 @@ describe "Title Bar items", ->
       cy.contains("Avid Gamer")
       cy.contains("Sign Out")
 
-  context.only "Errors menu", ->
+  context "Errors menu", ->
     it "is not visible without login, with error", ->
-      # cy.makePaperizeError()
       cy.visit("/")
+      cy.makePaperizeError()
       cy.contains("Errors").should("not.exist")
 
     it "is visible with login, with error", ->
-      # cy.makePaperizeError()
       cy.login()
+      cy.makePaperizeError()
       cy.contains("Errors")
 
-    it "is not visible with login, without error", ->
+    it.only "is not visible with login, without error", ->
       cy.login()
       cy.contains("Errors").should("not.exist")
 

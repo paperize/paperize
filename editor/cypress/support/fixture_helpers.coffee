@@ -1,5 +1,10 @@
+_ = require('lodash')
+
 # shorthand for loading more than one fixture at once
 Cypress.Commands.add "fixtures", (fixtureNames) ->
+  unless(_.isArray(fixtureNames))
+    fixtureNames = [fixtureNames]
+
   fixtures = {}
 
   cy.wrap(fixtureNames).each (fixtureName) ->
