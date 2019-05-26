@@ -11,6 +11,8 @@ v-toolbar(app)
 
   v-toolbar-items
     template(v-if="loggedIn")
+      errors-menu
+
       v-btn(flat @click="showDriveExplorer = true") Drive Explorer
       v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
         drive-explorer
@@ -34,6 +36,7 @@ v-toolbar(app)
   import { mapGetters, mapActions } from 'vuex'
   import ProfileMenu from './ProfileMenu.vue'
   import HelpMenu from './HelpMenu.vue'
+  import ErrorsMenu from './ErrorsMenu.vue'
   import DriveExplorer from '../drive/DriveExplorer.vue'
   import PrintStatus from '../print/PrintStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
@@ -43,6 +46,7 @@ v-toolbar(app)
     components: {
       ProfileMenu,
       HelpMenu,
+      ErrorsMenu,
       DatabaseManager,
       PrintStatus,
       DriveExplorer,
