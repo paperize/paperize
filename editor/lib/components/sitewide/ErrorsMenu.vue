@@ -7,7 +7,14 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
       span {{ errorCount }}
 
   v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="500" lazy)
-    h1 Errors Explorer
+    v-card
+      v-card-title Recent Errors
+      v-card-text
+        v-expansion-panel#errors-explorer(popout)
+          v-expansion-panel-content(v-for="error in allErrors")
+            div(slot="header") {{ error.name }}
+            v-card
+              v-card-text {{ error.message }}
 </template>
 
 <script>

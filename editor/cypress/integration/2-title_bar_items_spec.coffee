@@ -45,3 +45,10 @@ describe "Title Bar items", ->
       cy.makePaperizeError(1)
       cy.get('.error-count').contains 20
 
+    it "displays a modal of the errors", ->
+      cy.login()
+      cy.makePaperizeError(3)
+      cy.contains("Errors").click()
+
+      cy.contains("Recent Errors")
+      cy.contains("ErrorFixture")
