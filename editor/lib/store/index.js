@@ -16,6 +16,7 @@ import games        from './games'
 import components   from './components'
 import templates    from './templates'
 import layers       from './layers'
+import errors       from './errors'
 import dimensions   from './dimensions'
 import print        from './print'
 import uiPrint      from './ui_print'
@@ -35,6 +36,7 @@ const INITIAL_STATE = {
   components:   components.state,
   templates:    templates.state,
   layers:       layers.state,
+  errors:       errors.state,
   dimensions:   dimensions.state,
   print:        print.state,
   uiPrint:      uiPrint.state,
@@ -72,6 +74,7 @@ let store = new Vuex.Store({
     components,
     templates,
     layers,
+    errors,
     dimensions,
     print,
     google
