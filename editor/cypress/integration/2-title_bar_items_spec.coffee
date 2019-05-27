@@ -20,17 +20,17 @@ describe "Title Bar items", ->
       cy.makePaperizeError()
       cy.contains("Errors")
 
-    it.only "is not visible with login, without error", ->
+    it "is not visible with login, without error", ->
       cy.login()
       cy.contains("Errors").should("not.exist")
 
-    it "has a badge displaying quantity of unread errors", ->
+    it.only "has a badge displaying quantity of unread errors", ->
       cy.login()
-      # create 3 errors
-      # .error-menu badge contains "3"
-      # create 1 more error
-      # .error-menu badge contains "4"
-      cy.contains("Errors").click()
+      cy.makePaperizeError(3)
+      cy.get('.error-count').contains "3"
+      cy.makePaperizeError(1)
+      cy.get('.error-count').contains "4"
+      # cy.contains("Errors").click()
       # close the modal
       # .error-menu badge not visible
       # create 1 more error
