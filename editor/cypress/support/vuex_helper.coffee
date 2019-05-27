@@ -44,8 +44,12 @@ Cypress.Commands.add "visitActiveGameAndComponent", ->
 
 Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
   cy.vuex().then (vuex) ->
-    cy.fixtures("errors").then (errors) ->
-      vuex.commit("setErrors", _.take(errors, numberOfErrors))
+    cy.fixture("errors").then (errors) ->
+      # create the basic error N times
+      _.times numberOfErrors, ->
+        vuex.dispatch("createError", errors.basic)
+      # take N keys, then pick the taken keys
+      # vuex.commit("setErrors", _.pick(errors, _.take(_.keys(errors), numberOfErrors)))
 
 Cypress.Commands.add "loginAndEditGame", ->
   cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates } }) ->
