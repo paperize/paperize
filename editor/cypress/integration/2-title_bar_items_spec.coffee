@@ -35,3 +35,13 @@ describe "Title Bar items", ->
       # .error-menu badge not visible
       # create 1 more error
       # .error-menu badge contains "1"
+
+    it.only "maxes out at 20 errors", ->
+      cy.login()
+      cy.makePaperizeError(19)
+      cy.get('.error-count').contains 19
+      cy.makePaperizeError(1)
+      cy.get('.error-count').contains 20
+      cy.makePaperizeError(1)
+      cy.get('.error-count').contains 20
+
