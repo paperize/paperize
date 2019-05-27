@@ -106,6 +106,7 @@ let store = new Vuex.Store({
 
 store.subscribe((mutation, state) => {
   ui.subscribe(store, mutation, state)
+  errors.subscribe(store, mutation, state)
 })
 
 
