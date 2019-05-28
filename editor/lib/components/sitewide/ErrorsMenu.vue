@@ -11,7 +11,7 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
       v-card-title Recent Errors
       v-card-text
         v-expansion-panel#errors-explorer(popout)
-          v-expansion-panel-content(v-for="error in allErrors")
+          v-expansion-panel-content(v-for="error in allErrors" :key="error.id")
             div(slot="header") {{ error.name }}
             v-card
               v-card-text
