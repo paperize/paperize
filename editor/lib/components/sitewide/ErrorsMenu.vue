@@ -6,7 +6,7 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
     template(slot="badge")
       span {{ errorCount }}
 
-  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="500" lazy)
+  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="1200" lazy)
     v-card
       v-card-title Recent Errors
       v-card-text
@@ -16,7 +16,7 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
             v-card
               v-card-text
                 .message {{ error.message }}
-                .details {{ error.details }}
+                pre.details {{ error.details }}
 </template>
 
 <script>
