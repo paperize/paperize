@@ -29,6 +29,7 @@ const
     "setLayerHighlighting",
     "setPrintJobStatus",
     "setStatusWindowOpen",
+    "createError"
   ]
 
 let vuex,

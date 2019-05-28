@@ -10,7 +10,8 @@ const UNPERSISTED_STATE_KEYS = [
   "cache",
   "ui",
   "uiPrint",
-  "google"
+  "google",
+  "errors"
 ]
 
 const DatabaseModule = {
