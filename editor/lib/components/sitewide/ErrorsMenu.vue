@@ -14,7 +14,9 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
           v-expansion-panel-content(v-for="error in allErrors")
             div(slot="header") {{ error.name }}
             v-card
-              v-card-text {{ error.message }}
+              v-card-text
+                .message {{ error.message }}
+                .details {{ error.details }}
 </template>
 
 <script>

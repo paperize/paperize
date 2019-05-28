@@ -13,6 +13,7 @@ const ErrorModel = {
       id:               uuid(),
       name:             "",
       message:          "",
+      details:          "",
       // override with given
       ...newError
     }
