@@ -18,8 +18,8 @@ v-expansion-panel#image-layer-editor(popout)
 
         template(v-else)
           v-text-field(v-model="imageNamePrefix" label="Prefix" box)
-          v-select(v-model="imageNameProperty" :items="activeSheetProperties" box)
-          v-text-field(v-model="imageNameSuffix" label="Suffix" box)
+          v-select.image-name-property(v-model="imageNameProperty" :items="activeSheetProperties" box)
+          v-text-field.image-name-suffix(v-model="imageNameSuffix" label="Suffix" box)
           v-text-field(disabled label="Looks like" :value="dynamicImageName" box)
 
   v-expansion-panel-content
