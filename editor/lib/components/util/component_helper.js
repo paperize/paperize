@@ -3,17 +3,25 @@ import { isUndefined } from 'lodash'
 const computedVModelUpdate = function(objectName, actionName, propertyToUpdate) {
   return {
     get() {
-      let object = this[objectName]
+      const object = this[objectName]
       if(isUndefined(object)) { throw new Error(`Object name must exist on component for vmodel helper: "${objectName}"`)}
-      let property = object[propertyToUpdate]
+
+      const property = object[propertyToUpdate]
       if(isUndefined(property)) { throw new Error(`Property must exist for vmodel helper: "${propertyToUpdate}"`)}
-      return this[objectName][propertyToUpdate]
+
+      return property
     },
 
     set(propertyValue) {
-      let keyValueObject = {}
-      keyValueObject[propertyToUpdate] = propertyValue
-      let actionPayload = { ...this[objectName], ...keyValueObject }
+      let actionPayload = {}
+      actionPayload[propertyToUpdate] = propertyValue
+
+      // update payload
+      // actionPayload = { ...this[objectName], ...keyValueObject }
+
+      // patch payload
+      actionPayload.id = this[objectName].id
+
       this[actionName](actionPayload)
     }
   }

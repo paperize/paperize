@@ -73,7 +73,7 @@ v-expansion-panel#image-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "imageNameStatic",
         "imageId",
         "imageNamePrefix",
@@ -90,11 +90,9 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     methods: {
-      getImageLabel(imageItem) { return imageItem },
+      ...mapActions(["patchLayer"]),
 
-      updateLayer: debounce(function(layerUpdate) {
-        this.$store.dispatch("updateLayer", layerUpdate)
-      }, 400, { leading: true }),
+      getImageLabel(imageItem) { return imageItem },
 
       pickImageFromDrive() {
         return openImagePicker(this.workingDirectoryId)

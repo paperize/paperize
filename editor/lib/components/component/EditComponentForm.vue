@@ -35,11 +35,11 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     computed: {
       ...mapGetters(["activeGame", "findComponentTemplate"]),
 
-      title: computedVModelUpdate("component", "updateComponent", "title"),
+      title: computedVModelUpdate("component", "patchComponent", "title"),
     },
 
     methods: {
-      ...mapActions(["updateComponent"]),
+      ...mapActions(["patchComponent"]),
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {

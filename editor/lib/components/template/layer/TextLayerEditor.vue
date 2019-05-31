@@ -89,7 +89,7 @@ v-expansion-panel#text-layer-editor(popout)
         return this.$store.getters.sourceProperties(this.source)
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "textFontName",
         "textFontStyle",
         "textContentTemplate",
@@ -101,9 +101,7 @@ v-expansion-panel#text-layer-editor(popout)
     },
 
     methods: {
-      updateLayer: debounce(function(layer) {
-        this.$store.dispatch("updateLayer", layer)
-      }, 650, { leading: true }),
+      ...mapActions(["patchLayer"]),
 
       ensureValidStyle() {
         // Wait for styles to be reactively updated

@@ -63,7 +63,7 @@ v-expansion-panel#shape-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "shape",
         "strokePresent",
         "strokeWidth",
@@ -73,6 +73,6 @@ v-expansion-panel#shape-layer-editor(popout)
       ])
     },
 
-    methods: mapActions(["updateLayer"])
+    methods: mapActions(["patchLayer"])
   }
 </script>
