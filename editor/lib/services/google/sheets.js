@@ -37,24 +37,30 @@ const api = {
         return client.sheets.spreadsheets.get({
           spreadsheetId: googleId
         }).then(({ result }) => {
+
           // extract spreadsheet name
           const spreadsheetName = result.properties.title,
+
             // extract worksheet ids
             worksheetIds = chain(result.sheets)
               .take(MAX_WORKSHEETS)
               .map("properties.sheetId")
               .invokeMap("toString")
               .value(),
+
             // extract worksheet titles
             worksheetTitles = chain(result.sheets)
               .take(MAX_WORKSHEETS)
               .map("properties.title")
               .value(),
+
             // construct batch query
             params = {
               spreadsheetId: googleId,
-              // A sheet title is a valid A1 query
-              ranges: worksheetTitles
+              // Convert sheet title to proper A1 notation
+              ranges: worksheetTitles.map((sheetTitle) => {
+                return `'${sheetTitle}'!A1:AA1000`
+              })
             }
 
           return client.sheets.spreadsheets.values.batchGet(params)
