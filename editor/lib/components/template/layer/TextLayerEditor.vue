@@ -4,11 +4,11 @@ v-expansion-panel#text-layer-editor(popout)
 
   dimension-editor(:dimensions="dimensions" :size="templateSize")
 
-  v-expansion-panel-content
+  v-expansion-panel-content.font-settings
     div(slot="header") Font
     v-card
       v-card-text
-        v-autocomplete(label="Font Family" v-model="textFontName" :items="availableFonts" item-value="family" item-text="family" box)
+        v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" box)
         v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
         v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
         color-picker(label="Text Color" v-model="textColor")
@@ -45,11 +45,12 @@ v-expansion-panel#text-layer-editor(popout)
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
-  import fontIndex from '../../../services/google/google_font_index.json'
 
 
   export default {
     props: ["layer", "source"],
+
+    mounted() { this.fetchGoogleFonts() },
 
     components: {
       NameEditor,
@@ -57,25 +58,12 @@ v-expansion-panel#text-layer-editor(popout)
       ColorPicker,
     },
 
-    data() {
-      return {
-        availableFonts: fontIndex.items
-        // built-in PDF fonts:
-        // [ { family: "helvetica",
-        //     variants: ["normal", "bold", "italic", "bolditalic"]},
-        //   { family: "courier",
-        //     variants: ["normal", "bold", "italic", "bolditalic"]},
-        //   { family: "times",
-        //     variants: ["normal", "bold", "italic", "bolditalic"]},
-        //   { family: "symbol",
-        //     variants: ["normal"]},
-        //   { family: "zapfdingbats",
-        //     variants: ["normal"]} ]
-      }
-    },
-
     computed: {
-      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
+      ...mapGetters([
+        "getLayerDimensions",
+        "findTemplateByLayerId",
+        "allFonts"
+      ]),
 
       dimensions() { return this.getLayerDimensions(this.layer) },
 
@@ -84,7 +72,7 @@ v-expansion-panel#text-layer-editor(popout)
       },
 
       availableFontStyles() {
-        return find(this.availableFonts, { family: this.textFontName }).variants
+        return find(this.allFonts, { family: this.textFontName }).variants
       },
 
       propertyNames() {
@@ -103,6 +91,8 @@ v-expansion-panel#text-layer-editor(popout)
     },
 
     methods: {
+      ...mapActions(["fetchGoogleFonts"]),
+
       updateLayer: debounce(function(layer) {
         this.$store.dispatch("updateLayer", layer)
       }, 650, { leading: true }),
