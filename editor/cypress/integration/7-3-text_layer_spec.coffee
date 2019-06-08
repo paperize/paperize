@@ -5,7 +5,7 @@ describe "Text Layers", ->
     cy.route('/webfonts/v1/webfonts*', 'fixture:google_fonts_api.json')
       .as("googleFontsApi")
 
-    cy.route('/PermanentMarker.ttf', 'fixture:PermanentMarker.ttf')
+    cy.route('/PermanentMarker.ttf', 'fixture:PermanentMarker.ttf,binary')
       .as("PM.ttf")
 
     cy.loginAndEditGame()
