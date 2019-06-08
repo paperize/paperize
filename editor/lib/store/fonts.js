@@ -1,4 +1,4 @@
-import { concat, keys, reduce } from 'lodash'
+import { concat, filter, find, flatten, keys, map, reduce } from 'lodash'
 import axios from 'axios'
 import GOOGLE_FONT_API_KEY from "../../.api_keys.json"
 
@@ -41,20 +41,33 @@ const
         }, [])
       },
 
-      allFontsForItem: (state, getters, rootState, rootGetters) => (item) => {
-        return [{
-          family: "Permanent Marker",
-          variant: "regular",
-          location: "/PermanentMarker.ttf"
-        }]
+      allFontsForComponent: (state, getters, rootState, rootGetters) => (component) => {
+        const
+          template = rootGetters.findComponentTemplate(component),
+          layers = rootGetters.findAllTemplateLayers(template),
+          textLayers = filter(layers, { type: 'text' }),
+          fonts = reduce(textLayers, (acc, textLayer) => {
+            const googleFont = find(state.googleFonts, { family: textLayer.textFontName })
+            if(googleFont) {
+              acc.push({
+                family: textLayer.textFontName,
+                variant: textLayer.textFontStyle,
+                location: googleFont.variants[textLayer.textFontStyle]
+              })
+            }
+
+            return acc
+          }, [])
+
+        return fonts
       },
 
       allFontsForGame: (state, getters, rootState, rootGetters) => (game) => {
-        return [{
-          family: "Permanent Marker",
-          variant: "regular",
-          location: "/PermanentMarker.ttf"
-        }]
+        const
+          components = rootGetters.findAllGameComponents(game),
+          fonts = flatten(map(components, (component) => getters.allFontsForComponent(component)))
+
+        return fonts
       }
     },
 
