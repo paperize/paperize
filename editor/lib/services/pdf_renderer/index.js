@@ -9,14 +9,13 @@ import { preloadFonts } from './fonts/font_loader'
 
 const publicApi = {
   renderItemToPdf(game, component, item) {
-    const template = store.getters.findTemplate(component.templateId)
-    const doc = singlePageDocOfSize(template.size)
+    const
+      template = store.getters.findTemplate(component.templateId),
+      doc = singlePageDocOfSize(template.size)
 
-    preloadFonts(store.getters.allFontsForItem(item))
-
-    return renderItem(doc, game, component, item, template.size, 0, 1).then(() => {
-      return doc.output('bloburi')
-    })
+    return preloadFonts(store.getters.allFontsForComponent(component))
+      .then(() => renderItem(doc, game, component, item, template.size, 0, 1))
+      .then(() => doc.output('bloburi'))
   },
 
   renderGameToPdf(game) {

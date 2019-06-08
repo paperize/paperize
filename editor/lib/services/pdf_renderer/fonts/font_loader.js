@@ -12,12 +12,12 @@ export function loadFont(fontName, fontVariant, fontBase64) {
 }
 
 export function preloadFonts(fonts) {
-  const font = fonts[0]
-  console.log(font)
-  urlToBase64(font.location)
-    .then((fontBase64) => {
-      loadFont(font.family, font.variant, fontBase64)
-    })
+  return Promise.each(fonts, (font) => {
+    return urlToBase64(font.location)
+      .then((fontBase64) => {
+        loadFont(font.family, font.variant, fontBase64)
+      })
+  })
 }
 
 function urlToBase64(url) {
