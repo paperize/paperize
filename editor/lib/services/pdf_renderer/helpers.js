@@ -1,7 +1,8 @@
 import parseColor from 'color-parse'
+import { find } from 'lodash'
 
 const findProperty = function(item, key) {
-  const property = _.find(item, { key })
+  const property = find(item, { key })
   if(property) {
     return property.value
   } else {
@@ -31,9 +32,7 @@ const hexToRGB = function(hexColorString) {
 const anyToRGB = function(fuzzyInput) {
   const
     parsedColor = parseColor(fuzzyInput),
-    r = parsedColor.values[0],
-    g = parsedColor.values[1],
-    b = parsedColor.values[2]
+    { 0: r, 1: g, 2: b } = parsedColor.values
 
   return { r, g, b }
 }
