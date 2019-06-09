@@ -1,4 +1,4 @@
-import { reduce } from 'lodash'
+import { includes, reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
 import { hexToRGB } from './helpers'
 
@@ -28,11 +28,19 @@ export default {
       // Render the template to a string
       renderedText = mustache(layer.textContentTemplate, textContentTemplateVars)
 
-    // Configure text settings before writing
+    // Configure font/text settings
     doc.setTextColor(r, g, b)
-    doc.setFont(layer.textFontName)
-    doc.setFontStyle(layer.textFontStyle)
     doc.setFontSize(layer.textSize)
+
+    const defaultFontFamilies = ["helvetica", "courier", "times", "symbol", "zapfdingbats"]
+    if(includes(defaultFontFamilies, layer.textFontName)){
+      // do it the normal way for built-in fonts
+      doc.setFont(layer.textFontName)
+      doc.setFontStyle(layer.textFontStyle)
+    } else {
+      // do it the family-per-variant way for the rest
+      doc.setFont(`${layer.textFontName}-${layer.textFontStyle}`)
+    }
 
     // Convert horizontal alignment setting to an X offset
     const horizontalAlignment = layer.horizontalAlignment || "left"

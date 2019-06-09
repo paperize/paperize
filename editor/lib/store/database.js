@@ -10,6 +10,7 @@ const UNPERSISTED_STATE_KEYS = [
   "cache",
   "ui",
   "uiPrint",
+  "fonts",
   "google"
 ]
 

@@ -12,6 +12,7 @@ import ui           from './ui'
 import folders      from './folders'
 import spreadsheets from './spreadsheets'
 import images       from './images'
+import fonts        from './fonts'
 import games        from './games'
 import components   from './components'
 import templates    from './templates'
@@ -31,6 +32,7 @@ const INITIAL_STATE = {
   folders:      folders.state,
   spreadsheets: spreadsheets.state,
   images:       images.state,
+  fonts:        fonts.state,
   games:        games.state,
   components:   components.state,
   templates:    templates.state,
@@ -68,6 +70,7 @@ let store = new Vuex.Store({
     folders,
     spreadsheets,
     images,
+    fonts,
     games,
     components,
     templates,

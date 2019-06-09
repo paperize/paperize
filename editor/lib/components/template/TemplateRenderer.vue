@@ -26,7 +26,8 @@
         "activeLayer",
         "findTemplate",
         "findAllTemplateLayers",
-        "layerHighlighting"
+        "layerHighlighting",
+        "allFonts"
       ]),
 
       layerStrokePresent() { return (this.activeLayer && this.activeLayer.strokePresent) },
@@ -80,6 +81,7 @@
       layerTextColor: "renderPDF",
       layerTextSize: "renderPDF",
       layerHighlighting: "renderPDF",
+      allFonts: "renderPDF"
     },
 
     methods: {
