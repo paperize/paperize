@@ -29,6 +29,9 @@ const
     "setLayerHighlighting",
     "setPrintJobStatus",
     "setStatusWindowOpen",
+    "setStatusWindowOpen",
+    "setGoogleFonts",
+    "setRequestPromise",
   ]
 
 let vuex,

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "family": "Permanent Marker",
+      "files": {
+        "regular": "/PermanentMarker.ttf"
+      }
+    },
+    {
+      "family": "Roboto",
+      "files": {
+        "100": "/Roboto-100.ttf",
+        "regular": "/Roboto-regular.ttf",
+        "bold": "/Roboto-bold.ttf",
+        "italic": "/Roboto-italic.ttf",
+        "bolditalic": "/Roboto-bolditalic.ttf"
+      }
+    }
+  ]
+}
