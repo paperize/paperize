@@ -18,8 +18,8 @@ v-expansion-panel#image-layer-editor(popout)
 
         template(v-else)
           v-text-field(v-model="imageNamePrefix" label="Prefix" box)
-          v-select(v-model="imageNameProperty" :items="activeSheetProperties" box)
-          v-text-field(v-model="imageNameSuffix" label="Suffix" box)
+          v-select.image-name-property(v-model="imageNameProperty" :items="activeSheetProperties" box)
+          v-text-field.image-name-suffix(v-model="imageNameSuffix" label="Suffix" box)
           v-text-field(disabled label="Looks like" :value="dynamicImageName" box)
 
   v-expansion-panel-content
@@ -73,7 +73,7 @@ v-expansion-panel#image-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "imageNameStatic",
         "imageId",
         "imageNamePrefix",
@@ -90,11 +90,9 @@ v-expansion-panel#image-layer-editor(popout)
     },
 
     methods: {
-      getImageLabel(imageItem) { return imageItem },
+      ...mapActions(["patchLayer"]),
 
-      updateLayer: debounce(function(layerUpdate) {
-        this.$store.dispatch("updateLayer", layerUpdate)
-      }, 400, { leading: true }),
+      getImageLabel(imageItem) { return imageItem },
 
       pickImageFromDrive() {
         return openImagePicker(this.workingDirectoryId)

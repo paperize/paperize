@@ -95,7 +95,7 @@ v-flex#source-editor(sm4 md6)
         "allSpreadsheets"
       ]),
 
-      ...computedVModelUpdateAll("component", "updateComponent", [
+      ...computedVModelUpdateAll("component", "patchComponent", [
         "quantityProperty"
       ]),
 
@@ -157,7 +157,6 @@ v-flex#source-editor(sm4 md6)
 
     methods: {
       ...mapActions([
-        "updateComponent",
         "linkComponentSheet",
         "unlinkComponentSheet",
         "setComponentWorksheet",

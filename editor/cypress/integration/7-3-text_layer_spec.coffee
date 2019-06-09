@@ -28,7 +28,7 @@ describe "Text Layers", ->
     cy.contains("[text] 0")
     cy.contains("[text] 1")
 
-  it.only "sets fonts", ->
+  it "sets fonts", ->
     cy.get(".font-settings").click()
 
     cy.get(".font-family-setting").click()

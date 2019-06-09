@@ -14,9 +14,9 @@ v-expansion-panel-content
     props: ["layer"],
 
     computed: {
-      name: computedVModelUpdate("layer", "updateLayer", "name"),
+      name: computedVModelUpdate("layer", "patchLayer", "name"),
     },
 
-    methods: mapActions(["updateLayer"]),
+    methods: mapActions(["patchLayer"]),
   }
 </script>
