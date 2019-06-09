@@ -9,7 +9,7 @@ v-expansion-panel#text-layer-editor(popout)
     v-card
       v-card-text
         v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" box)
-        v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
+        v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" class="font-style-setting" box)
         v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
         color-picker(label="Text Color" v-model="textColor")
 
@@ -72,7 +72,9 @@ v-expansion-panel#text-layer-editor(popout)
       },
 
       availableFontStyles() {
-        return find(this.allFonts, { family: this.textFontName }).variants
+        const font = find(this.allFonts, { family: this.textFontName })
+
+        return font && font.variants || []
       },
 
       propertyNames() {
@@ -107,6 +109,10 @@ v-expansion-panel#text-layer-editor(popout)
           }
         })
       },
+    },
+
+    watch: {
+      availableFontStyles: "ensureValidStyle"
     }
   }
 </script>
