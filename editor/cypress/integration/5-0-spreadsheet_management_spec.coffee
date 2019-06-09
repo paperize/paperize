@@ -6,3 +6,25 @@ describe "Spreadsheet management", ->
     it.only "makes a color", ->
       cy.get("#source-editor").contains("Available Properties")
       cy.get("#source-editor").contains("Magical Properties")
+
+      cy.get("#template-editor").within ->
+        cy.contains("edit").click()
+
+      cy.contains("library_add").click()
+      cy.contains("Shape").click()
+
+      cy.contains("Layer Name: \"[shape] 0\"").click()
+      cy.get(".layer-name-input input").clear().type("Background Box")
+
+      cy.contains("Fill").click()
+      cy.contains("Fill?").click()
+
+      cy.contains("library_add").click()
+      cy.contains("Text").click()
+
+      cy.contains("Layer Name: \"[text] 1\"").click()
+      cy.get(".layer-name-input input").clear().type("Name")
+
+      cy.contains("Text Content").click()
+      cy.get(".text-content textarea")
+        .type("Colorized Text")
