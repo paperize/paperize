@@ -1,3 +1,5 @@
+import parseColor from 'color-parse'
+
 const findProperty = function(item, key) {
   const property = _.find(item, { key })
   if(property) {
@@ -26,4 +28,14 @@ const hexToRGB = function(hexColorString) {
   return { r, g, b }
 }
 
-export { findProperty, percentOfParent, hexToRGB }
+const anyToRGB = function(fuzzyInput) {
+  const
+    parsedColor = parseColor(fuzzyInput),
+    r = parsedColor.values[0],
+    g = parsedColor.values[1],
+    b = parsedColor.values[2]
+
+  return { r, g, b }
+}
+
+export { findProperty, percentOfParent, hexToRGB, anyToRGB }
