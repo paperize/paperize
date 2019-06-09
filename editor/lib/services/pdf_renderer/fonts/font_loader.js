@@ -37,6 +37,8 @@ export function preloadFonts(fonts) {
 
 // Black magic I tell you.
 function urlToBase64(url) {
+  // strip the scheme off the url so it matches whatever we are
+  url = url.replace(/^http(s?):/, "")
   return Promise.try(() => axios.get(url, { responseType: 'blob' })
     .then((response) => response.data)
 
