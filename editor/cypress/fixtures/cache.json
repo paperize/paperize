@@ -66,10 +66,10 @@
   ],
 
   "rainbowDeck-000000001": [
-    [ "Name", "Name:textColor", "Background Box:strokeColor", "Background Box:fillColor" ],
-    [ "Crimson", "darkred", "red", "pink" ],
-    [ "Grrn", "darkblue", "blue", "#888" ],
-    [ "Bul", "#888888", "blue", "lightblue" ],
-    [ "Cutty", "rgb(0, 0, 250)", "yellow", "darkgrey" ]
+    [ "Name", "Name:textColor", "Name:textFontName", "Name:textFontStyle", "Background Box:strokeColor", "Background Box:fillColor" ],
+    [ "Crimson", "darkred", "times", "bold", "red", "pink" ],
+    [ "Grrn", "darkblue", null, null, "blue", "#888" ],
+    [ "Bul", "#888888", null, null, "blue", "lightblue" ],
+    [ "Cutty", "rgb(0, 0, 250)", null, null, "yellow", "darkgrey" ]
   ]
 }
