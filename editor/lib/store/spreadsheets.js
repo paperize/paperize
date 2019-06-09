@@ -1,4 +1,4 @@
-import { map, max, min, pick, slice, zipWith } from 'lodash'
+import { chain, map, max, min, pick, slice, zipWith } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
 const pickFieldsFromResponse = function(givenSheet) {
@@ -31,6 +31,23 @@ const SpreadsheetModel = {
         worksheetTitles = map(worksheets, "title")
 
       return worksheetTitles
+    },
+
+    worksheetMagicProperties: (state, getters) => (spreadsheetId, worksheetId) => {
+
+      const
+        properties = getters.worksheetPropertyNames(spreadsheetId, worksheetId),
+        magicProperties = chain(properties)
+          .map((prop) => prop.split(':'))
+          .filter(["length", 2])
+          .map((parts) => {
+            return {
+              layerName: parts[0],
+              layerAttributeName: parts[1]
+            }
+          }).value()
+
+      return magicProperties
     },
 
     worksheetPropertyNames: (state, getters) => (spreadsheetId, worksheetId) => {
