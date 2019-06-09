@@ -45,7 +45,7 @@ const
       allFontsForComponent: (state, getters, rootState, rootGetters) => (component) => {
         const
           template = rootGetters.findComponentTemplate(component),
-          layers = rootGetters.findAllTemplateLayers(template),
+          layers = template ? rootGetters.findAllTemplateLayers(template) : [],
           textLayers = filter(layers, { type: 'text' }),
           fonts = reduce(textLayers, (acc, textLayer) => {
             const
