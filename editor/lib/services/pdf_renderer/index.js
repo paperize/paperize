@@ -10,10 +10,16 @@ import { preloadFonts } from './fonts/font_loader'
 const publicApi = {
   renderItemToPdf(game, component, item) {
     const
-      template = store.getters.findTemplate(component.templateId),
-      doc = singlePageDocOfSize(template.size)
+      template = store.getters.findTemplate(component.templateId)
 
-    return preloadFonts(store.getters.allFontsForComponent(component))
+    let doc,
+      fontsToLoad = store.getters.allFontsForComponent(component)
+
+    // Collapse variants into unique families and set all variants to "normal"
+    fontsToLoad = collapseVariantsIntoFamilies(fontsToLoad)
+
+    return preloadFonts(fontsToLoad)
+      .then(() => doc = singlePageDocOfSize(template.size))
       .then(() => renderItem(doc, game, component, item, template.size, 0, 1))
       .then(() => doc.output('bloburi'))
   },
@@ -32,16 +38,31 @@ const publicApi = {
         }
       })),
       printSettings = store.getters.getPrintSettings,
-      { doc, itemLocations, guideLocations } = doLayout(componentSizes, printSettings),
-      numPages = doc.getNumberOfPages(),
       numComponents = componentSizes.length,
-      numItems = sum(map(componentSizes, "quantity"))
+      numItems = sum(map(componentSizes, "quantity")),
+      fontsForGame = collapseVariantsIntoFamilies(store.getters.allFontsForGame(game))
 
-    store.dispatch("printJobStatusUpdate", `Layout Complete: ${numPages} pages, ${numComponents} components, ${numItems} items`)
+    let doc, itemLocations, guideLocations, numPages
 
-    return preloadFonts(store.getters.allFontsForGame(game))
-      .then(() => Promise.each(components, (component) => {
+    store.dispatch("printJobStatusUpdate", `Preloading Fonts: ${map(fontsForGame, "family").join(', ')}`)
+
+    // must preload fonts before creating a doc
+    return preloadFonts(fontsForGame)
+
+      // now get the doc and lay out all the components
+      .then(() => {
+        store.dispatch("printJobStatusUpdate", "Laying out document with components and print settings")
+        const layoutObject = doLayout(componentSizes, printSettings)
+        doc = layoutObject.doc
+        itemLocations = layoutObject.itemLocations
+        guideLocations = layoutObject.guideLocations
+        numPages = doc.getNumberOfPages()
+
+        store.dispatch("printJobStatusUpdate", `Layout Complete: ${numPages} pages, ${numComponents} components, ${numItems} items`)
+      })
+
       // Render all items into the PDF via the given itemLocations
+      .then(() => Promise.each(components, (component) => {
         const items = store.getters.getComponentItems(component)
         store.dispatch("printJobStatusUpdate", `Starting Component: "${component.title}", ${items.length} items`)
 
@@ -51,6 +72,7 @@ const publicApi = {
 
           return renderItem(doc, game, component, item, parentDimensions, itemIndex, totalItems)
         })
+
       // }).then(() => {
       // TODO: process guideLocations and render cut lines
 
@@ -61,6 +83,16 @@ const publicApi = {
 
       }).finally(() => store.dispatch("finishPrintJob") ))
   },
+}
+
+function collapseVariantsIntoFamilies(fonts) {
+  return map(fonts, (font) => {
+    return {
+      family: `${font.family}-${font.variant}`,
+      variant: "normal",
+      location: font.location
+    }
+  })
 }
 
 export default publicApi
