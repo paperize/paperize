@@ -38,7 +38,7 @@ v-container(v-else fluid grid-list-md)
       ]),
 
       game() {
-        return this.findGame(this.gameId, false)
+        return this.findGame(this.gameId)
       }
     },
 
