@@ -41,6 +41,8 @@ v-flex#source-editor(sm4 md6)
     ul.source-properties
       li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
 
+    magic-property-alignment-panel(:magic-properties="worksheetMagicProperties(spreadsheetId, worksheetId)" :template="componentTemplate")
+
   //- We need to set a source
   template(v-else)
     p
@@ -64,13 +66,15 @@ v-flex#source-editor(sm4 md6)
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
+  import MagicPropertyAlignmentPanel from './MagicPropertyAlignmentPanel.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
 
   export default {
     props: ["component"],
 
     components: {
-      SpreadsheetIcon
+      SpreadsheetIcon,
+      MagicPropertyAlignmentPanel
     },
 
     updated() {
@@ -88,6 +92,7 @@ v-flex#source-editor(sm4 md6)
       ...mapGetters([
         "workingDirectoryId",
         "worksheetPropertyNames",
+        "worksheetMagicProperties",
         "findComponentSheet",
         "findComponentTemplate",
         "getComponentFolderId",
@@ -153,6 +158,8 @@ v-flex#source-editor(sm4 md6)
       },
 
       componentSheet() { return this.findComponentSheet(this.component) },
+
+      componentTemplate() { return this.findComponentTemplate(this.component) },
     },
 
     methods: {
