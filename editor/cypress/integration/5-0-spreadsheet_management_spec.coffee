@@ -3,7 +3,7 @@ describe "Spreadsheet management", ->
     before ->
       cy.loginAndEditGame("magic")
 
-    it.only "makes a color", ->
+    it "colorful shapes and text", ->
       cy.get("#source-editor").contains("Available Properties")
       cy.get("#source-editor").contains("Magical Properties")
 
