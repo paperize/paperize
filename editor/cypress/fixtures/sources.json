@@ -160,5 +160,21 @@
         ]
       ]
     }
+  },
+
+  "rainbowDeck": {
+    "id": "rainbowDeck",
+    "name": "Rainbow Deck",
+    "data": {
+      "majorDimension": "ROWS",
+      "range": "Sheet1!A1:AA1000",
+      "values": [
+        [ "Background Box:shape-color" ],
+        [ "red" ],
+        [ "green" ],
+        [ "blue" ],
+        [ "yellow" ]
+      ]
+    }
   }
 }

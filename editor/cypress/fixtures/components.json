@@ -16,5 +16,13 @@
     "id": "pointCubes",
     "title": "Point Cubes",
     "quantityProperty": null
+  },
+  "rainbowDeck": {
+    "id": "rainbowDeck",
+    "title": "Rainbow Deck",
+    "spreadsheetId": "rainbowDeck",
+    "worksheetId": "000000001",
+    "templateId": "loveLetter",
+    "quantityProperty": null
   }
 }

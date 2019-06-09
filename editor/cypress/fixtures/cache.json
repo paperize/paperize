@@ -63,5 +63,13 @@
       "",
       "If you discard this card, you are out of the round."
     ]
+  ],
+
+  "rainbowDeck-000000001": [
+    [ "Background Box:strokeColor" ],
+    [ "red" ],
+    [ "green" ],
+    [ "blue" ],
+    [ "yellow" ]
   ]
 }
