@@ -8,10 +8,7 @@ import { preloadFonts } from './fonts/font_loader'
 
 
 const publicApi = {
-  renderItemToPdf(game, component, item) {
-    const
-      template = store.getters.findTemplate(component.templateId)
-
+  renderItemToPdf(game, component, item, template) {
     let doc,
       fontsToLoad = store.getters.allFontsForComponent(component)
 
