@@ -2,7 +2,8 @@
   v-tooltip(v-if="spreadsheet" top)
     v-btn(slot="activator" fab small @click="refreshSheetIndex(spreadsheet.id)")
       v-icon refresh
-    span Refresh (last refresh: {{ lastRefresh }})
+    p Refresh Spreadsheet from Drive
+    | (last refresh: {{ lastRefresh }})
 </template>
 
 <script>
