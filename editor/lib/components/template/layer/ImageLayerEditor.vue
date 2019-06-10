@@ -26,17 +26,23 @@ v-expansion-panel#image-layer-editor(popout)
     div(slot="header") Image Alignment
     v-card
       v-card-text
-        v-radio-group(label="Scaling:" v-model="imageScaling" row)
-          v-radio(color="primary" label="Fit" value="fitToBox")
-          v-radio(color="primary" label="Fill" value="fillToBox")
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="imageScaling")
+          v-flex
+            v-radio-group(label="Scaling:" v-model="imageScaling" row)
+              v-radio(color="primary" label="Fit" value="fitToBox")
+              v-radio(color="primary" label="Fill" value="fillToBox")
 
         p Horizontal:
+        magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
         v-btn-toggle(v-model="horizontalAlignment")
           v-btn(small flat value="left") Left
           v-btn(small flat value="center") Center
           v-btn(small flat value="right") Right
 
         p Vertical:
+        magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
         v-btn-toggle(v-model="verticalAlignment")
           v-btn(small flat value="top") Top
           v-btn(small flat value="middle") Middle
@@ -51,6 +57,7 @@ v-expansion-panel#image-layer-editor(popout)
   import { openImagePicker } from '../../../services/google/picker'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
+  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
 
   export default {
     props: ["layer"],
@@ -58,6 +65,7 @@ v-expansion-panel#image-layer-editor(popout)
     components: {
       NameEditor,
       DimensionEditor,
+      MagicPropertyInputTalker
     },
 
     computed: {
