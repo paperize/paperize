@@ -26,6 +26,7 @@ const
     "clearActiveComponent",
     "setActiveLayer",
     "clearActiveLayer",
+    "setActiveItem",
     "setLayerHighlighting",
     "setPrintJobStatus",
     "setStatusWindowOpen",

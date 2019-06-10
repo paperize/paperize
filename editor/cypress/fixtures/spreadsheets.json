@@ -1,7 +1,7 @@
 {
   "sheet-abc123": {
     "id": "sheet-abc123",
-    "name": "Artifactizoid",
+    "name": "Artifacts",
     "parents": [
       "folder-abc123"
     ],
@@ -19,6 +19,20 @@
       {
         "id": "000000001",
         "title": "Character Deck"
+      }
+    ]
+  },
+  "rainbowDeck": {
+    "id": "rainbowDeck",
+    "name": "Rainbow",
+    "parents": [
+      "folder-def456"
+    ],
+    "refreshedAt": 1552596999826,
+    "worksheets": [
+      {
+        "id": "000000001",
+        "title": "Rainbow Deck"
       }
     ]
   }

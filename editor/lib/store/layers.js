@@ -4,30 +4,12 @@ import uuid from 'uuid/v4'
 
 import { generateCrud } from './util/vuex_resource'
 
-const CODE = 'code'
 const TEXT = 'text'
 const IMAGE = 'image'
 const SHAPE = 'shape'
 
-const DEFAULT_RENDER_FUNCTION = `
-// Common tasks, all measurements in inches
-// Official docs here: http://rawgit.com/MrRio/jsPDF/master/docs/
-
-// Fetch the "Strength" column for this Item from your data Source:
-// var strength = helpers.findProperty("Strength")
-
-// Set the font size to 12 points:
-// doc.setFontSize(12)
-
-// Render "Text to render" an inch from the left and an inch from the top
-// doc.text("Text to render", 1, 1)
-
-// Insert the Image named "/my-game/my-image.jpg" at the top left corner
-// (must be last thing you do in a given Transform):
-// return helpers.image("/my-game/my-image.jpg", 0, 0)
-`
-
 const LAYER_DEFAULTS = {}
+
 LAYER_DEFAULTS[TEXT] =
   {
     name:                "[Text]",
@@ -69,14 +51,6 @@ LAYER_DEFAULTS[SHAPE] =
     strokeColor:   "#000000",
     fillPresent:   false,
     fillColor:     "#000000",
-  }
-LAYER_DEFAULTS[CODE] =
-  {
-    name:         "[Code]",
-    type:         CODE,
-    renderOrder:  0,
-    dimensionId:  null,
-    renderFunction: DEFAULT_RENDER_FUNCTION
   }
 
 const LayerModel = {

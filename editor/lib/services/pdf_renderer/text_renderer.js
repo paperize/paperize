@@ -1,6 +1,5 @@
 import { includes, reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
-import { hexToRGB } from './helpers'
 
 const PTS_PER_INCH = 72,
   LINE_HEIGHT = 1.2,
@@ -10,7 +9,7 @@ export default {
   render(doc, layer, layerDimensions, item, index, total) {
     const
       // Extract color channels
-      { r, g, b } = hexToRGB(layer.textColor),
+      { r: textRed, g: textGreen, b: textBlue } = layer.textColor,
 
       // Build-in some helper functions to the template variables
       defaultTemplateVars = {
@@ -25,11 +24,14 @@ export default {
         return kvObject
       }, defaultTemplateVars),
 
+      // If no content given, check for Layer-Aligned-Column-Names
+      contentToRender = layer.textContentTemplate || textContentTemplateVars[layer.name],
+
       // Render the template to a string
-      renderedText = mustache(layer.textContentTemplate, textContentTemplateVars)
+      renderedText = contentToRender ? mustache(contentToRender, textContentTemplateVars) : ""
 
     // Configure font/text settings
-    doc.setTextColor(r, g, b)
+    doc.setTextColor(textRed, textGreen, textBlue)
     doc.setFontSize(layer.textSize)
 
     const defaultFontFamilies = ["helvetica", "courier", "times", "symbol", "zapfdingbats"]
