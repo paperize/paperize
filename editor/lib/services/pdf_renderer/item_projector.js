@@ -1,43 +1,39 @@
-import { find, invokeMap, map, filter, reduce } from 'lodash'
+import { groupBy, reduce } from 'lodash'
+import { transformShapeLayer } from '../../models/shape_layer'
+import { transformTextLayer } from '../../models/text_layer'
+import { transformImageLayer } from '../../models/image_layer'
 
 export const projectItem = function(layer, item) {
-  const matches = matchingAttributes(layer, item)
+  const pseudoLayer = constructPseudoLayer(layer, item)
 
-  if(matches) {
-    layer = layerModifer(layer, matches)
+  switch(layer.type){
+  case "shape":
+    layer = transformShapeLayer(pseudoLayer, layer)
+    break
+  case "text":
+    layer = transformTextLayer(pseudoLayer, layer)
+    break
+  case "image":
+    layer = transformImageLayer(pseudoLayer, layer)
+    break
+  default:
+    throw new Error(`Why you no validate! ${layer.type}`)
   }
 
   return layer
 }
 
-const matchingAttributes = (layer, item) => {
+const constructPseudoLayer = (layer, item) => {
   const
-    splitNames = filter(
-      invokeMap(
-        map(item, "key"), 'split', ':'),
-      ["length", 2]),
-
-    layerMatchers = map(splitNames, ({ 0: layerName, 1: attributeName }) => {
-      const key = `${layerName}:${attributeName}`
-
-      return {
-        itemValue: find(item, { key }).value,
-        layerName: layerName,
-        attributeName: attributeName
+    groupedToLayerName = groupBy(item, ({ key }) => key.split(":")[0]),
+    attributesForThisLayer = groupedToLayerName[layer.name],
+    pseudoLayer = reduce(attributesForThisLayer, (acc, { key, value }) => {
+      const attributeName = key.split(":")[1]
+      if(attributeName) {
+        acc[attributeName] = value
       }
-    }),
+      return acc
+    }, {})
 
-    matchingLayerMatchers = filter(layerMatchers, { layerName: layer.name }),
-    matchingAttributeMatchers = filter(matchingLayerMatchers, (layerMatcher) => !!layer[layerMatcher.attributeName] ),
-    matchesWithValues = filter(matchingAttributeMatchers, "itemValue" )
-
-  return matchesWithValues
-}
-
-const layerModifer = (layer, matches) => {
-  return reduce(matches, (acc, { itemValue, attributeName }) => {
-    acc[attributeName] = itemValue
-
-    return acc
-  }, { ...layer })
+  return pseudoLayer
 }
