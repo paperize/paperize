@@ -14,11 +14,7 @@ v-flex#source-editor(sm4 md6)
           v-icon edit
         span Select a different Source
 
-      //- Refresh this source from Drive?
-      v-tooltip(top)
-        v-btn(slot="activator" fab small @click="refreshSheetIndex(componentSheet.id)")
-          v-icon refresh
-        span Refresh (last refresh: {{ lastRefresh }})
+      refresh-source-button(spreadsheet="componentSheet")
 
       v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title")
 
@@ -61,20 +57,21 @@ v-flex#source-editor(sm4 md6)
 </template>
 
 <script>
-  import moment from 'moment'
   import { map, max, min, pick } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
   import MagicPropertyAlignmentPanel from './MagicPropertyAlignmentPanel.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+  import RefreshSourceButton from './RefreshSourceButton.vue'
 
   export default {
     props: ["component"],
 
     components: {
       SpreadsheetIcon,
-      MagicPropertyAlignmentPanel
+      MagicPropertyAlignmentPanel,
+      RefreshSourceButton,
     },
 
     updated() {
@@ -149,10 +146,6 @@ v-flex#source-editor(sm4 md6)
         }
       },
 
-      lastRefresh() {
-        return moment(this.componentSheet.refreshedAt).fromNow()
-      },
-
       worksheetOptions() {
         return map(this.componentSheet.worksheets, (ws) => pick(ws, ["id", "title"]))
       },
@@ -169,7 +162,6 @@ v-flex#source-editor(sm4 md6)
         "setComponentWorksheet",
         "patchComponent",
         "googleCreateSpreadsheet",
-        "refreshSheetIndex",
       ]),
 
       pickSheetFromDrive() {
