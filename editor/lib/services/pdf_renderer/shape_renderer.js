@@ -1,5 +1,3 @@
-import { anyToRGB } from './helpers'
-
 // easy to render a rect given dimensions
 const dimensionRect = function(doc, dimensions, mode="S") {
   doc.rect(dimensions.x, dimensions.y, dimensions.w, dimensions.h, mode)
@@ -32,16 +30,15 @@ export default {
       // Outside the dimensions?
       // TODO when we need to support options
 
-      const { r: strokeRed, g: strokeGreen, b: strokeBlue } = anyToRGB(layer.strokeColor)
+      const { r: strokeRed, g: strokeGreen, b: strokeBlue } = layer.strokeColor
 
       doc.setDrawColor(strokeRed, strokeGreen, strokeBlue)
       doc.setLineWidth(layer.strokeWidth)
     }
 
     if(layer.fillPresent) {
-      // Set colors and line width based on layer settings
-      let { r: fr, g: fg, b: fb } = anyToRGB(layer.fillColor)
-      doc.setFillColor(fr, fg, fb)
+      const { r: fillRed, g: fillGreen, b: fillBlue } = layer.fillColor
+      doc.setFillColor(fillRed, fillGreen, fillBlue)
     }
 
     // Stroke fill

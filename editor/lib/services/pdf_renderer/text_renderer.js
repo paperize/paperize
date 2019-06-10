@@ -1,6 +1,5 @@
 import { includes, reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
-import { anyToRGB } from './helpers'
 
 const PTS_PER_INCH = 72,
   LINE_HEIGHT = 1.2,
@@ -10,7 +9,7 @@ export default {
   render(doc, layer, layerDimensions, item, index, total) {
     const
       // Extract color channels
-      { r: textRed, g: textGreen, b: textBlue } = anyToRGB(layer.textColor),
+      { r: textRed, g: textGreen, b: textBlue } = layer.textColor,
 
       // Build-in some helper functions to the template variables
       defaultTemplateVars = {
