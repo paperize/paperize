@@ -24,8 +24,11 @@ export default {
         return kvObject
       }, defaultTemplateVars),
 
+      // If no content given, check for Layer-Aligned-Column-Names
+      contentToRender = layer.textContentTemplate || textContentTemplateVars[layer.name],
+
       // Render the template to a string
-      renderedText = mustache(layer.textContentTemplate, textContentTemplateVars)
+      renderedText = contentToRender ? mustache(contentToRender, textContentTemplateVars) : ""
 
     // Configure font/text settings
     doc.setTextColor(textRed, textGreen, textBlue)
