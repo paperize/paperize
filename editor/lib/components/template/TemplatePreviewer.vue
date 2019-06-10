@@ -10,7 +10,7 @@ div
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import { clamp } from 'lodash'
   import TemplateRenderer from './TemplateRenderer.vue'
 
@@ -18,6 +18,8 @@ div
     props: ["game", "component", "item"],
 
     components: { TemplateRenderer },
+
+    mounted() { this.setActiveItem(this.currentItem) },
 
     data() {
       return {
@@ -40,5 +42,13 @@ div
         return this.items[this.currentItemIndex-1]
       },
     },
+
+    methods: mapActions(["setActiveItem"]),
+
+    watch: {
+      currentItem(newItem, oldItem) {
+        this.setActiveItem(newItem)
+      }
+    }
   }
 </script>
