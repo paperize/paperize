@@ -2,16 +2,18 @@
   layout
     v-layout()
       v-flex(xs-12)
-        h1 Paperize: <em>create better games, faster!</em>
-
-        h2 Paperize is currently in Alpha status
-        p This means that it:
+        h1 Paperize:  Create better games, faster!
         p
+          em Experimental bespoke rapid prototyping software for tabletop game designers
+
+        v-alert(type="warning" value="true" outline)
+          strong Paperize alpha software, meaning it:
           ul
             li is missing major features
             li has unacceptable bugs
             li is not easy to understand the user interface
-        p If you'd like to see it progress faster...
+
+        p Want to support this kind of thing?
 
         h2 Consider <a href="https://patreon.com/paperize" target="_blank">Becoming a Patron!</a>
         p Paperize is <strong>solely supported by generous donations from visionary game designers</strong>: no fees, no spying, no selling your data.
