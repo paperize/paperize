@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app#paperize-docs
+  v-app
     v-navigation-drawer(v-model="showDrawer" fixed app)
       v-card(min-height="200")
         v-card-text Recognized Patrons
@@ -16,7 +16,7 @@
         v-subheader(inset) Guides
         v-divider
 
-        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" @click="")
+        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" tag="g-link")
           v-list-tile-action
             //- empty on purpose, pads the title for alignment
           v-list-tile-title {{ guide.name }}
