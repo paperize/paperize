@@ -31,6 +31,9 @@
         v-list-tile(ripple v-for="reference in references" :to="reference.to" :key="reference.name" @click="")
           v-list-tile-action
           v-list-tile-title {{ reference.name }}
+          v-tooltip(v-if="reference.isNew" top)
+            span New content as of {{ reference.isNew }}!
+            v-icon(slot="activator" color="blue") new_releases
 
     v-toolbar(fixed app)
       v-toolbar-side-icon(@click.stop="showDrawer = !showDrawer")
@@ -61,6 +64,7 @@ query {
     ],
 
     references = [
+      { name: "Roadmap", to: "/references/roadmap", isNew: "June 2019" },
       { name: "Component", to: "/references/component" },
       { name: "Game", to: "/references/game" },
       { name: "Google Authorization", to: "/references/google-authorization" },
