@@ -8,15 +8,41 @@ title: Paperize Project Roadmap
 **Updated:** June 2019
 
 
-## Next Release: "Discriminating Customer" (Alpha 7)
+### Next Release: "Discriminating Customer" (Alpha 7)
 
 **Releasing:** _Soon_
 
 **Goal:** _Customization: Epic Font Expansion and the Rise of Magic Properties_
 
 
+## Road to Public Beta
 
-## Current Release: "Enigmatic Gambler" (Alpha 6)
+- [ ] Data Management Story: Backups, Security, Privacy (Alpha 8)
+- [ ] Error Reporting (Alpha 9)
+- [ ] Good Documentation
+- [ ] Copying Things (Games, Components, Templates, Layers, Dimensions)
+- [ ] "Load Example" for everything
+- [ ] Browser Testing
+- [ ] Getting the Word Out (Marketing Push)
+
+
+## The Road Beyond
+
+- [ ] Open Sourcing Everything
+- [ ] Sharing Things (Games, Components, Templates, Layers, Dimensions)
+- [ ] Icon Support/Workflow
+- [ ] Layer Nesting
+- [ ] Layer Rotation
+- [ ] "Print-n-Play" Config
+- [ ] SVG support
+- [ ] Active Sheet Workflow: Paperize watches Spreadsheet, notes issues, renders PDF
+- [ ] Asset Pipeline: Draft and Pro Quality, Performance Tradeoffs
+
+
+## The Road Behind
+
+### Current Release: "Enigmatic Gambler" (Alpha 6)
+---
 
 **Released:** March 25th, 2018
 
@@ -64,7 +90,8 @@ title: Paperize Project Roadmap
 - [x] fixed Template preview stops working after editing template
 - [x] don't search in Google trash
 
-## "Reclusive Scrivener" (Alpha 5)
+### "Reclusive Scrivener" (Alpha 5)
+---
 
 **Released:** December 6th, 2018
 
@@ -84,7 +111,8 @@ We've also overhauled the look-and-feel of the app, leveraging the phenomenal [V
 - [x] option to work against the **top, right, bottom, and left** instead of x, y, width, and height
 
 
-## "Prodigious Electromancer" (Alpha 4)
+### "Prodigious Electromancer" (Alpha 4)
+---
 
 **Released:** January 24th, 2018
 
@@ -99,7 +127,8 @@ This is it: the new Paperize template editor is now usable all the way through t
 - [x] HTTPS support
 
 
-## "Code Cowboy" (alpha 3)
+### "Code Cowboy" (alpha 3)
+---
 
 **Released:** December 8th, 2017
 
@@ -120,7 +149,8 @@ This is it: the new Paperize template editor is now usable all the way through t
 - [x] Ability to print entire game (one Item per page, no layout)
 
 
-## "Scheming Vizier" (alpha 2)
+### "Scheming Vizier" (alpha 2)
+---
 
 **Released:** October 14th, 2017
 
@@ -142,7 +172,8 @@ If a **Component** is a deck of cards, stack of tiles, or pile of chips, then a 
   - [x] refresh a Component Source from Google
   - [x] get Google approval for the API scopes we're using
 
-## "Sleeping Giant" (alpha 1)
+### "Sleeping Giant" (alpha 1)
+---
 
 **Released:** August 4th, 2017
 
@@ -185,34 +216,3 @@ This proves we can develop and deploy a brand new codebase and stack, statically
 **Devops:**
   - [x] CDN
   - [x] SSL
-
-## Backlog to Reach Beta 1
-
-**Devops:**
-  - [ ] Telemetry
-
-**Game Manager:**
-  - [ ] "Load Example" implemented as directory of Drive folders
-
-**Game Editor:**
-  - nothing outstanding
-
-**Component Editor:**
-  - [ ] Font asset management and rendering (feature)
-  - [ ] Text Layers support custom fonts and shrink-to-fit text
-  - [ ] Layer nesting with linked dimensions
-
-**Component Transform Editor:**
-  - [ ] Source Defaulting
-  - [ ] Source Validation
-
-**Printing:**
-  - [ ] Multi-page components
-  - [ ] Print profiles
-
-**Asset Manager:**
-  - [ ] Support for Font assets
-  - [ ] Support for SVG assets
-
-**Usability**
-  - [ ] example games, free image libraries, template sources

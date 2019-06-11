@@ -9,8 +9,15 @@
         v-list-tile(ripple to="/" @click="")
           v-list-tile-action
             v-icon(medium) home
-          v-list-tile-content
-            v-list-tile-title Home
+          v-list-tile-title Home
+
+        v-list-tile(ripple to="/references/roadmap" @click="")
+          v-list-tile-action
+
+          v-list-tile-title Paperize Roadmap
+          v-tooltip(top)
+            span New content as of June 2019!
+            v-icon(slot="activator" color="blue") new_releases
 
         //- Guides
         v-subheader(inset) Guides
@@ -64,7 +71,6 @@ query {
     ],
 
     references = [
-      { name: "Roadmap", to: "/references/roadmap", isNew: "June 2019" },
       { name: "Component", to: "/references/component" },
       { name: "Game", to: "/references/game" },
       { name: "Google Authorization", to: "/references/google-authorization" },
@@ -84,6 +90,10 @@ query {
 </script>
 
 <style>
+  :root {
+    font-size: 1.2rem;
+  }
+
   .v-subheader {
     text-transform: uppercase;
   }
@@ -94,5 +104,9 @@ query {
 
   a div {
     color: inherit;
+  }
+
+  ul {
+    margin-bottom: 1em;
   }
 </style>
