@@ -42,7 +42,7 @@ export default {
     } else {
       // do it the family-per-variant way for the rest
       // and don't forget to collapse whitespace in the family!
-      const fontFamilyNoWhitespace = layer.textFontName.replace(" ", ""),
+      const fontFamilyNoWhitespace = layer.textFontName.replace(/ /g, ""),
         familyWithVariant = `${fontFamilyNoWhitespace}-${layer.textFontStyle}`
 
       doc.setFont(familyWithVariant)

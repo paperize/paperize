@@ -59,7 +59,7 @@ function urlToBase64(url) {
 
 export function pushFontIntoJsPDF(fontName, fontVariant, fontBase64) {
   var callAddFont = function () {
-    const fontNameNoWhitespace = fontName.replace(" ", ""),
+    const fontNameNoWhitespace = fontName.replace(/ /g, ""),
       fontIndexName = `${fontNameNoWhitespace}-${fontVariant}.ttf`
     this.addFileToVFS(fontIndexName, fontBase64)
     this.addFont(fontIndexName, fontNameNoWhitespace, fontVariant)
