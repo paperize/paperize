@@ -49,7 +49,8 @@ function urlToBase64(url) {
         // Remove the DataURL preamble, like:
         // data:font/ttf;base64,
         // data:application/x-font-ttf;base64,
-        const base64Font = reader.result.replace(/^data:(.+)base64,/, "")
+        const indexAfterPreamble = (reader.result.indexOf("base64,")+7),
+          base64Font = reader.result.substr(indexAfterPreamble)
         resolve(base64Font)
       }
     }))
