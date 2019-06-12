@@ -41,7 +41,7 @@ const publicApi = {
 
     let doc, itemLocations, guideLocations, numPages
 
-    store.dispatch("printJobStatusUpdate", `Preloading Fonts: ${map(fontsForGame, "family").join(', ')}`)
+    store.dispatch("printJobStatusUpdate", `Preloading Fonts:\n- ${map(fontsForGame, "family").join('\n- ')}`)
 
     // must preload fonts before creating a doc
     return preloadFonts(fontsForGame)
