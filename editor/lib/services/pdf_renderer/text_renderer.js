@@ -41,7 +41,11 @@ export default {
       doc.setFontStyle(layer.textFontStyle)
     } else {
       // do it the family-per-variant way for the rest
-      doc.setFont(`${layer.textFontName}-${layer.textFontStyle}`)
+      // and don't forget to collapse whitespace in the family!
+      const fontFamilyNoWhitespace = layer.textFontName.replace(" ", ""),
+        familyWithVariant = `${fontFamilyNoWhitespace}-${layer.textFontStyle}`
+
+      doc.setFont(familyWithVariant)
     }
 
     // Convert horizontal alignment setting to an X offset
