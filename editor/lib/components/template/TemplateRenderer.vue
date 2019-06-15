@@ -1,5 +1,7 @@
 <template lang="pug">
-  iframe(:src="pdfBlob")
+  //- iframe(:src="pdfBlob") eliminate warnings in chrome
+  object(:data="pdfBlob" type="application/pdf")
+  //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 </template>
 
 <script>
@@ -97,7 +99,7 @@
 </script>
 
 <style scoped>
-  iframe {
+  iframe, object, embed {
     width: 100%;
     min-height: 400px;
   }
