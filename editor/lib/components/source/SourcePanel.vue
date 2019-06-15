@@ -14,7 +14,7 @@ v-flex#source-editor(sm4 md6)
           v-icon edit
         span Select a different Source
 
-      refresh-source-button(spreadsheet="componentSheet")
+      refresh-source-button(:spreadsheet="componentSheet")
 
       v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title")
 

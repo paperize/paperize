@@ -3,7 +3,7 @@ v-card
   v-card-title
     .headline Template Editor
     v-spacer
-    refresh-source-button(spreadsheet="componentSource")
+    refresh-source-button(:spreadsheet="componentSource")
     v-btn(small fab color="red" @click="$emit('close-dialog')")
       v-icon close
 
