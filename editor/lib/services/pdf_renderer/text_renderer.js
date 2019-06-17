@@ -33,12 +33,14 @@ export default {
     // Configure font/text settings
     doc.setTextColor(textRed, textGreen, textBlue)
     doc.setFontSize(layer.textSize)
+    doc.setFontStyle("normal")
 
     const defaultFontFamilies = ["helvetica", "courier", "times", "symbol", "zapfdingbats"]
     if(includes(defaultFontFamilies, layer.textFontName)){
       // do it the normal way for built-in fonts
       doc.setFont(layer.textFontName)
       doc.setFontStyle(layer.textFontStyle)
+
     } else {
       // do it the family-per-variant way for the rest
       // and don't forget to collapse whitespace in the family!
