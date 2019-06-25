@@ -11,9 +11,9 @@
           ul
             li is missing major features
             li has unacceptable bugs
-            li is not easy to understand the user interface
+            li can be confusing and is not yet documented
 
-        p Want to support this kind of thing?
+        p Want to support the project?
 
         h2 Consider <a href="https://patreon.com/paperize" target="_blank">Becoming a Patron!</a>
         p Paperize is <strong>solely supported by generous donations from visionary game designers</strong>: no fees, no spying, no selling your data.
