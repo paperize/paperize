@@ -59,7 +59,7 @@ export function renderHighlightLayer(doc, selectedLayer, parentDimensions) {
       shape:         "rectangle",
       strokePresent: true,
       strokeWidth:   0.02,
-      strokeColor:   "#CC0000",
+      strokeColor:   { r: 255, g: 0, b: 0 },
       fillPresent:   false,
     }
 
