@@ -1,6 +1,5 @@
-import { reduce } from 'lodash'
+import { includes, reduce } from 'lodash'
 import mustache from '../../services/tiny-mustache'
-import { hexToRGB } from './helpers'
 
 const PTS_PER_INCH = 72,
   LINE_HEIGHT = 1.2,
@@ -10,7 +9,7 @@ export default {
   render(doc, layer, layerDimensions, item, index, total) {
     const
       // Extract color channels
-      { r, g, b } = hexToRGB(layer.textColor),
+      { r: textRed, g: textGreen, b: textBlue } = layer.textColor,
 
       // Build-in some helper functions to the template variables
       defaultTemplateVars = {
@@ -25,14 +24,31 @@ export default {
         return kvObject
       }, defaultTemplateVars),
 
-      // Render the template to a string
-      renderedText = mustache(layer.textContentTemplate, textContentTemplateVars)
+      // If no content given, check for Layer-Aligned-Column-Names
+      contentToRender = layer.textContentTemplate || textContentTemplateVars[layer.name],
 
-    // Configure text settings before writing
-    doc.setTextColor(r, g, b)
-    doc.setFont(layer.textFontName)
-    doc.setFontStyle(layer.textFontStyle)
+      // Render the template to a string
+      renderedText = contentToRender ? mustache(contentToRender, textContentTemplateVars) : ""
+
+    // Configure font/text settings
+    doc.setTextColor(textRed, textGreen, textBlue)
     doc.setFontSize(layer.textSize)
+    doc.setFontStyle("normal")
+
+    const defaultFontFamilies = ["helvetica", "courier", "times", "symbol", "zapfdingbats"]
+    if(includes(defaultFontFamilies, layer.textFontName)){
+      // do it the normal way for built-in fonts
+      doc.setFont(layer.textFontName)
+      doc.setFontStyle(layer.textFontStyle)
+
+    } else {
+      // do it the family-per-variant way for the rest
+      // and don't forget to collapse whitespace in the family!
+      const fontFamilyNoWhitespace = layer.textFontName.replace(/ /g, ""),
+        familyWithVariant = `${fontFamilyNoWhitespace}-${layer.textFontStyle}`
+
+      doc.setFont(familyWithVariant)
+    }
 
     // Convert horizontal alignment setting to an X offset
     const horizontalAlignment = layer.horizontalAlignment || "left"

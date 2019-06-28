@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app#paperize-docs
+  v-app
     v-navigation-drawer(v-model="showDrawer" fixed app)
       v-card(min-height="200")
         v-card-text Recognized Patrons
@@ -9,14 +9,21 @@
         v-list-tile(ripple to="/" @click="")
           v-list-tile-action
             v-icon(medium) home
-          v-list-tile-content
-            v-list-tile-title Home
+          v-list-tile-title Home
+
+        v-list-tile(ripple to="/references/roadmap" @click="")
+          v-list-tile-action
+
+          v-list-tile-title Paperize Roadmap
+          v-tooltip(top)
+            span New content as of June 2019!
+            v-icon(slot="activator" color="blue") new_releases
 
         //- Guides
         v-subheader(inset) Guides
         v-divider
 
-        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" @click="")
+        v-list-tile(ripple v-for="guide in guides" :to="guide.to" :key="guide.name" tag="g-link")
           v-list-tile-action
             //- empty on purpose, pads the title for alignment
           v-list-tile-title {{ guide.name }}
@@ -31,6 +38,9 @@
         v-list-tile(ripple v-for="reference in references" :to="reference.to" :key="reference.name" @click="")
           v-list-tile-action
           v-list-tile-title {{ reference.name }}
+          v-tooltip(v-if="reference.isNew" top)
+            span New content as of {{ reference.isNew }}!
+            v-icon(slot="activator" color="blue") new_releases
 
     v-toolbar(fixed app)
       v-toolbar-side-icon(@click.stop="showDrawer = !showDrawer")
@@ -64,8 +74,10 @@ query {
       { name: "Component", to: "/references/component" },
       { name: "Game", to: "/references/game" },
       { name: "Google Authorization", to: "/references/google-authorization" },
+      { name: "Google Fonts", to: "/references/google-fonts", isNew: "July 2019" },
       { name: "Image", to: "/references/image" },
       { name: "Image Layer", to: "/references/image-layer" },
+      { name: "Magic Properties", to: "/references/magic-properties", isNew: "July 2019" },
       { name: "Shape Layer", to: "/references/shape-layer" },
       { name: "Spreadsheet", to: "/references/spreadsheet" },
       { name: "Text Layer", to: "/references/text-layer" },
@@ -80,6 +92,10 @@ query {
 </script>
 
 <style>
+  :root {
+    font-size: 1.2rem;
+  }
+
   .v-subheader {
     text-transform: uppercase;
   }
@@ -90,5 +106,9 @@ query {
 
   a div {
     color: inherit;
+  }
+
+  ul {
+    margin-bottom: 1em;
   }
 </style>

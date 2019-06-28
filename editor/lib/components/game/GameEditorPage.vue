@@ -17,7 +17,7 @@ v-container(v-else fluid grid-list-md)
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
 
   import GamePanel from './GamePanel.vue'
   import ComponentPanel from '../component/ComponentPanel.vue'
@@ -26,12 +26,22 @@ v-container(v-else fluid grid-list-md)
   export default {
     props: ['gameId'],
 
+    mounted() { this.ensureFontsFetchedForGame(this.game) },
+
     components: { GamePanel, ComponentPanel, ComponentEditor },
 
-    computed: mapGetters({
-      findAllGameComponents: 'findAllGameComponents',
-      activeComponent: 'activeComponent',
-      game: 'activeGame'
-    }),
+    computed: {
+      ...mapGetters([
+        'findAllGameComponents',
+        'activeComponent',
+        "findGame"
+      ]),
+
+      game() {
+        return this.findGame(this.gameId)
+      }
+    },
+
+    methods: mapActions([ 'ensureFontsFetchedForGame' ])
   }
 </script>

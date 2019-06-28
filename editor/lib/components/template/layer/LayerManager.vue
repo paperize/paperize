@@ -20,19 +20,19 @@ v-layout(column)
           v-btn(flat @click="createLayer('image')") Image
           v-btn(flat @click="createLayer('shape')") Shape
 
-  v-list
-    draggable(v-model="templateLayers")
-      v-list-tile(ripple avatar v-for="layer in templateLayers" :key="layer.name" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
-        v-list-tile-avatar
-          v-avatar(color="primary" size="36")
-            span.white--text.headline.text-capitalize {{ layer.type[0] }}
 
-        v-list-tile-content
-          v-list-tile-title {{ layer.name }}
+  draggable(v-model="templateLayers" tag="v-list")
+    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
+      v-list-tile-avatar
+        v-avatar(color="primary" size="36")
+          span.white--text.headline.text-capitalize {{ layer.type[0] }}
 
-        v-list-tile-action
-          v-btn(fab small @click="confirmDeleteLayer(layer)")
-            v-icon delete
+      v-list-tile-content
+        v-list-tile-title {{ layer.name }}
+
+      v-list-tile-action
+        v-btn(fab small @click="confirmDeleteLayer(layer)")
+          v-icon delete
 
   v-dialog(v-model="showDeleteLayerDialog" max-width="500" lazy)
     v-card

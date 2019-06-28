@@ -42,7 +42,7 @@ describe "Game Manager page", ->
         cy.loadGamesIntoVuex()
 
       it "lists my games", ->
-        cy.get(".game").its("length").should("eq", 3)
+        cy.get(".game").its("length").should("eq", 4)
 
       it "lets me edit a game", ->
         cy.get("#game-carcassonne")

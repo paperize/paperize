@@ -1,5 +1,7 @@
 <template lang="pug">
-  iframe(:src="pdfBlob")
+  //- iframe(:src="pdfBlob") eliminate warnings in chrome
+  object(:data="pdfBlob" type="application/pdf")
+  //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 </template>
 
 <script>
@@ -24,9 +26,10 @@
       ...mapGetters([
         "activeDimensions",
         "activeLayer",
-        "findTemplate",
+        "findComponentTemplate",
         "findAllTemplateLayers",
-        "layerHighlighting"
+        "layerHighlighting",
+        "allFonts"
       ]),
 
       layerStrokePresent() { return (this.activeLayer && this.activeLayer.strokePresent) },
@@ -48,10 +51,9 @@
       layerTextColor() { return (this.activeLayer && this.activeLayer.textColor) },
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
-      templateLayers() {
-        const template = this.findTemplate(this.component.templateId)
-        return this.findAllTemplateLayers(template)
-      }
+      componentTemplate() { return this.findComponentTemplate(this.component) },
+
+      templateLayers() { return this.findAllTemplateLayers(this.componentTemplate) }
     },
 
     watch: {
@@ -80,13 +82,16 @@
       layerTextColor: "renderPDF",
       layerTextSize: "renderPDF",
       layerHighlighting: "renderPDF",
+      allFonts: "renderPDF"
     },
 
     methods: {
       renderPDF: debounce(function() {
-        pdfRenderer.renderItemToPdf(this.game, this.component, this.item).then((pdf) => {
-          this.pdfBlob = pdf
-        })
+        if(this.game && this.component && this.item && this.componentTemplate) {
+          pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate).then((pdf) => {
+            this.pdfBlob = pdf
+          })
+        }
       }, RENDER_DELAY_MS)
     }
   }
@@ -94,7 +99,7 @@
 </script>
 
 <style scoped>
-  iframe {
+  iframe, object, embed {
     width: 100%;
     min-height: 400px;
   }

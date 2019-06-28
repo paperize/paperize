@@ -6,6 +6,7 @@ import { percentOfParent } from './helpers'
 import shape from './shape_renderer'
 import text from './text_renderer'
 import image from './image_renderer'
+import { projectItem } from './item_projector'
 
 const RENDERERS = { shape, text, image }
 
@@ -29,10 +30,13 @@ export function renderItem(doc, game, component, item, parentDimensions, index, 
       doc.setPage(dimensions.page)
 
       // TODO: modify with layout dimensions
-      const layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), dimensions)
+      const
+        layerDimensions = percentOfParent(store.getters.getLayerDimensions(layer), dimensions),
+        // Magic properties from the source affect layer defaults
+        projectedLayer = projectItem(layer, item)
 
       // Type-specific layer renderers
-      return RENDERERS[layer.type].render(doc, layer, layerDimensions, item, index, total)
+      return RENDERERS[projectedLayer.type].render(doc, projectedLayer, layerDimensions, item, index, total)
     })
   }).then(() => {
     if(selectedLayer && store.getters.layerHighlighting) {

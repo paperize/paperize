@@ -3,7 +3,8 @@ const UIModule = {
     activeGameId:       null,
     activeComponentId:  null,
     activeLayerId:      null,
-    layerHighlighting:  false
+    layerHighlighting:  false,
+    activeItem:         null,
   },
 
   getters: {
@@ -39,6 +40,8 @@ const UIModule = {
       }
     },
 
+    activeItem: (state) => state.activeItem,
+
     layerHighlighting: (state) => state.layerHighlighting
   },
 
@@ -66,6 +69,10 @@ const UIModule = {
     setActiveLayer(state, { layer }) {
       state.activeLayerId = layer.id
       state.activeDimensionsId = layer.dimensionId
+    },
+
+    setActiveItem(state, item) {
+      state.activeItem = item
     },
 
     clearActiveLayer(state) {
@@ -100,8 +107,13 @@ const UIModule = {
             return dispatch("unlinkComponentSheet", component)
           })
       }
-    }
+    },
+
+    setActiveItem({ commit }, item) {
+      commit("setActiveItem", item)
+    },
   },
+
 
   // respond to other commits
   subscribe({ dispatch, commit }, { type, payload }) {

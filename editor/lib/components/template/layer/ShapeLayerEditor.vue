@@ -9,21 +9,42 @@ v-expansion-panel#shape-layer-editor(popout)
     v-card
       v-card-text
         v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" box)
+          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="shape")
 
   v-expansion-panel-content
     div(slot="header") Stroke
     v-card
       v-card-text
-        v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokePresent")
+          v-flex
+            v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
+
         v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" box)
-        color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
+          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
+
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeColor")
+          v-flex
+            color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
 
   v-expansion-panel-content
     div(slot="header") Fill
     v-card
       v-card-text
-        v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
-        color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" box)
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillPresent")
+          v-flex
+            v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
+
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillColor")
+          v-flex
+            color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" box)
 </template>
 
 <script>
@@ -32,6 +53,7 @@ v-expansion-panel#shape-layer-editor(popout)
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
+  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
 
   const shapeOptions = [
     { value: "rectangle", text: "Rectangle" },
@@ -46,6 +68,7 @@ v-expansion-panel#shape-layer-editor(popout)
       NameEditor,
       DimensionEditor,
       ColorPicker,
+      MagicPropertyInputTalker
     },
 
     data() {
@@ -63,7 +86,7 @@ v-expansion-panel#shape-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "shape",
         "strokePresent",
         "strokeWidth",
@@ -73,6 +96,6 @@ v-expansion-panel#shape-layer-editor(popout)
       ])
     },
 
-    methods: mapActions(["updateLayer"])
+    methods: mapActions(["patchLayer"])
   }
 </script>

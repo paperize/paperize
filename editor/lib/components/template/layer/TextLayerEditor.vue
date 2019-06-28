@@ -4,26 +4,39 @@ v-expansion-panel#text-layer-editor(popout)
 
   dimension-editor(:dimensions="dimensions" :size="templateSize")
 
-  v-expansion-panel-content
+  v-expansion-panel-content.font-settings
     div(slot="header") Font
     v-card
       v-card-text
-        v-select(label="Font Family" v-model="textFontName" :items="availableFontNames" @change="ensureValidStyle()" box)
-        v-select(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" box)
+        p Need inspiration? <a href="https://fonts.google.com" _target="blank">Browse Google Fonts</a>
+        v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" box)
+          //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontName")
+
+        v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" class="font-style-setting" box)
+          //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontStyle")
+
         v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
-        color-picker(label="Text Color" v-model="textColor")
+          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
+
+        v-layout(row)
+          v-flex(shrink)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textColor")
+          v-flex
+            color-picker(label="Text Color" v-model="textColor")
 
   v-expansion-panel-content
     div(slot="header") Text Alignment
     v-card
       v-card-text
         p Horizontal Alignment
+        magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
         v-btn-toggle(v-model="horizontalAlignment")
           v-btn(small flat value="left") Left
           v-btn(small flat value="center") Center
           v-btn(small flat value="right") Right
 
         p Vertical Alignment
+        magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
         v-btn-toggle(v-model="verticalAlignment")
           v-btn(small flat value="top") Top
           v-btn(small flat value="middle") Middle
@@ -35,41 +48,40 @@ v-expansion-panel#text-layer-editor(popout)
       v-card-text
         p(v-pre) Use curly brackets to reference columns, like: {{Name}}
 
-        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box)
+        v-tooltip(top)
+          | Name a column "{{ layer.name }}" and leave this blank to pull from your spreadsheet.
+          v-icon(slot="activator") mdi-table-search
+        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box :placeholder="`{{ ${layer.name} }}`")
 </template>
 
 <script>
-  import { debounce, keys } from 'lodash'
+  import { debounce, find } from 'lodash'
   import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
   import ColorPicker from '../../shared/ColorPicker.vue'
+  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
+
 
   export default {
     props: ["layer", "source"],
+
+    mounted() { this.fetchGoogleFonts() },
 
     components: {
       NameEditor,
       DimensionEditor,
       ColorPicker,
-    },
-
-    data() {
-      return {
-        availableFonts: {
-          "Arial":        ["normal"],
-          "helvetica":    ["normal", "bold", "italic", "bolditalic"],
-          "courier":      ["normal", "bold", "italic", "bolditalic"],
-          "times":        ["normal", "bold", "italic", "bolditalic"],
-          "symbol":       ["normal"],
-          "zapfdingbats": ["normal"],
-        }
-      }
+      MagicPropertyInputTalker,
     },
 
     computed: {
-      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
+      ...mapGetters([
+        "getLayerDimensions",
+        "findTemplateByLayerId",
+        "allFonts"
+      ]),
 
       dimensions() { return this.getLayerDimensions(this.layer) },
 
@@ -77,19 +89,17 @@ v-expansion-panel#text-layer-editor(popout)
         return this.findTemplateByLayerId(this.layer.id).size
       },
 
-      availableFontNames() {
-        return keys(this.availableFonts)
-      },
-
       availableFontStyles() {
-        return this.availableFonts[this.textFontName]
+        const font = find(this.allFonts, { family: this.textFontName })
+
+        return font && font.variants || []
       },
 
       propertyNames() {
         return this.$store.getters.sourceProperties(this.source)
       },
 
-      ...computedVModelUpdateAll("layer", "updateLayer", [
+      ...computedVModelUpdateAll("layer", "patchLayer", [
         "textFontName",
         "textFontStyle",
         "textContentTemplate",
@@ -101,9 +111,7 @@ v-expansion-panel#text-layer-editor(popout)
     },
 
     methods: {
-      updateLayer: debounce(function(layer) {
-        this.$store.dispatch("updateLayer", layer)
-      }, 650, { leading: true }),
+      ...mapActions(["patchLayer", "fetchGoogleFonts"]),
 
       ensureValidStyle() {
         // Wait for styles to be reactively updated
@@ -115,6 +123,10 @@ v-expansion-panel#text-layer-editor(popout)
           }
         })
       },
+    },
+
+    watch: {
+      availableFontStyles: "ensureValidStyle"
     }
   }
 </script>

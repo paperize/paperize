@@ -3,7 +3,7 @@ v-expansion-panel-content
   div(slot="header") Layer Name: "{{ name }}"
   v-card
     v-card-text
-      v-text-field(v-model="name" label="Name" box)
+      v-text-field.layer-name-input(v-model="name" label="Name" box)
 </template>
 
 <script>
@@ -14,9 +14,9 @@ v-expansion-panel-content
     props: ["layer"],
 
     computed: {
-      name: computedVModelUpdate("layer", "updateLayer", "name"),
+      name: computedVModelUpdate("layer", "patchLayer", "name"),
     },
 
-    methods: mapActions(["updateLayer"]),
+    methods: mapActions(["patchLayer"]),
   }
 </script>

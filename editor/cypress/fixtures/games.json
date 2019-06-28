@@ -29,5 +29,11 @@
     "componentIds": [
 
     ]
+  },
+  "magic": {
+    "id": "magic",
+    "title": "Magic: The Gathering",
+    "description": "Five card colors to data drive!",
+    "componentIds": [ "rainbowDeck" ]
   }
 }

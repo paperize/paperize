@@ -3,6 +3,7 @@ v-card
   v-card-title
     .headline Template Editor
     v-spacer
+    refresh-source-button(:spreadsheet="componentSource")
     v-btn(small fab color="red" @click="$emit('close-dialog')")
       v-icon close
 
@@ -41,12 +42,13 @@ v-card
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   import LayerManager from './layer/LayerManager.vue'
   import LayerEditor from './layer/LayerEditor.vue'
   import TemplateSizeEditor from './TemplateSizeEditor.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
+  import RefreshSourceButton from '../source/RefreshSourceButton.vue'
 
   export default {
     props: ["component"],
@@ -55,7 +57,8 @@ v-card
       TemplatePreviewer,
       TemplateSizeEditor,
       LayerManager,
-      LayerEditor
+      LayerEditor,
+      RefreshSourceButton,
     },
 
     data() {
@@ -84,7 +87,5 @@ v-card
         return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
       }
     },
-
-    methods: { }
   }
 </script>

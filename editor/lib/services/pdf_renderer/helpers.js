@@ -1,5 +1,8 @@
+import parseColor from 'color-parse'
+import { find } from 'lodash'
+
 const findProperty = function(item, key) {
-  const property = _.find(item, { key })
+  const property = find(item, { key })
   if(property) {
     return property.value
   } else {
@@ -26,4 +29,12 @@ const hexToRGB = function(hexColorString) {
   return { r, g, b }
 }
 
-export { findProperty, percentOfParent, hexToRGB }
+const anyToRGB = function(fuzzyInput) {
+  const
+    parsedColor = parseColor(fuzzyInput),
+    { 0: r, 1: g, 2: b } = parsedColor.values
+
+  return { r, g, b }
+}
+
+export { findProperty, percentOfParent, hexToRGB, anyToRGB }

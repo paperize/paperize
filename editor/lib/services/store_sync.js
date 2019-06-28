@@ -26,10 +26,14 @@ const
     "clearActiveComponent",
     "setActiveLayer",
     "clearActiveLayer",
+    "setActiveItem",
     "setLayerHighlighting",
     "setPrintJobStatus",
     "setStatusWindowOpen",
-    "createError"
+    "createError",
+    "setStatusWindowOpen",
+    "setGoogleFonts",
+    "setRequestPromise",
   ]
 
 let vuex,

@@ -34,7 +34,7 @@ const ComponentModel = {
 
     findComponentTemplate: (_, __, ___, rootGetters) => component => {
       if(component.templateId) {
-        return rootGetters.findTemplate(component.templateId)
+        return rootGetters.findTemplate(component.templateId, false)
       }
     },
 
