@@ -6,7 +6,7 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
     template(slot="badge")
       span {{ errorCount }}
 
-  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="1200" lazy)
+  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="600" lazy)
     v-card
       v-card-title Recent Errors
       v-card-text
@@ -15,6 +15,10 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
             div(slot="header") {{ error.name }}
             v-card
               v-card-text
+                v-tooltip(top)
+                  | Copy Error Message to Clipboard
+                  v-btn(slot="activator" flat icon color="primary" large)
+                    v-icon(@click="copyToClipboard(error)") mdi-clipboard-plus
                 .message {{ error.message }}
                 pre.details {{ error.details }}
 </template>
@@ -35,6 +39,15 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
       errorCount() { return this.allErrors.length },
 
       anyErrors() { return this.errorCount > 0 },
+    },
+
+    methods: {
+      copyToClipboard(error) {
+        navigator.clipboard.writeText(error.stack).then(
+          () => {}, // success
+          () => {}  // failure
+        )
+      }
     }
   }
 </script>
