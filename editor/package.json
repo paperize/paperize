@@ -79,7 +79,7 @@
     "embed-js": "^4.2.1",
     "event-emitter": "^0.3.4",
     "idb-keyval": "^3.1.0",
-    "jspdf": "github:lorennorman/jspdf#no-split-long-words",
+    "jspdf": "github:lorennorman/jspdf#paperize-0.6.x",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "md5": "^2.2.1",
