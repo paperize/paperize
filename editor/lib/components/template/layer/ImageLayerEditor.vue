@@ -70,6 +70,7 @@ v-expansion-panel#image-layer-editor(popout)
 
     computed: {
       ...mapGetters([
+        "workingDirectoryId",
         "getLayerDimensions",
         "findTemplateByLayerId",
         "activeSheetProperties"
