@@ -42,8 +42,8 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
     },
 
     methods: {
-      copyToClipboard(error) {
-        navigator.clipboard.writeText(error.stack).then(
+      copyToClipboard(error={}) {
+        navigator.clipboard.writeText(error.details).then(
           () => {}, // success
           () => {}  // failure
         )

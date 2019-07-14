@@ -15,40 +15,33 @@ describe "Title Bar items", ->
       cy.makePaperizeError()
       cy.contains("Errors").should("not.exist")
 
-    it "is visible with login, with error", ->
-      cy.login()
-      cy.makePaperizeError()
-      cy.contains("Errors")
-
     it "is not visible with login, without error", ->
       cy.login()
       cy.contains("Errors").should("not.exist")
 
-    it "has a badge displaying quantity of unread errors", ->
-      cy.login()
-      cy.makePaperizeError(3)
-      cy.get('.error-count').contains 3
-      cy.makePaperizeError(1)
-      cy.get('.error-count').contains 4
-      # cy.contains("Errors").click()
-      # close the modal
-      # .error-menu badge not visible
-      # create 1 more error
-      # .error-menu badge contains "1"
+    describe "logged in with errors", ->
+      beforeEach ->
+        cy.login()
+        cy.makePaperizeError()
+        cy.contains("Errors")
 
-    it.only "maxes out at 20 errors", ->
-      cy.login()
-      cy.makePaperizeError(19)
-      cy.get('.error-count').contains 19
-      cy.makePaperizeError(1)
-      cy.get('.error-count').contains 20
-      cy.makePaperizeError(1)
-      cy.get('.error-count').contains 20
+      it "has a badge displaying quantity of unread errors", ->
+        cy.get('.error-count').contains 1
+        cy.makePaperizeError(3)
+        cy.get('.error-count').contains 4
 
-    it "displays a modal of the errors", ->
-      cy.login()
-      cy.makePaperizeError(3)
-      cy.contains("Errors").click()
+      it "maxes out at 20 errors", ->
+        cy.makePaperizeError(18)
+        cy.get('.error-count').contains 19
+        cy.makePaperizeError(1)
+        cy.get('.error-count').contains 20
+        cy.makePaperizeError(1)
+        cy.get('.error-count').contains 20
 
-      cy.contains("Recent Errors")
-      cy.contains("ErrorFixture")
+      context "open the errors modal", ->
+        beforeEach ->
+          cy.contains("Errors").click()
+
+          cy.contains("Recent Errors")
+          cy.contains("ErrorFixture")
+
