@@ -26,17 +26,17 @@ describe "Title Bar items", ->
         cy.contains("Errors")
 
       it "has a badge displaying quantity of unread errors", ->
-        cy.get('.error-count').contains 1
+        cy.get('.error-count-badge').contains 1
         cy.makePaperizeError(3)
-        cy.get('.error-count').contains 4
+        cy.get('.error-count-badge').contains 4
 
       it "maxes out at 20 errors", ->
         cy.makePaperizeError(18)
-        cy.get('.error-count').contains 19
+        cy.get('.error-count-badge').contains 19
         cy.makePaperizeError(1)
-        cy.get('.error-count').contains 20
+        cy.get('.error-count-badge').contains 20
         cy.makePaperizeError(1)
-        cy.get('.error-count').contains 20
+        cy.get('.error-count-badge').contains 20
 
       context "open the errors modal", ->
         beforeEach ->
@@ -45,3 +45,5 @@ describe "Title Bar items", ->
           cy.contains("Recent Errors")
           cy.contains("ErrorFixture")
 
+        it "clears the errors badge when modal is opened", ->
+          cy.get('.error-count-badge').should("not.exist")

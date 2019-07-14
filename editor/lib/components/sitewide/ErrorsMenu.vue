@@ -1,10 +1,10 @@
 <template lang="pug">
-v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
+v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
   v-badge.error-count(color="red")
     | Errors
 
-    template(slot="badge")
-      span {{ errorCount }}
+    template(v-if="unreadErrorCount > 0" slot="badge")
+      span.error-count-badge {{ unreadErrorCount }}
 
   v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="600" lazy)
     v-card
@@ -24,7 +24,7 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     data() {
@@ -34,18 +34,29 @@ v-btn(v-if="anyErrors" flat @click="showErrorExplorer = true")
     },
 
     computed: {
-      ...mapGetters(["allErrors"]),
-
-      errorCount() { return this.allErrors.length },
+      ...mapGetters([
+        "allErrors",
+        "errorCount",
+        "unreadErrorCount"
+      ]),
 
       anyErrors() { return this.errorCount > 0 },
     },
 
     methods: {
+      ...mapActions(["clearUnreadErrors"]),
+
+      revealErrorExplorer() {
+        this.showErrorExplorer = true
+        this.clearUnreadErrors()
+      },
+
       copyToClipboard(error={}) {
         navigator.clipboard.writeText(error.details).then(
           () => {}, // success
-          () => {}  // failure
+          (error) => { // failure
+            console.warn(`Failed to copy error clipboard: ${error}`)
+          }
         )
       }
     }

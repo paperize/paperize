@@ -8,6 +8,10 @@ const MAX_ERRORS_TO_KEEP = 20
 const ErrorModel = {
   name: 'errors',
 
+  state: {
+    unreadErrorCount: 0
+  },
+
   create(newError) {
     return {
       id:               uuid(),
@@ -19,21 +23,44 @@ const ErrorModel = {
     }
   },
 
-  getters: { },
+  getters: {
+    errorCount: (_, getters) => getters.allErrors.length,
+    unreadErrorCount: state => state.unreadErrorCount
+  },
+
+  mutations: {
+    incrementUnreadErrorCount(state) {
+      state.unreadErrorCount += 1
+    },
+
+    setUnreadErrorCount(state, newCount) {
+      state.unreadErrorCount = newCount
+    },
+
+    clearUnreadErrorCount(state) {
+      state.unreadErrorCount = 0
+    }
+  },
 
   actions: {
+    clearUnreadErrors({ commit }) {
+      commit("clearUnreadErrorCount")
+    },
+
     truncateErrors({ state, commit, getters }) {
-      if(getters.allErrors.length > MAX_ERRORS_TO_KEEP) {
+      if(getters.errorCount > MAX_ERRORS_TO_KEEP) {
         // choose 20 keys to keep at random TODO: make this right!
         const errorKeysToKeep = take(keys(state.errors), MAX_ERRORS_TO_KEEP)
         commit("setErrors", pick(state.errors, errorKeysToKeep))
+        commit("setUnreadErrorCount", MAX_ERRORS_TO_KEEP)
       }
     }
   },
 
   // proto callbacks, kind of nasty
-  subscribe({ dispatch }, { type }) {
+  subscribe({ dispatch, commit }, { type }) {
     if(type === 'createError') {
+      commit("incrementUnreadErrorCount")
       dispatch("truncateErrors")
     }
   }
