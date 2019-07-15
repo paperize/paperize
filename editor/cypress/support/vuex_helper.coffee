@@ -42,6 +42,13 @@ Cypress.Commands.add "visitActiveGameAndComponent", ->
   cy.vuex().then (vuex) ->
     cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
 
+Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
+  cy.vuex().then (vuex) ->
+    cy.fixture("errors").then (errors) ->
+      # create the basic error N times
+      _.times numberOfErrors, ->
+        vuex.dispatch("createError", errors.basic)
+
 Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
   cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates } }) ->
     gameToEdit = games[gameId]

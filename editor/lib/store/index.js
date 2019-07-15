@@ -17,6 +17,7 @@ import games        from './games'
 import components   from './components'
 import templates    from './templates'
 import layers       from './layers'
+import errors       from './errors'
 import dimensions   from './dimensions'
 import print        from './print'
 import uiPrint      from './ui_print'
@@ -37,6 +38,7 @@ const INITIAL_STATE = {
   components:   components.state,
   templates:    templates.state,
   layers:       layers.state,
+  errors:       errors.state,
   dimensions:   dimensions.state,
   print:        print.state,
   uiPrint:      uiPrint.state,
@@ -75,6 +77,7 @@ let store = new Vuex.Store({
     components,
     templates,
     layers,
+    errors,
     dimensions,
     print,
     google
@@ -104,9 +107,33 @@ let store = new Vuex.Store({
   }
 })
 
+// Register subscriptions for modules with callbacks
 store.subscribe((mutation, state) => {
   ui.subscribe(store, mutation, state)
+  errors.subscribe(store, mutation, state)
 })
 
+// Register the global error handlers for the errors module
+window.addEventListener("error", (event) => {
+  // Unpack the error event into our error tracker
+  store.dispatch("createError", {
+    name: event.error,
+    message: event.msg,
+    details: `${event.filename} on line ${event.lineno} at ${event.colno}`
+  })
+
+  return true // This stops it from hitting the console
+})
+
+window.addEventListener("unhandledrejection", (event) => {
+  // Unpack the unhandled rejectione event into our error tracker
+  store.dispatch("createError", {
+    name: "Promise Rejected",
+    message: event.detail.reason.message,
+    details: event.detail.reason.stack,
+  })
+
+  event.preventDefault() // This stops it from hitting the console
+})
 
 export default store

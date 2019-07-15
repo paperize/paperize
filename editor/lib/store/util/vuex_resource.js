@@ -35,6 +35,11 @@ export function generateCrud(model) {
   state[modelRepoName] = {}
   debug(resourceName, state)
 
+  // Params: { getters, dispatch, commit }, { type, payload }
+  const subscribe = () => {
+    // Default does nothing, override in models
+  }
+
 
   // GETTERS
   const getters = {}
@@ -217,5 +222,6 @@ export function generateCrud(model) {
     getters:   { ...getters, ...model.getters },
     mutations: { ...mutations, ...model.mutations },
     actions:   { ...actions, ...model.actions },
+    subscribe: model.subscribe || subscribe
   }
 }
