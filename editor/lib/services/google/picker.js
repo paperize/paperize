@@ -32,6 +32,10 @@ const
 
 export const
   openSheetPicker = function(parentId) {
+    if(!parentId) {
+      throw new Error("Google Picker invoked without a parent folder id!")
+    }
+
     return configurePicker((picker) => {
       // picker.addView(google.picker.ViewId.SPREADSHEETS)
       picker.addView(new google.picker.DocsView(google.picker.ViewId.SPREADSHEETS)
@@ -43,6 +47,10 @@ export const
   },
 
   openImagePicker = function(parentId) {
+    if(!parentId) {
+      throw new Error("Google Picker invoked without a parent folder id!")
+    }
+
     return configurePicker((picker) => {
       picker.addView(new google.picker.DocsView()
         // scope the Picker, probably to the working folder
