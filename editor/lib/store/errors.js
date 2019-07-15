@@ -50,6 +50,11 @@ const ErrorModel = {
       commit("clearUnreadErrorCount")
     },
 
+    clearAllErrors({ commit }) {
+      commit("setErrors", {})
+      commit("clearUnreadErrorCount")
+    },
+
     truncateErrors({ state, commit, getters }) {
       if(getters.errorCount > MAX_ERRORS_TO_KEEP) {
         const errorKeysToKeep = map(take(getters.allErrors, MAX_ERRORS_TO_KEEP), "id")

@@ -8,17 +8,22 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
 
   v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="600" lazy)
     v-card
-      v-card-title Recent Errors
+      v-card-title
+        | Recent Errors
+        v-spacer
+        v-btn(@click="clearAndClose") Clear All
       v-card-text
+        p This menu helps you see when Paperize is breaking, and why. You can look at the errors yourself, or copy-and-paste them to the dev team on Discord.
         v-expansion-panel#errors-explorer(popout)
           v-expansion-panel-content(v-for="error in allErrors" :key="error.id")
-            div(slot="header") {{ error.name }}
+            div(slot="header")
+              v-tooltip(top)
+                | Copy Error Message to Clipboard
+                v-btn(slot="activator" flat icon color="primary")
+                  v-icon(@click="copyToClipboard(error)") mdi-clipboard-plus
+              | {{ error.name }}
             v-card
               v-card-text
-                v-tooltip(top)
-                  | Copy Error Message to Clipboard
-                  v-btn(slot="activator" flat icon color="primary" large)
-                    v-icon(@click="copyToClipboard(error)") mdi-clipboard-plus
                 .message {{ error.message }}
                 pre.details {{ error.details }}
 </template>
@@ -44,11 +49,19 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
     },
 
     methods: {
-      ...mapActions(["clearUnreadErrors"]),
+      ...mapActions([
+        "clearUnreadErrors",
+        "clearAllErrors"
+      ]),
 
       revealErrorExplorer() {
         this.showErrorExplorer = true
         this.clearUnreadErrors()
+      },
+
+      clearAndClose() {
+        this.showErrorExplorer = false
+        this.clearAllErrors()
       },
 
       copyToClipboard(error={}) {

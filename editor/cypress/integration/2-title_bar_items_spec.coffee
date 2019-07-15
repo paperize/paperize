@@ -47,3 +47,12 @@ describe "Title Bar items", ->
 
         it "clears the errors badge when modal is opened", ->
           cy.get('.error-count-badge').should("not.exist")
+
+        it "clears all errors when 'Clear All' is clicked", ->
+          cy.contains("Clear All").click()
+          cy.contains("Errors").should("not.exist")
+
+        it "works again after clearing", ->
+          cy.contains("Clear All").click()
+          cy.makePaperizeError(15)
+          cy.get('.error-count-badge').contains 15
