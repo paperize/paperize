@@ -1,4 +1,4 @@
-import { keys, pick, take } from 'lodash'
+import { map, pick, reverse, sortBy, take, values } from 'lodash'
 import uuid from 'uuid/v4'
 
 import { generateCrud } from './util/vuex_resource'
@@ -14,16 +14,19 @@ const ErrorModel = {
 
   create(newError) {
     return {
-      id:               uuid(),
-      name:             "",
-      message:          "",
-      details:          "",
+      id:        uuid(),
+      name:      "",
+      message:   "",
+      details:   "",
+      createdAt: Date.now(),
       // override with given
       ...newError
     }
   },
 
   getters: {
+    // Override to fetch in reverse chronological by creation time
+    allErrors: state => reverse(sortBy(values(state.errors), "createdAt")),
     errorCount: (_, getters) => getters.allErrors.length,
     unreadErrorCount: state => state.unreadErrorCount
   },
@@ -49,8 +52,7 @@ const ErrorModel = {
 
     truncateErrors({ state, commit, getters }) {
       if(getters.errorCount > MAX_ERRORS_TO_KEEP) {
-        // choose 20 keys to keep at random TODO: make this right!
-        const errorKeysToKeep = take(keys(state.errors), MAX_ERRORS_TO_KEEP)
+        const errorKeysToKeep = map(take(getters.allErrors, MAX_ERRORS_TO_KEEP), "id")
         commit("setErrors", pick(state.errors, errorKeysToKeep))
         commit("setUnreadErrorCount", MAX_ERRORS_TO_KEEP)
       }
