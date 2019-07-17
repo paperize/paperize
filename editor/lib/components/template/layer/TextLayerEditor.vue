@@ -8,7 +8,7 @@ v-expansion-panel#text-layer-editor(popout)
     div(slot="header") Font
     v-card
       v-card-text
-        p Need inspiration? <a href="https://fonts.google.com" _target="blank">Browse Google Fonts</a>
+        p Need inspiration? <a href="https://fonts.google.com" target="_blank">Browse Google Fonts</a>
         v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" box)
           //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontName")
 
