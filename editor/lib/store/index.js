@@ -113,27 +113,36 @@ store.subscribe((mutation, state) => {
   errors.subscribe(store, mutation, state)
 })
 
-// Register the global error handlers for the errors module
-window.addEventListener("error", (event) => {
+// Register the top-level error handlers for the errors module
+Vue.config.errorHandler = ({ name, message, stack }) => {
+  store.dispatch("createError", {
+    name: `Vue Error: ${name}`,
+    message,
+    details: stack
+  })
+}
+
+window.onerror = (message, url, lineNo, columnNo, { name, stack }) => {
   // Unpack the error event into our error tracker
   store.dispatch("createError", {
-    name: event.error,
-    message: event.msg,
-    details: `${event.filename} on line ${event.lineno} at ${event.colno}`
+    name: `Global Error: ${name}`,
+    message,
+    details: stack
   })
 
-  return true // This stops it from hitting the console
-})
+  // return true // This stops it from hitting the console
+}
 
 window.addEventListener("unhandledrejection", (event) => {
+  const { name, message, stack } = event.detail.reason
   // Unpack the unhandled rejectione event into our error tracker
   store.dispatch("createError", {
-    name: "Promise Rejected",
-    message: event.detail.reason.message,
-    details: event.detail.reason.stack,
+    name: name && `Rejection: ${name}` || "Rejection",
+    message: message,
+    details: stack,
   })
 
-  event.preventDefault() // This stops it from hitting the console
+  // event.preventDefault() // This stops it from hitting the console
 })
 
 export default store
