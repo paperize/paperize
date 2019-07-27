@@ -24,7 +24,7 @@ To start the process, we visit [Paperize.io](https://beta.editor.paperize.io).
 
 Looking to the top right corner of the app, we click the "Sign In" menu item.
 
-SIGN_IN_LINK_IMAGE
+![Sign In Link](/images/sign-in-link.png)
 
 We are presented with a pop-out window that allows us to log in with our Google accounts.
 
@@ -36,9 +36,8 @@ GOOGLE_PERMISSIONS_IMAGE
 
 And that's it! Paperize will complete the login process, including creating a "Paperize.io" folder in our Google Drive, and dropping a special file in it, "paperize_database.json". You can view these details by clicking the "Database" menu item now visible at the top of the screen.
 
-DATABASE_LINK_IMAGE
-
-DATABASE_POPOVER_IMAGE
+![Database Link](/images/database-link.png)
+![Database Popover](/images/database-popover.png)
 
 [Learn more about Google Authorization](/references/google-authorization)
 
@@ -48,9 +47,8 @@ The first screen of Paperize lists our games, and since we have only just starte
 
 We click the button titled "New Game" and fill in a title.
 
-NEW_GAME_BUTTON
-
-NEW_GAME_FORM
+![New Game Button](/images/new-game-button.png)
+![New Game Form](/images/new-game-form.png)
 
 We notice a handful of checkboxes related to Google Drive:
 - one creates a folder to go with this game

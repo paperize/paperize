@@ -4,7 +4,7 @@ v-layout(column).component-panel
     .headline Components
 
     v-dialog(v-model="showNewDialog" max-width="500" lazy)
-      v-btn(small slot="activator") New Component
+      v-btn.new-component-button(small slot="activator") New Component
       new-component-form(@close-dialog="showNewDialog = false")
 
     v-dialog(v-model="showEditDialog" max-width="500" lazy)
