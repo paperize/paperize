@@ -1,4 +1,20 @@
 {
+  "basicCard": {
+    "id": "basicCard",
+    "layerIds": [],
+    "size": {
+      "w": 2.5,
+      "h": 3.5
+    }
+  },
+  "basicTile": {
+    "id": "basicTile",
+    "layerIds": [],
+    "size": {
+      "w": 1.5,
+      "h": 1.5
+    }
+  },
   "loveLetter": {
     "id": "loveLetter",
     "layerIds": [],
