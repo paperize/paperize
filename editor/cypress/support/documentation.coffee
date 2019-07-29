@@ -15,7 +15,7 @@ Cypress.Commands.add "paperizeDocs", (documentName, elementToHighlight=null, opt
 
   cy.wait(options.wait) if options.wait
 
-  cy.screenshot("docs/#{documentName}", capture: 'viewport')
+  cy.screenshot(documentName, capture: 'viewport')
 
   cy.get('footer').invoke("css", "display", null)
 

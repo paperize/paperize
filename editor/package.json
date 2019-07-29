@@ -22,7 +22,11 @@
     "deploy-prod": "coffee deploy.coffee",
     "bump-prod": "npm run build-prod && npm run deploy-prod",
     "release": "npm test && npm run build-prod && npm run deploy-prod",
-    "old-release": "npm run finalize-prod && npm run create-video && npm run build-prod && npm run copy-video && npm run deploy-prod"
+    "old-release": "npm run finalize-prod && npm run create-video && npm run build-prod && npm run copy-video && npm run deploy-prod",
+    "clean-screenshots": "rm -rf cypress/screenshots/documentation_screenshots_spec.coffee",
+    "generate-screenshots": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --spec cypress/integration/documentation_screenshots_spec.coffee\"",
+    "copy-screenshots": "cp cypress/screenshots/documentation_screenshots_spec.coffee/*.png ../docs/static/generated-images",
+    "bump-screenshots": "npm run clean-screenshots && npm run generate-screenshots && npm run copy-screenshots"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
   "license": "ISC",
