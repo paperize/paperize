@@ -17,6 +17,11 @@
     "title": "Point Cubes",
     "quantityProperty": null
   },
+  "carcassonneTiles": {
+    "id": "carcassonneTiles",
+    "title": "Basic Tiles",
+    "quantityProperty": null
+  },
   "rainbowDeck": {
     "id": "rainbowDeck",
     "title": "Rainbow Deck",

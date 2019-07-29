@@ -7,7 +7,7 @@ v-container(v-else fluid grid-list-md)
 
   v-divider
 
-  v-layout(row)
+  v-layout.component-section(row)
     v-flex(sm4 md3 lg2)
       component-panel(:components="findAllGameComponents(game)")
 

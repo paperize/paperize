@@ -67,9 +67,8 @@ In Paperize, our games are made up of components. A component is a deck of cards
 
 We click the button titled "New Component" and fill in a title.
 
-NEW_COMPONENT_BUTTON
-
-NEW_COMPONENT_FORM
+![New Component Button](/images/new-component-button.png)
+![New Component Form](/images/new-component-form.png)
 
 Again we see a checkbox related to our assets in Google Drive: this one creates a new worksheet inside of this game's spreadsheet (remember, a spreadsheet was created for this game automatically in the last step.)
 
