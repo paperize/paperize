@@ -18,9 +18,13 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
           v-expansion-panel-content(v-for="error in allErrors" :key="error.id")
             div(slot="header")
               v-tooltip(top)
+                | Clear
+                v-btn(slot="activator" flat icon color="primary")
+                  v-icon(@click.stop="destroyError(error)") mdi-close-circle
+              v-tooltip(top)
                 | Copy Error Message to Clipboard
                 v-btn(slot="activator" flat icon color="primary")
-                  v-icon(@click="copyToClipboard(error)") mdi-clipboard-plus
+                  v-icon(@click.stop="copyToClipboard(error)") mdi-clipboard-plus
               | {{ error.name }}
             v-card
               v-card-text
@@ -51,6 +55,7 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
     methods: {
       ...mapActions([
         "clearUnreadErrors",
+        "destroyError",
         "clearAllErrors"
       ]),
 
