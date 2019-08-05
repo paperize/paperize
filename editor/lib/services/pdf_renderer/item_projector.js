@@ -25,7 +25,7 @@ export const projectItem = function(layer, item) {
 
 const constructPseudoLayer = (layer, item) => {
   const
-    groupedToLayerName = groupBy(item, ({ key }) => key.split(":")[0]),
+    groupedToLayerName = groupBy(item, ({ key = "" }) => key.split(":")[0]),
     attributesForThisLayer = groupedToLayerName[layer.name],
     pseudoLayer = reduce(attributesForThisLayer, (acc, { key, value }) => {
       const attributeName = key.split(":")[1]
