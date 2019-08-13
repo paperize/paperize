@@ -59,7 +59,7 @@ const api = {
               spreadsheetId: googleId,
               // Convert sheet title to proper A1 notation
               ranges: worksheetTitles.map((sheetTitle) => {
-                return `'${sheetTitle}'!A1:AA1000`
+                return `'${sheetTitle}'!A1:NA1000`
               })
             }
 
