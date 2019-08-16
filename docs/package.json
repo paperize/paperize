@@ -15,8 +15,8 @@
     "vuetify": "^1.5.17"
   },
   "devDependencies": {
-    "@gridsome/source-filesystem": "^0.3.0",
-    "@gridsome/transformer-remark": "^0.2.1",
+    "@gridsome/source-filesystem": "^0.5.0",
+    "@gridsome/transformer-remark": "^0.3.2",
     "aws-sdk": "^2.511.0",
     "bluebird": "^3.5.5",
     "coffeescript": "^2.4.1",
