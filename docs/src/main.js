@@ -2,6 +2,7 @@
 // The Client API can be used here. Learn more: gridsome.org/docs/client-api
 
 import Layout from '~/layouts/Default.vue'
+import DocImage from '~/components/DocImage.vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
@@ -15,4 +16,5 @@ export default function (Vue, { router, head, isClient }) {
 
   // Register global components
   Vue.component('Layout', Layout)
+  Vue.component('DocImage', DocImage)
 }
