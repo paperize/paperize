@@ -24,7 +24,7 @@ To start the process, we visit [Paperize.io](https://beta.editor.paperize.io).
 
 Looking to the top right corner of the app, we click the "Sign In" menu item.
 
-![Sign In Link](/generated-images/sign-in-link.png)
+<DocImage src="/generated-images/sign-in-link.png" caption="The 'Sign In' Link" />
 
 We are presented with a pop-out window that allows us to log in with our Google accounts.
 
@@ -36,8 +36,8 @@ GOOGLE_PERMISSIONS_IMAGE
 
 And that's it! Paperize will complete the login process, including creating a "Paperize.io" folder in our Google Drive, and dropping a special file in it, "paperize_database.json". You can view these details by clicking the "Database" menu item now visible at the top of the screen.
 
-![Database Link](/generated-images/database-link.png)
-![Database Popover](/generated-images/database-popover.png)
+<DocImage src="/generated-images/database-link.png" caption="The 'Database' Link" />
+<DocImage src="/generated-images/database-popover.png" caption="The Database Popover" />
 
 [Learn more about Google Authorization](/references/google-authorization)
 
@@ -47,8 +47,8 @@ The first screen of Paperize lists our games, and since we have only just starte
 
 We click the button titled "New Game" and fill in a title.
 
-![New Game Button](/generated-images/new-game-button.png)
-![New Game Form](/generated-images/new-game-form.png)
+<DocImage src="/generated-images/new-game-button.png" caption="New Game Button" />
+<DocImage src="/generated-images/new-game-form.png" caption="New Game Form" />
 
 We notice a handful of checkboxes related to Google Drive:
 - one creates a folder to go with this game
@@ -67,8 +67,8 @@ In Paperize, our games are made up of components. A component is a deck of cards
 
 We click the button titled "New Component" and fill in a title.
 
-![New Component Button](/generated-images/new-component-button.png)
-![New Component Form](/generated-images/new-component-form.png)
+<DocImage src="/generated-images/new-component-button.png" caption="New Component Button" />
+<DocImage src="/generated-images/new-component-form.png" caption="New Component Form" />
 
 Again we see a checkbox related to our assets in Google Drive: this one creates a new worksheet inside of this game's spreadsheet (remember, a spreadsheet was created for this game automatically in the last step.)
 
@@ -76,7 +76,7 @@ Once again we agree that this is saving us time, so we leave it checked.
 
 We click "Create Component" and see the component appear on the left side of the screen, with its Spreadsheet and Template settings open in the middle and right of the screen.
 
-![Selected Component Screen](/generated-images/selected-component-screen.png)
+<DocImage src="/generated-images/selected-component-screen.png" caption="Selected Component Screen" />
 
 [Learn more about the Component resource](/references/component)
 
