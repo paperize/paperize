@@ -9,7 +9,7 @@ v-container(fluid)
         span Coming Soon!
 
       v-dialog(v-model="showGameForm" max-width="500" lazy)
-        v-btn(slot="activator" small) New Game
+        v-btn.new-game-button(slot="activator" small) New Game
         game-form(@close-dialog="showGameForm = false")
 
     v-flex(sm12)

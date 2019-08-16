@@ -24,7 +24,7 @@ To start the process, we visit [Paperize.io](https://beta.editor.paperize.io).
 
 Looking to the top right corner of the app, we click the "Sign In" menu item.
 
-SIGN_IN_LINK_IMAGE
+![Sign In Link](/generated-images/sign-in-link.png)
 
 We are presented with a pop-out window that allows us to log in with our Google accounts.
 
@@ -36,9 +36,8 @@ GOOGLE_PERMISSIONS_IMAGE
 
 And that's it! Paperize will complete the login process, including creating a "Paperize.io" folder in our Google Drive, and dropping a special file in it, "paperize_database.json". You can view these details by clicking the "Database" menu item now visible at the top of the screen.
 
-DATABASE_LINK_IMAGE
-
-DATABASE_POPOVER_IMAGE
+![Database Link](/generated-images/database-link.png)
+![Database Popover](/generated-images/database-popover.png)
 
 [Learn more about Google Authorization](/references/google-authorization)
 
@@ -48,9 +47,8 @@ The first screen of Paperize lists our games, and since we have only just starte
 
 We click the button titled "New Game" and fill in a title.
 
-NEW_GAME_BUTTON
-
-NEW_GAME_FORM
+![New Game Button](/generated-images/new-game-button.png)
+![New Game Form](/generated-images/new-game-form.png)
 
 We notice a handful of checkboxes related to Google Drive:
 - one creates a folder to go with this game
@@ -69,9 +67,8 @@ In Paperize, our games are made up of components. A component is a deck of cards
 
 We click the button titled "New Component" and fill in a title.
 
-NEW_COMPONENT_BUTTON
-
-NEW_COMPONENT_FORM
+![New Component Button](/generated-images/new-component-button.png)
+![New Component Form](/generated-images/new-component-form.png)
 
 Again we see a checkbox related to our assets in Google Drive: this one creates a new worksheet inside of this game's spreadsheet (remember, a spreadsheet was created for this game automatically in the last step.)
 
@@ -79,17 +76,13 @@ Once again we agree that this is saving us time, so we leave it checked.
 
 We click "Create Component" and see the component appear on the left side of the screen, with its Spreadsheet and Template settings open in the middle and right of the screen.
 
-SELECTED_COMPONENT_SCREEN
+![Selected Component Screen](/generated-images/selected-component-screen.png)
 
 [Learn more about the Component resource](/references/component)
 
 ## Importing a Spreadsheet
 
-Now the interface changes: our component appears in the components listing, and its Spreadsheet and Template panels are populated.
-
-COMPONENT_SELECTED_SCREEN
-
-Because we checked the box on the previous step, our spreadsheet is created and linked to this component automatically.
+Because we checked the box on the previous steps, this game has a spreadsheet in Drive already, and a new worksheet inside that spreadsheet is created and linked to this component automatically.
 
 ### Don't Have A Spreadsheet?
 

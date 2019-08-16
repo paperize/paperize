@@ -22,6 +22,20 @@
       }
     ]
   },
+  "tiles": {
+    "id": "tiles",
+    "name": "Tiles",
+    "parents": [
+      "folder-def456"
+    ],
+    "refreshedAt": 1552596999826,
+    "worksheets": [
+      {
+        "id": "000000001",
+        "title": "Basic Tiles"
+      }
+    ]
+  },
   "rainbowDeck": {
     "id": "rainbowDeck",
     "name": "Rainbow",

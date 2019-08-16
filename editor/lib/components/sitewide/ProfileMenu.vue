@@ -14,7 +14,7 @@ v-menu(v-if="loggedIn")
     v-list-tile(@click="logout()")
       v-list-tile-title Sign Out
 
-v-btn(v-else flat color="success" @click.stop="prepareForLogin") Sign In
+v-btn.log-in-button(v-else flat color="success" @click.stop="prepareForLogin") Sign In
   //- Show login flow
   v-dialog(v-model="showPopupHelper" max-width="500" lazy)
     v-card(v-if="!loginError")

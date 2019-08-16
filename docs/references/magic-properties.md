@@ -13,11 +13,11 @@ The simple formula for a Magic Property column is:
 
 `[Layer Name]:[Attribute Name]`
 
-So, for a Text Layer named "Card Title", in order to set the font size for different cards, you would name the column:
+So, for a Text Layer named "Card Title", in order to set the font size for different cards, you would look up the appropriate attribute below under Text Layer Attributes and see that it is in fact `textSize`. So simply name the column:
 
-`Card Title:fontSize`
+`Card Title:textSize`
 
-...and then fill in the cells with numbers representing reasonable font sizes.
+...and then fill in the cells with numbers representing the font size you want for that particular component.
 
 ## Shape Layer Attributes
 

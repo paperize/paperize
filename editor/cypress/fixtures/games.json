@@ -6,7 +6,8 @@
     "ageRange": "6+",
     "playerCount": "2-4",
     "playTime": "5-45 minutes",
-    "componentIds": [ "characterDeck", "instructionBook", "pointCubes"]
+    "componentIds": [ "characterDeck", "instructionBook", "pointCubes"],
+    "spreadsheetId": "sheet-abc123"
   },
   "carcassonne": {
     "id": "carcassonne",
@@ -15,9 +16,18 @@
     "ageRange": "8+",
     "playerCount": "2-6",
     "playTime": "20-120 minutes",
-    "componentIds": [
-
-    ]
+    "componentIds": [ ],
+    "spreadsheetId": "sheet-abc123"
+  },
+  "carcassonneWithComponent": {
+    "id": "carcassonneWithComponent",
+    "title": "Carcassonne",
+    "description": "The original medium-weight tile-layer.",
+    "ageRange": "8+",
+    "playerCount": "2-6",
+    "playTime": "20-120 minutes",
+    "componentIds": [ "carcassonneTiles" ],
+    "spreadsheetId": "sheet-abc123"
   },
   "pandemic": {
     "id": "pandemic",

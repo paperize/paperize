@@ -17,6 +17,14 @@
     "title": "Point Cubes",
     "quantityProperty": null
   },
+  "carcassonneTiles": {
+    "id": "carcassonneTiles",
+    "title": "Basic Tiles",
+    "spreadsheetId": "tiles",
+    "worksheetId": "000000001",
+    "templateId": "basicTile",
+    "quantityProperty": null
+  },
   "rainbowDeck": {
     "id": "rainbowDeck",
     "title": "Rainbow Deck",

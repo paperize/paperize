@@ -40,7 +40,13 @@ Cypress.Commands.add "vuexAndFixtures", (callback) ->
 
 Cypress.Commands.add "visitActiveGameAndComponent", ->
   cy.vuex().then (vuex) ->
-    cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
+    gameId = vuex.getters.activeGame.id
+    componentId = vuex.getters.activeComponent?.id
+
+    if componentId
+      cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
+    else
+      cy.visit("/#/games/#{vuex.getters.activeGame.id}")
 
 Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
   cy.vuex().then (vuex) ->
@@ -61,7 +67,8 @@ Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
       vuex.commit("cache", { key: key, values: value }))
     vuex.commit("setTemplates", templates)
     vuex.dispatch("setActiveGame", gameToEdit.id)
-    vuex.dispatch("setActiveComponent", gameToEdit.componentIds[0])
+    if activeComponentId = gameToEdit.componentIds[0]
+      vuex.dispatch("setActiveComponent", activeComponentId)
     vuex.dispatch("setStoreReady")
 
   .visitActiveGameAndComponent()

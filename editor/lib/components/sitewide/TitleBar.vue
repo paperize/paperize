@@ -17,7 +17,7 @@ v-toolbar(app)
       v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
         drive-explorer
 
-      v-btn(flat @click="showDatabaseManager = true") Database
+      v-btn.database-button(flat @click="showDatabaseManager = true") Database
       v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         database-manager
 
