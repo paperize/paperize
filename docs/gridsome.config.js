@@ -4,11 +4,12 @@ module.exports = {
   plugins: [
     // Markdown-based Guides
     {
-      use: '@gridsome/source-filesystem',
+      use: '~/vue-remark',
       options: {
-        path: 'guides/**/*.md',
         typeName: 'Guide',
-        route: '/guides/:slug'
+        baseDir: './guides',
+        route: '/guides/:slug',
+        component: "src/templates/Guide.vue"
       }
     },
     // Markdown-based Reference pages
