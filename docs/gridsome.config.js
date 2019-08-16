@@ -14,11 +14,12 @@ module.exports = {
     },
     // Markdown-based Reference pages
     {
-      use: '@gridsome/source-filesystem',
+      use: '~/vue-remark',
       options: {
-        path: 'references/**/*.md',
         typeName: 'Reference',
-        route: '/references/:slug'
+        baseDir: './references',
+        route: '/references/:slug',
+        component: "src/templates/Reference.vue"
       }
     }
   ],

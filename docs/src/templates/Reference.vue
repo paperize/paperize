@@ -1,6 +1,6 @@
 <template lang="pug">
 layout
-  div(v-html="$page.reference.content")
+  VueRemarkContent
 
   div(v-if="noContent")
     p ...coming soon...
