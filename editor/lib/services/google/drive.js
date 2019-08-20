@@ -1,8 +1,22 @@
-import { compact, map } from 'lodash'
+import { compact, map, reduce } from 'lodash'
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
 const
+  doBatchRequest = function(requestsToBatch) {
+    return new Promise((resolve) => {
+      getClient((client) => {
+        // Create a new batch and add each request to it
+        const batch = reduce(requestsToBatch, (newBatch, request) => {
+          newBatch.add(request)
+          return newBatch
+        }, client.newBatch())
+
+        resolve(batch)
+      })
+    })
+  },
+
   getRecord = function(fileId) {
     return new Promise((resolve, reject) => {
       fileId = matchGoogleId(fileId || "")
