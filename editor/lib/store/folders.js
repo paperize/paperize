@@ -125,6 +125,12 @@ const FolderModel = {
   },
 
   actions: {
+    touchFolders({ dispatch }, folderIds) {
+      return Promise.map(folderIds, (folderId) => {
+        dispatch("patchFolder", { id: folderId, refreshedAt: Date.now() })
+      })
+    },
+
     ensureWorkingFolder({ getters, rootGetters, dispatch }) {
       if(!getters.workingFolder) {
         return dispatch("createFolder", {
