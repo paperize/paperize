@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { filter, includes, keys, sortBy, reverse } from 'lodash'
+import { filter, flatten, includes, keys, map, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
@@ -65,6 +65,13 @@ const GoogleModule = {
         })
     },
 
+    googleBatchRequests({ dispatch }, requests) {
+      return dispatch("traceNetworkRequest",
+        { name: "Get Batch",
+          details: `Batching ${requests.length} requests`,
+          promise: drive.doBatchRequest(requests) })
+    },
+
     googleGetRecord({ dispatch }, fileId) {
       return dispatch("traceNetworkRequest",
         { name: "Get Record.",
@@ -72,9 +79,34 @@ const GoogleModule = {
           promise: drive.getRecord(fileId) })
     },
 
-    googleGetTrackedFileIndex({ dispatch }, folderId) {
-      // Get the full index
-      return dispatch("googleGetIndex", { folderId })
+    googleBatchGetTrackedFileIndex({ dispatch }, folderIds) {
+      const
+        indexRequestPromises = map(folderIds, (folderId) => drive.getIndex(folderId))
+
+      return Promise.all(indexRequestPromises)
+        .then((requestPromises) => {
+          const indexRequests = map(requestPromises, "request")
+          return dispatch("googleBatchRequests", indexRequests)
+            .then(() => {
+              return Promise.all(indexRequests)
+            })
+        })
+        .then((responses) => {
+          // each response in the batch
+          return flatten(map(responses, ({ result: { files } }) => {
+            // transform from Google response to Paperize data
+            return map(files, (file) => {
+              return {
+                id:       file.id,
+                name:     file.name,
+                md5:      file.md5Checksum,
+                mimeType: file.mimeType,
+                parents:  file.parents
+              }
+            })
+          }))
+        })
+
         .then((files) => {
           return {
             // split the response into the file types we care about
@@ -83,13 +115,10 @@ const GoogleModule = {
             images: filter(files, file => includes(file.mimeType, "image/") ),
           }
         })
-    },
 
-    googleGetIndex({ dispatch }, { folderId, options={} }) {
-      return dispatch("traceNetworkRequest",
-        { name: `Get Index.`,
-          details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
-          promise: drive.getIndex(folderId, options) })
+        .tap(() => {
+          return dispatch("touchFolders", folderIds)
+        })
     },
 
     googleCreateFolder({ dispatch }, { parentId, name }) {

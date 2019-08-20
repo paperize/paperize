@@ -1,9 +1,9 @@
-import { each, every, flatten, includes, map, pick, take, times, without } from 'lodash'
+import { every, flatten, includes, map, pick, take, times, without } from 'lodash'
 import { generateCrud } from './util/vuex_resource'
 
-const MAX_FOLDERS_AUTO_INDEX = 10,
-  DELAY_BETWEEN_INDEXES = 1500,
-  INDEX_CONCURRENCY = 3
+const
+  MAX_FOLDERS_AUTO_INDEX = 30,
+  DELAY_BETWEEN_INDEXES = 1500
 
 const FolderModel = {
   name: 'folders',
@@ -142,7 +142,7 @@ const FolderModel = {
 
     refreshRootFolderIndex({ dispatch, rootGetters }) {
       // Nesting: 1 (for root folder) + X (folders deep)
-      const nesting = 3,
+      const nesting = 6,
         // get working directory id
         workingDirectoryId = rootGetters.workingDirectoryId
 
@@ -152,42 +152,44 @@ const FolderModel = {
       })
     },
 
-    refreshFolderIndex({ dispatch }, { folderId, nesting = 1 }) {
+    refreshFolderIndex({ dispatch }, { folderId, nesting = 3 }) {
       // prefetch the first item but treat it as if it's a collection of items
-      let currentPromise = Promise.all([dispatch("googleGetTrackedFileIndex", folderId)])
-        .tap(() => { // Set refresh timestamp only AFTER the index comes in.
-          return dispatch("patchFolder", { id: folderId, refreshedAt: Date.now() })
-        })
+      let currentPromise = dispatch("googleBatchGetTrackedFileIndex", [folderId])
 
       // manage nesting depth
       times(nesting, (depth) => {
-        currentPromise = currentPromise.then((indexes) => {
-          // Flatten multiple promise results to single collections
-          const folders = flatten(map(indexes, "folders")),
-            sheets = flatten(map(indexes, "sheets")),
-            images = flatten(map(indexes, "images")),
-            goDeeper = depth < nesting - 1 // Calculate this now to be checked later
-
-          // stuff each into appropriate store modules
-          return Promise.all([
-            Promise.all(each(folders, (folder) => dispatch("createFolder", folder))),
-            Promise.all(each(sheets, (sheet) => dispatch("createSpreadsheet", sheet))),
-            Promise.all(each(images, (image) => dispatch("createImage", image)))
-          ]).then(() => {
-            // Entering the next depth level...
-            if(goDeeper) {
-              // gradually run tracked indexes on each of the child folders
-              return Promise.map(take(folders, MAX_FOLDERS_AUTO_INDEX), (folder) => {
-                return dispatch("googleGetTrackedFileIndex", folder.id)
-                  .delay(DELAY_BETWEEN_INDEXES) // Delay between requests keeps Google happy
-
-                  .tap(() => { // Set refresh timestamp only AFTER the index comes in.
-                    return dispatch("patchFolder", { id: folder.id, refreshedAt: Date.now() })
-                  })
-              }, { concurrency: INDEX_CONCURRENCY }) // Fewer concurrent API calls keeps Google happy
+        currentPromise = currentPromise
+          .delay(DELAY_BETWEEN_INDEXES) // Delay between requests keeps Google happy
+          .then((indexes) => {
+            if(!indexes) {
+              return Promise.resolve()
             }
+
+            // Flatten multiple promise results to single collections
+            const
+              folders = indexes.folders || [],
+              sheets = indexes.sheets || [],
+              images = indexes.images || [],
+              goDeeper = depth < nesting - 1 // Calculate this now to be checked later
+
+            // stuff each into appropriate store modules
+            return Promise.all([
+              Promise.all(map(folders, (folder) => dispatch("createFolder", folder))),
+              Promise.all(map(sheets, (sheet) => dispatch("createSpreadsheet", sheet))),
+              Promise.all(map(images, (image) => dispatch("createImage", image)))
+            ]).then(() => {
+              // Entering the next depth level...
+              if(goDeeper && folders.length > 0) {
+                // yell if we're truncating folders
+                if(folders.length > MAX_FOLDERS_AUTO_INDEX) {
+                  console.warn("Found more folders than we can index:", folders.length, "Limit:", MAX_FOLDERS_AUTO_INDEX)
+                }
+                // run a batch index for child folders
+                const folderIds = map(take(folders, MAX_FOLDERS_AUTO_INDEX), "id")
+                return dispatch("googleBatchGetTrackedFileIndex", folderIds)
+              }
+            })
           })
-        })
       })
 
       // TODO: purge (or flag?) orphaned files and folders
