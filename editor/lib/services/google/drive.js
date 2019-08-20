@@ -270,6 +270,7 @@ const
   }
 
 export default {
+  doBatchRequest,
   getRecord,
   getIndex,
   findFolders,
