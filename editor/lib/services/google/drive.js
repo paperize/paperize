@@ -58,25 +58,22 @@ const
     // Make the request
     return new Promise((resolve, reject) => {
       getClient((client) => {
-        client.drive.files.list({
-          q: query,
-          fields: "files(id,name,md5Checksum,mimeType,parents)",
-          pageSize: 1000, // Maximum, so we don't have to paginate yet
-        }).then(
-          ({ result }) => {
-            resolve(map(result.files, (file) => {
-              return {
-                id:       file.id,
-                name:     file.name,
-                md5:      file.md5Checksum,
-                mimeType: file.mimeType,
-                parents:  file.parents
-              }
-            }))
-          },
+        resolve({ request: client.request({
+          path: '/drive/v3/files',
+          method: 'GET',
+          params: {
+            q: query,
+            fields: "files(id,name,md5Checksum,mimeType,parents)",
+            pageSize: 1000, // Maximum, so we don't have to paginate yet
+          }
+        }) })
 
-          ({ result }) => reject(new Error(result.error.message))
-        )
+        // resolve(client.drive.files.list({
+        //   q: query,
+        //   fields: "files(id,name,md5Checksum,mimeType,parents)",
+        //   pageSize: 1000, // Maximum, so we don't have to paginate yet
+        // }))
+
       })
     })
   },
