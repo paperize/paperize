@@ -134,13 +134,21 @@ window.onerror = (message, url, lineNo, columnNo, { name, stack }) => {
 }
 
 window.addEventListener("unhandledrejection", (event) => {
-  const { name, message, stack } = event.detail.reason
-  // Unpack the unhandled rejectione event into our error tracker
-  store.dispatch("createError", {
-    name: name && `Rejection: ${name}` || "Rejection",
-    message: message,
-    details: stack,
-  })
+  // make sure rejection was a real error
+  if(event.detail && event.detail.reason) {
+    const { name, message, stack } = event.detail.reason
+    // Unpack the unhandled rejectione event into our error tracker
+    store.dispatch("createError", {
+      name: name && `Rejection: ${name}` || "Rejection",
+      message: message,
+      details: stack,
+    })
+  } else {
+    store.dispatch("createError", {
+      name: "Unknown Rejection",
+      message: event,
+    })
+  }
 
   // event.preventDefault() // This stops it from hitting the console
 })
