@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { filter, flatten, includes, keys, map, sortBy, reverse } from 'lodash'
+import { keys, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
@@ -80,44 +80,12 @@ const GoogleModule = {
     },
 
     googleBatchGetTrackedFileIndex({ dispatch }, folderIds) {
-      const
-        indexRequestPromises = map(folderIds, (folderId) => drive.getIndex(folderId))
-
-      return Promise.all(indexRequestPromises)
-        .then((requestPromises) => {
-          const indexRequests = map(requestPromises, "request")
-          return dispatch("googleBatchRequests", indexRequests)
-            .then(() => {
-              return Promise.all(indexRequests)
-            })
-        })
-        .then((responses) => {
-          // each response in the batch
-          return flatten(map(responses, ({ result: { files } }) => {
-            // transform from Google response to Paperize data
-            return map(files, (file) => {
-              return {
-                id:       file.id,
-                name:     file.name,
-                md5:      file.md5Checksum,
-                mimeType: file.mimeType,
-                parents:  file.parents
-              }
-            })
-          }))
-        })
-
-        .then((files) => {
-          return {
-            // split the response into the file types we care about
-            folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
-            sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
-            images: filter(files, file => includes(file.mimeType, "image/") ),
-          }
-        })
-
-        .tap(() => {
-          return dispatch("touchFolders", folderIds)
+      return dispatch("traceNetworkRequest",
+        { name: `Index Folders.`,
+          details: `Indexing ${folderIds.length} Folders.`,
+          promise: drive.getIndex(folderIds).tap(() => {
+            return dispatch("touchFolders", folderIds)
+          })
         })
     },
 

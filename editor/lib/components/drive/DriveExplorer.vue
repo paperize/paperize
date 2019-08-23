@@ -72,17 +72,15 @@ v-card
       ]),
 
       refreshFolder(folderId) {
-        if(folderId == this.workingDirectoryId) {
-          if(confirm("Refresh the working directory?")) {
-            return this.refreshRootFolderIndex()
-          }
-        } else {
-          return this.refreshFolderIndex({ folderId })
-        }
+        return folderId == this.workingDirectoryId ?
+          this.refreshRootFolderIndex() :
+          this.refreshFolderIndex({ folderId })
       },
 
       lastRefresh(refreshedAt) {
-        return refreshedAt ? moment(refreshedAt).fromNow() : 'never'
+        return refreshedAt ?
+          moment(refreshedAt).fromNow() :
+          'never'
       },
 
       neverRefreshed(item) {

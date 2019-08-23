@@ -1,4 +1,4 @@
-import { compact, map, reduce } from 'lodash'
+import { compact, filter, includes, map, reduce } from 'lodash'
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
@@ -42,13 +42,20 @@ const
     })
   },
 
-  getIndex = function(folderId, options={}) {
+  getIndex = function(folderIds, options={}) {
     // Build the query
-    const queryParts = []
-    // Only files in the given folder
-    queryParts.push(`'${folderId}' in parents`)
+    const
+      andQueries = [],
+      // in this folder or this folder or this folder...
+      orSubQuery =
+        map(folderIds,
+          folderId => `'${folderId}' in parents`)
+          .join(' or ')
+
+    andQueries.push(`(${orSubQuery})`)
+
     // No trashed files
-    queryParts.push(`trashed = false`)
+    andQueries.push(`trashed = false`)
 
     // Only a certain type of files
     let mimeType
@@ -64,30 +71,44 @@ const
     }
 
     if(mimeType) {
-      queryParts.push(`mimeType contains '${mimeType}'`)
+      andQueries.push(`mimeType contains '${mimeType}'`)
     }
 
-    const query = queryParts.join(' and ')
+    const query = andQueries.join(' and ')
+    console.log(query)
 
     // Make the request
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       getClient((client) => {
-        resolve({ request: client.request({
-          path: '/drive/v3/files',
-          method: 'GET',
-          params: {
-            q: query,
-            fields: "files(id,name,md5Checksum,mimeType,parents)",
-            pageSize: 1000, // Maximum, so we don't have to paginate yet
-          }
-        }) })
+        const listPromse = client.drive.files.list({
+          q: query,
+          fields: "files(id,name,md5Checksum,mimeType,parents)",
+          pageSize: 1000, // Maximum, so we don't have to paginate yet
+        })
 
-        // resolve(client.drive.files.list({
-        //   q: query,
-        //   fields: "files(id,name,md5Checksum,mimeType,parents)",
-        //   pageSize: 1000, // Maximum, so we don't have to paginate yet
-        // }))
+          .then(({ result: { files } }) => {
+            // transform from Google response to Paperize data
+            return map(files, (file) => {
+              return {
+                id:       file.id,
+                name:     file.name,
+                md5:      file.md5Checksum,
+                mimeType: file.mimeType,
+                parents:  file.parents
+              }
+            })
+          })
 
+          .then((files) => {
+            return {
+              // sort the returned files by type
+              folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
+              sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
+              images: filter(files, file => includes(file.mimeType, "image/") ),
+            }
+          })
+
+        resolve(listPromse)
       })
     })
   },

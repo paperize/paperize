@@ -2,8 +2,10 @@ import { every, flatten, includes, map, pick, take, times, without } from 'lodas
 import { generateCrud } from './util/vuex_resource'
 
 const
-  MAX_FOLDERS_AUTO_INDEX = 30,
-  DELAY_BETWEEN_INDEXES = 1500
+  NESTING_DEPTH = 4,
+  NESTING_DEPTH_ROOT = 6,
+  MAX_FOLDERS_AUTO_INDEX = 50,
+  DELAY_BETWEEN_INDEXES = 250
 
 const FolderModel = {
   name: 'folders',
@@ -141,18 +143,16 @@ const FolderModel = {
     },
 
     refreshRootFolderIndex({ dispatch, rootGetters }) {
-      // Nesting: 1 (for root folder) + X (folders deep)
-      const nesting = 6,
-        // get working directory id
-        workingDirectoryId = rootGetters.workingDirectoryId
+      // get working directory id
+      const workingDirectoryId = rootGetters.workingDirectoryId
 
       // Insert the working folder manually
       return dispatch("ensureWorkingFolder").then(() => {
-        return dispatch("refreshFolderIndex", { folderId: workingDirectoryId, nesting })
+        return dispatch("refreshFolderIndex", { folderId: workingDirectoryId, NESTING_DEPTH_ROOT })
       })
     },
 
-    refreshFolderIndex({ dispatch }, { folderId, nesting = 3 }) {
+    refreshFolderIndex({ dispatch }, { folderId, nesting = NESTING_DEPTH }) {
       // prefetch the first item but treat it as if it's a collection of items
       let currentPromise = dispatch("googleBatchGetTrackedFileIndex", [folderId])
 
