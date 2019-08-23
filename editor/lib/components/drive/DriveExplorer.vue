@@ -6,6 +6,8 @@ v-card
       |  Drive Explorer
 
   v-card-text(style="min-height: 500px;")
+    p What Google Drive items does Paperize know about? Use the refresh buttons to find new and changed files.
+
     h2.subheading Primary Index
     v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id")
       template(slot="prepend" slot-scope="{ item }")
@@ -72,17 +74,15 @@ v-card
       ]),
 
       refreshFolder(folderId) {
-        if(folderId == this.workingDirectoryId) {
-          if(confirm("Refresh the working directory?")) {
-            return this.refreshRootFolderIndex()
-          }
-        } else {
-          return this.refreshFolderIndex({ folderId })
-        }
+        return folderId == this.workingDirectoryId ?
+          this.refreshRootFolderIndex() :
+          this.refreshFolderIndex({ folderId })
       },
 
       lastRefresh(refreshedAt) {
-        return refreshedAt ? moment(refreshedAt).fromNow() : 'never'
+        return refreshedAt ?
+          moment(refreshedAt).fromNow() :
+          'never'
       },
 
       neverRefreshed(item) {

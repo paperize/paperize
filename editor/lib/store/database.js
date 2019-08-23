@@ -94,6 +94,10 @@ const DatabaseModule = {
               })
           }
         })
+
+        .then(() => {
+          return dispatch("refreshRootFolderIndex")
+        })
     },
 
     migrate({ getters }, dbState) {

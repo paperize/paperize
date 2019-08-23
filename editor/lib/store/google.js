@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { filter, includes, keys, sortBy, reverse } from 'lodash'
+import { keys, sortBy, reverse } from 'lodash'
 import uuid from 'uuid/v4'
 import { auth, sheets, drive } from '../services/google'
 
@@ -65,6 +65,13 @@ const GoogleModule = {
         })
     },
 
+    googleBatchRequests({ dispatch }, requests) {
+      return dispatch("traceNetworkRequest",
+        { name: "Get Batch",
+          details: `Batching ${requests.length} requests`,
+          promise: drive.doBatchRequest(requests) })
+    },
+
     googleGetRecord({ dispatch }, fileId) {
       return dispatch("traceNetworkRequest",
         { name: "Get Record.",
@@ -72,24 +79,14 @@ const GoogleModule = {
           promise: drive.getRecord(fileId) })
     },
 
-    googleGetTrackedFileIndex({ dispatch }, folderId) {
-      // Get the full index
-      return dispatch("googleGetIndex", { folderId })
-        .then((files) => {
-          return {
-            // split the response into the file types we care about
-            folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
-            sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
-            images: filter(files, file => includes(file.mimeType, "image/") ),
-          }
-        })
-    },
-
-    googleGetIndex({ dispatch }, { folderId, options={} }) {
+    googleBatchGetTrackedFileIndex({ dispatch }, folderIds) {
       return dispatch("traceNetworkRequest",
-        { name: `Get Index.`,
-          details: `Folder: ${folderId}, Options: ${JSON.stringify(options)}`,
-          promise: drive.getIndex(folderId, options) })
+        { name: `Index Folders.`,
+          details: `Indexing ${folderIds.length} Folders.`,
+          promise: drive.getIndex(folderIds).tap(() => {
+            return dispatch("touchFolders", folderIds)
+          })
+        })
     },
 
     googleCreateFolder({ dispatch }, { parentId, name }) {

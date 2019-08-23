@@ -1,8 +1,22 @@
-import { compact, map } from 'lodash'
+import { compact, filter, includes, map, reduce } from 'lodash'
 import { getClient } from './auth'
 import { matchGoogleId } from './util'
 
 const
+  doBatchRequest = function(requestsToBatch) {
+    return new Promise((resolve) => {
+      getClient((client) => {
+        // Create a new batch and add each request to it
+        const batch = reduce(requestsToBatch, (newBatch, request) => {
+          newBatch.add(request)
+          return newBatch
+        }, client.newBatch())
+
+        resolve(batch)
+      })
+    })
+  },
+
   getRecord = function(fileId) {
     return new Promise((resolve, reject) => {
       fileId = matchGoogleId(fileId || "")
@@ -28,13 +42,20 @@ const
     })
   },
 
-  getIndex = function(folderId, options={}) {
+  getIndex = function(folderIds, options={}) {
     // Build the query
-    const queryParts = []
-    // Only files in the given folder
-    queryParts.push(`'${folderId}' in parents`)
+    const
+      andQueries = [],
+      // in this folder or this folder or this folder...
+      orSubQuery =
+        map(folderIds,
+          folderId => `'${folderId}' in parents`)
+          .join(' or ')
+
+    andQueries.push(`(${orSubQuery})`)
+
     // No trashed files
-    queryParts.push(`trashed = false`)
+    andQueries.push(`trashed = false`)
 
     // Only a certain type of files
     let mimeType
@@ -50,21 +71,23 @@ const
     }
 
     if(mimeType) {
-      queryParts.push(`mimeType contains '${mimeType}'`)
+      andQueries.push(`mimeType contains '${mimeType}'`)
     }
 
-    const query = queryParts.join(' and ')
+    const query = andQueries.join(' and ')
 
     // Make the request
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       getClient((client) => {
-        client.drive.files.list({
+        const listPromse = client.drive.files.list({
           q: query,
           fields: "files(id,name,md5Checksum,mimeType,parents)",
           pageSize: 1000, // Maximum, so we don't have to paginate yet
-        }).then(
-          ({ result }) => {
-            resolve(map(result.files, (file) => {
+        })
+
+          .then(({ result: { files } }) => {
+            // transform from Google response to Paperize data
+            return map(files, (file) => {
               return {
                 id:       file.id,
                 name:     file.name,
@@ -72,11 +95,19 @@ const
                 mimeType: file.mimeType,
                 parents:  file.parents
               }
-            }))
-          },
+            })
+          })
 
-          ({ result }) => reject(new Error(result.error.message))
-        )
+          .then((files) => {
+            return {
+              // sort the returned files by type
+              folders: filter(files, { mimeType: "application/vnd.google-apps.folder" }),
+              sheets: filter(files, { mimeType: "application/vnd.google-apps.spreadsheet" }),
+              images: filter(files, file => includes(file.mimeType, "image/") ),
+            }
+          })
+
+        resolve(listPromse)
       })
     })
   },
@@ -270,6 +301,7 @@ const
   }
 
 export default {
+  doBatchRequest,
   getRecord,
   getIndex,
   findFolders,
