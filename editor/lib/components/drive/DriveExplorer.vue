@@ -6,6 +6,8 @@ v-card
       |  Drive Explorer
 
   v-card-text(style="min-height: 500px;")
+    p What Google Drive items does Paperize know about? Use the refresh buttons to find new and changed files.
+
     h2.subheading Primary Index
     v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id")
       template(slot="prepend" slot-scope="{ item }")

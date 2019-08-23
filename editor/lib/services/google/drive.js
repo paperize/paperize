@@ -75,7 +75,6 @@ const
     }
 
     const query = andQueries.join(' and ')
-    console.log(query)
 
     // Make the request
     return new Promise((resolve) => {
