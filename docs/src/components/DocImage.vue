@@ -1,6 +1,6 @@
 <template lang="pug">
   figure
-    g-image(:src="src")
+    v-img(:src="src")
     figcaption {{ caption }}
 </template>
 
@@ -18,11 +18,6 @@
     padding: 5px;
     max-width: 90%;
     margin: 1em auto;
-  }
-
-  img {
-    max-width: 100%;
-    min-width: 50%;
   }
 
   figcaption {
