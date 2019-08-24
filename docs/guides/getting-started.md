@@ -32,7 +32,7 @@ We are presented with a pop-out window that allows us to log in with our Google 
 
 After entering our credentials, we need to give Paperize access to our Google Drive and Google Sheets.
 
-<DocImage src="/images/google-permissions.png" caption="The Google Permissions Screen" />
+<DocImage class="tall" src="/images/google-permissions.png" caption="The Google Permissions Screen" />
 
 And that's it! Paperize will complete the login process, including creating a "Paperize.io" folder in our Google Drive, and dropping a special file in it, "paperize_database.json". You can view these details by clicking the "Database" menu item now visible at the top of the screen.
 

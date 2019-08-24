@@ -20,6 +20,10 @@
     margin: 1em auto;
   }
 
+  figure.tall {
+    max-width: 500px;
+  }
+
   figcaption {
     background-color: #222;
     color: #fff;
