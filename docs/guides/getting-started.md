@@ -28,11 +28,11 @@ Looking to the top right corner of the app, we click the "Sign In" menu item.
 
 We are presented with a pop-out window that allows us to log in with our Google accounts.
 
-GOOGLE_POP_OUT_IMAGE
+<DocImage src="/images/google-pop-out.png" caption="The Google Pop-out Sign-in Form" />
 
 After entering our credentials, we need to give Paperize access to our Google Drive and Google Sheets.
 
-GOOGLE_PERMISSIONS_IMAGE
+<DocImage src="/images/google-permissions.png" caption="The Google Permissions Screen" />
 
 And that's it! Paperize will complete the login process, including creating a "Paperize.io" folder in our Google Drive, and dropping a special file in it, "paperize_database.json". You can view these details by clicking the "Database" menu item now visible at the top of the screen.
 
@@ -88,15 +88,17 @@ Because we checked the box on the previous steps, this game has a spreadsheet in
 
 If you didn't use the checkbox in the previous step, or you decide to change your spreadsheet by clicking the 'Edit' button:
 
-EDIT_SPREADSHEET_BUTTON
+<DocImage src="/generated-images/edit-spreadsheet-link.png" caption="The 'Edit Spreadsheet' Link" />
 
 You can easily select an existing Spreadsheet or have Paperize create a new one for you.
+
+<DocImage src="/generated-images/set-spreadsheet-menu.png" caption="New Spreadsheet Menu" />
 
 ### Let's Get Some Data!
 
 Click the icon next to the Spreadsheet's name and we're taken directly to Google Sheets, ready to edit.
 
-SHEET_EDIT_ICON
+<DocImage src="/generated-images/spreadsheet-link.png" caption="Link to Google Sheet" />
 
 ## Data Generation: Spreadsheet Values
 
@@ -106,11 +108,11 @@ We know Paperize is all about being lean, so it leverages Google Sheets instead 
 
 The first row should be the names of the things we want on our cards, called "properties". It can be things like "Name", "Cost", "Text", "Rules", "Image Name", etc. It is completely arbitrary what you name your properties.
 
-SPREADSHEET_FIRST_ROW_FILLED
+<DocImage src="/images/spreadsheet-first-row-filled.png" caption="Spreasheet With Property Names Filled In" />
 
 We click back over to Paperize and refresh the spreadsheet there:
 
-REFRESH_SPREADSHEET_BUTTON
+<DocImage src="/generated-images/refresh-spreadsheet-link.png" caption="The 'Refresh Spreadsheet' Link" />
 
 A moment later, the property names appear in the Spreadsheet panel:
 
