@@ -13,8 +13,9 @@ v-container(fluid)
         game-form(@close-dialog="showGameForm = false")
 
     v-flex(sm12)
-      v-layout(row wrap)
-        game-card(v-for="game in allGames" :key="game.id" :game="game")
+      v-container(grid-list-md fluid)
+        v-layout(row wrap)
+          game-card(v-for="game in allGames" :key="game.id" :game="game")
 </template>
 
 <script>

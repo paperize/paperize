@@ -1,7 +1,8 @@
 <template lang="pug">
-v-layout(row)
-  source-panel(:component="component")
-  template-panel(:component="component")
+v-container(grid-list-md)
+  v-layout(row)
+    source-panel(:component="component")
+    template-panel(:component="component")
 </template>
 
 <script>
