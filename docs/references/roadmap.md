@@ -5,23 +5,21 @@ title: Paperize Project Roadmap
 
 # Paperize Roadmap
 
-**Updated:** June 2019
+**Updated:** August 2019
 
 
-### Next Release: "Discriminating Customer" (Alpha 7)
+### Next Release: ??? (Alpha 8)
 
-**Releasing:** _Soon_
+**Releasing:** _To be announced_
 
-**Goal:** _Customization: Epic Font Expansion and the Rise of Magic Properties_
+**Goal:** Quality of Life: _Time-saving features and automatic backups_
 
 
 ## Road to Public Beta
 
 - [ ] Data Management Story: Backups, Security, Privacy (Alpha 8)
-- [ ] Error Reporting (Alpha 9)
-- [ ] Good Documentation
-- [ ] Copying Things (Games, Components, Templates, Layers, Dimensions)
-- [ ] "Load Example" for everything
+- [ ] Copying Things (Games, Components, Templates, Layers, Dimensions) (Alpha 8)
+- [ ] A nice "Load Example" option for everything
 - [ ] Browser Testing
 - [ ] Getting the Word Out (Marketing Push)
 
@@ -41,10 +39,27 @@ title: Paperize Project Roadmap
 
 ## The Road Behind
 
-### Current Release: "Enigmatic Gambler" (Alpha 6)
+### Current Release: "Obedient Consumer" (Alpha 7)
 ---
 
-**Released:** March 25th, 2018
+**Released:** August 26, 2019
+
+![Obedient Consumer](https://media.giphy.com/media/JRBlqgyCnjdtK/giphy.gif)
+
+**Goal:** _Customization: Google Fonts and Magic Properties_
+
+- [x] Google Font support, expanding the available fonts from 14 to more than 900
+- [x] Magic Properties: most things can be dynamically set via the spreadsheet now
+  - used to be just text and images
+  - now includes colors, font sizes, alignments, shapes, etc
+  - new template features will automatically work like this going forward
+- [x] A documentation site so new users can self-teach!
+- [x] A built-in error-reporter so when things go wrong, users know it and can share it (even if they don't understand it!)
+
+### "Enigmatic Gambler" (Alpha 6)
+---
+
+**Released:** March 25th, 2019
 
 ![Enigmatic Gambler](https://media.giphy.com/media/l0MYv61yrzZu6roFG/giphy.gif)
 
