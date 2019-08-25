@@ -51,7 +51,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "core-util-is": "^1.0.2",
     "css-loader": "^0.26.2",
-    "cypress": "^3.4.0",
+    "cypress": "^3.4.1",
     "eslint": "^4.18.1",
     "eslint-plugin-vue": "^4.3.0",
     "express": "^4.14.1",
