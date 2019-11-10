@@ -2,4 +2,3 @@ node_modules
 build
 cypress/screenshots
 cypress/videos
-.api_keys.json
