@@ -1,4 +1,5 @@
 /* global require, __dirname, module */
+
 var webpack = require('webpack')
   , CopyWebpackPlugin = require('copy-webpack-plugin')
   , MomentLocalesPlugin = require('moment-locales-webpack-plugin')
