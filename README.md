@@ -10,4 +10,4 @@ A serverless, static front-end application for creating printable game materials
 - `npm install`
 - `npm test`
 - `npm start`
-- visit [http://localhost:8080] and _go go go!_
+- visit http://localhost:8080 and _go go go!_
