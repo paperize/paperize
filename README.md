@@ -15,8 +15,12 @@ Paperize helps game designers make better games by leveraging free web tools to 
 - clone this repository
 - Set up your API Keys:
   - visit [the Google API Developer Console](https://console.developers.google.com/apis/credentials)
-  - create a new Project for Paperize
+  - create a new Project for your Paperize keys
   - create a Google OAuth Client ID
+    - Application Type: Web Application
+    - Name: _totally up to you_
+    - Authorized JavaScript Origins: `http://localhost:8080`
+    - Authorized Redirect URIs: none
   - create a Google Fonts API Key
   - create a Google Picker API Key
   - `cp example.api_keys.dev.json .api_keys.dev.json`
