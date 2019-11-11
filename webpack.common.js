@@ -1,14 +1,16 @@
 /* global require, __dirname, module */
 
-var webpack = require('webpack')
-  , CopyWebpackPlugin = require('copy-webpack-plugin')
-  , MomentLocalesPlugin = require('moment-locales-webpack-plugin')
-  , VueLoaderPlugin = require('vue-loader/lib/plugin')
-  , path = require('path')
-  , shell = require('shelljs')
+const
+  webpack = require('webpack'),
+  CopyWebpackPlugin = require('copy-webpack-plugin'),
+  MomentLocalesPlugin = require('moment-locales-webpack-plugin'),
+  VueLoaderPlugin = require('vue-loader/lib/plugin'),
+  path = require('path'),
+  shell = require('shelljs')
 
-var gitSha = shell.exec("git log --pretty=format:'%h' -n 1").stdout
-  , gitChanges = shell.exec("git diff --stat").stdout.trim()
+let
+  gitSha = shell.exec("git log --pretty=format:'%h' -n 1").stdout,
+  gitChanges = shell.exec("git diff --stat").stdout.trim()
 
 if(gitChanges.length == 0) {
   gitChanges = "Clean checkout of " + gitSha
@@ -26,9 +28,7 @@ if(gitChanges.length == 0) {
   }
 }
 
-module.exports = (env) => {
-  env = env || {}
-
+module.exports = (env={}) => {
   return {
     entry: './lib/main.js',
 
