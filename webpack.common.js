@@ -41,7 +41,8 @@ module.exports = (env={}) => {
       new webpack.EnvironmentPlugin({
         GIT_SHA: gitSha,
         GIT_CHANGE_INFO: gitChanges,
-        NO_SYNC: !!env.NO_SYNC
+        NO_SYNC: !!env.NO_SYNC,
+        KEYS: env.KEYS
       }),
 
       new CopyWebpackPlugin([
