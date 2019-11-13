@@ -1,4 +1,4 @@
-/* global require module */
+/* global require */
 const
   merge = require('webpack-merge'),
   common = require('./webpack.common.js'),

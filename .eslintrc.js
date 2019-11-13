@@ -14,6 +14,10 @@ module.exports = {
       "experimentalObjectRestSpread": true
     }
   },
+  "globals": {
+    "process": "readable",
+    "module": "readable"
+  },
   "rules": {
     "indent": [
       "error",

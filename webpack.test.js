@@ -1,4 +1,4 @@
-/* global require, module, __dirname */
+/* global require, __dirname */
 var webpack = require('webpack')
   , path = require('path')
 

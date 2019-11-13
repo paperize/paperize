@@ -1,4 +1,4 @@
-/* global require, __dirname, module */
+/* global require, __dirname */
 
 const
   webpack = require('webpack'),
