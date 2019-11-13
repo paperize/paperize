@@ -4,6 +4,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 ## Get Involved
 
+- [Use the tool](https://beta.editor.paperize.io)
 - Support the project on [Patreon](https://patreon.com/paperize)
 - Chat with programmers and game designers on [Discord](https://discord.gg/9ggkkQp)
 - Read [the Docs](https://docs.paperize.io)
