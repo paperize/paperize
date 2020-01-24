@@ -36,4 +36,4 @@ Paperize helps game designers make better games by leveraging free web tools to 
 - `npm test`
 - `npm start`
 - visit http://localhost:8080 and _go go go!_
-- **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized JAvascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
+- **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized Javascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
