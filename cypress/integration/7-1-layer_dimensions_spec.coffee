@@ -58,10 +58,10 @@ describe "Layer Dimensions", ->
       cy.get("#dim-b").invoke("val").should("eq", "5.0")
       cy.get("#dim-l").invoke("val").should("eq", "5.0")
       # set them all to 10
-      cy.get("#dim-t").clear().type("10")
-      cy.get("#dim-r").clear().type("10")
-      cy.get("#dim-b").clear().type("10")
-      cy.get("#dim-l").clear().type("10")
+      cy.get("#dim-t").clear().type("10.0")
+      cy.get("#dim-r").clear().type("10.0")
+      cy.get("#dim-b").clear().type("10.0")
+      cy.get("#dim-l").clear().type("10.0")
       # click xywh
       cy.contains("XYWH").click()
       # see the x/y/w/h percent values
