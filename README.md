@@ -37,3 +37,13 @@ Paperize helps game designers make better games by leveraging free web tools to 
 - `npm start`
 - visit http://localhost:8080 and _go go go!_
 - **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized Javascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
+
+## Libraries, Tools, & Services
+
+- [VueJS 2.x](https://vuejs.org/v2/guide/): low-overhead, highly productive front-end framework
+- [Vuetify 1.5.x](https://v15.vuetifyjs.com/en/): material design components for Vue
+- [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/docs/) and [my fork](https://github.com/lorennorman/jsPDF): PDF generation in the browser
+- [Cypress.io](https://cypress.io): modern, browser-based integration testing
+- NodeJS, Webpack, Babel: so we can write modern JS
+- Google Drive API for user-controlled storage (more to come)
+- Amazon Route53/Cloudfront/S3: simple, fast, cheap, global CDN
