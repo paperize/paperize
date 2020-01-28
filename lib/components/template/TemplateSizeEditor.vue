@@ -3,7 +3,7 @@ fieldset.fieldset
   legend
     strong Component Size
 
-  v-btn-toggle(v-model="paperMode" @change="setPaperMode")
+  v-btn-toggle(v-model="paperMode" @change="paperModeChanged")
     v-btn(flat value="standard") Standard
     v-btn(flat value="custom") Custom
 
@@ -82,8 +82,7 @@ fieldset.fieldset
         this.$store.commit("updateTemplate", payload)
       }, 200),
 
-      setPaperMode(mode) {
-        this.paperMode = mode
+      paperModeChanged() {
         if(this.paperMode == "standard") {
           this.paperFormat = "poker"
           this.paperOrientation = "portrait"
