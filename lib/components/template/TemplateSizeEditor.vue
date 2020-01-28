@@ -97,11 +97,12 @@ fieldset.fieldset
       updatePageDimensions() {
         if(this.paperFormat.length == 0) { return }
 
-        let format = find(componentOptions, { value: this.paperFormat })
-          , width = format.width
-          , height = format.height
-          , smallerDimension = Math.min(width, height)
-          , largerDimension = Math.max(width, height)
+        const
+          format = find(componentOptions, { value: this.paperFormat }),
+          width = format.width,
+          height = format.height,
+          smallerDimension = Math.min(width, height),
+          largerDimension = Math.max(width, height)
 
         let size = {
           paperFormat: this.paperFormat,
