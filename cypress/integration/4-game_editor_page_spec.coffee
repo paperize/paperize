@@ -79,6 +79,20 @@ describe "Game Editor page", ->
 
       cy.contains("Instruction Manual")
 
+    it "displays correctly the size settings of a custom size component", ->
+      cy.contains("Point Cubes")
+        .click()
+
+      cy.get('.component.active')
+        .contains("Edit")
+        .click()
+
+      cy.get('.paper-width input').should('have.value', '1.5')
+      cy.get('.paper-height input').should('have.value', '1.5')
+      cy.get('.component-form')
+        .contains("Done")
+        .click()
+
     it "lets me delete a component", ->
       cy.contains("Instruction Book")
         .click()

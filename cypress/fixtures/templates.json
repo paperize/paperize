@@ -4,7 +4,10 @@
     "layerIds": [],
     "size": {
       "w": 2.5,
-      "h": 3.5
+      "h": 3.5,
+      "paperMode": "standard",
+      "paperFormat": "poker",
+      "paperOrientation": "landscape"
     }
   },
   "basicTile": {
@@ -12,7 +15,8 @@
     "layerIds": [],
     "size": {
       "w": 1.5,
-      "h": 1.5
+      "h": 1.5,
+      "paperMode": "custom"
     }
   },
   "loveLetter": {
@@ -20,7 +24,10 @@
     "layerIds": [],
     "size": {
       "w": 2.5,
-      "h": 3.5
+      "h": 3.5,
+      "paperMode": "standard",
+      "paperFormat": "poker",
+      "paperOrientation": "landscape"
     }
   }
 }

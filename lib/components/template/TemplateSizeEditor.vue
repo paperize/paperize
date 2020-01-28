@@ -3,7 +3,7 @@ fieldset.fieldset
   legend
     strong Component Size
 
-  v-btn-toggle(v-model="paperMode")
+  v-btn-toggle(v-model="paperMode" @change="setPaperMode")
     v-btn(flat value="standard") Standard
     v-btn(flat value="custom") Custom
 
@@ -51,9 +51,9 @@ fieldset.fieldset
       return {
         componentOptions,
         orientationOptions,
-        paperMode: 'standard',
-        paperFormat: '',
-        paperOrientation: 'portrait',
+        paperMode: this.template.size.paperMode || "standard",
+        paperFormat: this.template.size.paperFormat || "poker",
+        paperOrientation: this.template.size.paperOrientation || "landscape",
       }
     },
 
@@ -84,10 +84,13 @@ fieldset.fieldset
 
       setPaperMode(mode) {
         this.paperMode = mode
-
-        if(this.paperMode != "standard") {
-          this.paperFormat = ""
+        if(this.paperMode == "standard") {
+          this.paperFormat = "poker"
           this.paperOrientation = "portrait"
+          this.updatePageDimensions()
+        } else {
+          const newSize = { h: this.template.size.h, w: this.template.size.w, paperMode: mode }
+          this.updateTemplate({ ...this.template, size: newSize })
         }
       },
 
@@ -100,24 +103,27 @@ fieldset.fieldset
           , smallerDimension = Math.min(width, height)
           , largerDimension = Math.max(width, height)
 
-        if(this.paperOrientation == 'portrait') {
-          this.updateTemplate({
-            ...this.template,
-            size: {
-              w: smallerDimension,
-              h: largerDimension
-            }
-          })
-
-        } else if(this.paperOrientation == 'landscape') {
-          this.updateTemplate({
-            ...this.template,
-            size: {
-              w: largerDimension,
-              h: smallerDimension
-            }
-          })
+        let size = {
+          paperFormat: this.paperFormat,
+          paperMode: this.paperMode,
+          paperOrientation: this.paperOrientation
         }
+
+        if(this.paperOrientation == 'portrait') {
+          size = {...size,
+            w: smallerDimension,
+            h: largerDimension
+          }
+        } else if(this.paperOrientation == 'landscape') {
+          size = {...size,
+            w: largerDimension,
+            h: smallerDimension,
+          }
+        }
+        this.updateTemplate({
+          ...this.template,
+          size
+        })
       }
     }
   }

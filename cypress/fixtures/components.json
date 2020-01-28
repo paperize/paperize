@@ -10,12 +10,14 @@
   "instructionBook": {
     "id": "instructionBook",
     "title": "Instruction Book",
-    "quantityProperty": null
+    "quantityProperty": null,
+    "templateId": "basicCard"
   },
   "pointCubes": {
     "id": "pointCubes",
     "title": "Point Cubes",
-    "quantityProperty": null
+    "quantityProperty": null,
+    "templateId": "basicTile"
   },
   "carcassonneTiles": {
     "id": "carcassonneTiles",
