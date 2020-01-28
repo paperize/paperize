@@ -45,15 +45,22 @@ fieldset.fieldset
   ]
 
   export default {
-    props: ["template"],
+    props: {
+      template: {
+        type: Object,
+        required: true
+      }
+    },
 
     data() {
+      const size = this.template.size || {} // make sure we have defaults
+
       return {
         componentOptions,
         orientationOptions,
-        paperMode: this.template.size.paperMode || "standard",
-        paperFormat: this.template.size.paperFormat || "poker",
-        paperOrientation: this.template.size.paperOrientation || "landscape",
+        paperMode: size.paperMode || "standard",
+        paperFormat: size.paperFormat || "poker",
+        paperOrientation: size.paperOrientation || "landscape",
       }
     },
 
