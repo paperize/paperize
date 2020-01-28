@@ -25,8 +25,8 @@ fieldset.fieldset
 </template>
 
 <script>
-  import { debounce, isString, find } from 'lodash'
-  import { mapMutations } from 'vuex'
+  import { isString, find } from 'lodash'
+  import { mapActions } from 'vuex'
 
   const componentOptions = [
     { value: 'poker', name: 'Poker-sized Cards',
@@ -70,7 +70,7 @@ fieldset.fieldset
         set(newWidth) {
           if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
           const newSize = { ...this.template.size, w: newWidth  }
-          this.updateTemplate({ ...this.template, size: newSize })
+          this.patchTemplate({ ...this.template, size: newSize })
         }
       },
 
@@ -79,15 +79,13 @@ fieldset.fieldset
         set(newHeight) {
           if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
           const newSize = { ...this.template.size, h: newHeight }
-          this.updateTemplate({ ...this.template, size: newSize })
+          this.patchTemplate({ ...this.template, size: newSize })
         }
       }
     },
 
     methods: {
-      updateTemplate: debounce(function(payload) {
-        this.$store.commit("updateTemplate", payload)
-      }, 200),
+      ...mapActions(["patchTemplate"]),
 
       paperModeChanged() {
         if(this.paperMode == "standard") {
