@@ -3,7 +3,7 @@ fieldset.fieldset
   legend
     strong Component Size
 
-  v-btn-toggle(v-model="paperMode")
+  v-btn-toggle(v-model="paperMode" @change="paperModeChanged")
     v-btn(flat value="standard") Standard
     v-btn(flat value="custom") Custom
 
@@ -25,8 +25,8 @@ fieldset.fieldset
 </template>
 
 <script>
-  import { debounce, isString, find } from 'lodash'
-  import { mapMutations } from 'vuex'
+  import { isString, find } from 'lodash'
+  import { mapActions } from 'vuex'
 
   const componentOptions = [
     { value: 'poker', name: 'Poker-sized Cards',
@@ -45,15 +45,22 @@ fieldset.fieldset
   ]
 
   export default {
-    props: ["template"],
+    props: {
+      template: {
+        type: Object,
+        required: true
+      }
+    },
 
     data() {
+      const size = this.template.size || {} // make sure we have defaults
+
       return {
         componentOptions,
         orientationOptions,
-        paperMode: 'standard',
-        paperFormat: '',
-        paperOrientation: 'portrait',
+        paperMode: size.paperMode || "standard",
+        paperFormat: size.paperFormat || "poker",
+        paperOrientation: size.paperOrientation || "landscape",
       }
     },
 
@@ -63,7 +70,7 @@ fieldset.fieldset
         set(newWidth) {
           if(isString(newWidth) || newWidth < 0) { newWidth = 0 }
           const newSize = { ...this.template.size, w: newWidth  }
-          this.updateTemplate({ ...this.template, size: newSize })
+          this.patchTemplate({ ...this.template, size: newSize })
         }
       },
 
@@ -72,52 +79,58 @@ fieldset.fieldset
         set(newHeight) {
           if(isString(newHeight) || newHeight < 0) { newHeight = 0 }
           const newSize = { ...this.template.size, h: newHeight }
-          this.updateTemplate({ ...this.template, size: newSize })
+          this.patchTemplate({ ...this.template, size: newSize })
         }
       }
     },
 
     methods: {
-      updateTemplate: debounce(function(payload) {
-        this.$store.commit("updateTemplate", payload)
-      }, 200),
+      ...mapActions(["patchTemplate"]),
 
-      setPaperMode(mode) {
-        this.paperMode = mode
-
-        if(this.paperMode != "standard") {
-          this.paperFormat = ""
+      paperModeChanged() {
+        if(this.paperMode == "standard") {
+          this.paperFormat = "poker"
           this.paperOrientation = "portrait"
+          this.updatePageDimensions()
+        } else {
+          const size = {
+            h: this.template.size.h,
+            w: this.template.size.w,
+            paperMode: this.paperMode
+          }
+          this.patchTemplate({ ...this.template, size })
         }
       },
 
       updatePageDimensions() {
         if(this.paperFormat.length == 0) { return }
 
-        let format = find(componentOptions, { value: this.paperFormat })
-          , width = format.width
-          , height = format.height
-          , smallerDimension = Math.min(width, height)
-          , largerDimension = Math.max(width, height)
+        const
+          format = find(componentOptions, { value: this.paperFormat }),
+          width = format.width,
+          height = format.height,
+          smallerDimension = Math.min(width, height),
+          largerDimension = Math.max(width, height)
+
+        let size = {
+          paperFormat: this.paperFormat,
+          paperMode: this.paperMode,
+          paperOrientation: this.paperOrientation
+        }
 
         if(this.paperOrientation == 'portrait') {
-          this.updateTemplate({
-            ...this.template,
-            size: {
-              w: smallerDimension,
-              h: largerDimension
-            }
-          })
-
+          size = {...size,
+            w: smallerDimension,
+            h: largerDimension
+          }
         } else if(this.paperOrientation == 'landscape') {
-          this.updateTemplate({
-            ...this.template,
-            size: {
-              w: largerDimension,
-              h: smallerDimension
-            }
-          })
+          size = {...size,
+            w: largerDimension,
+            h: smallerDimension,
+          }
         }
+
+        this.patchTemplate({ ...this.template, size })
       }
     }
   }
