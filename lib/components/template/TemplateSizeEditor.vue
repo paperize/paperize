@@ -95,8 +95,12 @@ fieldset.fieldset
           this.paperOrientation = "portrait"
           this.updatePageDimensions()
         } else {
-          const newSize = { h: this.template.size.h, w: this.template.size.w, paperMode: mode }
-          this.updateTemplate({ ...this.template, size: newSize })
+          const size = {
+            h: this.template.size.h,
+            w: this.template.size.w,
+            paperMode: this.paperMode
+          }
+          this.patchTemplate({ ...this.template, size })
         }
       },
 
@@ -127,10 +131,8 @@ fieldset.fieldset
             h: smallerDimension,
           }
         }
-        this.updateTemplate({
-          ...this.template,
-          size
-        })
+
+        this.patchTemplate({ ...this.template, size })
       }
     }
   }
