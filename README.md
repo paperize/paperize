@@ -42,6 +42,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 - [VueJS 2.x](https://vuejs.org/v2/guide/): low-overhead, highly productive front-end framework
 - [Vuetify 1.5.x](https://v15.vuetifyjs.com/en/): material design components for Vue
+- [Material Design Icons](https://materialdesignicons.com/): icons integrated into Vuetify
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/docs/) and [my fork](https://github.com/lorennorman/jsPDF): PDF generation in the browser
 - [Cypress.io](https://cypress.io): modern, browser-based integration testing
 - NodeJS, Webpack, Babel: so we can write modern JS
