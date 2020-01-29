@@ -99,6 +99,7 @@
     "vue-loader": "^15.2.4",
     "vue-observe-visibility": "^0.4.3",
     "vue-router": "^3.0.1",
+    "vue-upload-component": "^2.8.20",
     "vuedraggable": "^2.16.0",
     "vuetify": "^1.5.2",
     "vuex": "^3.0.1"
