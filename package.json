@@ -4,13 +4,13 @@
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {
-    "//": "Server Stuff",
+    "// Server Stuff": "",
     "start": "concurrently \"npm run webpack-watch\" \"npm run server\"",
     "start-no-sync": "concurrently \"npm run webpack-watch -- --env.NO_SYNC=true\" \"npm run server\"",
     "server": "http-server build",
     "webpack-watch": "webpack --watch --config webpack.dev.js",
 
-    "//": "Testing",
+    "// Testing": "",
     "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-no-sync\" \"cypress open\"",
     "dev-mocha": "NODE_ENV=test concurrently --kill-others \"webpack --config webpack.test.js --watch\" \"mocha test/build/test.js --watch\"",
     "test-unit": "NODE_ENV=test webpack --config webpack.test.js && mocha test/build/test.js",
@@ -18,14 +18,14 @@
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-integration",
 
-    "//": "Build/Deploy",
+    "// Build/Deploy": "",
     "clean": "rm -rf build",
     "build-prod": "npm run clean && webpack --config webpack.prod.js",
     "deploy-prod": "coffee deploy.coffee",
     "bump-prod": "npm run build-prod && npm run deploy-prod",
     "release": "npm test && npm run build-prod && npm run deploy-prod",
 
-    "//": "Documentation Screenshots",
+    "// Documentation Screenshots": "",
     "clean-screenshots": "rm -rf cypress/screenshots/documentation_screenshots_spec.coffee",
     "generate-screenshots": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --spec cypress/integration/documentation_screenshots_spec.coffee\"",
     "copy-screenshots": "cp cypress/screenshots/documentation_screenshots_spec.coffee/*.png ../docs/static/generated-images",
