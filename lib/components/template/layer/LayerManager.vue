@@ -8,7 +8,7 @@ v-layout(column)
         v-btn(small fab color="primary" @click="showNewLayerDialog = true")
           v-icon library_add
       v-flex(xs8)
-        v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting")
+        v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting" id="highlight-layer")
 
     v-dialog(v-model="showNewLayerDialog" max-width="500" lazy)
       v-card
@@ -21,7 +21,7 @@ v-layout(column)
           v-btn(flat @click="createLayer('shape')") Shape
 
 
-  draggable(v-model="templateLayers" tag="v-list")
+  draggable(v-model="templateLayers" tag="v-list" class="layer-list")
     v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
       v-list-tile-avatar
         v-avatar(color="primary" size="36")
@@ -29,6 +29,11 @@ v-layout(column)
 
       v-list-tile-content
         v-list-tile-title {{ layer.name }}
+
+      v-list-tile-action
+        v-btn(fab small @click="setLayerToggling(layer)")
+          v-icon(v-if="layer.hide") mdi-eye-off
+          v-icon(v-else) mdi-eye
 
       v-list-tile-action
         v-btn(fab small @click="confirmDeleteLayer(layer)")
@@ -103,7 +108,7 @@ v-layout(column)
     },
 
     methods: {
-      ...mapActions(["createTemplateLayer", "destroyTemplateLayer", "setLayersRenderOrder"]),
+      ...mapActions(["createTemplateLayer", "destroyTemplateLayer", "setLayersRenderOrder", "toggleLayer"]),
       ...mapMutations(["setActiveLayer"]),
 
       isActive(layer) {
@@ -118,6 +123,14 @@ v-layout(column)
       confirmDeleteLayer(layer) {
         this.showDeleteLayerDialog = true
         this.layerToDelete = layer
+      },
+
+      setLayerToggling(layer) {
+        this.toggleLayer(layer)
+      },
+
+      toggledIcon(layer) {
+        return (layer.hide != undefined && layer.hide) ? "mdi-eye-off" : "mdi-eye"
       },
 
       deleteLayer() {
