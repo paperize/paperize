@@ -5,10 +5,9 @@
   "main": "lib/main.js",
   "scripts": {
     "//": "Server Stuff",
-    "start": "concurrently \"npm run webpack-watch\" \"npm run server\"",
-    "start-no-sync": "concurrently \"npm run webpack-watch -- --env.NO_SYNC=true\" \"npm run server\"",
+    "start": "webpack-dev-server --hot --host localhost --config webpack.dev.js",
+    "start-no-sync": "npm start -- --env.NO_SYNC=true",
     "server": "http-server build",
-    "webpack-watch": "webpack --watch --config webpack.dev.js",
 
     "//": "Testing",
     "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-no-sync\" \"cypress open\"",
