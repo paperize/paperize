@@ -31,9 +31,9 @@ v-layout(column)
         v-list-tile-title {{ layer.name }}
 
       v-list-tile-action
-        v-btn(fab small @click="setLayerToggling(layer)")
-          v-icon(v-if="layer.hide") mdi-eye-off
-          v-icon(v-else) mdi-eye
+        v-btn(fab small @click="toggleLayer(layer)")
+          v-icon(v-if="layer.visible") mdi-eye
+          v-icon(v-else) mdi-eye-off
 
       v-list-tile-action
         v-btn(fab small @click="confirmDeleteLayer(layer)")
@@ -123,14 +123,6 @@ v-layout(column)
       confirmDeleteLayer(layer) {
         this.showDeleteLayerDialog = true
         this.layerToDelete = layer
-      },
-
-      setLayerToggling(layer) {
-        this.toggleLayer(layer)
-      },
-
-      toggledIcon(layer) {
-        return (layer.hide != undefined && layer.hide) ? "mdi-eye-off" : "mdi-eye"
       },
 
       deleteLayer() {
