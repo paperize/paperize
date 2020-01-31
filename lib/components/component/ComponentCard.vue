@@ -2,7 +2,7 @@
 v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isActiveComponent() }" @click="setActive")
   v-card
     v-card-title
-      .headline {{ component.title || "[No title]" }} ({{ totalItems }})
+      .headline {{ component.title || "[No title]" }} {{ quantityLabel }}
 
     v-card-actions
       v-btn(small @click="$emit('edit-me')") Edit
@@ -46,8 +46,9 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
         "getItemQuantity"
       ]),
 
-      totalItems() {
-        return this.getItemQuantity(this.component)
+      quantityLabel() {
+        const quantity = this.getItemQuantity(this.component)
+        return quantity > 0 ? `(${quantity})` : ""
       }
     },
 
