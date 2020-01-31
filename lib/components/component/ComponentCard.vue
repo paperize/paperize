@@ -27,6 +27,12 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
       }
     },
 
+    mounted() {
+      if(this.component.spreadsheetId) {
+        this.ensureSheetIndexed(this.component.spreadsheetId)
+      }
+    },
+
     data() {
       return {
         showDeleteDialog: false
@@ -46,7 +52,7 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
     },
 
     methods: {
-      ...mapActions(["destroyGameComponent"]),
+      ...mapActions(["destroyGameComponent", "ensureSheetIndexed"]),
 
       setActive() {
         if(this.isActiveComponent()) { return }
