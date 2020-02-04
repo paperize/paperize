@@ -33,6 +33,7 @@ v-expansion-panel#image-layer-editor(popout)
             v-radio-group(label="Scaling:" v-model="imageScaling" row)
               v-radio(color="primary" label="Fit" value="fitToBox")
               v-radio(color="primary" label="Fill" value="fillToBox")
+              v-radio(color="primary" label="Stretch" value="stretch")
 
         p Horizontal:
         magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
