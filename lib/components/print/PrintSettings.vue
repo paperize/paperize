@@ -115,27 +115,35 @@ v-card
 
       selectedComponents: {
         get() {
-          return this.activeGame.printSettings === undefined ? [] : this.activeGame.printSettings.componentIdsToPrint
+          return this.activeGame.printSettings.componentIdsToPrint
         },
 
         set(components) {
           const game = this.activeGame
-          this.updateGame({ ...game, printSettings: {...game.printSettings, componentIdsToPrint: components}})
+          this.updateGame({
+            ...game,
+            printSettings: {
+              ...game.printSettings,
+              componentIdsToPrint: components
+            }
+          })
         }
       },
 
       printSelection: {
         get() {
-          return this.activeGame.printSettings === undefined ? ALL_COMPONENTS : this.activeGame.printSettings.componentSelection
+          return this.activeGame.printSettings.componentSelection
         },
 
         set(selection) {
           const game = this.activeGame
-          let updatedGame = { ...game, printSettings: {...game.printSettings, componentSelection: selection}}
-          if (selection === ALL_COMPONENTS) {
-            updatedGame = { ...updatedGame, printSettings: {...updatedGame.printSettings, componentIdsToPrint: []}}
-          }
-          this.updateGame(updatedGame)
+          this.updateGame({
+            ...game,
+            printSettings: {
+              ...game.printSettings,
+              componentSelection: selection
+            }
+          })
         },
       },
 
