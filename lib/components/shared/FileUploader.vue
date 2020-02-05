@@ -7,16 +7,36 @@ div
       v-toolbar
         v-toolbar-title.text-xs-center File Uploader
 
+      v-list
+        v-list-tile
+          v-list-tile-content Uploading to Folder: {{ folderId }}
+
+        v-list-tile
+          v-list-tile-content
+            vue-upload-component(v-model="files" :multiple="true" accept="image/*")
+              v-btn Choose Files
+
         //- v-list-tile
-        //-   v-list-tile-content Uploading to Folder: {{ folderId }}
+        //-   v-list-tile-content
+        //-     v-card
+        v-list
+          v-list-tile(v-for="file in files" :key="file.name")
+            v-list-tile-avatar
+              v-icon mdi-file-image
+
+            v-list-tile-content
+              v-list-tile-title {{ file.name }}
+              v-list-tile-sub-title
+                v-progress-linear(v-model="fileProgress")
+
+            v-list-tile-action
+              v-btn(icon ripple)
+                v-icon(color="grey lighten-1") info
+
 
         v-list-tile(v-if="anyFiles")
           v-list-tile-content
             v-btn(color="success" @click="performUpload") Perform Upload
-
-        v-list-tile
-          v-list
-            v-list-tile(v-for="file in files") {{ file.name }}
 </template>
 
 <script>
@@ -32,8 +52,9 @@ div
 
     data: () => {
       return {
-        files: [],
+        files: [{ name: "Big Sunset.png" }, { name: "Quiet Night.jpg" }, { name: 'Lookout!.png' }],
         showUploader: false,
+        fileProgress: 45
       }
     },
 
