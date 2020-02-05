@@ -88,7 +88,8 @@ v-card
 <script>
   import { capitalize, find, debounce, map } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
-  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS, ORIENTATIONS, ALL_COMPONENTS, SELECT_COMPONENTS } from '../../store/print'
+  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
+    ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
 
   // Construct form-friendly collections from the print sources in the store
   const printOptions = map(PAGE_DIMENSIONS, (dimension, key) => {
@@ -103,8 +104,8 @@ v-card
       return {
         MODE_AUTO_LAYOUT,
         MODE_COMPONENT_PER_PAGE,
-        ALL_COMPONENTS,
-        SELECT_COMPONENTS,
+        PRINT_ALL_COMPONENTS,
+        PRINT_SELECT_COMPONENTS,
         printOptions,
         orientationOptions,
       }
