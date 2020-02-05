@@ -52,6 +52,12 @@ v-card
 
       v-checkbox(label="Enable Spacing?" v-model="componentSpacing")
 
+      v-label
+        strong Merge same size components
+      v-divider
+        p If you want to print same size components in the same page instead of starting a new one.
+      v-checkbox(label="Merge components?" v-model="componentMerging")
+
 
       //- Margins
       v-label
@@ -163,6 +169,16 @@ v-card
 
         set(componentSpacing) {
           this.updatePrintSettings({ componentSpacing })
+        }
+      },
+
+      componentMerging: {
+        get() {
+          return this.getPrintSettings.componentMerging
+        },
+
+        set(componentMerging) {
+          this.updatePrintSettings({ componentMerging })
         }
       },
 
