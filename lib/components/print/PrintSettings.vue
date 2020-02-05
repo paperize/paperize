@@ -5,28 +5,31 @@ v-card
 
   v-card-text
     //- Selective component printing
-    v-radio-group(v-model="printSelection")
-      strong(slot="label") Print Selection
+    v-label
+      strong Print Which Components?
+    v-divider
 
-      v-tooltip(bottom)
+    v-radio-group(v-model="printSelection")
+      v-tooltip(top)
         span(slot="activator")
-          v-radio(label="All" :value="ALL_COMPONENTS")
+          v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
         span Print all components of the game.
 
-      v-tooltip(bottom)
+      v-tooltip(top)
         span(slot="activator")
-          v-radio(label="Select Components" :value="SELECT_COMPONENTS")
+          v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
         span Select specific components to print.
 
-    template(v-if="printSelection == SELECT_COMPONENTS")
-      v-label
-        strong Components
-      v-checkbox(v-for="component in allComponents()" :key="component.id" :label="component.title" :value="component.id" v-model="selectedComponents" hideDetails)
+    v-card.component-selection(v-if="printSelection == PRINT_SELECT_COMPONENTS")
+      v-card-text
+        v-checkbox(v-for="component in allComponents()" :key="component.id" :label="component.title" :value="component.id" v-model="selectedComponents" hideDetails)
 
     //- Layout Modes
-    v-radio-group(v-model="printMode")
-      strong(slot="label") Layout Mode
+    v-label
+      strong Layout Mode
+    v-divider
 
+    v-radio-group(v-model="printMode")
       v-tooltip(bottom)
         span(slot="activator")
           v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
@@ -276,3 +279,17 @@ v-card
     }
   }
 </script>
+
+<style scoped>
+  .component-selection {
+    margin-bottom: 1em;
+  }
+
+  .component-selection .v-card__text {
+    padding: .5em;
+  }
+
+  .v-input--checkbox:first-child {
+    margin-top: 0;
+  }
+</style>
