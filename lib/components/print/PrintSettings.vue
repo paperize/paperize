@@ -22,7 +22,7 @@ v-card
 
     v-card.component-selection(v-if="printSelection == PRINT_SELECT_COMPONENTS")
       v-card-text
-        v-checkbox(v-for="component in allComponents()" :key="component.id" :label="component.title" :value="component.id" v-model="selectedComponents" hideDetails)
+        v-checkbox(v-model="selectedComponents" hide-details v-for="component in allComponents" :key="component.id" :label="component.title" :value="component.id")
 
     //- Layout Modes
     v-label
