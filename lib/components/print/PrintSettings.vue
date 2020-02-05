@@ -117,6 +117,10 @@ v-card
     computed: {
       ...mapGetters(["getPrintSettings", "activeGame", "findAllGameComponents"]),
 
+      allComponents() {
+        return this.findAllGameComponents(this.activeGame)
+      },
+
       selectedComponents: {
         get() {
           return this.activeGame.printSettings.componentIdsToPrint
@@ -269,13 +273,10 @@ v-card
 
     methods: {
       ...mapActions(["updateGame"]),
+
       updatePrintSettings: debounce(function(attributes) {
         this.$store.dispatch("updatePrintSettings", attributes)
       }, 200),
-
-      allComponents() {
-        return this.findAllGameComponents(this.activeGame)
-      }
     }
   }
 </script>
