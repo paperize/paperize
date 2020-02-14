@@ -1,4 +1,4 @@
-describe "Screenshots for Documentation", ->
+xdescribe "Screenshots for Documentation", ->
   context "Getting Started", ->
     it "login button", ->
       cy.visit("/")
