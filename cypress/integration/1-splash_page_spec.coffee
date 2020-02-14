@@ -1,6 +1,7 @@
 describe "Splash Page", ->
   it "has a bunch of stuff on the splash page", ->
     cy.visit("/")
+    cy.setStoreReady()
     # The name of the app
     cy.contains("Paperize.io")
     # A helpful call to action for newbies
