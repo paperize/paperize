@@ -6,7 +6,7 @@ describe "Game Editor page", ->
     it "shows the game's vitals", ->
       cy.contains("Love Letter")
 
-    it.only "lets me edit the game and updates the vitals", ->
+    it "lets me edit the game and updates the vitals", ->
       cy.get('.edit-game-button').click()
 
       cy.get(".game-form").within ->
