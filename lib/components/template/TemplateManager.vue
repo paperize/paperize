@@ -23,7 +23,6 @@ v-card(v-else)
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
   import TemplateEditor from './TemplateEditor.vue'
 
   export default {

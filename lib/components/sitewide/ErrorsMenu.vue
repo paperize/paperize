@@ -33,7 +33,6 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     data() {

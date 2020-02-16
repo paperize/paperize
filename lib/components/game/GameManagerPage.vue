@@ -19,7 +19,6 @@ v-container(fluid)
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
   import GameCard from './GameCard.vue'
   import GameForm from './GameForm.vue'
 

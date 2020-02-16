@@ -29,7 +29,6 @@ v-card.image-library
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
 

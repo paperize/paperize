@@ -8,7 +8,6 @@
 
 <script>
   import moment from 'moment'
-  import { mapActions } from 'vuex'
 
   export default {
     props: ["spreadsheet"],

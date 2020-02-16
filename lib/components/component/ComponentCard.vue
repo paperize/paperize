@@ -18,7 +18,6 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     props: {

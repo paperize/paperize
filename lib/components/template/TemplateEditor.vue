@@ -42,7 +42,6 @@ v-card
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   import LayerManager from './layer/LayerManager.vue'
   import LayerEditor from './layer/LayerEditor.vue'

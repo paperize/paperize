@@ -96,7 +96,6 @@ v-card
 
 <script>
   import { capitalize, find, debounce, map } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
   import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
     ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
 

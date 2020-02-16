@@ -13,7 +13,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdate } from '../util/component_helper'
   import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
 

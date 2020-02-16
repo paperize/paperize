@@ -41,7 +41,6 @@ v-layout(row fluid).game-panel
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'

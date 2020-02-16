@@ -5,7 +5,6 @@
 
 <script>
   import { debounce } from 'lodash'
-  import { mapGetters } from 'vuex'
 
   export default {
     props: ["layer"],

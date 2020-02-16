@@ -43,7 +43,6 @@ v-card.image-manager
 
 <script>
   import { find, findIndex } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
 
   import InlineImageEditor from './InlineImageEditor.vue'
   import LocalImage from './LocalImage.vue'

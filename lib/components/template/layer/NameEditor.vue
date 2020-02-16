@@ -7,7 +7,6 @@ v-expansion-panel-content
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
   import { computedVModelUpdate } from '../../util/component_helper'
 
   export default {

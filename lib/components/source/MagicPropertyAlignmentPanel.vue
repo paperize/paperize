@@ -11,7 +11,6 @@
 
 <script>
   import { includes, keys, map } from 'lodash'
-  import { mapGetters } from 'vuex'
 
   export default {
     props: [

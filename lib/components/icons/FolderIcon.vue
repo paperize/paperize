@@ -9,7 +9,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
 
   export default {
     props: ["folderId", "color", "large", "force"],

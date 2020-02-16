@@ -23,7 +23,6 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
   import FolderIcon from '../icons/FolderIcon.vue'
 
   export default {

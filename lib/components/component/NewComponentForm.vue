@@ -13,7 +13,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     data() {

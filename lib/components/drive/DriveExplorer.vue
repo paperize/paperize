@@ -40,7 +40,6 @@ v-card
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
   import moment from 'moment'
   import FolderIcon from "../icons/FolderIcon.vue"
   import ImageIcon from "../icons/ImageIcon.vue"

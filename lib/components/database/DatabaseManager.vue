@@ -14,7 +14,6 @@ v-card.database-manager
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import databaseController from '../../services/database_controller'
 
   export default {

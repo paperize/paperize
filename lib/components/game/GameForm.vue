@@ -61,7 +61,6 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
   import { openFolderPicker, openSheetPicker } from '../../services/google/picker'
 
   import FolderIcon from '../icons/FolderIcon.vue'

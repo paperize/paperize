@@ -52,7 +52,6 @@ v-expansion-panel#image-layer-editor(popout)
 
 <script>
   import Vue from 'vue'
-  import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import { openImagePicker } from '../../../services/google/picker'

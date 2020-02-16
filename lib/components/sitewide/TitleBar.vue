@@ -33,7 +33,6 @@ v-toolbar(app)
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
   import ProfileMenu from './ProfileMenu.vue'
   import HelpMenu from './HelpMenu.vue'
   import ErrorsMenu from './ErrorsMenu.vue'

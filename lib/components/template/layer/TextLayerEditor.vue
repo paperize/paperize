@@ -56,7 +56,6 @@ v-expansion-panel#text-layer-editor(popout)
 
 <script>
   import { debounce, find } from 'lodash'
-  import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'

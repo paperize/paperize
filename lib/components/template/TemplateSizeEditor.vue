@@ -26,7 +26,6 @@ fieldset.fieldset
 
 <script>
   import { isString, find } from 'lodash'
-  import { mapActions } from 'vuex'
 
   const componentOptions = [
     { value: 'poker', name: 'Poker-sized Cards',

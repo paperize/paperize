@@ -58,7 +58,6 @@ v-flex#source-editor(sm4 md6)
 
 <script>
   import { map, max, min, pick } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
   import MagicPropertyAlignmentPanel from './MagicPropertyAlignmentPanel.vue'

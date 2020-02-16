@@ -14,7 +14,6 @@ v-layout(column).component-panel
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import ComponentCard from './ComponentCard.vue'
   import NewComponentForm from './NewComponentForm.vue'
   import EditComponentForm from './EditComponentForm.vue'

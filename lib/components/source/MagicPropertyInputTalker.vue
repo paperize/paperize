@@ -20,7 +20,6 @@
 
 <script>
   import { find, isEmpty } from 'lodash'
-  import { mapGetters } from 'vuex'
 
   export default {
     props: ["layer", "attributeName"],

@@ -48,7 +48,6 @@ v-expansion-panel#shape-layer-editor(popout)
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'

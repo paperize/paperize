@@ -17,7 +17,6 @@ v-container(v-else fluid grid-list-md)
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
 
   import GamePanel from './GamePanel.vue'
   import ComponentPanel from '../component/ComponentPanel.vue'

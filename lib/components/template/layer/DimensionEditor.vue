@@ -47,7 +47,6 @@ v-expansion-panel-content#dimension-editor
 
 <script>
   import { isString } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
   import { XYWH, INSET,
     PERCENT, PIXELS, INCHES, MILLIMETERS } from '../../../store/dimensions.js'
 
