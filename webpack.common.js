@@ -45,6 +45,11 @@ module.exports = (env={}) => {
         KEYS: env.KEYS
       }),
 
+      new webpack.ProvidePlugin({
+        mapActions: ['vuex', 'mapActions'],
+        mapGetters: ['vuex', 'mapGetters']
+      }),
+
       new CopyWebpackPlugin([
         { context: 'static', from: '**' }
       ]),
