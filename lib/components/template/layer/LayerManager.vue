@@ -22,7 +22,7 @@ v-layout(column)
 
 
   draggable(v-model="templateLayers" tag="v-list" class="layer-list")
-    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
+    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer(layer)" :class="{ 'selected': isActive(layer) }")
       v-list-tile-avatar
         v-avatar(color="primary" size="36")
           span.white--text.headline.text-capitalize {{ layer.type[0] }}
@@ -49,8 +49,6 @@ v-layout(column)
 </template>
 
 <script>
-  import { mapGetters, mapActions, mapMutations } from 'vuex'
-
   import draggable from 'vuedraggable'
 
   export default {
@@ -108,8 +106,13 @@ v-layout(column)
     },
 
     methods: {
-      ...mapActions(["createTemplateLayer", "destroyTemplateLayer", "setLayersRenderOrder", "toggleLayer"]),
-      ...mapMutations(["setActiveLayer"]),
+      ...mapActions([
+        "createTemplateLayer",
+        "destroyTemplateLayer",
+        "setLayersRenderOrder",
+        "toggleLayer",
+        "setActiveLayer"
+      ]),
 
       isActive(layer) {
         return this.activeLayer === layer
