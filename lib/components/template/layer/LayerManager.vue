@@ -49,6 +49,7 @@ v-layout(column)
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
   import draggable from 'vuedraggable'
 
   export default {

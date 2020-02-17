@@ -24,6 +24,7 @@ v-flex#template-editor(sm8 md6)
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateManager from './TemplateManager.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
 
