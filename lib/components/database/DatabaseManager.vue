@@ -15,7 +15,7 @@ v-card.database-manager
   v-divider
 
   v-container(grid-list-md)
-    v-layout(row wrap)
+    v-layout(row wrap v-observe-visibility="updateCacheCounts")
       v-flex(xs12)
         .subheading Caches
         p Paperize limits its API calls to other services by caching heavy assets locally in your browser. Here you can see how many things are cached right now, and clear the cache if desired.
@@ -45,10 +45,6 @@ v-card.database-manager
   import databaseController from '../../services/database_controller'
 
   export default {
-    mounted() {
-      this.updateCacheCounts()
-    },
-
     data() {
       return {
         selectedDatabase: null,
