@@ -8,5 +8,6 @@ module.exports = (env={}) => {
   env.KEYS = KEYS
   return merge(common(env), {
     mode: 'production',
+    devtool: 'source-map',
   })
 }

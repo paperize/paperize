@@ -11,10 +11,37 @@ v-card.database-manager
 
     .subheading Database File
     a(:href="databaseFile.url") {{ databaseFile.name }}
+
+  v-divider
+
+  v-container(grid-list-md)
+    v-layout(row wrap v-observe-visibility="updateCacheCounts")
+      v-flex(xs12)
+        .subheading Caches
+        p Paperize limits its API calls to other services by caching heavy assets locally in your browser. Here you can see how many things are cached right now, and clear the cache if desired.
+
+      v-flex(xs4)
+        v-card
+          v-card-title {{ imageCount }} Images
+          v-card-text
+            v-btn(small @click="clearImages") Clear
+      v-flex(xs4)
+        v-card
+          v-card-title {{ sheetCount }} Sheets
+          v-card-text
+            v-btn(small @click="clearSheets") Clear
+      v-flex(xs4)
+        v-card
+          v-card-title {{ fontCount }} Fonts
+          v-card-text
+            v-btn(small @click="clearFonts") Clear
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
+  import imageCache from '../../services/image_cache'
+  import sheetCache from '../../services/sheet_cache'
+  import fontCache from '../../services/font_cache'
   import databaseController from '../../services/database_controller'
 
   export default {
@@ -23,7 +50,10 @@ v-card.database-manager
         selectedDatabase: null,
         showDatabaseExportDialog: false,
         showDatabaseClearDialog: false,
-        jsonExport: {}
+        jsonExport: {},
+        imageCount: 0,
+        sheetCount: 0,
+        fontCount: 0,
       }
     },
 
@@ -56,7 +86,37 @@ v-card.database-manager
       clearDatabase() {
         databaseController.clear()
         this.showDatabaseClearDialog = false
-      }
+      },
+
+      updateCacheCounts() {
+        return Promise.all([
+          imageCache.count(),
+          sheetCache.count(),
+          fontCache.count(),
+        ]).then(([newImageCount, newSheetCount, newFontCount]) => {
+          this.imageCount = newImageCount
+          this.sheetCount = newSheetCount
+          this.fontCount = newFontCount
+        })
+      },
+
+      clearImages() {
+        return imageCache.clear().then(() => {
+          this.updateCacheCounts()
+        })
+      },
+
+      clearSheets() {
+        return sheetCache.clear().then(() => {
+          this.updateCacheCounts()
+        })
+      },
+
+      clearFonts() {
+        return fontCache.clear().then(() => {
+          this.updateCacheCounts()
+        })
+      },
     }
   }
 </script>

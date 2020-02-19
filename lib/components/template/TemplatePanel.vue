@@ -24,7 +24,7 @@ v-flex#template-editor(sm8 md6)
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateManager from './TemplateManager.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
 
@@ -53,7 +53,7 @@ v-flex#template-editor(sm8 md6)
     },
 
     methods: {
-      ...mapMutations(["clearActiveLayer"]),
+      ...mapActions(["clearActiveLayer"]),
 
       shutdownTemplateManager() {
         this.showTemplateManager = false

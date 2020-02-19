@@ -3,6 +3,12 @@ v-layout(row fluid).game-panel
   v-flex(xs12 md4)
     .headline {{ game.title || "[No title]" }}
 
+    v-btn.edit-game-button(small fab @click="showEditDialog = true")
+      v-icon edit
+
+      v-dialog(v-model="showEditDialog" max-width="500" lazy)
+        game-form(:game="game" @close-dialog="showEditDialog = false")
+
     folder-icon(:folderId="game.folderId")
     spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
@@ -19,13 +25,6 @@ v-layout(row fluid).game-panel
 
           v-dialog(v-model="showPrintSettingsDialog" max-width="500" lazy)
             print-settings
-
-        v-btn(small @click="showEditDialog = true")
-          v-icon(left) edit
-          | Edit Game
-
-          v-dialog(v-model="showEditDialog" max-width="500" lazy)
-            game-form(:game="game" @close-dialog="showEditDialog = false")
 
         v-btn(small @click="showDeleteDialog = true")
           v-icon(left) delete

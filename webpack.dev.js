@@ -25,5 +25,6 @@ module.exports = (env={}) => {
   env.KEYS = KEYS
   return merge(common(env), {
     mode: 'development',
+    devtool: 'inline-source-map',
   })
 }

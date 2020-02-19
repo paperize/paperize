@@ -32,6 +32,7 @@
         "allFonts"
       ]),
 
+      layerVisible() { return (this.activeLayer && this.activeLayer.visible ) },
       layerStrokePresent() { return (this.activeLayer && this.activeLayer.strokePresent) },
       layerStrokeWidth() { return (this.activeLayer && this.activeLayer.strokeWidth) },
       layerStrokeColor() { return (this.activeLayer && this.activeLayer.strokeColor) },
@@ -73,6 +74,7 @@
       layerImageNameStatic: "renderPDF",
       layerImageName: "renderPDF",
       layerImageNamePrefix: "renderPDF",
+      layerVisible: "renderPDF",
       layerImageNameProperty: "renderPDF",
       layerImageNameSuffix: "renderPDF",
       layerImageScaling: "renderPDF",

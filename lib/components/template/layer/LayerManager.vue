@@ -8,7 +8,7 @@ v-layout(column)
         v-btn(small fab color="primary" @click="showNewLayerDialog = true")
           v-icon library_add
       v-flex(xs8)
-        v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting")
+        v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting" id="highlight-layer")
 
     v-dialog(v-model="showNewLayerDialog" max-width="500" lazy)
       v-card
@@ -21,14 +21,19 @@ v-layout(column)
           v-btn(flat @click="createLayer('shape')") Shape
 
 
-  draggable(v-model="templateLayers" tag="v-list")
-    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer({ layer })" :class="{ 'selected': isActive(layer) }")
+  draggable(v-model="templateLayers" tag="v-list" class="layer-list")
+    v-list-tile(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer(layer)" :class="{ 'selected': isActive(layer) }")
       v-list-tile-avatar
         v-avatar(color="primary" size="36")
           span.white--text.headline.text-capitalize {{ layer.type[0] }}
 
       v-list-tile-content
         v-list-tile-title {{ layer.name }}
+
+      v-list-tile-action
+        v-btn(fab small @click="toggleLayer(layer)")
+          v-icon(v-if="layer.visible") mdi-eye
+          v-icon(v-else) mdi-eye-off
 
       v-list-tile-action
         v-btn(fab small @click="confirmDeleteLayer(layer)")
@@ -44,8 +49,7 @@ v-layout(column)
 </template>
 
 <script>
-  import { mapGetters, mapActions, mapMutations } from 'vuex'
-
+  import { mapGetters, mapActions } from 'vuex'
   import draggable from 'vuedraggable'
 
   export default {
@@ -103,8 +107,13 @@ v-layout(column)
     },
 
     methods: {
-      ...mapActions(["createTemplateLayer", "destroyTemplateLayer", "setLayersRenderOrder"]),
-      ...mapMutations(["setActiveLayer"]),
+      ...mapActions([
+        "createTemplateLayer",
+        "destroyTemplateLayer",
+        "setLayersRenderOrder",
+        "toggleLayer",
+        "setActiveLayer"
+      ]),
 
       isActive(layer) {
         return this.activeLayer === layer

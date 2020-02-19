@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip
-      span.caption(slot="activator")= " ver.A7.0.2"
+      span.caption(slot="activator")= " ver.A7.1.3"
       | Alpha 7 "Obedient Consumer " {{ gitSha }}
 
   v-spacer
@@ -28,7 +28,7 @@ v-toolbar(app)
 
       v-btn(flat @click="showNetworkManager = true")
         = "Network "
-        v-progress-circular(v-if="showSpinner" indeterminate color="primary")
+        v-progress-circular(:size="16" :width="3" :class="{ invisible: !showSpinner }" indeterminate color="primary")
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
 
@@ -83,3 +83,14 @@ v-toolbar(app)
     methods: mapActions(["saveToDrive"])
   }
 </script>
+
+<style scoped>
+  .v-progress-circular {
+    position: absolute;
+    margin-top: 1em;
+  }
+
+  .invisible {
+    visibility: hidden
+  }
+</style>

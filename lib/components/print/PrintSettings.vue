@@ -4,10 +4,32 @@ v-card
     .headline Print Settings
 
   v-card-text
-    //- Layout Modes
-    v-radio-group(v-model="printMode")
-      strong(slot="label") Layout Mode
+    //- Selective component printing
+    v-label
+      strong Print Which Components?
+    v-divider
 
+    v-radio-group(v-model="printSelection")
+      v-tooltip(top)
+        span(slot="activator")
+          v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
+        span Print all components of the game.
+
+      v-tooltip(top)
+        span(slot="activator")
+          v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
+        span Select specific components to print.
+
+    v-card.component-selection(v-if="printSelection == PRINT_SELECT_COMPONENTS")
+      v-card-text
+        v-checkbox(v-model="selectedComponents" hide-details v-for="component in allComponents" :key="component.id" :label="component.title" :value="component.id")
+
+    //- Layout Modes
+    v-label
+      strong Layout Mode
+    v-divider
+
+    v-radio-group(v-model="printMode")
       v-tooltip(bottom)
         span(slot="activator")
           v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
@@ -52,6 +74,12 @@ v-card
 
       v-checkbox(label="Enable Spacing?" v-model="componentSpacing")
 
+      v-label
+        strong Merge same size components
+      v-divider
+        p If you want to print same size components in the same page instead of starting a new one.
+      v-checkbox(label="Merge components?" v-model="componentMerging")
+
 
       //- Margins
       v-label
@@ -69,7 +97,8 @@ v-card
 <script>
   import { capitalize, find, debounce, map } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
-  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS, ORIENTATIONS } from '../../store/print'
+  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
+    ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
 
   // Construct form-friendly collections from the print sources in the store
   const printOptions = map(PAGE_DIMENSIONS, (dimension, key) => {
@@ -84,13 +113,53 @@ v-card
       return {
         MODE_AUTO_LAYOUT,
         MODE_COMPONENT_PER_PAGE,
+        PRINT_ALL_COMPONENTS,
+        PRINT_SELECT_COMPONENTS,
         printOptions,
         orientationOptions,
       }
     },
 
     computed: {
-      ...mapGetters(["getPrintSettings"]),
+      ...mapGetters(["getPrintSettings", "activeGame", "findAllGameComponents"]),
+
+      allComponents() {
+        return this.findAllGameComponents(this.activeGame)
+      },
+
+      selectedComponents: {
+        get() {
+          return this.activeGame.printSettings.componentIdsToPrint
+        },
+
+        set(components) {
+          const game = this.activeGame
+          this.updateGame({
+            ...game,
+            printSettings: {
+              ...game.printSettings,
+              componentIdsToPrint: components
+            }
+          })
+        }
+      },
+
+      printSelection: {
+        get() {
+          return this.activeGame.printSettings.componentSelection
+        },
+
+        set(selection) {
+          const game = this.activeGame
+          this.updateGame({
+            ...game,
+            printSettings: {
+              ...game.printSettings,
+              componentSelection: selection
+            }
+          })
+        },
+      },
 
       printMode: {
         get() {
@@ -166,6 +235,16 @@ v-card
         }
       },
 
+      componentMerging: {
+        get() {
+          return this.getPrintSettings.componentMerging
+        },
+
+        set(componentMerging) {
+          this.updatePrintSettings({ componentMerging })
+        }
+      },
+
       marginTop: {
         get() {
           return this.getPrintSettings.marginTop
@@ -209,9 +288,25 @@ v-card
     },
 
     methods: {
+      ...mapActions(["updateGame"]),
+
       updatePrintSettings: debounce(function(attributes) {
         this.$store.dispatch("updatePrintSettings", attributes)
       }, 200),
     }
   }
 </script>
+
+<style scoped>
+  .component-selection {
+    margin-bottom: 1em;
+  }
+
+  .component-selection .v-card__text {
+    padding: .5em;
+  }
+
+  .v-input--checkbox:first-child {
+    margin-top: 0;
+  }
+</style>
