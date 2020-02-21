@@ -7,18 +7,10 @@ div
       v-toolbar
         v-toolbar-title.text-xs-center File Uploader
 
-      v-list
-        v-list-tile
-          v-list-tile-content Uploading to Folder: {{ folderId }}
+      v-card-text
+        p Uploading to Folder: {{ folder.name }}
+        p Explanation of Drive permissions that require use of this uploader.
 
-        v-list-tile
-          v-list-tile-content
-            vue-upload-component(v-model="files" :multiple="true" accept="image/*")
-              v-btn Choose Files
-
-        //- v-list-tile
-        //-   v-list-tile-content
-        //-     v-card
         v-list
           v-list-tile(v-for="file in files" :key="file.name")
             v-list-tile-avatar
@@ -30,17 +22,22 @@ div
                 v-progress-linear(v-model="fileProgress")
 
             v-list-tile-action
-              v-btn(icon ripple)
-                v-icon(color="grey lighten-1") info
+              v-btn(@click="removeFile(file)" icon ripple)
+                v-icon(color="grey lighten-1") cancel
 
+      v-card-actions
+        v-btn(v-if="anyFiles" color="success" @click="performUpload") Start Uploading
 
-        v-list-tile(v-if="anyFiles")
-          v-list-tile-content
-            v-btn(color="success" @click="performUpload") Perform Upload
+        vue-upload-component(v-model="files" :multiple="true" accept="image/*")
+          v-btn Choose {{ anyFiles ? "More" : "" }} Files
 </template>
 
 <script>
+  import { readAsDataURL } from 'promisify-file-reader'
   import VueUploadComponent from 'vue-upload-component'
+  import { remove } from 'lodash'
+  import { mapGetters } from 'vuex'
+  import drive from '../../services/google/drive'
 
   export default {
     props: {
@@ -52,7 +49,7 @@ div
 
     data: () => {
       return {
-        files: [{ name: "Big Sunset.png" }, { name: "Quiet Night.jpg" }, { name: 'Lookout!.png' }],
+        files: [],
         showUploader: false,
         fileProgress: 45
       }
@@ -61,25 +58,41 @@ div
     components: { VueUploadComponent },
 
     computed: {
+      ...mapGetters([
+        "workingDirectoryId",
+        "findFolder",
+      ]),
+
+      folder() {
+        return this.findFolder(this.folderId)
+      },
+
       anyFiles() {
         return this.files.length > 0
       }
     },
 
     methods: {
+      removeFile(file) {
+        this.files.splice(this.files.indexOf(file), 1)
+      },
 
       performUpload() {
-        const lastFile = this.files[this.files.length-1]
+        return Promise.map(this.files, (fileToUpload) => {
+          return readAsDataURL(fileToUpload.file)
 
-        let reader = new FileReader()
-        reader.readAsDataURL(lastFile.file)
-        reader.onloadend = () => {
-          let fileContents = reader.result
-          fileContents = fileContents.replace(`data:${lastFile.type};base64,`, "")
+          .then((result) => {
+            const
+              fileContents = result.replace(`data:${fileToUpload.type};base64,`, ""),
+              fileName = fileToUpload.name,
+              mimeType = fileToUpload.type,
+              parentFolder = this.workingDirectoryId
 
-          drive.createFile(lastFile.name, lastFile.type, this.workingDirectoryId, fileContents, { base64: true })
-          .then(console.log)
-        }
+            return drive.createFile(fileName, mimeType, parentFolder, fileContents, { base64: true })
+          })
+        }, { concurrency: 5 })
+
+        .then(console.log)
       }
     }
   }
