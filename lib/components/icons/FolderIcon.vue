@@ -1,6 +1,6 @@
 <template lang="pug">
   v-tooltip(v-if="folderId || force" top)
-    | {{ folderId || "No Folder Id" }}
+    | Google Drive Folder: {{ (folder && folder.name) || folderId || "No Folder ID" }}
 
     a(v-if="driveLink" slot="activator" :href="driveLink" target="_blank")
       v-icon(:large="large" :color="color") mdi-folder-google-drive
@@ -17,8 +17,12 @@
     computed: {
       ...mapGetters(["findFolder"]),
 
+      folder() {
+        return this.folderId && this.findFolder(this.folderId, false)
+      },
+
       driveLink() {
-        if(this.folderId && this.findFolder(this.folderId, false)) {
+        if(this.folder) {
           return `https://drive.google.com/drive/folders/${this.folderId}`
         }
       }

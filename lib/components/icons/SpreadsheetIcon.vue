@@ -1,6 +1,6 @@
 <template lang="pug">
   v-tooltip(v-if="(spreadsheetId || force)" top)
-    | {{ spreadsheetId || "No Spreadsheet Id" }}
+    | Google Sheet: {{ (sheet && sheet.name) || spreadsheetId || "No Spreadsheet ID" }}
 
     a(v-if="driveLink" slot="activator" :href="driveLink" target="_blank")
       v-icon(:large="large") mdi-google-spreadsheet
@@ -17,8 +17,12 @@
     computed: {
       ...mapGetters(["findSpreadsheet"]),
 
+      sheet() {
+        return this.spreadsheetId && this.findSpreadsheet(this.spreadsheetId, false)
+      },
+
       driveLink() {
-        if(this.spreadsheetId && this.findSpreadsheet(this.spreadsheetId, false)) {
+        if(this.sheet) {
           return `https://docs.google.com/spreadsheets/d/${this.spreadsheetId}/edit`
         }
       }
