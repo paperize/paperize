@@ -68,7 +68,6 @@ div
 
     computed: {
       ...mapGetters([
-        "workingDirectoryId",
         "findFolder",
       ]),
 
@@ -98,7 +97,7 @@ div
               fileContents = result.replace(`data:${fileToUpload.type};base64,`, ""),
               fileName = fileToUpload.name,
               mimeType = fileToUpload.type,
-              parentFolder = this.workingDirectoryId
+              parentFolder = this.folderId
 
             return drive.createFile(fileName, mimeType, parentFolder, fileContents, { base64: true })
           })
