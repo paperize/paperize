@@ -34,9 +34,6 @@ v-card
             v-tooltip(top)
               v-icon(slot="activator") refresh
               span refreshed {{ lastRefresh(item.refreshedAt) }}
-
-    h2.subheading Orphaned Items
-    v-treeview(v-model="tree" :items="orphanedItemsAsTree" item-key="id")
 </template>
 
 <script>
@@ -61,8 +58,7 @@ v-card
 
     computed: mapGetters([
       "workingDirectoryId",
-      "completeIndexAsTree",
-      "orphanedItemsAsTree"
+      "completeIndexAsTree"
     ]),
 
     methods: {
