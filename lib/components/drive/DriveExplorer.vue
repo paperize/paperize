@@ -14,6 +14,7 @@ v-card
         //- Folders
         template(v-if="item.type == 'folder'")
           folder-icon(:folderId="item.id" :color="refreshColor(item)")
+          file-uploader(:folderId="item.id")
           a(@click="refreshFolder(item.id)")
             v-tooltip(top)
               v-icon(slot="activator") refresh
@@ -40,12 +41,14 @@ v-card
   import { mapGetters, mapActions } from 'vuex'
   import moment from 'moment'
   import FolderIcon from "../icons/FolderIcon.vue"
+  import FileUploader from '../shared/FileUploader.vue'
   import ImageIcon from "../icons/ImageIcon.vue"
   import SpreadsheetIcon from "../icons/SpreadsheetIcon.vue"
 
   export default {
     components: {
       FolderIcon,
+      FileUploader,
       ImageIcon,
       SpreadsheetIcon
     },
