@@ -1,6 +1,6 @@
 <template lang="pug">
   v-tooltip(v-if="folderId || force" top)
-    | Google Drive Folder: {{ (folder && folder.name) || folderId || "No Folder ID" }}
+    | Drive Folder: {{ (folder && folder.name) || folderId || "No Folder ID" }}
 
     a(v-if="driveLink" slot="activator" :href="driveLink" target="_blank")
       v-icon(:large="large" :color="color") mdi-folder-google-drive
