@@ -9,10 +9,14 @@ v-tooltip(top)
         v-toolbar-title.text-xs-center File Uploader
 
       v-card-text
-        p Uploading to Folder: {{ folder.name }}
-        p Explanation of Drive permissions that require use of this uploader.
+        v-alert(v-if="!anyFiles" :value="true" type="warning" outline)
+          .subheading(align="center")
+            strong Remember!<br/> Upload All Paperize Files Through Paperize!
+          |  Paperize can ONLY see files that you upload through Paperize.
 
-        v-list
+        p Uploading to Folder: {{ folder.name }}
+
+        v-list(v-if="anyFiles")
           v-list-tile(v-for="file in files" :key="file.name")
             v-list-tile-avatar
               v-icon mdi-file-image
