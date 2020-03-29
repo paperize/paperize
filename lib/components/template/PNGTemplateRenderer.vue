@@ -1,6 +1,6 @@
 <template lang="pug">
   template-renderer(:renderer="renderPNG" :game="game" :component="component" :item="item")
-    canvas(ref="pngCanvas" width=400 height=600)
+    canvas(ref="pngCanvas" :width="width" :height="height")
 </template>
 
 <script>
@@ -41,6 +41,14 @@
         return this.findComponentTemplate(this.component)
       },
 
+      width() {
+        return this.template.size.w*150
+      },
+
+      height() {
+        return this.template.size.h*150
+      },
+
       graphics() {
         const canvas = this.$refs.pngCanvas
         return canvas.getContext('2d')
@@ -57,3 +65,10 @@
   }
 
 </script>
+
+<style scoped>
+  canvas {
+    max-width: 100%;
+    max-height: 100%;
+  }
+</style>
