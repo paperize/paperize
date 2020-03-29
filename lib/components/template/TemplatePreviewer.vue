@@ -3,7 +3,8 @@ div
   v-pagination(v-model="currentItemIndex" :length="totalItems")
 
   v-flex
-    template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+    //- pdf-template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+    png-template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
     p(v-else) Nothing to render.
 
   v-pagination(v-model="currentItemIndex" :length="totalItems")
@@ -12,12 +13,16 @@ div
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import { clamp } from 'lodash'
-  import TemplateRenderer from './TemplateRenderer.vue'
+  import PDFTemplateRenderer from './PDFTemplateRenderer.vue'
+  import PNGTemplateRenderer from './PNGTemplateRenderer.vue'
 
   export default {
     props: ["game", "component", "item"],
 
-    components: { TemplateRenderer },
+    components: {
+      "pdf-template-renderer": PDFTemplateRenderer,
+      "png-template-renderer": PNGTemplateRenderer,
+    },
 
     mounted() { this.setActiveItem(this.currentItem) },
 
