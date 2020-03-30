@@ -9,7 +9,7 @@
   import TemplateRenderer from './TemplateRenderer.vue'
   import pngRenderer from '../../services/png_renderer'
 
-  const RENDER_DELAY_MS = 35
+  const RENDER_DELAY_MS = 80
 
   export default {
     props: {
@@ -27,12 +27,6 @@
     components: { TemplateRenderer },
 
     updated() { this.renderPNG() },
-
-    data() {
-      return {
-        pdfBlob: null
-      }
-    },
 
     computed: {
       ...mapGetters(["findComponentTemplate"]),
