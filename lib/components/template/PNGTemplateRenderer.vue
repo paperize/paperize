@@ -1,9 +1,11 @@
 <template lang="pug">
   template-renderer(:renderer="renderPNG" :game="game" :component="component" :item="item")
-    canvas(ref="pngCanvas" :width="width" :height="height")
+    div#template-container
+    //- canvas(ref="pngCanvas" :width="width" :height="height")
 </template>
 
 <script>
+  import Konva from 'konva'
   import { debounce } from 'lodash'
   import { mapGetters } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
@@ -51,9 +53,17 @@
 
     methods: {
       renderPNG: debounce(function() {
-        if(this.template && this.graphics) {
-          pngRenderer.renderItemToGraphics(this.graphics, this.game, this.component, this.item, this.template)
-        }
+        let stage = new Konva.Stage({
+          container: '#template-container',   // id of container <div>
+          width: this.width,
+          height: this.height
+        });
+
+        pngRenderer.renderItemToKonva(stage, this.game, this.component, this.item, this.template)
+
+        // if(this.template && this.graphics) {
+        //   pngRenderer.renderItemToGraphics(this.graphics, this.game, this.component, this.item, this.template)
+        // }
       }, RENDER_DELAY_MS)
     }
   }
