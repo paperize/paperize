@@ -5,11 +5,10 @@
 </template>
 
 <script>
-  import Konva from 'konva'
   import { debounce } from 'lodash'
   import { mapGetters } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
-  import pngRenderer from '../../services/png_renderer'
+  import { renderItemsToCanvas } from '../../services/png_renderer'
 
   const RENDER_DELAY_MS = 80
 
@@ -53,17 +52,13 @@
 
     methods: {
       renderPNG: debounce(function() {
-        let stage = new Konva.Stage({
-          container: '#template-container',   // id of container <div>
-          width: this.width,
-          height: this.height
-        });
+        // project items
+        const projectedItems = [1, 2, 3]
+        // load images
+        // load fonts
+        // fit cards into spritesheets, use a WxH strategy (max, min, custom)
 
-        pngRenderer.renderItemToKonva(stage, this.game, this.component, this.item, this.template)
-
-        // if(this.template && this.graphics) {
-        //   pngRenderer.renderItemToGraphics(this.graphics, this.game, this.component, this.item, this.template)
-        // }
+        renderItemsToCanvas(projectedItems, "#template-container", this.width, this.height)
       }, RENDER_DELAY_MS)
     }
   }
