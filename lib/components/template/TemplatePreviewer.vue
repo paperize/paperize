@@ -4,7 +4,7 @@ div
 
   v-flex
     //- pdf-template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
-    png-template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+    png-template-renderer(v-if="currentItem" :template="template" :item="currentItem")
     p(v-else) Nothing to render.
 
   v-pagination(v-model="currentItemIndex" :length="totalItems")
@@ -33,7 +33,10 @@ div
     },
 
     computed: {
-      ...mapGetters(["getComponentItems"]),
+      ...mapGetters([
+        "getComponentItems",
+        "findComponentTemplate"
+      ]),
 
       items() {
         return this.getComponentItems(this.component)
@@ -45,6 +48,10 @@ div
 
       currentItem() {
         return this.items[this.currentItemIndex-1]
+      },
+
+      template() {
+        return this.findComponentTemplate(this.component)
       },
     },
 

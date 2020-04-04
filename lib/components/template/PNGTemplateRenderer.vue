@@ -1,7 +1,6 @@
 <template lang="pug">
-  template-renderer(:renderer="renderPNG" :game="game" :component="component" :item="item")
-    div#template-container
-    //- canvas(ref="pngCanvas" :width="width" :height="height")
+  template-renderer(:renderer="renderPNG" :template="template" :item="item")
+    #template-container
 </template>
 
 <script>
@@ -10,14 +9,13 @@
   import TemplateRenderer from './TemplateRenderer.vue'
   import { renderItemsToCanvas } from '../../services/png_renderer'
 
-  const RENDER_DELAY_MS = 80
+  const
+    RENDER_DELAY_MS = 80,
+    CONTAINER_ID = "#template-container"
 
   export default {
     props: {
-      game: {
-        required: true
-      },
-      component: {
+      template: {
         required: true
       },
       item: {
@@ -30,11 +28,9 @@
     updated() { this.renderPNG() },
 
     computed: {
-      ...mapGetters(["findComponentTemplate"]),
-
-      template() {
-        return this.findComponentTemplate(this.component)
-      },
+      ...mapGetters([
+        "projectItemThroughTemplate",
+      ]),
 
       width() {
         return this.template.size.w*150
@@ -43,22 +39,17 @@
       height() {
         return this.template.size.h*150
       },
-
-      graphics() {
-        const canvas = this.$refs.pngCanvas
-        return canvas.getContext('2d')
-      }
     },
 
     methods: {
       renderPNG: debounce(function() {
-        // project items
-        const projectedItems = [1, 2, 3]
-        // load images
-        // load fonts
-        // fit cards into spritesheets, use a WxH strategy (max, min, custom)
+        // all store fetching, input validation, magic transformation, and data aggregation
+        return this.projectItemThroughTemplate(this.item, this.template)
 
-        renderItemsToCanvas(projectedItems, "#template-container", this.width, this.height)
+          // all rendering
+          .then((item) => {
+            renderItemsToCanvas([item], CONTAINER_ID, this.width, this.height)
+          })
       }, RENDER_DELAY_MS)
     }
   }

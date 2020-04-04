@@ -8,10 +8,7 @@
 
   export default {
     props: {
-      game: {
-        required: true
-      },
-      component: {
+      template: {
         required: true
       },
       item: {
@@ -26,9 +23,12 @@
 
     computed: {
       ...mapGetters([
-        "activeDimensions",
+        "activeGame",
+        "activeComponent",
+        "activeTemplate",
+        "activeItem",
         "activeLayer",
-        "findComponentTemplate",
+        "activeDimensions",
         "findAllTemplateLayers",
         "layerHighlighting",
         "allFonts"
@@ -54,16 +54,14 @@
       layerTextColor() { return (this.activeLayer && this.activeLayer.textColor) },
       layerTextSize() { return (this.activeLayer && this.activeLayer.textSize) },
 
-      componentTemplate() { return this.findComponentTemplate(this.component) },
-
-      templateLayers() { return this.findAllTemplateLayers(this.componentTemplate) }
+      templateLayers() { return this.findAllTemplateLayers(this.activeTemplate) }
     },
 
     watch: {
       // Props
-      game: "renderTemplate",
-      component: "renderTemplate",
-      item: "renderTemplate",
+      activeGame: "renderTemplate",
+      activeComponent: "renderTemplate",
+      activeItem: "renderTemplate",
       // Computed
       activeDimensions: "renderTemplate",
       templateLayers: "renderTemplate",
