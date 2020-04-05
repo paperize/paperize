@@ -1,5 +1,5 @@
 <template lang="pug">
-  template-renderer(:renderer="renderPDF" :game="game" :component="component" :item="item")
+  template-renderer(:renderer="renderPDF" :template="template" :item="item")
     //- iframe(:src="pdfBlob") eliminate warnings in chrome
     //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
     object(:data="pdfBlob" type="application/pdf")
@@ -15,10 +15,7 @@
 
   export default {
     props: {
-      game: {
-        required: true
-      },
-      component: {
+      template: {
         required: true
       },
       item: {
@@ -34,19 +31,18 @@
       }
     },
 
-    computed: {
-      ...mapGetters(["findComponentTemplate"]),
-
-      template() {
-        return this.findComponentTemplate(this.component)
-      }
-    },
+    computed: mapGetters(["projectItemThroughTemplate"]),
 
     methods: {
       renderPDF: debounce(function() {
-        pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.template).then((pdf) => {
-          this.pdfBlob = pdf
-        })
+        // all store fetching, input validation, magic transformation, and data aggregation
+        return this.projectItemThroughTemplate(this.item, this.template)
+
+          // all rendering
+          .then((item) => {
+            // pdfRenderer.renderItemToPdf(this.item, this.template).then((pdf) => {
+            this.pdfBlob = pdfRenderer.renderItemToPdf(item, this.template.size)
+          })
       }, RENDER_DELAY_MS)
     }
   }
