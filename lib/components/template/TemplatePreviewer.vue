@@ -1,10 +1,20 @@
 <template lang="pug">
 div
+  v-flex
+    v-btn-toggle(v-model="rendererComponent" mandatory)
+      v-tooltip(top)
+        | PNG Renderer (experimental)
+        v-btn(slot="activator" flat value="png-template-renderer")
+          v-icon mdi-file-image
+      v-tooltip(top)
+        | PDF Renderer
+        v-btn(slot="activator" flat value="pdf-template-renderer")
+          v-icon mdi-file-pdf
+
   v-pagination(v-model="currentItemIndex" :length="totalItems")
 
   v-flex
-    //- pdf-template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
-    png-template-renderer(v-if="currentItem" :template="template" :item="currentItem")
+    component(v-if="currentItem" :is="rendererComponent" :template="template" :item="currentItem")
     p(v-else) Nothing to render.
 
   v-pagination(v-model="currentItemIndex" :length="totalItems")
@@ -29,6 +39,7 @@ div
     data() {
       return {
         currentItemIndex: 1,
+        rendererComponent: "png-template-renderer"
       }
     },
 
