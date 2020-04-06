@@ -39,7 +39,7 @@ div
     data() {
       return {
         currentItemIndex: 1,
-        rendererComponent: "png-template-renderer"
+        rendererComponent: "pdf-template-renderer"
       }
     },
 
