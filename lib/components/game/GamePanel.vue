@@ -42,7 +42,7 @@ v-layout(row fluid).game-panel
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'
@@ -69,6 +69,8 @@ v-layout(row fluid).game-panel
       }
     },
 
+    computed: mapGetters(["projectGame"]),
+
     methods: {
       ...mapActions(["destroyGame"]),
 
@@ -78,7 +80,7 @@ v-layout(row fluid).game-panel
       },
 
       printGame() {
-        pdfRenderer.renderGameToPdf(this.game)
+        pdfRenderer.renderGameToPdf(this.projectGame)
       }
     }
   }
