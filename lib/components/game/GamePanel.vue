@@ -51,7 +51,9 @@ v-layout(row fluid).game-panel
   import PrintSettings from '../print/PrintSettings.vue'
 
   export default {
-    props: ["game"],
+    props: {
+      game: { required: true }
+    },
 
     components: {
       GameForm,
@@ -80,7 +82,10 @@ v-layout(row fluid).game-panel
       },
 
       printGame() {
-        pdfRenderer.renderGameToPdf(this.projectGame)
+        this.projectGame(this.game)
+          .then((game) => {
+            pdfRenderer.renderGameToPdf(game)
+          })
       }
     }
   }

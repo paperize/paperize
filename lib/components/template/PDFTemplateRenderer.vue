@@ -15,12 +15,8 @@
 
   export default {
     props: {
-      template: {
-        required: true
-      },
-      item: {
-        required: true
-      },
+      template: { required: true },
+      item: { required: true },
     },
 
     components: { TemplateRenderer },
@@ -40,8 +36,15 @@
 
           // all rendering
           .then((item) => {
-            // pdfRenderer.renderItemToPdf(this.item, this.template).then((pdf) => {
-            this.pdfBlob = pdfRenderer.renderItemToPdf(item, this.template.size)
+            item.location = {
+              page: 1,
+              pageSize: item.size,
+              x: 0,
+              y: 0,
+              ...item.size,
+            }
+
+            this.pdfBlob = pdfRenderer.renderItemToPdf(item)
           })
       }, RENDER_DELAY_MS)
     }
