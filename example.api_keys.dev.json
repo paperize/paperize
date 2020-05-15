@@ -1,7 +1,8 @@
 {
   "//": "Copy this file to .api_keys.dev.json and insert real keys",
   "google": {
-    "client_id": "your-google-api-client-id",
+    "app_id": "number-at-front-of-client-id",
+    "client_id": "your-full-google-api-client-id",
     "picker": "your-google-picker-api-key",
     "fonts": "your-google-fonts-api-key"
   }

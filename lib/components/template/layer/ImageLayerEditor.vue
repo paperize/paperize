@@ -8,6 +8,10 @@ v-expansion-panel#image-layer-editor(popout)
     div(slot="header") Image Selection
     v-card
       v-card-text
+        v-alert(:value="true" type="info" outline)
+          span(align="center")
+            = "Images can be uploaded here: "
+            file-uploader(:folderId="componentFolderId")
         v-radio-group(label="Selection Style:" v-model="imageNameStatic" row)
           v-radio(color="primary" label="Static" :value="true")
           v-radio(color="primary" label="Dynamic" :value="false")
@@ -59,6 +63,7 @@ v-expansion-panel#image-layer-editor(popout)
   import NameEditor from './NameEditor.vue'
   import DimensionEditor from './DimensionEditor.vue'
   import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
+  import FileUploader from '../../shared/FileUploader.vue'
 
   export default {
     props: ["layer"],
@@ -66,7 +71,8 @@ v-expansion-panel#image-layer-editor(popout)
     components: {
       NameEditor,
       DimensionEditor,
-      MagicPropertyInputTalker
+      MagicPropertyInputTalker,
+      FileUploader
     },
 
     computed: {
@@ -74,8 +80,14 @@ v-expansion-panel#image-layer-editor(popout)
         "workingDirectoryId",
         "getLayerDimensions",
         "findTemplateByLayerId",
-        "activeSheetProperties"
+        "activeSheetProperties",
+        "activeComponent",
+        "getComponentFolderId"
       ]),
+
+      componentFolderId() {
+        return this.getComponentFolderId(this.activeComponent)
+      },
 
       dimensions() { return this.getLayerDimensions(this.layer) },
 
