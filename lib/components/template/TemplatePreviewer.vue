@@ -3,13 +3,13 @@ div
   v-flex
     v-btn-toggle(v-model="rendererComponent" mandatory)
       v-tooltip(top)
-        | PNG Renderer (experimental)
-        v-btn(slot="activator" flat value="png-template-renderer")
-          v-icon mdi-file-image
-      v-tooltip(top)
         | PDF Renderer
         v-btn(slot="activator" flat value="pdf-template-renderer")
           v-icon mdi-file-pdf
+      v-tooltip(top)
+        | PNG Renderer (experimental)
+        v-btn(slot="activator" flat value="png-template-renderer")
+          v-icon mdi-file-image
 
   v-pagination(v-model="currentItemIndex" :length="totalItems")
 
