@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip
-      span.caption(slot="activator")= " ver.A7.2.0-yolo"
+      span.caption(slot="activator")= " ver.A7.2.0"
       | Alpha 7 "Obedient Consumer " {{ gitSha }}
 
   v-spacer
@@ -73,14 +73,14 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters(["loggedIn", "showSpinner"]),
+      ...mapGetters([ "loggedIn", "showSpinner" ]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
     },
 
-    methods: mapActions(["saveToDrive"])
+    methods: mapActions([ "saveToDrive" ])
   }
 </script>
 
