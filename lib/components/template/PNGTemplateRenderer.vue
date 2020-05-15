@@ -2,7 +2,6 @@
   template-renderer(:renderer="renderPNG" :template="template" :item="item")
     v-card
       v-card-text
-        input(v-model="pixelsPerInch")
         #template-container(ref="canvasContainer")
 </template>
 
@@ -33,7 +32,7 @@
 
     data() {
       return {
-        pixelsPerInch: 150
+        pixelsPerInch: 70
       }
     },
 
