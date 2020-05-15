@@ -14,6 +14,7 @@ v-card
         //- Folders
         template(v-if="item.type == 'folder'")
           folder-icon(:folderId="item.id" :color="refreshColor(item)")
+          file-uploader(:folderId="item.id")
           a(@click="refreshFolder(item.id)")
             v-tooltip(top)
               v-icon(slot="activator") refresh
@@ -34,21 +35,20 @@ v-card
             v-tooltip(top)
               v-icon(slot="activator") refresh
               span refreshed {{ lastRefresh(item.refreshedAt) }}
-
-    h2.subheading Orphaned Items
-    v-treeview(v-model="tree" :items="orphanedItemsAsTree" item-key="id")
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import moment from 'moment'
   import FolderIcon from "../icons/FolderIcon.vue"
+  import FileUploader from '../shared/FileUploader.vue'
   import ImageIcon from "../icons/ImageIcon.vue"
   import SpreadsheetIcon from "../icons/SpreadsheetIcon.vue"
 
   export default {
     components: {
       FolderIcon,
+      FileUploader,
       ImageIcon,
       SpreadsheetIcon
     },
@@ -61,8 +61,7 @@ v-card
 
     computed: mapGetters([
       "workingDirectoryId",
-      "completeIndexAsTree",
-      "orphanedItemsAsTree"
+      "completeIndexAsTree"
     ]),
 
     methods: {

@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip
-      span.caption(slot="activator")= " ver.A7.1.3"
+      span.caption(slot="activator")= " ver.A7.2.0-yolo"
       | Alpha 7 "Obedient Consumer " {{ gitSha }}
 
   v-spacer
@@ -12,6 +12,11 @@ v-toolbar(app)
   v-toolbar-items
     template(v-if="loggedIn")
       errors-menu
+
+      template(v-if="notProduction")
+        v-btn(flat @click="showDebugMenu = true") Debug
+        v-dialog(v-model="showDebugMenu" @close-dialog="showDebugMenu = false" max-width="500" lazy)
+          debug-menu
 
       v-btn(flat @click="showDriveExplorer = true") Drive Explorer
       v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
@@ -34,6 +39,7 @@ v-toolbar(app)
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
+  import DebugMenu from './DebugMenu.vue'
   import ProfileMenu from './ProfileMenu.vue'
   import HelpMenu from './HelpMenu.vue'
   import ErrorsMenu from './ErrorsMenu.vue'
@@ -44,6 +50,7 @@ v-toolbar(app)
 
   export default {
     components: {
+      DebugMenu,
       ProfileMenu,
       HelpMenu,
       ErrorsMenu,
@@ -55,8 +62,10 @@ v-toolbar(app)
 
     data() {
       return {
+        notProduction: process.env.NODE_ENV !== "production",
         gitSha: process.env.GIT_SHA,
         gitChanges: process.env.GIT_CHANGE_INFO,
+        showDebugMenu: false,
         showDriveExplorer: false,
         showDatabaseManager: false,
         showNetworkManager: false,

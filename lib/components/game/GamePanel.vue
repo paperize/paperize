@@ -10,6 +10,7 @@ v-layout(row fluid).game-panel
         game-form(:game="game" @close-dialog="showEditDialog = false")
 
     folder-icon(:folderId="game.folderId")
+    file-uploader(:folderId="game.folderId")
     spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
   v-flex(xs12 md8)
@@ -45,6 +46,7 @@ v-layout(row fluid).game-panel
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'
+  import FileUploader from '../shared/FileUploader.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
   import PrintSettings from '../print/PrintSettings.vue'
 
@@ -54,6 +56,7 @@ v-layout(row fluid).game-panel
     components: {
       GameForm,
       FolderIcon,
+      FileUploader,
       SpreadsheetIcon,
       PrintSettings,
     },
