@@ -73,14 +73,14 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters(["loggedIn", "showSpinner"]),
+      ...mapGetters([ "loggedIn", "showSpinner" ]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
     },
 
-    methods: mapActions(["saveToDrive"])
+    methods: mapActions([ "saveToDrive" ])
   }
 </script>
 
