@@ -1,6 +1,10 @@
 <template lang="pug">
   template-renderer(:renderer="renderPNG" :template="template" :item="item")
-    v-card
+    v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="1" max="10000" box)
+
+    label(for="pixel-resolution") PNG Resolution: {{ scaledSize.w }}x{{ scaledSize.h }} pixels
+
+    v-card(height="420px")
       v-card-text
         #template-container(ref="canvasContainer")
 </template>
@@ -64,7 +68,7 @@
 
             // this fits the canvas to the container, regardless its resolution
             parent.setAttribute("style", "width: initial; height: initial;")
-            canvas.setAttribute("style", "width: 100%; height: 100%;")
+            canvas.setAttribute("style", "max-height: 400px;")
           })
       }, RENDER_DELAY_MS)
     }
@@ -73,8 +77,8 @@
 </script>
 
 <style scoped>
-  .konvajs-content canvas {
+  /* .konvajs-content canvas {
     width: 500px;
     max-width: 500px;
-  }
+  } */
 </style>
