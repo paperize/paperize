@@ -1,8 +1,14 @@
 <template lang="pug">
   template-renderer(:renderer="renderPNG" :template="template" :item="item")
-    v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="1" max="10000" box)
+    v-layout
+      v-flex(xs-4)
+        v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="1" max="600" box)
+      v-flex(xs-4)
+        v-text-field.text-size(label="Font Scale Factor" v-model="fontScaleFactor" type="number" max="1000" step="1" box)
+      v-flex(xs-4)
+        v-text-field.text-size(label="Stroke Scale Factor" v-model="strokeScaleFactor" type="number" max="1000" step="1" box)
 
-    label(for="pixel-resolution") PNG Resolution: {{ scaledSize.w }}x{{ scaledSize.h }} pixels
+    label(for="pixel-resolution") PNG Resolution: {{ pngSize.w }}x{{ pngSize.h }} pixels
 
     v-card(height="420px")
       v-card-text
@@ -10,7 +16,7 @@
 </template>
 
 <script>
-  import { debounce } from 'lodash'
+  import { debounce, map } from 'lodash'
   import { mapGetters } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
   import { renderItemsToCanvas } from '../../services/png_renderer'
@@ -36,7 +42,9 @@
 
     data() {
       return {
-        pixelsPerInch: 70
+        pixelsPerInch: 150,
+        fontScaleFactor: 2.0,
+        strokeScaleFactor: 200,
       }
     },
 
@@ -45,19 +53,31 @@
         "projectItemThroughTemplate",
       ]),
 
-      scaledSize() {
+      scalingOptions() {
+        return {
+          size: this.parsedPixelsPerInch,
+          fonts: this.parsedFontScaleFactor,
+          strokes: this.parsedStrokeScaleFactor
+        }
+      },
+
+      parsedPixelsPerInch() { return parseInt(this.pixelsPerInch, 10) },
+      parsedFontScaleFactor() { return parseFloat(this.fontScaleFactor) },
+      parsedStrokeScaleFactor() { return parseFloat(this.strokeScaleFactor) },
+
+      pngSize() {
         return scaleDimensions(this.template.size, this.pixelsPerInch)
-      }
+      },
     },
 
     methods: {
       renderPNG: debounce(function() {
         // all store fetching, input validation, magic transformation, and data aggregation
-        return this.projectItemThroughTemplate(this.item, { ...this.template, size: this.scaledSize })
+        return this.projectItemThroughTemplate(this.item, this.template, this.scalingOptions)
 
           // all rendering
           .then((item) => {
-            renderItemsToCanvas([item], CONTAINER_ID, this.scaledSize.w, this.scaledSize.h)
+            renderItemsToCanvas([item], CONTAINER_ID, this.pngSize.w, this.pngSize.h)
           })
 
           .then(() => {
