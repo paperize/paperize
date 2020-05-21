@@ -1,14 +1,17 @@
 <template lang="pug">
   template-renderer(:renderer="renderPNG" :template="template" :item="item")
     v-layout
-      v-flex(xs-4)
+      v-flex(xs-3)
         v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="1" max="600" box)
 
-      v-flex(xs-4)
+      v-flex(xs-3)
         v-text-field.text-size(label="Font Scale Factor" v-model="fontScaleFactor" type="number" min="0" max="1000" box)
 
-      v-flex(xs-4)
+      v-flex(xs-3)
         v-text-field.text-size(label="Stroke Scale Factor" v-model="strokeScaleFactor" type="number" min="0" max="1000" box)
+
+      v-flex(xs-3)
+        v-checkbox.text-size(label="Image Smoothing" v-model="imageSmoothing" type="number" min="0" max="1000" box)
 
     label(for="pixel-resolution") PNG Resolution: {{ pngSize.w }}x{{ pngSize.h }} pixels
 
@@ -47,6 +50,7 @@
         pixelsPerInch: 150,
         fontScaleFactor: 2.0,
         strokeScaleFactor: 200,
+        imageSmoothing: true
       }
     },
 
@@ -67,6 +71,12 @@
       parsedFontScaleFactor() { return parseFloat(this.fontScaleFactor) },
       parsedStrokeScaleFactor() { return parseFloat(this.strokeScaleFactor) },
 
+      renderOptions() {
+        return {
+          imageSmoothing: this.imageSmoothing
+        }
+      },
+
       pngSize() {
         return scaleDimensions(this.template.size, this.pixelsPerInch)
       },
@@ -79,7 +89,7 @@
 
           // all rendering
           .then((item) => {
-            renderItemsToCanvas([item], CONTAINER_ID, this.pngSize.w, this.pngSize.h)
+            renderItemsToCanvas([item], CONTAINER_ID, this.pngSize.w, this.pngSize.h, this.renderOptions)
           })
 
           .then(() => {
