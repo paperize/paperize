@@ -33,13 +33,9 @@ Paperize helps game designers make better games by leveraging free web tools to 
     - Google Sheets API ../auth/drive.file
   - copy and rename `example.api_keys.dev.json` to `.api_keys.dev.json` (`cp example.api_keys.dev.json .api_keys.dev.json`)
   - modify `.api_keys.dev.json` to contain the keys you just set up
-- **Mac OS**
-  - `npm install`
-  - `npm test`
-  - `npm start`
-- **Windows**
-  - `npm install`
-  - `npm start`
+- `npm install`
+- `npm test` (Optional test, may not work on some systems)
+- `npm start`
 - visit http://localhost:8080 and _go go go!_
 - **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized Javascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
 
