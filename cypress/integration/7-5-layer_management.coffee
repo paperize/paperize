@@ -13,6 +13,16 @@ describe "Layer Management", ->
       cy.get(".mdi-eye-off").should("exist")
       cy.get(".mdi-eye").should("not.exist")
 
+  it 'copies layer', ->
+    cy.contains('Dimensions').click()
+    cy.get("#dimension-editor").within ->
+      cy.get("#dim-y").clear().type("20")
+    cy.get(".layer-list").within ->
+      cy.get(".mdi-content-copy").click()
+    cy.contains("Copy of [image] 0")
+    cy.get("#dimension-editor").within ->
+      cy.get("#dim-y").invoke("val").should("eq", "20")
+
   it 'allows to cancel deleting a layer', ->
     cy.get(".layer-list").within ->
       cy.contains("delete").click()

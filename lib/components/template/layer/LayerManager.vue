@@ -31,6 +31,10 @@ v-layout(column)
         v-list-tile-title {{ layer.name }}
 
       v-list-tile-action
+        v-btn(fab small v-on:click.stop="copyLayer(layer)")
+          v-icon mdi-content-copy
+
+      v-list-tile-action
         v-btn(fab small @click="toggleLayer(layer)")
           v-icon(v-if="layer.visible") mdi-eye
           v-icon(v-else) mdi-eye-off
@@ -109,6 +113,7 @@ v-layout(column)
     methods: {
       ...mapActions([
         "createTemplateLayer",
+        "copyTemplateLayer",
         "destroyTemplateLayer",
         "setLayersRenderOrder",
         "toggleLayer",
@@ -121,6 +126,11 @@ v-layout(column)
 
       createLayer(layerType) {
         this.createTemplateLayer({ template: this.template, layerType })
+        this.showNewLayerDialog = false
+      },
+
+      copyLayer(layer) {
+        this.copyTemplateLayer({ template: this.template, layer })
         this.showNewLayerDialog = false
       },
 
