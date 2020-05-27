@@ -19,7 +19,7 @@ describe "Layer Management", ->
       cy.get("#dim-y").clear().type("20")
     cy.get(".layer-list").within ->
       cy.get(".mdi-content-copy").click()
-    cy.contains("Copy of [image] 0")
+    cy.contains("[image] 0 (copy)")
     cy.get("#dimension-editor").within ->
       cy.get("#dim-y").invoke("val").should("eq", "20")
 
