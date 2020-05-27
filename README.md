@@ -24,16 +24,17 @@ Paperize helps game designers make better games by leveraging free web tools to 
     - Authorized JavaScript Origins: `http://localhost:8080`
     - Authorized Redirect URIs: none
   - from the Library menu, enable Web Fonts Developer API and create an API Key
+  - from the Library menu, enable the Google Drive API and choose the previously created API key
   - from the Library menu, enable the Google Picker API and choose the previously created API Key
   - from the Library menu, enable the Google Sheets API and choose the previously created API Key
   - Open the OAuth Consent Screen menu again, and add the following scopes:
     - Google Drive API  ../auth/drive.appdata
     - Google Drive API  ../auth/drive.file
     - Google Sheets API ../auth/drive.file
-  - `cp example.api_keys.dev.json .api_keys.dev.json`
+  - copy and rename `example.api_keys.dev.json` to `.api_keys.dev.json` (`cp example.api_keys.dev.json .api_keys.dev.json`)
   - modify `.api_keys.dev.json` to contain the keys you just set up
 - `npm install`
-- `npm test`
+- `npm test` (Optional test, may not work on some systems)
 - `npm start`
 - visit http://localhost:8080 and _go go go!_
 - **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized Javascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
