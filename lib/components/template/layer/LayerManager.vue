@@ -74,6 +74,7 @@ v-layout(column)
       ...mapGetters([
         "findAllTemplateLayers",
         "activeLayer",
+        "getSafeLayerName",
       ]),
 
       layerHighlighting: {
@@ -131,10 +132,10 @@ v-layout(column)
       },
 
       copyLayer(layer) {
-        let modifiedLayer = {
-            ...layer,
-            name:`${layer.name} (copy)`
-          }
+        const modifiedLayer = {
+          ...layer,
+          name: this.getSafeLayerName(this.template, layer.name)
+        }
         this.copyTemplateLayer({ template: this.template, layer: modifiedLayer })
       },
 
