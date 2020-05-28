@@ -130,8 +130,11 @@ v-layout(column)
       },
 
       copyLayer(layer) {
-        this.copyTemplateLayer({ template: this.template, layer })
-        this.showNewLayerDialog = false
+        let modifiedLayer = {
+            ...layer,
+            name:`${layer.name} (copy)`
+          }
+        this.copyTemplateLayer({ template: this.template, layer: modifiedLayer })
       },
 
       confirmDeleteLayer(layer) {
