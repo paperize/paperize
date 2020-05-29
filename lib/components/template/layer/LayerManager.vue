@@ -74,7 +74,6 @@ v-layout(column)
       ...mapGetters([
         "findAllTemplateLayers",
         "activeLayer",
-        "getSafeLayerName",
       ]),
 
       layerHighlighting: {
