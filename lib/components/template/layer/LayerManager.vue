@@ -30,14 +30,19 @@ v-layout(column)
       v-list-tile-content
         v-list-tile-title {{ layer.name }}
 
-      v-list-tile-action
-        v-btn(fab small @click="toggleLayer(layer)")
-          v-icon(v-if="layer.visible") mdi-eye
-          v-icon(v-else) mdi-eye-off
+      template(v-if="isActive(layer)")
+        v-list-tile-action
+          v-btn(fab small v-on:click.stop="copyLayer(layer)")
+            v-icon mdi-content-copy
 
-      v-list-tile-action
-        v-btn(fab small @click="confirmDeleteLayer(layer)")
-          v-icon delete
+        v-list-tile-action
+          v-btn(fab small @click="toggleLayer(layer)")
+            v-icon(v-if="layer.visible") mdi-eye
+            v-icon(v-else) mdi-eye-off
+
+        v-list-tile-action
+          v-btn(fab small @click="confirmDeleteLayer(layer)")
+            v-icon delete
 
   v-dialog(v-model="showDeleteLayerDialog" max-width="500" lazy)
     v-card
@@ -109,6 +114,7 @@ v-layout(column)
     methods: {
       ...mapActions([
         "createTemplateLayer",
+        "copyTemplateLayer",
         "destroyTemplateLayer",
         "setLayersRenderOrder",
         "toggleLayer",
@@ -122,6 +128,10 @@ v-layout(column)
       createLayer(layerType) {
         this.createTemplateLayer({ template: this.template, layerType })
         this.showNewLayerDialog = false
+      },
+
+      copyLayer(layer) {
+        this.copyTemplateLayer({ template: this.template, layer })
       },
 
       confirmDeleteLayer(layer) {
