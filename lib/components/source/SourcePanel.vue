@@ -16,7 +16,7 @@ v-flex#source-editor(sm4 md6)
 
       refresh-source-button(:spreadsheet="componentSheet")
 
-      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title")
+      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="worksheetId ? false : true")
 
       v-btn(small v-if="showRowSelection" @click="disableRowSelect") Disable Row Selection
       v-btn(small v-else @click="enableRowSelect") Enable Row Selection
