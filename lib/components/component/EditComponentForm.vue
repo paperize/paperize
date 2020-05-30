@@ -3,6 +3,8 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
   v-card
     v-card-title
       .headline Component: {{ component.title }}
+      v-btn(fab small v-on:click="copyComponent(component)")
+          v-icon mdi-content-copy
 
     v-card-text
       v-text-field.component-title(v-model="title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
@@ -39,7 +41,12 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     },
 
     methods: {
-      ...mapActions(["patchComponent"]),
+      ...mapActions(["patchComponent", "copyGameComponent"]),
+
+      copyComponent(component) {
+        this.copyGameComponent({ game: this.activeGame, component })
+        this.$emit("close-dialog")
+      },
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {
