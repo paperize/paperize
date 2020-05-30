@@ -1,7 +1,7 @@
 {
   "basicCard": {
     "id": "basicCard",
-    "layerIds": [],
+    "layerIds": ["layer1"],
     "size": {
       "w": 2.5,
       "h": 3.5,
@@ -12,7 +12,7 @@
   },
   "basicTile": {
     "id": "basicTile",
-    "layerIds": [],
+    "layerIds": ["layer2"],
     "size": {
       "w": 1.5,
       "h": 1.5,
@@ -21,6 +21,17 @@
   },
   "loveLetter": {
     "id": "loveLetter",
+    "layerIds": ["layer3", "layer4"],
+    "size": {
+      "w": 2.5,
+      "h": 3.5,
+      "paperMode": "standard",
+      "paperFormat": "poker",
+      "paperOrientation": "landscape"
+    }
+  },
+  "noLayers": {
+    "id": "noLayers",
     "layerIds": [],
     "size": {
       "w": 2.5,

@@ -11,7 +11,7 @@ describe "Shape Layers", ->
       cy.contains('Shape').click()
 
   it "is created", ->
-    cy.contains("[shape] 0")
+    cy.contains("[shape] 2")
 
   it "can be set to rectangle", ->
     cy.get(".shape-select").click()

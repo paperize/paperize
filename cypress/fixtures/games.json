@@ -63,5 +63,15 @@
       "componentSelection": "all_components",
       "componentIdsToPrint": []
     }
+  },
+  "noLayersGame": {
+    "id": "noLayersGame",
+    "title": "The Game With No Layers",
+    "description": "No layers but a lot of fun",
+    "componentIds": [ "noLayerComponent" ],
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   }
 }

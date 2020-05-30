@@ -25,8 +25,8 @@ describe "Text Layers", ->
     cy.contains("library_add").click()
     cy.contains("Text").click()
 
-    cy.contains("[text] 0")
-    cy.contains("[text] 1")
+    cy.contains("[text] 2")
+    cy.contains("[text] 3")
 
   it "sets fonts", ->
     cy.get(".font-settings").click()

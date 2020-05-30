@@ -1,0 +1,42 @@
+{
+  "dimension1": {
+    "id": "dimension1",
+    "mode": "sameAsParent",
+    "units": "percent",
+    "layout": "xywh",
+    "x": 7,
+    "y": 59,
+    "w": 90,
+    "h": 90
+  },
+  "dimension2": {
+    "id": "dimension2",
+    "mode": "sameAsParent",
+    "units": "percent",
+    "layout": "xywh",
+    "x": 20,
+    "y": 20,
+    "w": 90,
+    "h": 90
+  },
+  "dimension3": {
+    "id": "dimension3",
+    "mode": "sameAsParent",
+    "units": "percent",
+    "layout": "xywh",
+    "x": 5,
+    "y": 5,
+    "w": 90,
+    "h": 90
+  },
+  "dimension4": {
+    "id": "dimension4",
+    "mode": "sameAsParent",
+    "units": "percent",
+    "layout": "xywh",
+    "x": 5,
+    "y": 5,
+    "w": 90,
+    "h": 90
+  }
+}

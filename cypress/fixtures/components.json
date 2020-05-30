@@ -34,5 +34,13 @@
     "worksheetId": "000000001",
     "templateId": "loveLetter",
     "quantityProperty": null
+  },
+  "noLayerComponent": {
+    "id": "noLayerComponent",
+    "title": "No Layer",
+    "spreadsheetId": "rainbowDeck",
+    "worksheetId": "000000001",
+    "templateId": "noLayers",
+    "quantityProperty": null
   }
 }

@@ -7,9 +7,22 @@ v-card
     v-btn(small fab color="red" @click="$emit('close-dialog')")
       v-icon close
 
-  v-divider
+  v-card-text(v-if="shouldShowNewTemplateSelection")
+    v-container(ma-0 pa-0 grid-list-md fluid)
+      v-layout(row)
+        v-flex(xs4)
+          v-radio-group(v-model="newTemplateSelection")
+            v-tooltip(top)
+              span(slot="activator")
+                v-radio(label="New Template" value="NEW_TEMPLATE")
+              span Create a new template
+            v-tooltip(top)
+              span(slot="activator")
+                v-radio(label="Copy Template" value="COPY_TEMPLATE")
+              span Copy pre-existing template from component
+          v-select(box v-if="newTemplateSelection == 'COPY_TEMPLATE'" label="Component" v-model="componentId" :items="componentOptions" item-value="id" item-text="title")
 
-  v-card-text
+  v-card-text(v-else)
     v-container(ma-0 pa-0 grid-list-md fluid)
       v-layout(row)
         v-flex(xs4)
@@ -63,7 +76,8 @@ v-card
 
     data() {
       return {
-        editingSize: false
+        editingSize: false,
+        newTemplateSelection: null,
       }
     },
 
@@ -71,9 +85,24 @@ v-card
       ...mapGetters([
         "activeGame",
         "activeLayer",
+        "findComponent",
         "findComponentSheet",
-        "findComponentTemplate"
+        "findComponentTemplate",
+        "allComponents",
       ]),
+
+      componentId: {
+        get() { null },
+        set(componentId) {
+          let existingComponent = this.findComponent(componentId)
+          let template = this.findComponentTemplate(existingComponent)
+          this.copyComponentTemplate({ component: this.component, template: template })
+          }
+      },
+      componentOptions() {
+        return this.allComponents.filter(component => component.id != this.component.id
+        && this.findComponentTemplate(component).layerIds.length > 0)
+      },
 
       componentSource() {
         return this.findComponentSheet(this.component)
@@ -83,9 +112,20 @@ v-card
         return this.findComponentTemplate(this.component)
       },
 
+      shouldShowNewTemplateSelection() {
+        return this.findComponentTemplate(this.component).layerIds.length === 0
+        && this.newTemplateSelection !== "NEW_TEMPLATE"
+      },
+
       sizeLabel() {
         return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
       }
+    },
+    methods: {
+
+      ...mapActions([
+        "copyComponentTemplate",
+      ]),
     },
   }
 </script>
