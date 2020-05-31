@@ -5,8 +5,12 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       .headline New Component
 
     v-card-text
+      span Copy pre-existing component
+      v-select.component-selector(box label="Component" v-model="componentIdToCopy" :items="allComponents" item-value="id" item-text="title")
+
+    v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-      v-checkbox.component-add-sheet-to-source(v-if="gameHasSource" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
+      v-checkbox.component-add-sheet-to-source(v-if="gameHasSource && componentIdToCopy == null" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
 
     v-card-actions
       v-btn(small success @click="submitComponent") Create Component
@@ -19,6 +23,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     data() {
       return {
         component: { title: "" },
+        componentIdToCopy: null,
         addSheetToSource: true,
         rules: {
           required: value => !!value || 'Required.'
@@ -27,11 +32,15 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     },
 
     computed: {
-      ...mapGetters(["activeGame"]),
+      ...mapGetters([
+        "allComponents",
+        "findComponent",
+        "activeGame"
+      ]),
 
       gameHasSource() {
         return !!this.activeGame.spreadsheetId
-      }
+      },
     },
 
     methods: {
@@ -39,27 +48,38 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         "createGameComponent",
         "createComponentFolder",
         "createComponentImageFolder",
-        "createGameComponentAndDriveArtifacts"
+        "createGameComponentAndDriveArtifacts",
+        "copyGameComponent"
       ]),
 
       submitComponent() {
         if(this.$refs.componentForm.validate()) {
+          let componentToCreate = this.component
+          let action = "create"
+          if (this.componentIdToCopy !== null) {
+            componentToCreate = { ...this.findComponent(this.componentIdToCopy),
+              title: this.component.title
+            }
+            action = "copy"
+          }
           this.createGameComponentAndDriveArtifacts({
-            game: this.activeGame,
-            component: this.component,
-            addSheetToSource: this.gameHasSource && this.addSheetToSource
-          })
-
-          .then((componentId) => {
+              action: action,
+              game: this.activeGame,
+              component: componentToCreate,
+              addSheetToSource: this.gameHasSource && this.addSheetToSource
+              && this.componentIdToCopy == null
+            }).then((componentId) => {
             // stop validating this form
             this.$refs.componentForm.reset()
             // reset the title
             this.component.title = ""
+            this.componentIdToCopy = null
             // activate the component we created
             this.$store.dispatch("setActiveComponent", componentId)
-          })
 
-          this.$emit("close-dialog")
+            this.$emit("close-dialog")
+            })
+
         }
       }
     }

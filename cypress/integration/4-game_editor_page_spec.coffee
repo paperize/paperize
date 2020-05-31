@@ -60,6 +60,20 @@ describe "Game Editor page", ->
       cy.get('.component.active .headline')
         .contains("Random Encounters")
 
+    it "lets me copy a component", ->
+      cy.contains("New Component").click()
+
+      cy.get(".component-form").within ->
+        cy.contains("New Component")
+        cy.typeIntoSelectors ".component-title input": 'Random Encounters'
+        cy.get(".component-selector").click()
+      cy.contains("Character Deck").click()
+      cy.contains("Create Component").click()
+
+      cy.get('.component.active .headline')
+        .contains("Random Encounters")
+      cy.contains("Love Letter")
+
     it "lets me edit a component", ->
       cy.contains("Instruction Book")
         .click()
@@ -78,6 +92,18 @@ describe "Game Editor page", ->
         .click()
 
       cy.contains("Instruction Manual")
+
+    it "lets me copy a component from edit modal", ->
+      cy.contains("Instruction Book")
+        .click()
+
+      cy.get('.component.active')
+        .contains("Edit")
+        .click()
+
+      cy.get(".mdi-content-copy").click()
+
+      cy.contains("Instruction Book (copy)")
 
     it "displays correctly the size settings of a custom size component", ->
       cy.contains("Point Cubes")

@@ -44,7 +44,11 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       ...mapActions(["patchComponent", "copyGameComponent"]),
 
       copyComponent(component) {
-        this.copyGameComponent({ game: this.activeGame, component })
+        let modifiedComponent = {
+          ...component,
+          title:`${component.title} (copy)`
+        }
+        this.copyGameComponent({ game: this.activeGame, component: modifiedComponent })
         this.$emit("close-dialog")
       },
 
