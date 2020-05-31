@@ -2,7 +2,7 @@
 
 const
   webpack = require('webpack'),
-  CopyWebpackPlugin = require('copy-webpack-plugin'),
+  CopyPlugin = require('copy-webpack-plugin'),
   MomentLocalesPlugin = require('moment-locales-webpack-plugin'),
   VueLoaderPlugin = require('vue-loader/lib/plugin'),
   path = require('path'),
@@ -45,9 +45,11 @@ module.exports = (env={}) => {
         KEYS: env.KEYS
       }),
 
-      new CopyWebpackPlugin([
-        { context: 'static', from: '**' }
-      ]),
+      new CopyPlugin({
+        patterns: [
+          { context: 'static', from: '**' }
+        ]
+      }),
 
       new MomentLocalesPlugin(),
 
