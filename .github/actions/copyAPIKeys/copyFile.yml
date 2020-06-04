@@ -1,0 +1,21 @@
+# copyFile.yml
+name: 'Copy API keys'
+description: 'Copies API keys for tests'
+inputs:
+  client_id:  # id of input
+    description: 'Client id'
+    required: true
+    default: 'nothing'
+  picker:  # id of input
+    description: 'Picker API key'
+    required: true
+    default: 'nothing'
+outputs:
+  time: # id of output
+    description: 'Success'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.client_id }}
+    - ${{ inputs.picker }}
