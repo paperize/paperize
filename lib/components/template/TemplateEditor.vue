@@ -7,6 +7,8 @@ v-card
     v-btn(small fab color="red" @click="$emit('close-dialog')")
       v-icon close
 
+  v-divider
+
   v-card-text
     v-container(ma-0 pa-0 grid-list-md fluid)
       v-layout(row)
@@ -62,7 +64,6 @@ v-card
     data() {
       return {
         editingSize: false,
-        newTemplateSelection: null,
       }
     },
 
@@ -70,10 +71,8 @@ v-card
       ...mapGetters([
         "activeGame",
         "activeLayer",
-        "findComponent",
         "findComponentSheet",
         "findComponentTemplate",
-        "allComponents",
       ]),
 
       componentSource() {
