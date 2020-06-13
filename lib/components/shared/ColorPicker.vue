@@ -22,7 +22,7 @@
 
     methods: {
       emitOnlyHex(color) {
-        this.$emit("input", color.hex)
+        this.$emit("input", color.hex8)
       },
 
       visibilityChanged(visible) {

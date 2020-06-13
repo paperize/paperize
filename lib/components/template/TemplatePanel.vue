@@ -1,10 +1,12 @@
 <template lang="pug">
 v-flex#template-editor(sm8 md6)
-  .headline Template
-
-  template(v-if="componentTemplate")
+  .headline
+    | Template
     v-btn(fab small @click="showTemplateManager = true")
       v-icon edit
+
+
+  template(v-if="componentTemplate")
 
     template-previewer.inline-preview(v-if="!showTemplateManager" :game="activeGame" :component="activeComponent")
 

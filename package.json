@@ -80,6 +80,7 @@
     "idb-keyval": "^3.1.0",
     "jspdf": "github:lorennorman/jspdf#paperize-0.6.x",
     "jwt-decode": "^2.2.0",
+    "konva": "^4.2.2",
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "moment": "^2.24.0",
