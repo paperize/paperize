@@ -4,13 +4,17 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     v-card-title
       .headline New Component
 
-    v-card-text
-      span Copy pre-existing component
-      v-select.component-selector(box label="Component" v-model="componentIdToCopy" :items="allComponents" item-value="id" item-text="title")
 
     v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
       v-checkbox.component-add-sheet-to-source(v-if="gameHasSource && componentIdToCopy == null" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
+
+      v-radio-group(v-if="anyComponents" v-model="copyMode")
+        v-radio(label="Blank Component" :value="false")
+        v-radio(label="Copy Existing Component" :value="true")
+
+      template(v-if="copyMode")
+        v-select.component-selector(box label="Select Component to Copy" v-model="componentIdToCopy" :items="allComponents" item-value="id" item-text="title")
 
     v-card-actions
       v-btn(small success @click="submitComponent") Create Component
@@ -25,6 +29,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         component: { title: "" },
         componentIdToCopy: null,
         addSheetToSource: true,
+        copyMode: false,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -41,6 +46,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       gameHasSource() {
         return !!this.activeGame.spreadsheetId
       },
+
+      anyComponents() {
+        return this.allComponents.length > 0
+      }
     },
 
     methods: {
