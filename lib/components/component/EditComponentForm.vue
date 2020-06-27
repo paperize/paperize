@@ -3,9 +3,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
   v-card
     v-card-title
       .headline Component: {{ component.title }}
+
       v-tooltip(top)
         | Make a Copy of This Component
-        v-btn(slot="activator" fab small v-on:click="copyComponent(component)")
+        v-btn(slot="activator" fab small v-on:click="copyComponent")
             v-icon mdi-content-copy
 
     v-card-text

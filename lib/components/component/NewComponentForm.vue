@@ -4,7 +4,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     v-card-title
       .headline New Component
 
-
     v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
 
@@ -53,6 +52,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         return this.allComponents.length > 0
       },
 
+      componentToCopy() {
+        return this.findComponent(this.componentIdToCopy)
+      },
+
       actionName() {
         return this.copyMode ? "Copy" : "Create"
       }
@@ -60,9 +63,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     methods: {
       ...mapActions([
-        "createGameComponent",
-        "createComponentFolder",
-        "createComponentImageFolder",
         "createGameComponentAndDriveArtifacts",
         "copyGameComponent"
       ]),
@@ -74,12 +74,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         return new Promise((resolve) => {
           if(this.copyMode) {
             // Copy Mode
-            const
-              componentToCopy = this.findComponent(this.componentIdToCopy),
-              copyComponent = {
-                ...componentToCopy,
-                title: this.component.title
-              }
+            const copyComponent = {
+              ...this.componentToCopy,
+              title: this.component.title
+            }
 
             resolve(this.copyGameComponent({ game: this.activeGame, component: copyComponent }))
 
