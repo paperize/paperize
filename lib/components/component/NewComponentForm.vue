@@ -7,17 +7,19 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     v-card-text
       v-text-field.component-title(v-model="component.title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-      v-checkbox.component-add-sheet-to-source(v-if="gameHasSource && componentIdToCopy == null" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
 
       v-radio-group(v-if="anyComponents" v-model="copyMode")
         v-radio(label="Blank Component" :value="false")
         v-radio(label="Copy Existing Component" :value="true")
 
       template(v-if="copyMode")
-        v-select.component-selector(box label="Select Component to Copy" v-model="componentIdToCopy" :items="allComponents" item-value="id" item-text="title")
+        v-select.component-selector(box label="Select Component to Copy" v-model="componentIdToCopy" :rules="[rules.required]" :items="allComponents" item-value="id" item-text="title")
+
+      template(v-else)
+        v-checkbox.component-add-sheet-to-source(v-if="gameHasSource && componentIdToCopy == null" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
 
     v-card-actions
-      v-btn(small success @click="submitComponent") Create Component
+      v-btn(small success @click="submitComponent") {{ actionName }} Component
 </template>
 
 <script>
@@ -27,9 +29,9 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
     data() {
       return {
         component: { title: "" },
+        copyMode: false,
         componentIdToCopy: null,
         addSheetToSource: true,
-        copyMode: false,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -49,6 +51,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
       anyComponents() {
         return this.allComponents.length > 0
+      },
+
+      actionName() {
+        return this.copyMode ? "Copy" : "Create"
       }
     },
 
@@ -62,34 +68,41 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       ]),
 
       submitComponent() {
-        if(this.$refs.componentForm.validate()) {
-          let componentToCreate = this.component
-          let action = "create"
-          if (this.componentIdToCopy !== null) {
-            componentToCreate = { ...this.findComponent(this.componentIdToCopy),
-              title: this.component.title
-            }
-            action = "copy"
-          }
-          this.createGameComponentAndDriveArtifacts({
-              action: action,
+        if(!this.$refs.componentForm.validate()) { return }
+
+        // Wrap create and copy inside one promise
+        return new Promise((resolve) => {
+          if(this.copyMode) {
+            // Copy Mode
+            const
+              componentToCopy = this.findComponent(this.componentIdToCopy),
+              copyComponent = {
+                ...componentToCopy,
+                title: this.component.title
+              }
+
+            resolve(this.copyGameComponent({ game: this.activeGame, component: copyComponent }))
+
+          } else {
+            // Create mode
+            resolve(this.createGameComponentAndDriveArtifacts({
               game: this.activeGame,
-              component: componentToCreate,
-              addSheetToSource: this.gameHasSource && this.addSheetToSource
-              && this.componentIdToCopy == null
-            }).then((componentId) => {
+              component: this.component,
+              addSheetToSource: (this.gameHasSource && this.addSheetToSource)
+            }))
+          }
+        })
+
+          // Clean up regardless of which operation
+          .then((componentId) => {
             // stop validating this form
             this.$refs.componentForm.reset()
-            // reset the title
-            this.component.title = ""
-            this.componentIdToCopy = null
+
             // activate the component we created
             this.$store.dispatch("setActiveComponent", componentId)
 
             this.$emit("close-dialog")
-            })
-
-        }
+          })
       }
     }
   }
