@@ -60,7 +60,7 @@ describe "Game Editor page", ->
       cy.get('.component.active .headline')
         .contains("Random Encounters")
 
-    it.only "lets me copy a component", ->
+    it "lets me copy a component", ->
       cy.contains("New Component").click()
 
       cy.get(".component-form").within ->
