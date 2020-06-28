@@ -5,14 +5,14 @@ v-expansion-panel#shape-layer-editor(popout)
   dimension-editor(:dimensions="dimensions" :size="templateSize")
 
   v-expansion-panel-content
-    div(slot="header") Shape
+    .shape-settings(slot="header") Shape
     v-card
       v-card-text
         v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" box)
           magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="shape")
 
   v-expansion-panel-content
-    div(slot="header") Stroke
+    .stroke-settings(slot="header") Stroke
     v-card
       v-card-text
         v-layout(row)
@@ -31,7 +31,7 @@ v-expansion-panel#shape-layer-editor(popout)
             color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
 
   v-expansion-panel-content
-    div(slot="header") Fill
+    .fill-settings(slot="header") Fill
     v-card
       v-card-text
         v-layout(row)

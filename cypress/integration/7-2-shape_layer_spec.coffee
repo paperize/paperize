@@ -7,11 +7,10 @@ describe "Shape Layers", ->
     cy.contains("library_add").click()
     cy.contains("Shape").click()
 
-    cy.get("#shape-layer-editor").within ->
-      cy.contains('Shape').click()
+    cy.get(".shape-settings").click()
 
   it "is created", ->
-    cy.contains("[shape] 2")
+    cy.contains("Shape")
 
   it "can be set to rectangle", ->
     cy.get(".shape-select").click()

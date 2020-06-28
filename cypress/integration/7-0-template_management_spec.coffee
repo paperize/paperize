@@ -16,7 +16,6 @@ describe "Template management", ->
 
   it 'allows to copy a template from a component', ->
     cy.get(".template-selector").click()
-    # cy.contains("Component").parent().click()
     cy.contains("Rainbow Deck").click()
     cy.contains("Copy").click()
     cy.contains("[text] 0")
