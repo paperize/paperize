@@ -8,12 +8,19 @@ Cypress.Commands.add "vuex", ->
   if vuexCache
     cy.wrap(vuexCache)
   else
-    cy
-      .visit('/')
-      .window()
+    cy.url().then (currentUrl) ->
+      if currentUrl is 'about:blank'
+        cy.visit('/')
+
+      cy.window()
         .its("paperize.store")
       .then (vuex) ->
         vuexCache = vuex
+
+# we need to call this after setting up our data
+# or at the beginning of the test if there's no data to set up
+Cypress.Commands.add "setStoreReady", ->
+  cy.vuex().invoke("dispatch", "setStoreReady")
 
 # cache the vuex store for speed
 toReturn = null
@@ -38,16 +45,6 @@ Cypress.Commands.add "vuexAndFixtures", (callback) ->
       .wrap(toReturn)
       .then(callback)
 
-Cypress.Commands.add "visitActiveGameAndComponent", ->
-  cy.vuex().then (vuex) ->
-    gameId = vuex.getters.activeGame.id
-    componentId = vuex.getters.activeComponent?.id
-
-    if componentId
-      cy.visit("/#/games/#{vuex.getters.activeGame.id}/components/#{vuex.getters.activeComponent.id}")
-    else
-      cy.visit("/#/games/#{vuex.getters.activeGame.id}")
-
 Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
   cy.vuex().then (vuex) ->
     cy.fixture("errors").then (errors) ->
@@ -56,6 +53,7 @@ Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
         vuex.dispatch("createError", errors.basic)
 
 Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
+  cy.visit("/")
   cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates, layers, dimensions } }) ->
     gameToEdit = games[gameId]
 
@@ -68,14 +66,15 @@ Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
     vuex.commit("setTemplates", templates)
     vuex.commit("setLayers", layers)
     vuex.commit("setDimensions", dimensions)
-    vuex.dispatch("setActiveGame", gameToEdit.id)
     if activeComponentId = gameToEdit.componentIds[0]
-      vuex.dispatch("setActiveComponent", activeComponentId)
+      cy.visit("/#/games/#{gameToEdit.id}/components/#{activeComponentId}")
+    else
+      cy.visit("/#/games/#{activeComponentId}")
+
     vuex.dispatch("setStoreReady")
 
-  .visitActiveGameAndComponent()
-
 Cypress.Commands.add "login", ->
+  cy.visit("/")
   cy.vuexAndFixtures ({ vuex, fixtures: { users } }) ->
     vuex.dispatch("become", users[0])
     vuex.dispatch("setStoreReady")

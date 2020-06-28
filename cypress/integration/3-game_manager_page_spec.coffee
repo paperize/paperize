@@ -2,6 +2,7 @@ describe "Game Manager page", ->
   context "when not logged in", ->
     it "redirects home", ->
       cy.visit("/#/games")
+      cy.setStoreReady()
       cy.url().should("match", /#\/$/)
 
   context "logged in", ->
