@@ -3,7 +3,14 @@ v-layout(row fluid).game-panel
   v-flex(xs12 md4)
     .headline {{ game.title || "[No title]" }}
 
+    v-btn.edit-game-button(small fab @click="showEditDialog = true")
+      v-icon edit
+
+      v-dialog(v-model="showEditDialog" max-width="500" lazy)
+        game-form(:game="game" @close-dialog="showEditDialog = false")
+
     folder-icon(:folderId="game.folderId")
+    file-uploader(:folderId="game.folderId")
     spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
   v-flex(xs12 md8)
@@ -19,13 +26,6 @@ v-layout(row fluid).game-panel
 
           v-dialog(v-model="showPrintSettingsDialog" max-width="500" lazy)
             print-settings
-
-        v-btn(small @click="showEditDialog = true")
-          v-icon(left) edit
-          | Edit Game
-
-          v-dialog(v-model="showEditDialog" max-width="500" lazy)
-            game-form(:game="game" @close-dialog="showEditDialog = false")
 
         v-btn(small @click="showDeleteDialog = true")
           v-icon(left) delete
@@ -46,6 +46,7 @@ v-layout(row fluid).game-panel
   import pdfRenderer from '../../services/pdf_renderer'
   import GameForm from './GameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'
+  import FileUploader from '../shared/FileUploader.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
   import PrintSettings from '../print/PrintSettings.vue'
 
@@ -55,6 +56,7 @@ v-layout(row fluid).game-panel
     components: {
       GameForm,
       FolderIcon,
+      FileUploader,
       SpreadsheetIcon,
       PrintSettings,
     },

@@ -15,4 +15,4 @@ Cypress.Commands.add "fixtures", (fixtureNames) ->
 
 # shorthand for loading all fixtures
 Cypress.Commands.add "allFixtures", ->
-  cy.fixtures(["users", "games", "components", "spreadsheets", "cache", "templates"])
+  cy.fixtures(["users", "games", "components", "spreadsheets", "cache", "templates", "layers", "dimensions"])

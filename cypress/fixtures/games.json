@@ -7,7 +7,11 @@
     "playerCount": "2-4",
     "playTime": "5-45 minutes",
     "componentIds": [ "characterDeck", "instructionBook", "pointCubes"],
-    "spreadsheetId": "sheet-abc123"
+    "spreadsheetId": "sheet-abc123",
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   },
   "carcassonne": {
     "id": "carcassonne",
@@ -17,7 +21,11 @@
     "playerCount": "2-6",
     "playTime": "20-120 minutes",
     "componentIds": [ ],
-    "spreadsheetId": "sheet-abc123"
+    "spreadsheetId": "sheet-abc123",
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   },
   "carcassonneWithComponent": {
     "id": "carcassonneWithComponent",
@@ -27,7 +35,11 @@
     "playerCount": "2-6",
     "playTime": "20-120 minutes",
     "componentIds": [ "carcassonneTiles" ],
-    "spreadsheetId": "sheet-abc123"
+    "spreadsheetId": "sheet-abc123",
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   },
   "pandemic": {
     "id": "pandemic",
@@ -36,14 +48,30 @@
     "ageRange": "12+",
     "playerCount": "2-6",
     "playTime": "45 - 150 minutes",
-    "componentIds": [
-
-    ]
+    "componentIds": [ ],
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   },
   "magic": {
     "id": "magic",
     "title": "Magic: The Gathering",
     "description": "Five card colors to data drive!",
-    "componentIds": [ "rainbowDeck" ]
+    "componentIds": [ "rainbowDeck" ],
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
+  },
+  "noLayersGame": {
+    "id": "noLayersGame",
+    "title": "The Game With No Layers",
+    "description": "No layers but a lot of fun",
+    "componentIds": [ "noLayerComponent" ],
+    "printSettings": {
+      "componentSelection": "all_components",
+      "componentIdsToPrint": []
+    }
   }
 }

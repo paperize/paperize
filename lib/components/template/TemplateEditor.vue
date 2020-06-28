@@ -63,7 +63,7 @@ v-card
 
     data() {
       return {
-        editingSize: false
+        editingSize: false,
       }
     },
 
@@ -72,7 +72,7 @@ v-card
         "activeGame",
         "activeLayer",
         "findComponentSheet",
-        "findComponentTemplate"
+        "findComponentTemplate",
       ]),
 
       componentSource() {
@@ -87,5 +87,7 @@ v-card
         return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
       }
     },
+
+    methods: { },
   }
 </script>
