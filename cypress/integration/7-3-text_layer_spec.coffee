@@ -23,10 +23,11 @@ describe "Text Layers", ->
 
   it "gets created and auto-named", ->
     cy.contains("library_add").click()
-    cy.contains("Text").click()
+    cy.get(".v-dialog--active").within ->
+      cy.contains("Text").click()
 
-    cy.contains("[text] 2")
-    cy.contains("[text] 3")
+    cy.contains("Text")
+    cy.contains("Text (1)")
 
   it "sets fonts", ->
     cy.get(".font-settings").click()
