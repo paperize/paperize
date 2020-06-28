@@ -6,29 +6,33 @@ describe "Layer Management", ->
 
   it 'toggles visibility of layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.get(".mdi-eye").click()
       cy.get(".mdi-eye-off").should("exist")
       cy.get(".mdi-eye").should("not.exist")
 
   it 'copies layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.get(".mdi-content-copy").click()
-    cy.contains("[shape] 0 (copy)")
+    cy.contains("[shape] 0 (1)")
     cy.get("#dimension-editor").within ->
       cy.get("#dim-y").invoke("val").should("eq", "20.0")
 
   it 'allows to cancel deleting a layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.contains("delete").click()
     cy.contains("No").click()
     cy.get(".layer-list").within ->
       cy.contains("delete").should("exist")
-  
+
   it 'allows to delete a layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.contains("delete").click()
     cy.contains("Yes").click()
-    cy.contains("New Template")
+    cy.contains("Empty Template")
 
   it 'allows to select a layer as highlighted', ->
     # This seems to be a problem with vuetify and checkboxes.
