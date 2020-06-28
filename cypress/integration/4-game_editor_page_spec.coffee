@@ -60,15 +60,17 @@ describe "Game Editor page", ->
       cy.get('.component.active .headline')
         .contains("Random Encounters")
 
-    it "lets me copy a component", ->
+    it.only "lets me copy a component", ->
       cy.contains("New Component").click()
 
       cy.get(".component-form").within ->
         cy.contains("New Component")
         cy.typeIntoSelectors ".component-title input": 'Random Encounters'
-        cy.get(".component-selector").click()
+
+      cy.contains("Copy Existing Component").click()
+      cy.get(".component-selector").click()
       cy.contains("Character Deck").click()
-      cy.contains("Create Component").click()
+      cy.contains("Copy Component").click()
 
       cy.get('.component.active .headline')
         .contains("Random Encounters")
@@ -103,7 +105,7 @@ describe "Game Editor page", ->
 
       cy.get(".mdi-content-copy").click()
 
-      cy.contains("Instruction Book (copy)")
+      cy.contains("Instruction Book Copy")
 
     it "displays correctly the size settings of a custom size component", ->
       cy.contains("Point Cubes")
