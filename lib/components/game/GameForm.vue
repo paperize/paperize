@@ -130,9 +130,11 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
           } else {
             this.createGameAndDriveArtifacts({
               game: { title: this.gameTitle },
-              gameFolder: this.createGameFolder,
-              createComponentSpreadsheet: this.createComponentSpreadsheet,
-              createImageFolder: this.createImageFolder
+              driveFlags: {
+                gameFolder: this.createGameFolder,
+                componentSheet: this.createComponentSpreadsheet,
+                imageSubfolder: this.createImageFolder
+              }
             })
           }
 
