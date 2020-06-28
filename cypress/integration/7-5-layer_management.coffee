@@ -1,41 +1,38 @@
 describe "Layer Management", ->
   beforeEach ->
-    cy.loginAndEditGame()
+    cy.loginAndEditGame("carcassonneWithComponent")
     cy.get("#template-editor").within ->
       cy.contains("edit").click()
 
-    cy.contains("library_add").click()
-    cy.contains("Image").click()
-
   it 'toggles visibility of layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.get(".mdi-eye").click()
       cy.get(".mdi-eye-off").should("exist")
       cy.get(".mdi-eye").should("not.exist")
 
   it 'copies layer', ->
-    cy.contains('Dimensions').click()
-    cy.get("#dimension-editor").within ->
-      cy.get("#dim-y").clear().type("20")
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.get(".mdi-content-copy").click()
-    cy.contains("[image] 0 (copy)")
+    cy.contains("[shape] 0 (1)")
     cy.get("#dimension-editor").within ->
-      cy.get("#dim-y").invoke("val").should("eq", "20")
+      cy.get("#dim-y").invoke("val").should("eq", "20.0")
 
   it 'allows to cancel deleting a layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.contains("delete").click()
     cy.contains("No").click()
     cy.get(".layer-list").within ->
       cy.contains("delete").should("exist")
-  
-  it 'allows to cancel deleting a layer', ->
+
+  it 'allows to delete a layer', ->
     cy.get(".layer-list").within ->
+      cy.contains("[shape] 0").click()
       cy.contains("delete").click()
     cy.contains("Yes").click()
-    cy.get(".layer-list").within ->
-      cy.contains("delete").should("not.exist")
+    cy.contains("Empty Template")
 
   it 'allows to select a layer as highlighted', ->
     # This seems to be a problem with vuetify and checkboxes.

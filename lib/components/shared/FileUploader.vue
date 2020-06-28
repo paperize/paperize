@@ -1,5 +1,5 @@
 <template lang="pug">
-v-tooltip(top)
+v-tooltip(top v-if="folderId")
   | Upload to linked Google Drive Folder: {{ folder.name }}
   v-icon(slot="activator" @click="showUploader = true") mdi-folder-plus
 
@@ -56,8 +56,7 @@ v-tooltip(top)
   export default {
     props: {
       folderId: {
-        type: String,
-        required: true,
+        type: String
       },
     },
 

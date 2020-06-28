@@ -56,7 +56,7 @@ Cypress.Commands.add "makePaperizeError", (numberOfErrors=1) ->
         vuex.dispatch("createError", errors.basic)
 
 Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
-  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates } }) ->
+  cy.vuexAndFixtures ({ vuex, fixtures: { users, games, components, spreadsheets, cache, templates, layers, dimensions } }) ->
     gameToEdit = games[gameId]
 
     vuex.dispatch("become", users[0])
@@ -66,6 +66,8 @@ Cypress.Commands.add "loginAndEditGame", (gameId = "loveLetter") ->
     _.each(cache, (value, key) ->
       vuex.commit("cache", { key: key, values: value }))
     vuex.commit("setTemplates", templates)
+    vuex.commit("setLayers", layers)
+    vuex.commit("setDimensions", dimensions)
     vuex.dispatch("setActiveGame", gameToEdit.id)
     if activeComponentId = gameToEdit.componentIds[0]
       vuex.dispatch("setActiveComponent", activeComponentId)

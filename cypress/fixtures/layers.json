@@ -1,0 +1,60 @@
+{
+  "layer1": {
+    "name": "[shape] 0",
+    "type": "shape",
+    "renderOrder": 0,
+    "dimensionId": "dimension1",
+    "shape": "rectangle",
+    "strokePresent": true,
+    "strokeWidth": 0.1,
+    "strokeColor": "#000000",
+    "fillPresent": false,
+    "fillColor": "#000000",
+    "id": "layer1",
+    "visible": true
+  },
+  "layer2": {
+    "name": "[shape] 0",
+    "type": "shape",
+    "renderOrder": 0,
+    "visible": true,
+    "dimensionId": "dimension2",
+    "shape": "rectangle",
+    "strokePresent": true,
+    "strokeWidth": 0.1,
+    "strokeColor": "#000000",
+    "fillPresent": false,
+    "fillColor": "#000000",
+    "id": "layer2"
+  },
+  "layer3": {
+    "name": "[text] 0",
+    "type": "text",
+    "renderOrder": 0,
+    "visible": true,
+    "dimensionId": "dimension3",
+    "textFontName": "helvetica",
+    "textFontStyle": "normal",
+    "textContentTemplate": "Simple stuff",
+    "textColor": "#000000",
+    "textSize": 16,
+    "horizontalAlignment": "left",
+    "verticalAlignment": "top",
+    "id": "layer3"
+  },
+  "layer4": {
+    "name": "[text] 1",
+    "type": "text",
+    "renderOrder": 1,
+    "visible": false,
+    "dimensionId": "dimension4",
+    "textFontName": "helvetica",
+    "textFontStyle": "normal",
+    "textContentTemplate": "{{Title}}",
+    "textColor": "#954848",
+    "textSize": 12,
+    "horizontalAlignment": "left",
+    "verticalAlignment": "top",
+    "id": "layer4"
+  }
+}

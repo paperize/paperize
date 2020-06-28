@@ -13,7 +13,7 @@ describe "Spreadsheet management", ->
       cy.contains("library_add").click()
       cy.contains("Shape").click()
 
-      cy.contains("Layer Name: \"[shape] 0\"").click()
+      cy.contains("Layer Name: \"Shape\"").click()
       cy.get(".layer-name-input input").clear().type("Background Box")
 
       cy.contains("Fill").click()
@@ -22,7 +22,7 @@ describe "Spreadsheet management", ->
       cy.contains("library_add").click()
       cy.contains("Text").click()
 
-      cy.contains("Layer Name: \"[text] 1\"").click()
+      cy.contains("Layer Name: \"Text\"").click()
       cy.get(".layer-name-input input").clear().type("Name")
 
       cy.contains("Text Content").click()
