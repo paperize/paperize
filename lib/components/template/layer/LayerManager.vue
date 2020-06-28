@@ -39,7 +39,7 @@ v-layout(column)
 
         v-list-tile
           v-list-tile-content
-            v-select(box label="Select a Template" v-model="componentIdToCopy" :items="copyableComponents" item-value="id" item-text="title")
+            v-select.template-selector(box label="Select a Template" v-model="componentIdToCopy" :items="copyableComponents" item-value="id" item-text="title")
           v-list-tile-action
             v-btn(small color="primary" @click="copyTemplate(componentIdToCopy)" :disabled="!componentIdToCopy") Copy
 

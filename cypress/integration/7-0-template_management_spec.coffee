@@ -8,13 +8,16 @@ describe "Template management", ->
     cy.get("#template-editor").within ->
       cy.contains("Template")
 
-  it 'allows to create new template', ->
-    cy.contains("New Template").click()
-    cy.contains("library_add")
+  it 'prompts about empty template until a layer is created', ->
+    cy.contains("Empty Template")
+    cy.contains("Add a Layer").click()
+    cy.contains("Text").click()
+    cy.contains("Empty Template").should("not.exist")
 
   it 'allows to copy a template from a component', ->
-    cy.contains("Copy Template").click()
-    cy.contains("Component").parent().click()
+    cy.get(".template-selector").click()
+    # cy.contains("Component").parent().click()
     cy.contains("Rainbow Deck").click()
+    cy.contains("Copy").click()
     cy.contains("[text] 0")
     cy.contains("[text] 1")
