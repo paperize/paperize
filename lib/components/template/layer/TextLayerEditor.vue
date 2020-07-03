@@ -46,12 +46,12 @@ v-expansion-panel#text-layer-editor(popout)
     div(slot="header") Text Content
     v-card
       v-card-text
-        p(v-pre) Use curly brackets to reference columns, like: {{Name}}
+        p(v-pre) Use triple curly-braces to reference columns, like: {{{Name}}}
 
         v-tooltip(top)
           | Name a column "{{ layer.name }}" and leave this blank to pull from your spreadsheet.
           v-icon(slot="activator") mdi-table-search
-        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box :placeholder="`{{ ${layer.name} }}`")
+        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box :placeholder="`{{{${layer.name}}}}`")
 </template>
 
 <script>
