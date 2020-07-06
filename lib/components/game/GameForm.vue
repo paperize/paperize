@@ -8,9 +8,13 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
       template(v-if="!isSaved")
-        v-checkbox.game-create-game-folder(v-model="createGameFolder" label="Create a Google Drive Folder for this game?")
-        v-checkbox.game-create-spreadsheet(v-model="createComponentSpreadsheet" label="Create a Google Spreadsheet inside for its components?")
-        v-checkbox.game-create-image-folder(v-model="createImageFolder" label="Create an Images Folder inside for its images?")
+        p <b>Note:</b> Paperize will create a folder in your Drive to store all the game assets.
+        template(v-if="creatingGameFolder")
+          p <b>Creating game folder...</b>
+        template(v-if="creatingImagesFolderAndDrive")
+          p <b>Creating image folder and component spreadsheet...</b>
+        template(v-if="createdGame")
+          p <b>Done</b>
 
       v-container(v-else grid-list-md text-xs-center)
         v-layout(row)
@@ -82,12 +86,12 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     data() {
       return {
         gameTitle: this.game.title,
-        createGameFolder: true,
-        createComponentSpreadsheet: true,
-        createImageFolder: true,
         rules: {
           required: value => !!value || 'Required.'
-        }
+        },
+        creatingGameFolder: false,
+        creatingImagesFolderAndDrive: false,
+        createdGame: false,
       }
     },
 
@@ -95,6 +99,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       ...mapGetters([
         "workingDirectoryId",
         "findFolder",
+        "findGame",
         "findSpreadsheet"
       ]),
 
@@ -119,7 +124,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     methods: {
       ...mapActions([
         "createGame",
-        "createGameAndDriveArtifacts",
+        "createDriveArtifacts",
         "updateGame"
       ]),
 
@@ -127,18 +132,22 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
         if(this.$refs.gameForm.validate()) {
           if(this.isSaved) {
             this.updateGame({ ...this.game, title: this.gameTitle })
+            this.$emit("close-dialog")
           } else {
-            this.createGameAndDriveArtifacts({
-              game: { title: this.gameTitle },
-              driveFlags: {
-                gameFolder: this.createGameFolder,
-                componentSheet: this.createComponentSpreadsheet,
-                imageSubfolder: this.createImageFolder
-              }
+            this.createGame(
+              { title: this.gameTitle }
+            ).then((gameId) => {
+              let game = this.findGame(gameId)
+              this.$store.subscribe((mutation,state) => {
+                if (mutation.type === 'updateGame' && mutation.payload.id == gameId) {
+                  this.updateGameCreateProgress(mutation.payload.creationStatus, gameId)
+                }
+              });
+              this.createDriveArtifacts({
+                game
+              })
             })
           }
-
-          this.$emit("close-dialog")
         }
       },
 
@@ -167,6 +176,27 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
             return this.updateGame({ ...this.game, spreadsheetId })
           })
       },
-    }
+
+      updateGameCreateProgress(creationStatus, gameId) {
+        switch(creationStatus) {
+          case "initial_creation":
+          case "creating_game_folder":
+            this.creatingGameFolder = true
+            break
+          case "creating_image_folder_and_spreadsheet":
+            this.creatingImagesFolderAndDrive = true
+            break
+          case "creation_completed":
+            let router = this.$router
+            this.createdGame = true
+            setTimeout(function() {
+              router.push({ name: "gameEditor", params: { gameId }})
+              }, 2000);
+            break
+        }
+      },
+    },
+
   }
+
 </script>
