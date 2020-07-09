@@ -96,10 +96,6 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
       gameSpreadsheet() {
         return this.getGameSpreadsheet(this.game)
-        // if(this.game.spreadsheetId) {
-        //   const maybeSpreadsheet = this.findSpreadsheet(this.game.spreadsheetId, false)
-        //   return maybeSpreadsheet ? maybeSpreadsheet : { name: "Missing Spreadsheet" }
-        // }
       },
     },
 

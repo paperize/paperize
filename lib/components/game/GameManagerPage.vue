@@ -10,7 +10,7 @@ v-container(fluid)
 
       v-dialog(v-model="showGameForm" max-width="500" lazy)
         v-btn.new-game-button(slot="activator" small) New Game
-        game-form(@close-dialog="showGameForm = false")
+        new-game-form(@close-dialog="showGameForm = false")
 
     v-flex(sm12)
       v-container(grid-list-md fluid)
@@ -21,10 +21,10 @@ v-container(fluid)
 <script>
   import { mapState, mapGetters } from 'vuex'
   import GameCard from './GameCard.vue'
-  import GameForm from './GameForm.vue'
+  import NewGameForm from './NewGameForm.vue'
 
   export default {
-    components: { GameCard, GameForm },
+    components: { GameCard, NewGameForm },
 
     data() {
       return {
