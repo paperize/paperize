@@ -5,17 +5,28 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       .headline Design a New Game
 
     v-card-text
-      v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
+      v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" :disabled="!!game" label="Title" placeholder="Settlers of Carcassonne")
 
       template(v-if="game")
-        p(v-if="gameFolder") Creating Folder... Done!
-        p(v-else) Creating Folder...
-        p(v-if="gameImagesFolder") Creating Game Images Folder... Done!
-        p(v-else) Creating Game Images Folder...
-        p(v-if="gameSpreadsheet") Creating Game Sheet... Done!
-        p(v-else) Creating Game Sheet...
+        v-layout(row)
+          v-flex(xs2)
+            v-icon(v-if="gameFolder" color="green") check_circle
+            v-progress-circular(v-else indeterminate color="primary")
+          v-flex(xs10) Creating Folder
 
-    v-card-actions
+        v-layout(row)
+          v-flex(xs2)
+            v-icon(v-if="gameImagesFolder" color="green") check_circle
+            v-progress-circular(v-else indeterminate color="primary")
+          v-flex(xs10) Creating Images Subfolder
+
+        v-layout(row)
+          v-flex(xs2)
+            v-icon(v-if="gameSpreadsheet" color="green") check_circle
+            v-progress-circular(v-else indeterminate color="primary")
+          v-flex(xs10) Creating Spreadsheet
+
+    v-card-actions(v-if="!game")
       v-btn(small color="success" @click="submitGame") Start Designing
 </template>
 
@@ -24,6 +35,8 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
   import FolderIcon from '../icons/FolderIcon.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+
+  const DELAY_MS_AFTER_DRIVE_COMPLETE = 800
 
   export default {
     components: {
@@ -90,13 +103,13 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       verifyDriveComplete() {
         // We don't move on until the spreadsheet is in place
         if(this.game && this.gameSpreadsheet) {
-          // Set "Success" message and pause a moment
+          // Pause a moment so user can see that we were successful
           setTimeout(() => {
             // Close dialog
             this.$emit("close-dialog")
             // Route to the game we just created
             this.$router.push({ name: "gameEditor", params: { gameId: this.gameId }})
-          }, 1000)
+          }, DELAY_MS_AFTER_DRIVE_COMPLETE)
         }
       }
     }
