@@ -7,7 +7,7 @@ v-layout(row fluid).game-panel
       v-icon edit
 
       v-dialog(v-model="showEditDialog" max-width="500" lazy)
-        game-form(:game="game" @close-dialog="showEditDialog = false")
+        edit-game-form(:game="game" @close-dialog="showEditDialog = false")
 
     folder-icon(:folderId="game.folderId")
     file-uploader(:folderId="game.folderId")
@@ -44,7 +44,7 @@ v-layout(row fluid).game-panel
 <script>
   import { mapActions } from 'vuex'
   import pdfRenderer from '../../services/pdf_renderer'
-  import GameForm from './GameForm.vue'
+  import EditGameForm from './EditGameForm.vue'
   import FolderIcon from '../icons/FolderIcon.vue'
   import FileUploader from '../shared/FileUploader.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
@@ -54,7 +54,7 @@ v-layout(row fluid).game-panel
     props: ["game"],
 
     components: {
-      GameForm,
+      EditGameForm,
       FolderIcon,
       FileUploader,
       SpreadsheetIcon,

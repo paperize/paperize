@@ -15,26 +15,22 @@ describe "Game Manager page", ->
 
       it "lets me create a new game", ->
         cy.get("button").contains("New Game").click()
-
         cy.get(".game-title input").type("Love Letter")
-        cy.get(".game-create-game-folder input").click(force: true)
-
         cy.get("button").contains("Start Designing").click()
 
         cy.url().should("match", /games\/.+$/)
 
-        cy.contains "Love Letter"
+        cy.get('.headline').contains "Love Letter"
 
       it "lets me create 3 games", ->
         cy.wrap(["Love Letter", "Carcassonne", "Pandemic"]).each (title) ->
           cy.contains("New Game").click()
           cy.get(".game-title input").invoke("val").should("eq", "")
           cy.get(".game-title input").type(title)
-          cy.get(".game-create-game-folder input").click(force: true)
           cy.get("button").contains("Start Designing").click()
-          cy.contains(title)
+          cy.get('.headline').contains(title)
 
-          cy.visit("/#/games")
+          cy.contains("Paperize.io").click()
 
       it "lets me load an example game"
 
