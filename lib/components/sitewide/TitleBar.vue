@@ -13,7 +13,7 @@ v-toolbar(app)
     template(v-if="loggedIn")
       errors-menu
 
-      template(v-if="notProduction")
+      template(v-if="!isProduction")
         v-btn(flat @click="showDebugMenu = true") Debug
         v-dialog(v-model="showDebugMenu" @close-dialog="showDebugMenu = false" max-width="500" lazy)
           debug-menu
@@ -62,7 +62,6 @@ v-toolbar(app)
 
     data() {
       return {
-        notProduction: process.env.NODE_ENV !== "production",
         gitSha: process.env.GIT_SHA,
         gitChanges: process.env.GIT_CHANGE_INFO,
         showDebugMenu: false,
@@ -73,7 +72,7 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters([ "loggedIn", "showSpinner" ]),
+      ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
