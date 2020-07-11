@@ -2,17 +2,12 @@
 v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
   v-card
     v-card-title
-      .headline {{ headlineText }}
+      .headline Editing Game: "{{ game.title }}"
 
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
-      template(v-if="!isSaved")
-        v-checkbox.game-create-game-folder(v-model="createGameFolder" label="Create a Google Drive Folder for this game?")
-        v-checkbox.game-create-spreadsheet(v-model="createComponentSpreadsheet" label="Create a Google Spreadsheet inside for its components?")
-        v-checkbox.game-create-image-folder(v-model="createImageFolder" label="Create an Images Folder inside for its images?")
-
-      v-container(v-else grid-list-md text-xs-center)
+      v-container(grid-list-md text-xs-center)
         v-layout(row)
           v-flex(xs12 sm6)
             div
@@ -57,7 +52,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
                 v-btn(@click="pickSheetFromDrive") Pick Spreadsheet
 
     v-card-actions
-      v-btn(small color="success" @click="submitGame") {{ submitButtonText }}
+      v-btn(small color="success" @click="submitGame") Update
 </template>
 
 <script>
@@ -70,7 +65,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
   export default {
     props: {
       game: {
-        default() { return {} }
+        required: true
       }
     },
 
@@ -82,9 +77,6 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     data() {
       return {
         gameTitle: this.game.title,
-        createGameFolder: true,
-        createComponentSpreadsheet: true,
-        createImageFolder: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -92,53 +84,26 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     computed: {
-      ...mapGetters([
-        "workingDirectoryId",
-        "findFolder",
-        "findSpreadsheet"
-      ]),
-
-      isSaved() { return !!this.game.id },
-      headlineText() { return this.isSaved ? `Editing Game: "${this.game.title}"` : "Design a New Game" },
-      submitButtonText() { return this.isSaved ? `Update` : "Start Designing" },
+      ...mapGetters([ "workingDirectoryId" ]),
 
       gameFolder() {
-        if(this.game.folderId) {
-          return this.findFolder(this.game.folderId)
-        }
+        return this.$store.getters.gameFolder(this.game)
       },
 
       gameSpreadsheet() {
-        if(this.game.spreadsheetId) {
-          const maybeSpreadsheet = this.findSpreadsheet(this.game.spreadsheetId, false)
-          return maybeSpreadsheet ? maybeSpreadsheet : { name: "Missing Spreadsheet" }
-        }
-      }
+        return this.$store.getters.gameSpreadsheet(this.game)
+      },
     },
 
     methods: {
-      ...mapActions([
-        "createGame",
-        "createGameAndDriveArtifacts",
-        "updateGame"
-      ]),
+      ...mapActions([ "updateGame" ]),
 
       submitGame() {
         if(this.$refs.gameForm.validate()) {
-          if(this.isSaved) {
-            this.updateGame({ ...this.game, title: this.gameTitle })
-          } else {
-            this.createGameAndDriveArtifacts({
-              game: { title: this.gameTitle },
-              driveFlags: {
-                gameFolder: this.createGameFolder,
-                componentSheet: this.createComponentSpreadsheet,
-                imageSubfolder: this.createImageFolder
-              }
+          this.updateGame({ ...this.game, title: this.gameTitle })
+            .then(() => {
+              this.$emit("close-dialog")
             })
-          }
-
-          this.$emit("close-dialog")
         }
       },
 

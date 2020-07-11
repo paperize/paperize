@@ -1,37 +1,27 @@
-/* global require, __dirname */
-var webpack = require('webpack')
-  , path = require('path')
+/* global require */
+const
+  merge = require('webpack-merge'),
+  common = require('./webpack.common.js'),
+  { NormalModuleReplacementPlugin } = require('webpack')
 
-module.exports = {
-  mode: 'development',
-  target: 'node',
-  entry: './test/test.coffee',
-  watchOptions: {
-    ignored: /node_modules/
-  },
-  output: {
-    filename: 'test.js',
-    path: path.resolve(__dirname, 'test/build')
-  },
-  plugins: [
-    new webpack.EnvironmentPlugin({'NODE_ENV': 'test'})
-  ],
-  module: {
-    noParse: /lie\.js$/,
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        loader: 'babel-loader'
-      }, {
-        test: /\.coffee$/,
-        exclude: /(node_modules)/,
-        loader: 'coffee-loader'
-      }, {
-        test: /\.vue$/,
-        exclude: /(node_modules)/,
-        loader: 'vue-loader'
-      }
+module.exports = (env={}) => {
+  env.KEYS = {}
+  return merge(common(env), {
+    mode: 'development',
+    devtool: 'inline-source-map',
+    plugins: [
+      new NormalModuleReplacementPlugin(
+        /services\/google\/drive\.js/,
+        '../../../cypress/mocks/drive.js'),
+      new NormalModuleReplacementPlugin(
+        /services\/google\/sheets\.js/,
+        '../../../cypress/mocks/sheets.js'),
+      new NormalModuleReplacementPlugin(
+        /services\/google\/picker\.js/,
+        '../../../cypress/mocks/picker.js'),
+      new NormalModuleReplacementPlugin(
+        /services\/keys\.js/,
+        '../../cypress/mocks/keys.js'),
     ]
-  }
+  })
 }

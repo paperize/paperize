@@ -18,7 +18,7 @@ v-container(grid-list-xl fluid)
 
       v-layout(justify-space-around)
         v-flex(xs10)
-          iframe(src="https://discordapp.com/widget?id=335061144311955456&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0")
+          iframe(v-if="!isCypress" src="https://discordapp.com/widget?id=335061144311955456&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0")
 
     v-flex(sm8 md4)
       p.display-1.text-xs-center What is Paperize.io?
@@ -44,3 +44,11 @@ v-container(grid-list-xl fluid)
 
       p.body-2 You only need a Google account to log in and get started creating games right away! Just click "Sign In" above and to the right.
 </template>
+
+<script>
+  import { mapGetters } from 'vuex'
+
+  export default {
+    computed: mapGetters([ "isCypress" ])
+  }
+</script>
