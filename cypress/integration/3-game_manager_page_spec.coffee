@@ -1,4 +1,4 @@
-describe.only "Game Manager page", ->
+describe "Game Manager page", ->
   context "when not logged in", ->
     it "redirects home", ->
       cy.visit("/#/games")
