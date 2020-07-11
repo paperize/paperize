@@ -84,25 +84,19 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     computed: {
-      ...mapGetters({
-        workingDirectoryId: "workingDirectoryId",
-        getGameFolder: "gameFolder",
-        getGameSpreadsheet: "gameSpreadsheet"
-      }),
+      ...mapGetters([ "workingDirectoryId" ]),
 
       gameFolder() {
-        return this.getGameFolder(this.game)
+        return this.$store.getters.gameFolder(this.game)
       },
 
       gameSpreadsheet() {
-        return this.getGameSpreadsheet(this.game)
+        return this.$store.getters.gameSpreadsheet(this.game)
       },
     },
 
     methods: {
-      ...mapActions([
-        "updateGame"
-      ]),
+      ...mapActions([ "updateGame" ]),
 
       submitGame() {
         if(this.$refs.gameForm.validate()) {
