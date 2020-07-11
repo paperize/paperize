@@ -6,10 +6,10 @@
   "scripts": {
     "//": "Server Stuff",
     "start": "npx webpack-dev-server --hot --host localhost --config webpack.dev.js",
-    "start-no-sync": "npm start -- --env.NO_SYNC=true",
+    "start-test": "npx webpack-dev-server --host localhost --config webpack.test.js --env.NO_SYNC=true",
     "server": "http-server build",
     "// Testing": "",
-    "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-no-sync\" \"cypress open\"",
+    "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-test\" \"cypress open\"",
     "build-test-integration": "npm run clean && NODE_ENV=test npx webpack --config webpack.dev.js",
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-integration",
