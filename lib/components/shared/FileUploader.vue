@@ -14,7 +14,9 @@ v-tooltip(top v-if="folderId")
             strong Remember!<br/> Upload All Paperize Files Through Paperize!
           |  Paperize can ONLY see files that you upload through Paperize.
 
-        p Uploading to Folder: {{ folder.name }}
+        p
+          strong Folder:
+          | {{ folderPath }}
 
         v-list(v-if="anyFiles")
           v-list-tile(v-for="file in files" :key="file.name")
@@ -47,7 +49,7 @@ v-tooltip(top v-if="folderId")
 <script>
   import { readAsDataURL } from 'promisify-file-reader'
   import VueUploadComponent from 'vue-upload-component'
-  import { remove } from 'lodash'
+  import { reduce, remove } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import drive from '../../services/google/drive'
 
@@ -73,10 +75,17 @@ v-tooltip(top v-if="folderId")
     computed: {
       ...mapGetters([
         "findFolder",
+        "parentFolders"
       ]),
 
       folder() {
         return this.findFolder(this.folderId)
+      },
+
+      folderPath() {
+        return reduce(this.parentFolders(this.folder), (pathAccumulator, parentFolder) => {
+          return `${pathAccumulator} ${parentFolder.name} >`
+        }, "")
       },
 
       anyFiles() {
