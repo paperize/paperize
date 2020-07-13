@@ -17,8 +17,13 @@ v-tooltip(top v-if="currentFolderId")
         p
           v-btn(small fab @click="openFolderPicker")
             v-icon edit
-          strong Folder:
-          | {{ folderPath }}
+          strong= "Folder: "
+          template(v-for="folder in parentFolders")
+            template(v-if="folder.id == currentFolderId") {{ folder.name }}
+            template(v-else)
+              strong
+                a(@click="currentFolderId = folder.id") {{ folder.name }}
+              = " > "
 
 
         v-list(v-if="anyFiles")
@@ -87,17 +92,14 @@ v-tooltip(top v-if="currentFolderId")
     computed: {
       ...mapGetters([
         "findFolder",
-        "parentFolders"
       ]),
 
       folder() {
         return this.findFolder(this.currentFolderId)
       },
 
-      folderPath() {
-        return reduce(this.parentFolders(this.folder), (pathAccumulator, parentFolder) => {
-          return `${pathAccumulator} ${parentFolder.name} >`
-        }, "")
+      parentFolders() {
+        return this.$store.getters.parentFolders(this.folder)
       },
 
       anyFiles() {
