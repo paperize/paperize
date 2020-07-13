@@ -1,9 +1,9 @@
 <template lang="pug">
-v-tooltip(top v-if="folderId")
+v-tooltip(top v-if="currentFolderId")
   | Upload to linked Google Drive Folder: {{ folder.name }}
   v-icon(slot="activator" @click="showUploader = true") mdi-folder-plus
 
-  v-dialog(v-model="showUploader" @close-dialog="showDebugMenu = false" max-width="500" lazy)
+  v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500" lazy)
     v-card
       v-toolbar
         v-toolbar-title.text-xs-center File Uploader
@@ -15,8 +15,11 @@ v-tooltip(top v-if="folderId")
           |  Paperize can ONLY see files that you upload through Paperize.
 
         p
+          v-btn(small fab @click="openFolderPicker")
+            v-icon edit
           strong Folder:
           | {{ folderPath }}
+
 
         v-list(v-if="anyFiles")
           v-list-tile(v-for="file in files" :key="file.name")
@@ -51,6 +54,7 @@ v-tooltip(top v-if="folderId")
   import VueUploadComponent from 'vue-upload-component'
   import { reduce, remove } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
+  import { openFolderPicker } from '../../services/google/picker'
   import drive from '../../services/google/drive'
 
   const FILE_UPLOAD_CONCURRENCY = 5
@@ -58,12 +62,14 @@ v-tooltip(top v-if="folderId")
   export default {
     props: {
       folderId: {
-        type: String
+        type: String,
+        required: true
       },
     },
 
-    data: () => {
+    data() {
       return {
+        currentFolderId: this.folderId,
         files: [],
         showUploader: false,
         uploading: false
@@ -72,6 +78,12 @@ v-tooltip(top v-if="folderId")
 
     components: { VueUploadComponent },
 
+    watch: {
+      showUploader(show) {
+        if(!show) { this.currentFolderId = this.folderId }
+      }
+    },
+
     computed: {
       ...mapGetters([
         "findFolder",
@@ -79,7 +91,7 @@ v-tooltip(top v-if="folderId")
       ]),
 
       folder() {
-        return this.findFolder(this.folderId)
+        return this.findFolder(this.currentFolderId)
       },
 
       folderPath() {
@@ -100,6 +112,12 @@ v-tooltip(top v-if="folderId")
         this.files.splice(this.files.indexOf(file), 1)
       },
 
+      openFolderPicker() {
+        openFolderPicker(this.currentFolderId).then((newFolderId) => {
+          if(newFolderId) { this.currentFolderId = newFolderId }
+        })
+      },
+
       performUpload() {
         this.uploading = true
         return Promise.map(this.files, (fileToUpload) => {
@@ -110,7 +128,7 @@ v-tooltip(top v-if="folderId")
               fileContents = result.replace(`data:${fileToUpload.type};base64,`, ""),
               fileName = fileToUpload.name,
               mimeType = fileToUpload.type,
-              parentFolder = this.folderId
+              parentFolder = this.currentFolderId
 
             return drive.createFile(fileName, mimeType, parentFolder, fileContents, { base64: true })
           })
