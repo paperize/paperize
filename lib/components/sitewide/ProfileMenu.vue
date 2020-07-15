@@ -11,6 +11,11 @@ v-menu(v-if="loggedIn")
         img(alt="avatar" :src="userAvatar")
       v-list-tile-title {{ userName }}
 
+    v-list-tile(@click="revokeAccessAndLogout()")
+      v-tooltip(left)
+        | Removes the permission you granted to Paperize upon sign-in. No data will be lost.
+        v-list-tile-title(slot="activator") Revoke Google Access &amp; Sign Out
+
     v-list-tile(@click="logout()")
       v-list-tile-title Sign Out
 
@@ -53,7 +58,14 @@ v-btn.log-in-button(v-else flat color="success" @click.stop="prepareForLogin") S
     },
 
     computed: {
-      ...mapGetters(['loggedIn', 'loginStatus', 'loginError', 'showSpinner', 'userName', 'userAvatar']),
+      ...mapGetters([
+        'loggedIn',
+        'loginStatus',
+        'loginError',
+        'showSpinner',
+        'userName',
+        'userAvatar'
+      ]),
 
       errorCodeInEnglish() {
         return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`
@@ -61,7 +73,7 @@ v-btn.log-in-button(v-else flat color="success" @click.stop="prepareForLogin") S
     },
 
     methods: {
-      ...mapActions(["login", "logout"]),
+      ...mapActions(["login", "logout", "revokeAccessAndLogout"]),
 
       prepareForLogin() {
         // Helpful information inside our app about the Google login process
