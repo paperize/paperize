@@ -92,7 +92,8 @@ v-flex#source-editor(sm4 md6)
         "worksheetMagicProperties",
         "findComponentSheet",
         "findComponentTemplate",
-        "getComponentFolderId",
+        "activeGame",
+        "gameFolderOrDefault",
         "getRowCount",
         "allSpreadsheets"
       ]),
@@ -179,7 +180,7 @@ v-flex#source-editor(sm4 md6)
       createSpreadsheetAndLinkSheet() {
         return this.googleCreateSpreadsheet({
           name: this.component.title,
-          parentId: this.getComponentFolderId(this.component),
+          parentId: this.gameFolderOrDefault(this.activeGame),
         })
 
         .then((spreadsheetId) => {

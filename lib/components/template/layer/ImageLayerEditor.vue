@@ -11,7 +11,7 @@ v-expansion-panel#image-layer-editor(popout)
         v-alert(:value="true" type="info" outline)
           span(align="center")
             = "Images can be uploaded here: "
-            file-uploader(:folderId="componentFolderId")
+            file-uploader(:folderId="gameImagesFolderId")
         v-radio-group(label="Selection Style:" v-model="imageNameStatic" row)
           v-radio(color="primary" label="Static" :value="true")
           v-radio(color="primary" label="Dynamic" :value="false")
@@ -80,13 +80,14 @@ v-expansion-panel#image-layer-editor(popout)
         "workingDirectoryId",
         "getLayerDimensions",
         "findTemplateByLayerId",
+        "gameImagesFolderOrDefault",
         "activeSheetProperties",
         "activeComponent",
-        "getComponentFolderId"
+        "activeGame",
       ]),
 
-      componentFolderId() {
-        return this.getComponentFolderId(this.activeComponent)
+      gameImagesFolderId() {
+        return this.gameImagesFolderOrDefault(this.activeGame).id
       },
 
       dimensions() { return this.getLayerDimensions(this.layer) },
@@ -107,7 +108,12 @@ v-expansion-panel#image-layer-editor(popout)
       ]),
 
       dynamicImageName() {
-        return `${this.layer.imageNamePrefix}[${this.layer.imageNameProperty}]${this.layer.imageNameSuffix}`
+        const
+          prefix = this.layer.imageNamePrefix,
+          property = this.layer.imageNameProperty,
+          suffix = this.layer.imageNameSuffix
+
+        return `${prefix}[${property}]${suffix}`
       }
     },
 
