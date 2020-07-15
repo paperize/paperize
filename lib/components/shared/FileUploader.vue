@@ -85,6 +85,7 @@ v-tooltip(top v-if="currentFolderId")
 
     watch: {
       showUploader(show) {
+        // Reset the folder when the modal is hidden
         if(!show) { this.currentFolderId = this.folderId }
       }
     },
