@@ -178,9 +178,10 @@ v-flex#source-editor(sm4 md6)
       },
 
       createSpreadsheetAndLinkSheet() {
+        const folder = this.gameFolderOrDefault(this.activeGame)
         return this.googleCreateSpreadsheet({
           name: this.component.title,
-          parentId: this.gameFolderOrDefault(this.activeGame),
+          parentId: folder.id,
         })
 
         .then((spreadsheetId) => {
