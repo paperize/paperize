@@ -86,7 +86,8 @@ v-expansion-panel#text-layer-editor(popout)
       dimensions() { return this.getLayerDimensions(this.layer) },
 
       templateSize() {
-        return this.findTemplateByLayerId(this.layer.id).size
+        let template = this.findTemplateByLayerId(this.layer.id)
+        return template ? template.size : template
       },
 
       availableFontStyles() {
