@@ -93,7 +93,8 @@ v-expansion-panel#image-layer-editor(popout)
       dimensions() { return this.getLayerDimensions(this.layer) },
 
       templateSize() {
-        return this.findTemplateByLayerId(this.layer.id).size
+        const template = this.findTemplateByLayerId(this.layer.id)
+        return template && template.size
       },
 
       ...computedVModelUpdateAll("layer", "patchLayer", [

@@ -1,7 +1,7 @@
 <template lang="pug">
 v-expansion-panel-content#dimension-editor
   div(slot="header") Dimensions
-  v-card
+  v-card(v-if="size")
     v-card-text
       v-layout(column)
           v-flex
