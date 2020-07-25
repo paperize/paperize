@@ -82,6 +82,7 @@ v-layout(row fluid).game-panel
       },
 
       printGame() {
+        this.setPrintTarget("pdf")
         this.projectGame(this.game)
           .then((game) => {
             pdfRenderer.renderGameToPdf(game)

@@ -22,7 +22,7 @@
 
 <script>
   import { debounce, map } from 'lodash'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
   import { renderItemsToCanvas } from '../../services/png_renderer'
   import { scaleDimensions } from '../../services/pdf_renderer/helpers'
@@ -83,7 +83,11 @@
     },
 
     methods: {
+      ...mapActions(["setPrintTarget"]),
+
       renderPNG: debounce(function() {
+        this.setPrintTarget("png")
+
         // all store fetching, input validation, magic transformation, and data aggregation
         return this.projectItemThroughTemplate(this.item, this.template, this.scalingOptions)
 
