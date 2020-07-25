@@ -74,7 +74,7 @@ v-layout(row fluid).game-panel
     computed: mapGetters(["projectGame"]),
 
     methods: {
-      ...mapActions(["destroyGame"]),
+      ...mapActions(["destroyGame", "setPrintTarget"]),
 
       deleteGame() {
         this.$router.push({ name: "gameManager" })
@@ -82,6 +82,7 @@ v-layout(row fluid).game-panel
       },
 
       printGame() {
+        this.setPrintTarget("pdf")
         this.projectGame(this.game)
           .then((game) => {
             pdfRenderer.renderGameToPdf(game)

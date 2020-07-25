@@ -7,7 +7,7 @@
 
 <script>
   import { debounce } from 'lodash'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
   import pdfRenderer from '../../services/pdf_renderer'
 
@@ -30,7 +30,10 @@
     computed: mapGetters(["projectItemThroughTemplate"]),
 
     methods: {
+      ...mapActions(["setPrintTarget"]),
+
       renderPDF: debounce(function() {
+        this.setPrintTarget("pdf")
         // all store fetching, input validation, magic transformation, and data aggregation
         return this.projectItemThroughTemplate(this.item, this.template)
 

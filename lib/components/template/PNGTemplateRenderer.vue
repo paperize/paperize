@@ -22,7 +22,7 @@
 
 <script>
   import { debounce, map } from 'lodash'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import TemplateRenderer from './TemplateRenderer.vue'
   import { renderItemsToCanvas } from '../../services/png_renderer'
   import { scaleDimensions } from '../../services/pdf_renderer/helpers'
@@ -83,7 +83,11 @@
     },
 
     methods: {
+      ...mapActions(["setPrintTarget"]),
+
       renderPNG: debounce(function() {
+        this.setPrintTarget("png")
+
         // all store fetching, input validation, magic transformation, and data aggregation
         return this.projectItemThroughTemplate(this.item, this.template, this.scalingOptions)
 
@@ -96,7 +100,11 @@
             // dirty style-setting on the generated canvas and its parent
             const
               parent = this.$refs.canvasContainer.children[0],
-              canvas = parent.children[0]
+              canvas = parent && parent.children[0]
+
+            if(!canvas) {
+              throw new Error("PNG Canvas not present after render.")
+            }
 
             // this fits the canvas to the container, regardless its resolution
             parent.setAttribute("style", "width: initial; height: initial;")
