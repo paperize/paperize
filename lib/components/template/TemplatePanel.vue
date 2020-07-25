@@ -7,8 +7,7 @@ v-flex#template-editor(sm8 md6)
 
 
   template(v-if="componentTemplate")
-
-    template-previewer.inline-preview(v-if="!showTemplateManager" :game="activeGame" :component="activeComponent")
+    template-previewer.inline-preview(:game="activeGame" :component="activeComponent")
 
   template(v-else)
     p
