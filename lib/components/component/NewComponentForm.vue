@@ -14,9 +14,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       template(v-if="copyMode")
         v-select.component-selector(box label="Select Component to Copy" v-model="componentIdToCopy" :rules="[rules.required]" :items="allComponents" item-value="id" item-text="title")
 
-      template(v-else)
-        v-checkbox.component-add-sheet-to-source(v-if="gameHasSource && componentIdToCopy == null" v-model="addSheetToSource" label="Automatically add a Sheet to the main spreadsheet for this component?")
-
     v-card-actions
       v-btn(small success @click="submitComponent") {{ actionName }} Component
 </template>
@@ -30,7 +27,6 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         component: { title: "" },
         copyMode: false,
         componentIdToCopy: null,
-        addSheetToSource: true,
         rules: {
           required: value => !!value || 'Required.'
         }
@@ -63,15 +59,16 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     methods: {
       ...mapActions([
-        "createGameComponentAndDriveArtifacts",
-        "copyGameComponent"
+        "copyGameComponent",
+        "createGameComponent",
+        "createDriveArtifactsForGameComponent",
       ]),
 
       submitComponent() {
         if(!this.$refs.componentForm.validate()) { return }
 
         // Wrap create and copy inside one promise
-        return new Promise((resolve) => {
+        return Promise.try(() => {
           if(this.copyMode) {
             // Copy Mode
             const copyComponent = {
@@ -79,15 +76,17 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
               title: this.component.title
             }
 
-            resolve(this.copyGameComponent({ game: this.activeGame, component: copyComponent }))
+            return this.copyGameComponent({ game: this.activeGame, component: copyComponent })
 
           } else {
             // Create mode
-            resolve(this.createGameComponentAndDriveArtifacts({
-              game: this.activeGame,
-              component: this.component,
-              addSheetToSource: (this.gameHasSource && this.addSheetToSource)
-            }))
+            const game = this.activeGame
+
+            return this.createGameComponent({ game, component: this.component })
+              .then((componentId) => {
+                const component = this.findComponent(componentId)
+                return this.createDriveArtifactsForComponent({ game, component })
+              })
           }
         })
 
