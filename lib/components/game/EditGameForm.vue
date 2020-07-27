@@ -50,6 +50,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
                 | No Game Spreadsheet set
 
                 v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
+                v-btn(@click="createSheetArtifactForGame(game)") Create New Spreadsheet
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") Update
@@ -106,7 +107,10 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     methods: {
-      ...mapActions([ "updateGame" ]),
+      ...mapActions([
+        "updateGame",
+        "createSheetArtifactForGame"
+       ]),
 
       submitGame() {
         if(this.$refs.gameForm.validate()) {
