@@ -83,9 +83,9 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
             const game = this.activeGame
 
             return this.createGameComponent({ game, component: this.component })
-              .then((componentId) => {
+              .tap((componentId) => {
                 const component = this.findComponent(componentId)
-                return this.createDriveArtifactsForComponent({ game, component })
+                return this.createDriveArtifactsForGameComponent({ game, component })
               })
           }
         })
