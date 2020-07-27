@@ -23,7 +23,7 @@ v-expansion-panel#shape-layer-editor(popout)
             v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
 
         v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" box)
-          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
+          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeWidth")
 
         v-layout(row)
           v-flex(shrink)
