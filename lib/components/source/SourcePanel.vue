@@ -26,21 +26,6 @@ v-flex#source-editor(sm4 md6)
             v-icon close
           span Select a different Worksheet
 
-    //- Worksheet Select
-    template(v-else)
-      v-btn(small @click="createWorksheetDialog = true") Create New Worksheet
-      v-select(box label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
-      v-dialog(v-model="createWorksheetDialog" max-width="500" lazy)
-        v-card
-          v-card-text
-            v-form(ref="worksheetForm")
-              p Add a new worksheet to the Google Sheet "{{ componentSheet.name }}"
-              v-text-field(label="Worksheet Name" v-model="worksheetTitle" :rules="[rules.required, rules.noDupes]" )
-
-              v-btn(success @click="createWorksheetDialog = false") Cancel
-              v-btn(success color="primary" @click="createAndLinkWorksheet") Create Worksheet
-
-    template(v-else)
       //- Row Selection
       v-btn(small v-if="showRowSelection" @click="disableRowSelect") Disable Row Selection
       v-btn(small v-else @click="enableRowSelect") Enable Row Selection
@@ -62,6 +47,20 @@ v-flex#source-editor(sm4 md6)
         li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
 
       magic-property-alignment-panel(:magic-properties="worksheetMagicProperties(spreadsheetId, worksheetId)" :template="componentTemplate")
+
+    //- Worksheet Select
+    template(v-else)
+      v-btn(small @click="createWorksheetDialog = true") Create New Worksheet
+      v-select(box label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
+      v-dialog(v-model="createWorksheetDialog" max-width="500" lazy)
+        v-card
+          v-card-text
+            v-form(ref="worksheetForm")
+              p Add a new worksheet to the Google Sheet "{{ componentSheet.name }}"
+              v-text-field(label="Worksheet Name" v-model="worksheetTitle" :rules="[rules.required, rules.noDupes]" )
+
+              v-btn(success @click="createWorksheetDialog = false") Cancel
+              v-btn(success color="primary" @click="createAndLinkWorksheet") Create Worksheet
 
   //- We need to set a source
   template(v-else)
