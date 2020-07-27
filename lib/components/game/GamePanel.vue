@@ -10,7 +10,7 @@ v-layout(row fluid).game-panel
         edit-game-form(:game="game" @close-dialog="showEditDialog = false")
 
     folder-icon(:folderId="game.folderId")
-    file-uploader(:folderId="game.folderId")
+    file-uploader(v-if="game.folderId" :folderId="game.folderId")
     spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
   v-flex(xs12 md8)
