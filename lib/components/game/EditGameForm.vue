@@ -49,7 +49,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
                 spreadsheet-icon(:force="true")
                 | No Game Spreadsheet set
 
-                v-btn(@click="pickSheetFromDrive") Pick Spreadsheet
+                v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
 
     v-card-actions
       v-btn(small color="success" @click="submitGame") Update
@@ -57,7 +57,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { openFolderPicker, openSheetPicker } from '../../services/google/picker'
+  import { openFolderPicker } from '../../services/google/picker'
 
   import FolderIcon from '../icons/FolderIcon.vue'
   import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
@@ -84,7 +84,10 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     },
 
     computed: {
-      ...mapGetters([ "workingDirectoryId" ]),
+      ...mapGetters([
+        "workingDirectoryId",
+        "allSpreadsheets",
+      ]),
 
       gameFolder() {
         return this.$store.getters.gameFolder(this.game)
@@ -92,6 +95,13 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
       gameSpreadsheet() {
         return this.$store.getters.gameSpreadsheet(this.game)
+      },
+
+      spreadsheetId: {
+        get() { return this.gameSpreadsheet },
+        set(spreadsheetId) {
+          return this.updateGame({ ...this.game, spreadsheetId })
+        }
       },
     },
 
@@ -121,15 +131,6 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
             if(!folderId) { return Promise.reject(new Error("No Folder picked.")) }
 
             return this.updateGame({ ...this.game, folderId })
-          })
-      },
-
-      pickSheetFromDrive() {
-        return openSheetPicker(this.workingDirectoryId)
-          .then((spreadsheetId) => {
-            if(!spreadsheetId) { return Promise.reject(new Error("No sheet picked.")) }
-
-            return this.updateGame({ ...this.game, spreadsheetId })
           })
       },
     }
