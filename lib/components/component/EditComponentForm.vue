@@ -43,7 +43,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       title: computedVModelUpdate("component", "patchComponent", "title"),
 
       componentTemplate() {
-        return this.component && findComponentTemplate(this.component)
+        return this.component && this.findComponentTemplate(this.component)
       }
     },
 
