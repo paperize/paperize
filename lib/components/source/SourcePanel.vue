@@ -8,16 +8,40 @@ v-flex#source-editor(sm4 md6)
       spreadsheet-icon(:spreadsheetId="componentSheet.id")
       | {{ componentSheet.name }}
 
-      //- Change this source?
-      v-tooltip(top)
-        v-btn.edit-spreadsheet(slot="activator" fab small @click="unlinkComponentSheet(component)")
-          v-icon edit
-        span Select a different Source
-
+      //- Refresh Spreadsheet
       refresh-source-button(:spreadsheet="componentSheet")
 
-      v-select(box label="Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
+      //- Change Spreadsheet
+      v-tooltip(top)
+        v-btn.edit-spreadsheet(slot="activator" fab small @click="unlinkComponentSheet(component)")
+          v-icon close
+        span Select a different Spreadsheet
 
+    template(v-if="componentWorksheet")
+      .subheading
+        | {{ componentWorksheet.title }}
+        //- Change Worksheet
+        v-tooltip(top)
+          v-btn.edit-spreadsheet(slot="activator" fab small @click="unlinkComponentWorksheet(component)")
+            v-icon close
+          span Select a different Worksheet
+
+    //- Worksheet Select
+    template(v-else)
+      v-btn(small @click="createWorksheetDialog = true") Create New Worksheet
+      v-select(box label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
+      v-dialog(v-model="createWorksheetDialog" max-width="500" lazy)
+        v-card
+          v-card-text
+            v-form(ref="worksheetForm")
+              p Add a new worksheet to the Google Sheet "{{ componentSheet.name }}"
+              v-text-field(label="Worksheet Name" v-model="worksheetTitle" :rules="[rules.required, rules.noDupes]" )
+
+              v-btn(success @click="createWorksheetDialog = false") Cancel
+              v-btn(success color="primary" @click="createAndLinkWorksheet") Create Worksheet
+
+    template(v-else)
+      //- Row Selection
       v-btn(small v-if="showRowSelection" @click="disableRowSelect") Disable Row Selection
       v-btn(small v-else @click="enableRowSelect") Enable Row Selection
 
@@ -27,37 +51,30 @@ v-flex#source-editor(sm4 md6)
         v-flex(xs-6)
           v-text-field(box label="Last Row" v-model="lastRow" type="number" min="2" :max="getRowCount(component)+1")
 
-    //- Quantity Property
-    v-tooltip(bottom)
-      v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
-      | A quantity property duplicates an item any number of times.
+      //- Quantity Property
+      v-tooltip(bottom)
+        v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
+        | A quantity property duplicates an item any number of times.
 
-    //- List of Properties
-    .subheading Available Properties
-    ul.source-properties
-      li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
+      //- List of Properties
+      .subheading Available Properties
+      ul.source-properties
+        li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
 
-    magic-property-alignment-panel(:magic-properties="worksheetMagicProperties(spreadsheetId, worksheetId)" :template="componentTemplate")
+      magic-property-alignment-panel(:magic-properties="worksheetMagicProperties(spreadsheetId, worksheetId)" :template="componentTemplate")
 
   //- We need to set a source
   template(v-else)
     p
-      strong This component needs a Sheet to pull its items from.
+      strong This component needs a Spreadsheet to render items from.
 
-    v-btn(small color="primary" @click="pickSheetFromDrive") Explore Drive
-    v-btn(small color="primary" @click="createSheetDialog = true") Create New Source
-    v-autocomplete(box label="Select Existing Source" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
+    v-btn(v-if="gameHasSheet" small @click="useGameSheet") Use Game Spreadsheet
 
-    v-dialog(v-model="createSheetDialog" max-width="500" lazy)
-      v-card
-        v-card-text
-          p Create a new Google Sheet named "{{ component.title }}" in the game folder?
-
-          v-btn(success @click="createSpreadsheetAndLinkSheet") Go
+    v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
 </template>
 
 <script>
-  import { map, max, min, pick } from 'lodash'
+  import { includes, map, max, min, pick } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import { computedVModelUpdateAll } from '../util/component_helper'
   import { openSheetPicker } from '../../services/google/picker'
@@ -76,22 +93,31 @@ v-flex#source-editor(sm4 md6)
 
     updated() {
       this.detectRowSelection()
+      this.validateWorksheetForm()
     },
 
     data() {
       return {
         createSheetDialog: false,
-        showRowSelection: false
+        createWorksheetDialog: false,
+        showRowSelection: false,
+        worksheetTitle: this.component.title,
+        rules: {
+          required: value => !!value || 'Required.',
+          noDupes: value => !includes(this.worksheetTitles(this.componentSheet.id), value) || 'No duplicate names.'
+        }
       }
     },
 
     computed: {
       ...mapGetters([
         "workingDirectoryId",
+        "worksheetTitles",
         "worksheetPropertyNames",
         "worksheetMagicProperties",
         "findComponentSheet",
         "findComponentTemplate",
+        "findSpreadsheetWorksheet",
         "activeGame",
         "gameFolderOrDefault",
         "getRowCount",
@@ -151,7 +177,13 @@ v-flex#source-editor(sm4 md6)
         return map(this.componentSheet.worksheets, (ws) => pick(ws, ["id", "title"]))
       },
 
+      gameHasSheet() { return !!this.activeGame.spreadsheetId },
+
       componentSheet() { return this.findComponentSheet(this.component) },
+
+      componentWorksheet() {
+        return this.findSpreadsheetWorksheet(this.componentSheet.id, this.worksheetId)
+      },
 
       componentTemplate() { return this.findComponentTemplate(this.component) },
     },
@@ -163,7 +195,12 @@ v-flex#source-editor(sm4 md6)
         "setComponentWorksheet",
         "patchComponent",
         "googleCreateSpreadsheet",
+        "createComponentSpreadsheetWorksheet",
       ]),
+
+      validateWorksheetForm() {
+        this.$refs.worksheetForm && this.$refs.worksheetForm.validate()
+      },
 
       pickSheetFromDrive() {
         return openSheetPicker(this.workingDirectoryId)
@@ -177,18 +214,19 @@ v-flex#source-editor(sm4 md6)
           })
       },
 
-      createSpreadsheetAndLinkSheet() {
-        const folder = this.gameFolderOrDefault(this.activeGame)
-        return this.googleCreateSpreadsheet({
-          name: this.component.title,
-          parentId: folder.id,
+      useGameSheet() {
+        return this.patchComponent({
+          id: this.component.id,
+          spreadsheetId: this.activeGame.spreadsheetId
         })
+      },
 
-        .then((spreadsheetId) => {
-          return this.patchComponent({
-            id: this.component.id, spreadsheetId
+      createAndLinkWorksheet() {
+        this.createComponentSpreadsheetWorksheet({ component: this.component, worksheetTitle: this.worksheetTitle  })
+
+          .then(() => {
+            this.createWorksheetDialog = false
           })
-        })
       },
 
       detectRowSelection() {
@@ -206,6 +244,10 @@ v-flex#source-editor(sm4 md6)
           worksheetFirstRow: 0,
           worksheetLastRow: this.getRowCount(this.component)-1
         })
+      },
+
+      unlinkComponentWorksheet(component) {
+        this.setComponentWorksheet({ component, worksheetId: null })
       },
 
       disableRowSelect() {
