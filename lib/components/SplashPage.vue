@@ -33,7 +33,7 @@ v-container(grid-list-xl fluid)
 
       p.body-2 Paperize is "free as in pizza", which means "you can have this piece of software to use as you wish."
 
-      p.body-2 Paperize is "free as in speech", which means "you can inspect, modify, and distribute the source code of this software." (Not actually open source yet, but coming soon.)
+      p.body-2 Paperize is "free as in speech", which means "you can inspect, modify, and distribute the source code of this software."
 
       p.body-2 Paperize is "free from surveillance", which means it doesn't track you around the web, or access the data you trust it with.
 
