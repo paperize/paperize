@@ -11,7 +11,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
     v-card-text
       v-text-field.component-title(v-model="title" :rules="[rules.required]" label="Title" placeholder="Artifact Cards")
-      template-size-editor(:template="findComponentTemplate(component)")
+      template-size-editor(v-if="componentTemplate" :template="componentTemplate")
 
     v-card-actions
       v-btn(small success @click="submitComponent") Done
@@ -41,6 +41,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
       ...mapGetters(["activeGame", "findComponentTemplate"]),
 
       title: computedVModelUpdate("component", "patchComponent", "title"),
+
+      componentTemplate() {
+        return this.component && findComponentTemplate(this.component)
+      }
     },
 
     methods: {
