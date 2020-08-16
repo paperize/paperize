@@ -4,9 +4,9 @@
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {
-    "//": "Server Stuff",
+    "// Server Stuff": "",
     "start": "npx webpack-dev-server --hot --host localhost --config webpack.dev.js",
-    "start-test": "npx webpack-dev-server --host localhost --config webpack.test.js --env.NO_SYNC=true",
+    "start-test": "npx webpack-dev-server --host localhost --config webpack.test.js --env.NO_SYNC=true --no-hot --no-inline",
     "server": "http-server build",
     "// Testing": "",
     "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-test\" \"cypress open\"",
