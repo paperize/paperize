@@ -75,7 +75,7 @@ v-toolbar(app)
       ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
 
       homeLink () {
-        return this.loggedIn ? 'gameManager' : 'splash'
+        return this.loggedIn ? 'gameManager' : 'threshold'
       }
     },
 
