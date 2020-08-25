@@ -13,9 +13,11 @@ v-expansion-panel-content#dimension-editor
           v-flex#dimension-unit-selector
             p Units:
             v-btn-toggle(v-model="dimensionUnits" mandatory)
-              v-btn(small flat value="percent") %
+              v-btn(small flat value="percent") %              
               v-btn(small flat value="inches") in
+              v-btn(small flat value="centimeters") cm
               v-btn(small flat value="millimeters") mm
+              v-btn(small flat value="points") pt
               v-btn(small flat value="pixels") px
 
           v-flex(v-if="modeXYWH")
@@ -49,7 +51,7 @@ v-expansion-panel-content#dimension-editor
   import { isString } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
   import { XYWH, INSET,
-    PERCENT, PIXELS, INCHES, MILLIMETERS } from '../../../store/dimensions.js'
+    PERCENT, PIXELS, POINTS, INCHES, CENTIMETERS, MILLIMETERS } from '../../../store/dimensions.js'
 
   const VARIABLES = {}
   VARIABLES[PERCENT] = {
@@ -62,13 +64,23 @@ v-expansion-panel-content#dimension-editor
     name:        "px",
     description: "pixels",
   }
+  VARIABLES[POINTS] = {
+    step:        "0.1",
+    name:        "pt",
+    description: "points",
+  }
   VARIABLES[INCHES] = {
     step:        "0.01",
     name:        "in",
     description: "inches",
   }
+  VARIABLES[CENTIMETERS] = {
+    step:        "0.01",
+    name:        "cm",
+    description: "centimeters"
+  }
   VARIABLES[MILLIMETERS] = {
-    step:        "1",
+    step:        "0.1",
     name:        "mm",
     description: "millimeters",
   }
@@ -78,7 +90,7 @@ v-expansion-panel-content#dimension-editor
 
     data() {
       return {
-        XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS
+        XYWH, INSET, PERCENT, PIXELS, POINTS, INCHES, CENTIMETERS, MILLIMETERS
       }
     },
 
@@ -205,15 +217,21 @@ v-expansion-panel-content#dimension-editor
         switch(currentUnit) {
           case "percent":
             return measure
+            break            
+          case "pixels":
+            return this.fromCurrentUnit((measure / 300), dimension, 'inches')
+            break
+          case "points":
+            return this.fromCurrentUnit((measure /  72), dimension, 'inches')
             break
           case "inches":
             return measure / this.size[dimension] * 100
             break
+          case "centimeters":
+            return this.fromCurrentUnit((measure / 2.54), dimension, 'inches')
+            break
           case "millimeters":
             return this.fromCurrentUnit((measure / 25.4), dimension, 'inches')
-            break
-          case "pixels":
-            return this.fromCurrentUnit((measure / 300), dimension, 'inches')
             break
           default:
             throw new Error(`Unrecognized unit: ${measure}`)
@@ -229,14 +247,20 @@ v-expansion-panel-content#dimension-editor
           case "percent":
             return measure.toFixed(1)
             break
+          case "pixels":
+            return (this.toCurrentUnit(measure, dimension, 'inches') * 300).toFixed(0)
+            break
+          case "points":
+            return (this.toCurrentUnit(measure, dimension, 'inches') *  72).toFixed(1)
+            break
           case "inches":
             return (this.size[dimension] * measure * .01).toFixed(2)
             break
+          case "centimeters":
+            return (this.toCurrentUnit(measure, dimension, 'inches') * 2.54).toFixed(2)
+            break
           case "millimeters":
             return (this.toCurrentUnit(measure, dimension, 'inches') * 25.4).toFixed(1)
-            break
-          case "pixels":
-            return (this.toCurrentUnit(measure, dimension, 'inches') * 300).toFixed(0)
             break
           default:
             throw new Error(`Unrecognized unit: ${measure}`)

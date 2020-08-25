@@ -2,13 +2,10 @@
   template-renderer(:renderer="renderPNG" :template="template" :item="item")
     v-layout
       v-flex(xs-3)
-        v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="1" max="600" box)
+        v-text-field.text-size(label="Pixels per Inch" v-model="pixelsPerInch" type="number" min="150" max="600" box)
 
       v-flex(xs-3)
-        v-text-field.text-size(label="Font Scale Factor" v-model="fontScaleFactor" type="number" min="0" max="1000" box)
-
-      v-flex(xs-3)
-        v-text-field.text-size(label="Stroke Scale Factor" v-model="strokeScaleFactor" type="number" min="0" max="1000" box)
+        v-text-field.text-size(label="Points per Inch" v-model="pointsPerInch" type="number" min="36" max="144" box)
 
       v-flex(xs-3)
         v-checkbox.text-size(label="Image Smoothing" v-model="imageSmoothing" type="number" min="0" max="1000" box)
@@ -48,9 +45,8 @@
     data() {
       return {
         pixelsPerInch: 150,
-        fontScaleFactor: 2.0,
-        strokeScaleFactor: 200,
-        imageSmoothing: true
+        pointsPerInch:  72,
+        imageSmoothing: false
       }
     },
 
@@ -68,8 +64,7 @@
       },
 
       parsedPixelsPerInch() { return parseInt(this.pixelsPerInch, 10) },
-      parsedFontScaleFactor() { return parseFloat(this.fontScaleFactor) },
-      parsedStrokeScaleFactor() { return parseFloat(this.strokeScaleFactor) },
+      parsedPointsPerInch() { return parseInt(this.pointsPerInch, 10) },
 
       renderOptions() {
         return {
