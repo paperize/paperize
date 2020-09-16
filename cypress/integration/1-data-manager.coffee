@@ -4,38 +4,48 @@ describe "Data Manager", ->
     # just start Paperize with local persistence
     # promote to remote-synced later, upon login
 
+  # 5 Ideal States:
   context "App modes", ->
+    # Blank
     it "Mode: Empty"
-      # router not installed
+      # uses empty router
       # Data Manager rendered
       # automatic database/login detectors run in background
-      # detectors negative or timedout, start first-timer happy-path
+      # detectors return negative or timeout, start first-timer happy-path
 
+    # Loading
+    it "Mode: Loading"
+
+    # Partial
     it "Mode: Database Active"
       # a database has been loaded into the system successfully
       # mount the router
 
+    # Ideal
     it "Mode: Database Active w/ Remote Sync"
       # remote data source auth acquired
       # subscription to store set up for db sync
+
+    # Errors (probably)
+    it "Mode: Errors"
 
   context "Empty state", ->
     beforeEach ->
       cy.visit "/"
       # cy.setStoreReady()
 
-    it.only "Starts in empty mode", ->
-      cy.vuex().then (vuex) ->
-        expect(vuex.getters.appMode).equal("empty")
+    it "Starts in empty mode", ->
+      cy.vuex()
+        .its("getters.appMode")
+        .should("equal", "empty")
 
-    it "Appear at the root", ->
+    it "Shows the data manager's state", ->
       cy.contains "Data Manager"
-
-    it "Says no database is selected", ->
       cy.contains "No Database Selected"
-
-    it "Says no user is logged in", ->
       cy.contains "No User Selected"
+
+    it.only "Starts background checks for local db/login/remote db", ->
+
 
   context "Selecting local persistence", ->
     it "creates a database in localStore/IndexedDB"
