@@ -53,56 +53,107 @@ v-expansion-panel-content#dimension-editor
   import { XYWH, INSET,
     PERCENT, PIXELS, INCHES, MILLIMETERS } from '../../../store/dimensions.js'
 
-  const VARIABLES = {}
-  VARIABLES[PERCENT] = {
-    step:        "0.1",
-    name:        "%",
-    description: "percentage of total width or height",
-  }
-  VARIABLES[PIXELS] = {
-    step:        "1",
-    name:        "px",
-    description: "pixels",
-  }
-  VARIABLES[INCHES] = {
-    step:        "0.01",
-    name:        "in",
-    description: "inches",
-  }
-  VARIABLES[MILLIMETERS] = {
-    step:        "1",
-    name:        "mm",
-    description: "millimeters",
+
+  /* FIXME: This is an unmitigated disaster.
+    Multiple concerns are herein struggling against one another.
+    - validation of inputs
+    - user input UX (don't overwrite what they're typing, move their cursor, etc)
+    - rounding for beauty
+    - translating between units in multiple places
+    - maintaining a model that's just for the view, syncing changes appropriately
+    - updating different dimensions individually vs all at once
+    - function visibility:
+      - need to run some in data(), before methods are available
+      - need to also run them via methods
+    - dimension-specific variables
+  */
+  const VARIABLES = {
+    [PERCENT]: {
+      step:          "0.1",
+      decimalDigits: 1,
+      name:          "%",
+      description:   "percentage of total width or height",
+    },
+    [PIXELS]: {
+      step:          "1",
+      decimalDigits: 0,
+      name:          "px",
+      description:   "pixels",
+    },
+    [INCHES]: {
+      step:          "0.01",
+      decimalDigits: 2,
+      name:          "in",
+      description:   "inches",
+    },
+    [MILLIMETERS]: {
+      step:          "1",
+      decimalDigits: 1,
+      name:          "mm",
+      description:   "millimeters",
+    }
   }
 
   const
-    roundAllToUnit = (dimensionObject, currentUnit) => {
-      roundToUnit('x', dimensionObject, currentUnit)
-      roundToUnit('y', dimensionObject, currentUnit)
-      roundToUnit('w', dimensionObject, currentUnit)
-      roundToUnit('h', dimensionObject, currentUnit)
+    fromUnitToUnit = (measure, dimension, oldUnit, newUnit, size) => {
+      const base = fromUnit(measure, dimension, oldUnit, size)
+      return toUnit(base, dimension, newUnit, size)
     },
 
-    roundToUnit = (dimensionProperty, dimensionObject, currentUnit) => {
-      let fixedPosition
+    fromUnit = (measure, dimension, currentUnit, size) => {
       switch(currentUnit) {
         case "percent":
-          fixedPosition = 1
+          return measure
           break
         case "inches":
-          fixedPosition = 2
+          return measure / size[dimension] * 100
           break
         case "millimeters":
-          fixedPosition = 1
+          return fromUnit((measure / 25.4), dimension, 'inches', size)
           break
         case "pixels":
-          fixedPosition = 0
+          return fromUnit((measure / 300), dimension, 'inches', size)
+          break
+        default:
+          throw new Error(`Unrecognized unit: ${currentUnit}`)
+      }
+    },
+
+    toUnit = (measure, dimension, currentUnit, size) => {
+      let stringDimension
+      switch(currentUnit) {
+        case "percent":
+          stringDimension = measure.toFixed(1)
+          break
+        case "inches":
+          stringDimension = (size[dimension] * measure * .01).toFixed(2)
+          break
+        case "millimeters":
+          stringDimension = (toUnit(measure, dimension, 'inches', size) * 25.4).toFixed(1)
+          break
+        case "pixels":
+          stringDimension = (toUnit(measure, dimension, 'inches', size) * 300).toFixed(0)
           break
         default:
           throw new Error(`Unrecognized unit: ${currentUnit}`)
       }
 
+      return parseFloat(stringDimension)
+    },
+
+    roundToUnit = (dimensionProperty, dimensionObject, currentUnit) => {
+      const fixedPosition = VARIABLES[currentUnit].decimalDigits
+
       dimensionObject[dimensionProperty] = parseFloat(dimensionObject[dimensionProperty].toFixed(fixedPosition))
+    },
+
+    translateToNewUnits = (dimensionsModel, dimensions, newUnits, size) => {
+      const { x, y, w, h, units } = dimensions
+      dimensionsModel.x = fromUnitToUnit(x, 'w', 'percent', newUnits, size)
+      dimensionsModel.y = fromUnitToUnit(y, 'h', 'percent', newUnits, size)
+      dimensionsModel.w = fromUnitToUnit(w, 'w', 'percent', newUnits, size)
+      dimensionsModel.h = fromUnitToUnit(h, 'h', 'percent', newUnits, size)
+      dimensionsModel.units = newUnits
     }
 
   export default {
@@ -110,7 +161,7 @@ v-expansion-panel-content#dimension-editor
 
     data() {
       const dimensionsModel = { ...this.dimensions }
-      roundAllToUnit(dimensionsModel, dimensionsModel.units)
+      translateToNewUnits(dimensionsModel, this.dimensions, dimensionsModel.units, this.size)
 
       return {
         XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS,
@@ -129,12 +180,7 @@ v-expansion-panel-content#dimension-editor
       dimensionUnits: {
         get() { return this.dimensions.units || PERCENT },
         set(newUnits) {
-          const { x, y, w, h, units } = this.dimensions
-          this.dimensionsModel.x = this.fromUnitToUnit(x, 'w', 'percent', newUnits)
-          this.dimensionsModel.y = this.fromUnitToUnit(y, 'h', 'percent', newUnits)
-          this.dimensionsModel.w = this.fromUnitToUnit(w, 'w', 'percent', newUnits)
-          this.dimensionsModel.h = this.fromUnitToUnit(h, 'h', 'percent', newUnits)
-          this.dimensionsModel.units = newUnits
+          translateToNewUnits(this.dimensionsModel, this.dimensions, newUnits, this.size)
           this.updateDimension({ ...this.dimensions, units: newUnits })
         }
       },
@@ -264,8 +310,7 @@ v-expansion-panel-content#dimension-editor
       ...mapActions(["patchDimension", "updateDimension"]),
 
       fromUnitToUnit(measure, dimension, fromUnit, toUnit=this.dimensionUnits) {
-        const base = this.fromUnit(measure, dimension, fromUnit)
-        return this.toUnit(base, dimension, toUnit)
+        return fromUnitToUnit(measure, dimension, fromUnit, toUnit, this.size)
       },
 
       fromUnit(measure, dimension, currentUnit=this.dimensionUnits) {
@@ -273,22 +318,7 @@ v-expansion-panel-content#dimension-editor
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
 
-        switch(currentUnit) {
-          case "percent":
-            return measure
-            break
-          case "inches":
-            return measure / this.size[dimension] * 100
-            break
-          case "millimeters":
-            return this.fromUnit((measure / 25.4), dimension, 'inches')
-            break
-          case "pixels":
-            return this.fromUnit((measure / 300), dimension, 'inches')
-            break
-          default:
-            throw new Error(`Unrecognized unit: ${currentUnit}`)
-        }
+        return fromUnit(measure, dimension, currentUnit, this.size)
       },
 
       toUnit(measure, dimension, currentUnit=this.dimensionUnits) {
@@ -296,25 +326,7 @@ v-expansion-panel-content#dimension-editor
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
 
-        let stringDimension
-        switch(currentUnit) {
-          case "percent":
-            stringDimension = measure.toFixed(1)
-            break
-          case "inches":
-            stringDimension = (this.size[dimension] * measure * .01).toFixed(2)
-            break
-          case "millimeters":
-            stringDimension = (this.toUnit(measure, dimension, 'inches') * 25.4).toFixed(1)
-            break
-          case "pixels":
-            stringDimension = (this.toUnit(measure, dimension, 'inches') * 300).toFixed(0)
-            break
-          default:
-            throw new Error(`Unrecognized unit: ${currentUnit}`)
-        }
-
-        return parseFloat(stringDimension)
+        return toUnit(measure, dimension, currentUnit, this.size)
       },
 
       roundToUnit(dimensionProperty, dimensionObject=this.dimensionsModel, currentUnit=this.dimensionUnits) {
