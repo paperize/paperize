@@ -23,26 +23,28 @@ v-expansion-panel-content#dimension-editor
               v-flex
                 p Expressed as {{ unitDescription }} from the top left corner.
               v-flex(xs12 md6)
-                v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX" box)
+                v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX" @blur="roundToUnit('x')" box)
               v-flex(xs12 md6)
-                v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY" box)
+                v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY" @blur="roundToUnit('y')" box)
               v-flex(xs12 md6)
-                v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW" box)
+                v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW" @blur="roundToUnit('w')" box)
               v-flex(xs12 md6)
-                v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" box)
+                v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" @blur="roundToUnit('h')" box)
 
           v-flex(v-else-if="modeInset")
             v-layout#layout-inset(row wrap)
               v-flex
                 p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
-              v-flex(xs12)
-                v-text-field#dim-t(prefix="T" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT" box)
+              v-flex(md3)
               v-flex(xs12 md6)
-                v-text-field#dim-l(prefix="L" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL" box)
+                v-text-field#dim-t(prefix="Top" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT" box)
               v-flex(xs12 md6)
-                v-text-field#dim-r(prefix="R" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR" box)
-              v-flex(xs12)
-                v-text-field#dim-b(prefix="B" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB" box)
+                v-text-field#dim-l(prefix="Left" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL" box)
+              v-flex(xs12 md6)
+                v-text-field#dim-r(prefix="Right" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR" box)
+              v-flex(md3)
+              v-flex(xs12 md6)
+                v-text-field#dim-b(prefix="Bottom" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB" box)
 </template>
 
 <script>
@@ -73,26 +75,68 @@ v-expansion-panel-content#dimension-editor
     description: "millimeters",
   }
 
+  const
+    roundAllToUnit = (dimensionObject, currentUnit) => {
+      roundToUnit('x', dimensionObject, currentUnit)
+      roundToUnit('y', dimensionObject, currentUnit)
+      roundToUnit('w', dimensionObject, currentUnit)
+      roundToUnit('h', dimensionObject, currentUnit)
+    },
+
+    roundToUnit = (dimensionProperty, dimensionObject, currentUnit) => {
+      let fixedPosition
+      switch(currentUnit) {
+        case "percent":
+          fixedPosition = 1
+          break
+        case "inches":
+          fixedPosition = 2
+          break
+        case "millimeters":
+          fixedPosition = 1
+          break
+        case "pixels":
+          fixedPosition = 0
+          break
+        default:
+          throw new Error(`Unrecognized unit: ${currentUnit}`)
+      }
+
+      dimensionObject[dimensionProperty] = parseFloat(dimensionObject[dimensionProperty].toFixed(fixedPosition))
+    }
+
   export default {
     props: ["dimensions", "size"],
 
     data() {
+      const dimensionsModel = { ...this.dimensions }
+      roundAllToUnit(dimensionsModel, dimensionsModel.units)
+
       return {
-        XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS
+        XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS,
+        dimensionsModel
       }
     },
 
     computed: {
-      // ...mapGetters([]),
-
       dimensionLayout: {
         get() { return this.dimensions.layout || XYWH },
-        set(newLayout) { this.updateDimension({ ...this.dimensions, layout: newLayout })}
+        set(newLayout) {
+          this.dimensionsModel.layout = newLayout
+          this.updateDimension({ ...this.dimensions, layout: newLayout })}
       },
 
       dimensionUnits: {
         get() { return this.dimensions.units || PERCENT },
-        set(newUnits) { this.updateDimension({ ...this.dimensions, units: newUnits })}
+        set(newUnits) {
+          const { x, y, w, h, units } = this.dimensions
+          this.dimensionsModel.x = this.fromUnitToUnit(x, 'w', 'percent', newUnits)
+          this.dimensionsModel.y = this.fromUnitToUnit(y, 'h', 'percent', newUnits)
+          this.dimensionsModel.w = this.fromUnitToUnit(w, 'w', 'percent', newUnits)
+          this.dimensionsModel.h = this.fromUnitToUnit(h, 'h', 'percent', newUnits)
+          this.dimensionsModel.units = newUnits
+          this.updateDimension({ ...this.dimensions, units: newUnits })
+        }
       },
 
       modeXYWH() { return this.dimensionLayout == XYWH },
@@ -107,88 +151,110 @@ v-expansion-panel-content#dimension-editor
       unitName() { return VARIABLES[this.dimensionUnits].name },
       unitDescription() { return VARIABLES[this.dimensionUnits].description },
 
+      currentUnitWidth() {
+        return this.fromUnitToUnit(this.size.w, 'w', 'inches')
+      },
+
+      currentUnitHeight() {
+        return this.fromUnitToUnit(this.size.h, 'h', 'inches')
+      },
+
       dimensionsId() { return this.dimensions.id },
 
       dimensionX: {
-        get() { return this.toCurrentUnit(this.dimensions.x, 'w') },
+        get() { return this.dimensionsModel.x },
 
         set(newX) {
           if(isString(newX) || newX < 0) { newX = 0 }
-          newX = this.fromCurrentUnit(newX, 'w')
+          this.dimensionsModel.x = newX
+          newX = this.fromUnit(newX, 'w')
           this.patchDimension({ id: this.dimensionsId, x: newX })
         }
       },
 
       dimensionY: {
-        get() { return this.toCurrentUnit(this.dimensions.y, 'h') },
+        get() { return this.dimensionsModel.y },
 
         set(newY) {
           if(isString(newY) || newY < 0) { newY = 0 }
-          newY = this.fromCurrentUnit(newY, 'h')
+          this.dimensionsModel.y = newY
+          newY = this.fromUnit(newY, 'h')
           this.patchDimension({ id: this.dimensionsId, y: newY })
         }
       },
 
       dimensionW: {
-        get() { return this.toCurrentUnit(this.dimensions.w, 'w') },
+        get() { return this.dimensionsModel.w },
 
         set(newW) {
           if(isString(newW) || newW < 0) { newW = 0 }
-          newW = this.fromCurrentUnit(newW, 'w')
+          this.dimensionsModel.w = newW
+          newW = this.fromUnit(newW, 'w')
           this.patchDimension({ id: this.dimensionsId, w: newW })
         }
       },
 
       dimensionH: {
-        get() { return this.toCurrentUnit(this.dimensions.h, 'h') },
+        get() { return this.dimensionsModel.h },
 
         set(newH) {
           if(isString(newH) || newH < 0) { newH = 0 }
-          newH = this.fromCurrentUnit(newH, 'h')
+          this.dimensionsModel.h = newH
+          newH = this.fromUnit(newH, 'h')
           this.patchDimension({ id: this.dimensionsId, h: newH })
         }
       },
 
       dimensionT: {
-        get() { return this.toCurrentUnit(this.dimensions.y, 'h') },
+        get() { return this.dimensionsModel.y },
 
         set(newT) {
           if(isString(newT) || newT < 0) { newT = 0 }
-          newT = this.fromCurrentUnit(newT, 'h')
-          let newHeight = (this.dimensions.h + this.dimensions.y) - newT
+          const modelHeight = (this.dimensionsModel.h + this.dimensionsModel.y) - newT
+          this.dimensionsModel.y = newT
+          this.dimensionsModel.h = modelHeight
+          newT = this.fromUnit(newT, 'h')
+          const newHeight = (this.dimensions.h + this.dimensions.y) - newT
           this.patchDimension({ id: this.dimensionsId, y: newT, h: newHeight })
         }
       },
 
       dimensionR: {
-        get() { return this.toCurrentUnit((100 - this.dimensions.x - this.dimensions.w), 'w') },
+        get() { return (this.currentUnitWidth - this.dimensionsModel.x - this.dimensionsModel.w) },
 
         set(newR) {
           if(isString(newR) || newR < 0) { newR = 0 }
-          newR = this.fromCurrentUnit(newR, 'w')
-          let newWidth = 100 - newR - this.dimensions.x
+          const modelWidth = this.currentUnitWidth - newR - this.dimensionsModel.x
+          this.dimensionsModel.w = modelWidth
+          newR = this.fromUnit(newR, 'w')
+          const newWidth = 100 - newR - this.dimensions.x
           this.patchDimension({ id: this.dimensionsId, w: newWidth })
         }
       },
 
       dimensionB: {
-        get() { return this.toCurrentUnit((100 - this.dimensions.y - this.dimensions.h), 'h') },
+        get() { return (this.currentUnitHeight - this.dimensionsModel.y - this.dimensionsModel.h) },
 
         set(newB) {
           if(isString(newB) || newB < 0) { newB = 0 }
-          newB = this.fromCurrentUnit(newB, 'h')
-          let newHeight = 100 - newB - this.dimensions.y
+          const modelHeight = this.currentUnitHeight - newB - this.dimensionsModel.y
+          this.dimensionsModel.h = modelHeight
+          newB = this.fromUnit(newB, 'h')
+          const newHeight = 100 - newB - this.dimensions.y
           this.patchDimension({ id: this.dimensionsId, h: newHeight })
         }
       },
 
       dimensionL: {
-        get() { return this.toCurrentUnit(this.dimensions.x, 'w') },
+        get() { return this.dimensionsModel.x },
 
         set(newL) {
           if(isString(newL) || newL < 0) { newL = 0 }
-          newL = this.fromCurrentUnit(newL, 'w')
-          let newWidth = (this.dimensions.w + this.dimensions.x) - newL
+          const modelWidth = (this.dimensionsModel.w + this.dimensionsModel.x) - newL
+          this.dimensionsModel.x = newL
+          this.dimensionsModel.w = modelWidth
+          newL = this.fromUnit(newL, 'w')
+          const newWidth = (this.dimensions.w + this.dimensions.x) - newL
           this.patchDimension({ id: this.dimensionsId, x: newL, w: newWidth })
         }
       },
@@ -197,7 +263,12 @@ v-expansion-panel-content#dimension-editor
     methods: {
       ...mapActions(["patchDimension", "updateDimension"]),
 
-      fromCurrentUnit(measure, dimension, currentUnit=this.dimensionUnits) {
+      fromUnitToUnit(measure, dimension, fromUnit, toUnit=this.dimensionUnits) {
+        const base = this.fromUnit(measure, dimension, fromUnit)
+        return this.toUnit(base, dimension, toUnit)
+      },
+
+      fromUnit(measure, dimension, currentUnit=this.dimensionUnits) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
@@ -210,37 +281,44 @@ v-expansion-panel-content#dimension-editor
             return measure / this.size[dimension] * 100
             break
           case "millimeters":
-            return this.fromCurrentUnit((measure / 25.4), dimension, 'inches')
+            return this.fromUnit((measure / 25.4), dimension, 'inches')
             break
           case "pixels":
-            return this.fromCurrentUnit((measure / 300), dimension, 'inches')
+            return this.fromUnit((measure / 300), dimension, 'inches')
             break
           default:
-            throw new Error(`Unrecognized unit: ${measure}`)
+            throw new Error(`Unrecognized unit: ${currentUnit}`)
         }
       },
 
-      toCurrentUnit(measure, dimension, currentUnit=this.dimensionUnits) {
+      toUnit(measure, dimension, currentUnit=this.dimensionUnits) {
         if(!this.size[dimension]) {
           throw new Error(`Unrecognized dimension: ${dimension}`)
         }
 
+        let stringDimension
         switch(currentUnit) {
           case "percent":
-            return measure.toFixed(1)
+            stringDimension = measure.toFixed(1)
             break
           case "inches":
-            return (this.size[dimension] * measure * .01).toFixed(2)
+            stringDimension = (this.size[dimension] * measure * .01).toFixed(2)
             break
           case "millimeters":
-            return (this.toCurrentUnit(measure, dimension, 'inches') * 25.4).toFixed(1)
+            stringDimension = (this.toUnit(measure, dimension, 'inches') * 25.4).toFixed(1)
             break
           case "pixels":
-            return (this.toCurrentUnit(measure, dimension, 'inches') * 300).toFixed(0)
+            stringDimension = (this.toUnit(measure, dimension, 'inches') * 300).toFixed(0)
             break
           default:
-            throw new Error(`Unrecognized unit: ${measure}`)
+            throw new Error(`Unrecognized unit: ${currentUnit}`)
         }
+
+        return parseFloat(stringDimension)
+      },
+
+      roundToUnit(dimensionProperty, dimensionObject=this.dimensionsModel, currentUnit=this.dimensionUnits) {
+        roundToUnit(dimensionProperty, dimensionObject, currentUnit)
       }
     }
   }
