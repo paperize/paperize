@@ -161,7 +161,7 @@ v-expansion-panel-content#dimension-editor
 
     data() {
       const dimensionsModel = { ...this.dimensions }
-      translateToNewUnits(dimensionsModel, this.dimensions, dimensionsModel.units, this.size)
+      translateToNewUnits(dimensionsModel, this.dimensions, dimensionsModel.units || PERCENT, this.size)
 
       return {
         XYWH, INSET, PERCENT, PIXELS, INCHES, MILLIMETERS,
