@@ -214,7 +214,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newX) || newX < 0) { newX = 0 }
           this.dimensionsModel.x = newX
           newX = this.fromUnit(newX, 'w')
-          this.patchDimension({ id: this.dimensionsId, x: newX })
+          this.updateDimension({ ...this.dimensions, x: newX })
         }
       },
 
@@ -225,7 +225,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newY) || newY < 0) { newY = 0 }
           this.dimensionsModel.y = newY
           newY = this.fromUnit(newY, 'h')
-          this.patchDimension({ id: this.dimensionsId, y: newY })
+          this.updateDimension({ ...this.dimensions, y: newY })
         }
       },
 
@@ -236,7 +236,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newW) || newW < 0) { newW = 0 }
           this.dimensionsModel.w = newW
           newW = this.fromUnit(newW, 'w')
-          this.patchDimension({ id: this.dimensionsId, w: newW })
+          this.updateDimension({ ...this.dimensions, w: newW })
         }
       },
 
@@ -247,7 +247,7 @@ v-expansion-panel-content#dimension-editor
           if(isString(newH) || newH < 0) { newH = 0 }
           this.dimensionsModel.h = newH
           newH = this.fromUnit(newH, 'h')
-          this.patchDimension({ id: this.dimensionsId, h: newH })
+          this.updateDimension({ ...this.dimensions, h: newH })
         }
       },
 
@@ -261,7 +261,7 @@ v-expansion-panel-content#dimension-editor
           this.dimensionsModel.h = modelHeight
           newT = this.fromUnit(newT, 'h')
           const newHeight = (this.dimensions.h + this.dimensions.y) - newT
-          this.patchDimension({ id: this.dimensionsId, y: newT, h: newHeight })
+          this.updateDimension({ ...this.dimensions, y: newT, h: newHeight })
         }
       },
 
@@ -274,7 +274,7 @@ v-expansion-panel-content#dimension-editor
           this.dimensionsModel.w = modelWidth
           newR = this.fromUnit(newR, 'w')
           const newWidth = 100 - newR - this.dimensions.x
-          this.patchDimension({ id: this.dimensionsId, w: newWidth })
+          this.updateDimension({ ...this.dimensions, w: newWidth })
         }
       },
 
@@ -287,7 +287,7 @@ v-expansion-panel-content#dimension-editor
           this.dimensionsModel.h = modelHeight
           newB = this.fromUnit(newB, 'h')
           const newHeight = 100 - newB - this.dimensions.y
-          this.patchDimension({ id: this.dimensionsId, h: newHeight })
+          this.updateDimension({ ...this.dimensions, h: newHeight })
         }
       },
 
@@ -301,13 +301,13 @@ v-expansion-panel-content#dimension-editor
           this.dimensionsModel.w = modelWidth
           newL = this.fromUnit(newL, 'w')
           const newWidth = (this.dimensions.w + this.dimensions.x) - newL
-          this.patchDimension({ id: this.dimensionsId, x: newL, w: newWidth })
+          this.updateDimension({ ...this.dimensions, x: newL, w: newWidth })
         }
       },
     },
 
     methods: {
-      ...mapActions(["patchDimension", "updateDimension"]),
+      ...mapActions(["updateDimension"]),
 
       fromUnitToUnit(measure, dimension, fromUnit, toUnit=this.dimensionUnits) {
         return fromUnitToUnit(measure, dimension, fromUnit, toUnit, this.size)
