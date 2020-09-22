@@ -169,6 +169,12 @@ v-expansion-panel-content#dimension-editor
       }
     },
 
+    watch: {
+      dimensions(newDimensions) {
+        translateToNewUnits(this.dimensionsModel, newDimensions, this.dimensionsModel.units || PERCENT, this.size)
+      }
+    },
+
     computed: {
       dimensionLayout: {
         get() { return this.dimensions.layout || XYWH },

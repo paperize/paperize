@@ -7,8 +7,6 @@ v-layout(column)
 </template>
 
 <script>
-  import { debounce } from 'lodash'
-  import { mapActions } from 'vuex'
   import TextLayerEditor from './TextLayerEditor.vue'
   import ImageLayerEditor from './ImageLayerEditor.vue'
   import ShapeLayerEditor from './ShapeLayerEditor.vue'
