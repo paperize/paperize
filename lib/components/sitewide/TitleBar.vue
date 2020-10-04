@@ -5,7 +5,7 @@ v-toolbar(app)
 
     v-tooltip
       span.caption(slot="activator")= " ver.A8.0.6"
-      | Alpha 7 "Obedient Consumer " {{ gitSha }}
+      | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
 
