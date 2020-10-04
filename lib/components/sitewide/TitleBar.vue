@@ -3,7 +3,7 @@ v-toolbar(app)
   v-toolbar-title
     router-link(:to="{ name: homeLink }") Paperize.io
 
-    v-tooltip
+    v-tooltip(bottom)
       span.caption(slot="activator")= " ver.A8.0.6"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
