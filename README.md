@@ -18,6 +18,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
   - visit [the Google API Developer Console](https://console.developers.google.com/apis/credentials)
   - create a new Project for your Paperize keys
   - create the OAuth consent screen. You just need to enter the application name, the support email and keep the existing scopes for the moment.
+  - Add a google account you plan to test with as a "Test User". (While publishing status is set to "Testing", only test users are able to access the app.)
   - create a Google OAuth Client ID
     - Application Type: Web Application
     - Name: _totally up to you_
@@ -28,9 +29,9 @@ Paperize helps game designers make better games by leveraging free web tools to 
   - from the Library menu, enable the Google Picker API and choose the previously created API Key
   - from the Library menu, enable the Google Sheets API and choose the previously created API Key
   - Open the OAuth Consent Screen menu again, and add the following scopes:
-    - Google Drive API  ../auth/drive.appdata
-    - Google Drive API  ../auth/drive.file
-    - Google Sheets API ../auth/drive.file
+    - Google Drive API  .../auth/drive.appdata
+    - Google Drive API  .../auth/drive.file
+    - Google Sheets API .../auth/spreadsheets
   - copy and rename `example.api_keys.dev.json` to `.api_keys.dev.json` (`cp example.api_keys.dev.json .api_keys.dev.json`)
   - modify `.api_keys.dev.json` to contain the keys you just set up
 - `npm install`
