@@ -12,7 +12,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 ## Getting Started
 
-- [Install NodeJS](https://nodejs.org)
+- [Install NodeJS](https://nodejs.org). Suggested version is `14`.
 - clone this repository
 - Set up your API Keys:
   - visit [the Google API Developer Console](https://console.developers.google.com/apis/credentials)
