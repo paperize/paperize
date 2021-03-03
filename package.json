@@ -56,7 +56,7 @@
     "http-server": "^0.12.3",
     "mime-types": "^2.1.14",
     "moment-locales-webpack-plugin": "^1.0.7",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "pug-plain-loader": "^1.0.0",
     "recursive-readdir": "^2.2.1",
     "semver": "^5.3.0",
