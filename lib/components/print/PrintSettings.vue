@@ -37,6 +37,11 @@ v-card
 
       v-tooltip(bottom)
         span(slot="activator")
+          v-radio(label="Tabletop Simulator" :value="MODE_TABLETOP_SIMULATOR")
+        span 25x24.5 with 0 margins, this setting is ideal for users looking to convert their PDF to a PNG and then feeding it to the Tabletop Simulator Deck Editor.
+
+      v-tooltip(bottom)
+        span(slot="activator")
           v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
         p This allows advanced users to do their own layout.
         span Paperize will place each component onto a page of its own, sized exactly to the component with no margins. Advanced users can then do their own layout.
@@ -97,7 +102,7 @@ v-card
 <script>
   import { capitalize, find, debounce, map } from 'lodash'
   import { mapGetters, mapActions } from 'vuex'
-  import { MODE_AUTO_LAYOUT, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
+  import { MODE_AUTO_LAYOUT, MODE_TABLETOP_SIMULATOR, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
     ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
 
   // Construct form-friendly collections from the print sources in the store
@@ -112,6 +117,7 @@ v-card
     data() {
       return {
         MODE_AUTO_LAYOUT,
+        MODE_TABLETOP_SIMULATOR,
         MODE_COMPONENT_PER_PAGE,
         PRINT_ALL_COMPONENTS,
         PRINT_SELECT_COMPONENTS,
