@@ -34,6 +34,7 @@ v-expansion-panel#text-layer-editor(popout)
           v-btn(small flat value="left") Left
           v-btn(small flat value="center") Center
           v-btn(small flat value="right") Right
+          v-btn(small flat value="justify") Justify
 
         p Vertical Alignment
         magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
