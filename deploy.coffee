@@ -4,8 +4,8 @@ mimeTypes = require("mime-types")
 process.env.AWS_PROFILE = "paperize-editor-beta" # force to beta for now
 AWS = require("aws-sdk")
 Promise = require("bluebird")
-s3 = Promise.promisifyAll(new AWS.S3())
-cloudfront = Promise.promisifyAll(new AWS.CloudFront())
+s3 = new AWS.S3()
+cloudfront = new AWS.CloudFront()
 fs = Promise.promisifyAll(require("fs"))
 recursiveReaddir = require("recursive-readdir")
 
