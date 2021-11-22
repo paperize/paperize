@@ -4,8 +4,8 @@ mimeTypes = require("mime-types")
 process.env.AWS_PROFILE = "paperize-editor-beta" # force to beta for now
 AWS = require("aws-sdk")
 Promise = require("bluebird")
-s3 = new AWS.S3()
-cloudfront = new AWS.CloudFront()
+s3PutObjectAsync = Promise.promisify(new AWS.S3().putObjectAsync)
+cloudfrontCreateInvalidationAsync = Promise.promisify(new AWS.CloudFront().createInvalidationAsync)
 fs = Promise.promisifyAll(require("fs"))
 recursiveReaddir = require("recursive-readdir")
 
@@ -23,7 +23,7 @@ recursiveReaddir('./build').then (files) ->
 
   .then ->
     console.log("Invalidating CloudFront cache...")
-    cloudfront.createInvalidationAsync
+    cloudfrontCreateInvalidationAsync
       DistributionId: CLOUDFRONT_DISTRIBUTION_ID
       InvalidationBatch:
         CallerReference: String(Date.now())
@@ -37,7 +37,7 @@ recursiveReaddir('./build').then (files) ->
 uploadFileToS3 = (file) ->
   mimeType = mimeTypes.lookup(file) || 'application/octet-stream'
 
-  s3.putObjectAsync({
+  s3PutObjectAsync({
     Bucket: TARGET_BUCKET
     Key:    file
     Body:   fs.createReadStream("./build/#{file}")
