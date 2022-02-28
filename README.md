@@ -28,9 +28,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
   - from the Library menu, enable the Google Picker API and choose the previously created API Key
   - from the Library menu, enable the Google Sheets API and choose the previously created API Key
   - Open the OAuth Consent Screen menu again, and add the following scopes:
-    - Google Drive API  ../auth/drive.appdata
-    - Google Drive API  ../auth/drive.file
-    - Google Sheets API ../auth/drive.file
+    - Google Drive API `.../auth/drive.file`
   - copy and rename `example.api_keys.dev.json` to `.api_keys.dev.json` (`cp example.api_keys.dev.json .api_keys.dev.json`)
   - modify `.api_keys.dev.json` to contain the keys you just set up
 - `npm install`
