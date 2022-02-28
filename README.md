@@ -12,12 +12,13 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 ## Getting Started
 
-- [Install NodeJS](https://nodejs.org)
+- [Install NodeJS](https://nodejs.org). Suggested version is `14`.
 - clone this repository
 - Set up your API Keys:
   - visit [the Google API Developer Console](https://console.developers.google.com/apis/credentials)
   - create a new Project for your Paperize keys
   - create the OAuth consent screen. You just need to enter the application name, the support email and keep the existing scopes for the moment.
+  - Add a google account you plan to test with as a "Test User". (While publishing status is set to "Testing", only test users are able to access the app.)
   - create a Google OAuth Client ID
     - Application Type: Web Application
     - Name: _totally up to you_
