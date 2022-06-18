@@ -33,6 +33,8 @@ v-toolbar(app)
         network-manager
 
     help-menu
+    v-btn(flat icon @click="setDarkMode(!darkMode)" :class=" {'toggle-up': darkMode, 'toggle-dn':!darkMode}")
+        v-icon mdi-brightness-6
     profile-menu
     print-status
 </template>
@@ -72,14 +74,14 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
+      ...mapGetters([ "loggedIn", "showSpinner", "isProduction", "darkMode" ]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
     },
 
-    methods: mapActions([ "saveToDrive" ])
+    methods: {...mapActions([ "saveToDrive", "setDarkMode" ])}
   }
 </script>
 
@@ -91,5 +93,39 @@ v-toolbar(app)
 
   .invisible {
     visibility: hidden
+  }
+
+  .toggle-up {
+    animation-name: turn-up;
+    transform: rotate(180deg);
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  .toggle-dn {
+    animation-name: turn-dn;
+    transform: rotate(  0deg); 
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes turn-up {
+    from {
+      transform: rotate(  0deg);
+    }
+
+    to {
+      transform: rotate(180deg);
+    }
+  }
+
+  @keyframes turn-dn {
+    from {
+      transform: rotate(180deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>

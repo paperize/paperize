@@ -1,5 +1,5 @@
 <template lang="pug">
-v-app
+v-app(:dark="darkMode")
   //- v-navigation-drawer(app mini-variant)
   title-bar
 
@@ -14,8 +14,12 @@ v-app
 
 <script>
   import TitleBar from '../sitewide/TitleBar.vue'
+  import { mapGetters } from 'vuex'
 
   export default {
-    components: { TitleBar }
+    components: { TitleBar },
+    computed: {
+      ...mapGetters(['darkMode'])
+    }
   }
 </script>
