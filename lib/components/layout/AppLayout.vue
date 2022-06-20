@@ -18,8 +18,6 @@ v-app(:dark="darkMode")
 
   export default {
     components: { TitleBar },
-    computed: {
-      ...mapGetters(['darkMode'])
-    }
+    computed: mapGetters(['darkMode'])
   }
 </script>

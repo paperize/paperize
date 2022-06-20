@@ -33,7 +33,7 @@ v-toolbar(app)
         network-manager
 
     help-menu
-    v-btn(flat icon @click="setDarkMode(!darkMode)" :class=" {'toggle-up': darkMode, 'toggle-dn':!darkMode}")
+    v-btn(flat icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
         v-icon mdi-brightness-6
     profile-menu
     print-status
@@ -81,7 +81,7 @@ v-toolbar(app)
       }
     },
 
-    methods: {...mapActions([ "saveToDrive", "setDarkMode" ])}
+    methods: mapActions([ "saveToDrive", "setDarkMode" ])
   }
 </script>
 
@@ -95,15 +95,15 @@ v-toolbar(app)
     visibility: hidden
   }
 
-  .toggle-up {
+  .toggle-on {
     animation-name: turn-up;
     transform: rotate(180deg);
     animation-duration: 300ms;
     animation-timing-function: ease-in-out;
   }
 
-  .toggle-dn {
-    animation-name: turn-dn;
+  .toggle-off {
+    animation-name: turn-down;
     transform: rotate(  0deg); 
     animation-duration: 300ms;
     animation-timing-function: ease-in-out;
@@ -119,7 +119,7 @@ v-toolbar(app)
     }
   }
 
-  @keyframes turn-dn {
+  @keyframes turn-down {
     from {
       transform: rotate(180deg);
     }
