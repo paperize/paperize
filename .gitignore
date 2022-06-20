@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 build
+dist
 cypress/screenshots
 cypress/videos
 .api_keys*.json
+.env.*
