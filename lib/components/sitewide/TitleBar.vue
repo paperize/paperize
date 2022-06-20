@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip(bottom)
-      span.caption(slot="activator")= " ver.A8.1.5"
+      span.caption(slot="activator")= " ver.A8.1.6"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
@@ -33,6 +33,8 @@ v-toolbar(app)
         network-manager
 
     help-menu
+    v-btn(flat icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
+        v-icon mdi-brightness-6
     profile-menu
     print-status
 </template>
@@ -72,14 +74,14 @@ v-toolbar(app)
     },
 
     computed: {
-      ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
+      ...mapGetters([ "loggedIn", "showSpinner", "isProduction", "darkMode" ]),
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
     },
 
-    methods: mapActions([ "saveToDrive" ])
+    methods: mapActions([ "saveToDrive", "setDarkMode" ])
   }
 </script>
 
@@ -91,5 +93,39 @@ v-toolbar(app)
 
   .invisible {
     visibility: hidden
+  }
+
+  .toggle-on {
+    animation-name: turn-up;
+    transform: rotate(180deg);
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  .toggle-off {
+    animation-name: turn-down;
+    transform: rotate(  0deg);
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes turn-up {
+    from {
+      transform: rotate(  0deg);
+    }
+
+    to {
+      transform: rotate(180deg);
+    }
+  }
+
+  @keyframes turn-down {
+    from {
+      transform: rotate(180deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>
