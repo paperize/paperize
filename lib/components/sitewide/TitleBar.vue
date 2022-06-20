@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip(bottom)
-      span.caption(slot="activator")= " ver.A8.1.5"
+      span.caption(slot="activator")= " ver.A8.1.6"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
@@ -104,7 +104,7 @@ v-toolbar(app)
 
   .toggle-off {
     animation-name: turn-down;
-    transform: rotate(  0deg); 
+    transform: rotate(  0deg);
     animation-duration: 300ms;
     animation-timing-function: ease-in-out;
   }
