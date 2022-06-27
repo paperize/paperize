@@ -4,22 +4,25 @@
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {
-    "//": "Server Stuff",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+
     "start": "npx webpack-dev-server --hot --host localhost --config webpack.dev.js",
     "start-test": "npx webpack-dev-server --host localhost --config webpack.test.js --env.NO_SYNC=true",
     "server": "http-server build",
-    "// Testing": "",
+
     "dev-cypress": "NODE_ENV=test concurrently --kill-others \"npm run start-test\" \"cypress open\"",
     "build-test-integration": "npm run clean && NODE_ENV=test npx webpack --config webpack.dev.js",
     "test-integration": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run\"",
     "test": "npm run test-integration",
-    "// Build/Deploy": "",
+
     "clean": "rm -rf build",
     "build-prod": "npm run clean && npx webpack --config webpack.prod.js",
     "deploy-prod": "coffee deploy.coffee",
     "bump-prod": "npm run build-prod && npm run deploy-prod",
     "release": "npm test && npm run build-prod && npm run deploy-prod",
-    "// Documentation Screenshots": "",
+
     "clean-screenshots": "rm -rf cypress/screenshots/documentation_screenshots_spec.coffee",
     "generate-screenshots": "npm run build-test-integration && concurrently --kill-others \"npm run server\" \"cypress run --spec cypress/integration/documentation_screenshots_spec.coffee\"",
     "copy-screenshots": "cp cypress/screenshots/documentation_screenshots_spec.coffee/*.png ../docs/static/generated-images",
