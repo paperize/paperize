@@ -8,7 +8,7 @@
     "set-dev-creds": "cp .env.development .env.production",
     "set-prod-creds": "cp .env.production.backup .env.production",
     "build": "npm run set-prod-creds && vite build",
-    "preview": "npm run set-dev-creds && vite preview",
+    "preview": "npm run set-dev-creds && vite build && vite preview",
     "start": "npm run dev",
     "clean": "rm -rf dist",
     "deploy-prod": "coffee deploy.coffee",
