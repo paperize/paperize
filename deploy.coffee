@@ -1,4 +1,4 @@
-# Basic Deploy: Upload everything in /build straight to S3
+# Basic Deploy: Upload everything in /dist straight to S3
 _ = require("lodash")
 mimeTypes = require("mime-types")
 process.env.AWS_PROFILE = "paperize-editor-beta" # force to beta for now
@@ -14,11 +14,11 @@ recursiveReaddir = require("recursive-readdir")
 TARGET_BUCKET = 'beta.editor.paperize.io'
 CLOUDFRONT_DISTRIBUTION_ID = "E32JZ9YALLPGSM"
 
-# for each file in /build
-recursiveReaddir('./build').then (files) ->
+# for each file in /dist
+recursiveReaddir('./dist').then (files) ->
   itemCount = files.length
-  # Strip the build dir from the path
-  files = files.map (file) -> file.replace("build/", "")
+  # Strip the dist dir from the path
+  files = files.map (file) -> file.replace("dist/", "")
   # Start uploading in parallel
   console.log("Uploading #{itemCount} files...")
   Promise.map files, uploadFileToS3, concurrency: 10
@@ -42,7 +42,7 @@ uploadFileToS3 = (file) ->
   putObjectAsync({
     Bucket: TARGET_BUCKET
     Key:    file
-    Body:   fs.createReadStream("./build/#{file}")
+    Body:   fs.createReadStream("./dist/#{file}")
     ACL:    'public-read'
     ContentDisposition: 'inline'
     ContentType: mimeType
