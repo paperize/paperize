@@ -6,6 +6,9 @@ export default {
     port: 8080,
     open: true
   },
+  build: {
+    sourcemap: true
+  },
   plugins: [
     createVuePlugin()
   ],
