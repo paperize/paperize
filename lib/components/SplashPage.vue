@@ -10,7 +10,7 @@ v-container(grid-list-xl fluid)
 
       p.body-2
         a(href="https://www.patreon.com/bePatron?u=67763" data-patreon-widget-type="become-patron-button")
-          v-img(src="/images/become_a_patron_button@2x.png" contain max-height="51")
+          v-img(:src="becomeAPatron" contain max-height="51")
 
       p.headline.text-xs-center Discord
 
@@ -47,8 +47,12 @@ v-container(grid-list-xl fluid)
 
 <script>
   import { mapGetters } from 'vuex'
+  import becomeAPatron from "/images/become_a_patron_button@2x.png"
 
   export default {
+    data() {
+      return { becomeAPatron }
+    },
     computed: mapGetters([ "isCypress" ])
   }
 </script>
