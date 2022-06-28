@@ -68,7 +68,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         if(!this.$refs.componentForm.validate()) { return }
 
         // Wrap create and copy inside one promise
-        return Promise.try(() => {
+        return Bluebird.try(() => {
           if(this.copyMode) {
             // Copy Mode
             const copyComponent = {
@@ -83,9 +83,10 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
             const game = this.activeGame
 
             return this.createGameComponent({ game, component: this.component })
-              .tap((componentId) => {
+              .then(componentId => {
                 const component = this.findComponent(componentId)
                 return this.createDriveArtifactsForGameComponent({ game, component })
+                  .then(() => componentId)
               })
           }
         })
