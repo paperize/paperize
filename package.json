@@ -40,6 +40,7 @@
     "pug-plain-loader": "^1.0.0",
     "recursive-readdir": "^2.2.1",
     "semver": "^5.3.0",
+    "shelljs": "^0.8.5",
     "util-deprecate": "^1.0.2",
     "vite": "^2.9.9",
     "vite-plugin-vue2": "^2.0.1",

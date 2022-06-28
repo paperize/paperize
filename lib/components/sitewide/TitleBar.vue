@@ -64,7 +64,7 @@ v-toolbar(app)
 
     data() {
       return {
-        gitSha: import.meta.env.VITE_GIT_SHA || "GIT_SHA",
+        gitSha: import.meta.env.VITE_GIT_SHA || "Unknown Git SHA",
         showDebugMenu: false,
         showDriveExplorer: false,
         showDatabaseManager: false,
