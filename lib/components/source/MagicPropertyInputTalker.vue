@@ -1,21 +1,21 @@
 <template lang="pug">
-  v-tooltip(top)
-    P Magic Property: <pre>{{ magicProperty }}</pre>
-    | {{ statusMessage }}
-    v-icon(slot="activator" :color="statusColor" @click="dialogOpen = true") mdi-table-search
+v-tooltip(top)
+  P Magic Property: <pre>{{ magicProperty }}</pre>
+  | {{ statusMessage }}
+  v-icon(slot="activator" :color="statusColor" @click="dialogOpen = true") mdi-table-search
 
-    v-dialog(v-model="dialogOpen" max-width="500")
-      v-card
-        v-card-title
-          h2 Magic Properties
+  v-dialog(v-model="dialogOpen" max-width="500")
+    v-card
+      v-card-title
+        h2 Magic Properties
 
-        v-card-text
-          template(v-if="!columnMatched")
-            p No magic column defined
-          template(v-else-if="!propertySet")
-            p Magic column defined, this item does not override
-          template(v-else)
-            p Magic column defined, this item sets "{{ propertyValue }}"
+      v-card-text
+        template(v-if="!columnMatched")
+          p No magic column defined
+        template(v-else-if="!propertySet")
+          p Magic column defined, this item does not override
+        template(v-else)
+          p Magic column defined, this item sets "{{ propertyValue }}"
 </template>
 
 <script>
