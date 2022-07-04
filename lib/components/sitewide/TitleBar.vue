@@ -35,7 +35,7 @@ v-app-bar
 
     help-menu
     v-btn(text icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
-        v-icon mdi-brightness-6
+      v-icon mdi-brightness-6
     profile-menu
     print-status
 </template>
@@ -74,14 +74,20 @@ v-app-bar
     },
 
     computed: {
-      ...mapGetters([ "loggedIn", "showSpinner", "isProduction", "darkMode" ]),
+      ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
+
+      darkMode() { return this.$vuetify.theme.dark },
 
       homeLink () {
         return this.loggedIn ? 'gameManager' : 'splash'
       }
     },
 
-    methods: mapActions([ "saveToDrive", "setDarkMode" ])
+    methods: {
+      ...mapActions([ "saveToDrive" ]),
+
+      setDarkMode(isDark) { this.$vuetify.theme.dark = isDark }
+    }
   }
 </script>
 
