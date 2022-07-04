@@ -92,6 +92,10 @@ v-app-bar
 </script>
 
 <style scoped>
+  .v-app-bar {
+    max-height: 64px;
+  }
+
   .v-progress-circular {
     position: absolute;
     margin-top: 1em;
