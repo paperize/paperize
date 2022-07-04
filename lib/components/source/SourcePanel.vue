@@ -4,7 +4,7 @@ v-flex#source-editor(sm4 md6)
 
   //- We have a source to work with
   template(v-if="componentSheet")
-    .subheading
+    .subtitle-1
       spreadsheet-icon(:spreadsheetId="componentSheet.id")
       | {{ componentSheet.name }}
 
@@ -19,7 +19,7 @@ v-flex#source-editor(sm4 md6)
         span Select a different Spreadsheet
 
     template(v-if="componentWorksheet")
-      .subheading
+      .subtitle-1
         | {{ componentWorksheet.title }}
         //- Change Worksheet
         v-tooltip(top)
@@ -45,7 +45,7 @@ v-flex#source-editor(sm4 md6)
         | A quantity property duplicates an item any number of times.
 
       //- List of Properties
-      .subheading Available Properties
+      .subtitle-1 Available Properties
       ul.source-properties
         li(v-for="property in worksheetPropertyNames(spreadsheetId, worksheetId)") {{ property }}
 

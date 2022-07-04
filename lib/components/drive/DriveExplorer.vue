@@ -8,7 +8,7 @@ v-card
   v-card-text(style="min-height: 500px;")
     p What Google Drive items does Paperize know about? Use the refresh buttons to find new and changed files.
 
-    h2.subheading Primary Index
+    h2.subtitle-1 Primary Index
     v-treeview(v-model="tree" :items="completeIndexAsTree" item-key="id")
       template(slot="prepend" slot-scope="{ item }")
         //- Folders
@@ -101,7 +101,7 @@ v-card
 </script>
 
 <style scoped>
-  .subheading {
+  .subtitle-1 {
     text-decoration: underline;
   }
 </style>

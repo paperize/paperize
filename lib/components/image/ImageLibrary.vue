@@ -4,7 +4,7 @@ v-card.image-library
     .headline Image Library
 
   v-card-text
-    .subheading Folders
+    .subtitle-1 Folders
     p Currently, all image files must be stored in Google Drive folders that you manage here. When you create Game Components, you have the option to have Paperize create and track an image folder for that Component automatically. Otherwise, you can paste a link to a Drive Folder below.
 
     v-list(subtitle)
@@ -20,7 +20,7 @@ v-card.image-library
       v-list-item(v-if="!imageFolders.length")
         v-list-item-title No image folders have been added.
 
-    .subheading Paste Link
+    .subtitle-1 Paste Link
     v-layout
       v-flex(xs12 sm8)
         v-text-field(v-model="pastedLink")

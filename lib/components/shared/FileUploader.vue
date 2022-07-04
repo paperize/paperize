@@ -11,7 +11,7 @@ v-tooltip(top v-if="currentFolderId")
 
       v-card-text
         v-alert(v-if="!anyFiles" :value="true" type="warning" outline)
-          .subheading(align="center")
+          .subtitle-1(align="center")
             strong Remember!<br/> Upload All Paperize Files Through Paperize!
           |  Paperize can ONLY see files that you upload through Paperize.
 

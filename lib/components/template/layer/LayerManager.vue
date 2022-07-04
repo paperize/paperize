@@ -1,7 +1,7 @@
 <template lang="pug">
 v-layout(column)
   v-flex
-    v-layout.subheading
+    v-layout.subtitle-1
       v-flex(xs4)
         | Layers
 

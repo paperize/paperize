@@ -1,6 +1,6 @@
 <template lang="pug">
 .magic-properties
-  .subheading Magical Properties
+  .subtitle-1 Magical Properties
   ul.source-properties
     li(v-for="magicProperty in magicPropertiesWithMatches")
       v-icon() {{ magicProperty.layerMatchIcon }}
