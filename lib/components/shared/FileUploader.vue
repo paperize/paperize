@@ -1,7 +1,8 @@
 <template lang="pug">
 v-tooltip(top v-if="currentFolderId")
   | Upload to linked Google Drive Folder: {{ folder.name }}
-  v-icon(slot="activator" @click="showUploader = true") mdi-folder-plus
+  template(v-slot:activator="{ on }")
+    v-icon(v-on="on" @click="showUploader = true") mdi-folder-plus
 
   v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500" lazy)
     v-card

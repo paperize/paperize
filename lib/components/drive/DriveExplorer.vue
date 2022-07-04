@@ -17,7 +17,8 @@ v-card
           file-uploader(:folderId="item.id")
           a(@click="refreshFolder(item.id)")
             v-tooltip(top)
-              v-icon(slot="activator") refresh
+              template(v-slot:activator="{ on }")
+                v-icon(v-on="on") refresh
               span refreshed {{ lastRefresh(item.refreshedAt) }}
 
         //- Sheets
@@ -25,7 +26,8 @@ v-card
           spreadsheet-icon(:spreadsheetId="item.id")
           a(@click="refreshSheetRecord(item.id)")
             v-tooltip(top)
-              v-icon(slot="activator") refresh
+              template(v-slot:activator="{ on }")
+                v-icon(v-on="on") refresh
               span refreshed {{ lastRefresh(item.refreshedAt) }}
 
         //- Images
@@ -33,7 +35,8 @@ v-card
           image-icon(:imageId="item.id")
           a(@click="refreshImageRecord(item.id)")
             v-tooltip(top)
-              v-icon(slot="activator") refresh
+              template(v-slot:activator="{ on }")
+                v-icon(v-on="on") refresh
               span refreshed {{ lastRefresh(item.refreshedAt) }}
 </template>
 

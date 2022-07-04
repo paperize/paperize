@@ -1,7 +1,8 @@
 <template lang="pug">
 v-tooltip(v-if="spreadsheet" top)
-  v-btn.refresh-spreadsheet(slot="activator" fab small @click="refreshSheetIndex(spreadsheet.id)")
-    v-icon refresh
+  template(v-slot:activator="{ on }")
+    v-btn.refresh-spreadsheet(v-on="on" fab small @click="refreshSheetIndex(spreadsheet.id)")
+      v-icon refresh
   p Refresh Spreadsheet from Drive
   | (last refresh: {{ lastRefresh }})
 </template>

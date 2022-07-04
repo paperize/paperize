@@ -19,12 +19,14 @@ v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
             div(slot="header")
               v-tooltip(top)
                 | Clear
-                v-btn(slot="activator" text icon color="primary")
-                  v-icon(@click.stop="destroyError(error)") mdi-close-circle
+                template(v-slot:activator="{ on }")
+                  v-btn(v-on="on" text icon color="primary")
+                    v-icon(@click.stop="destroyError(error)") mdi-close-circle
               v-tooltip(top)
                 | Copy Error Message to Clipboard
-                v-btn(slot="activator" text icon color="primary")
-                  v-icon(@click.stop="copyToClipboard(error)") mdi-clipboard-plus
+                template(v-slot:activator="{ on }")
+                  v-btn(v-on="on" text icon color="primary")
+                    v-icon(@click.stop="copyToClipboard(error)") mdi-clipboard-plus
               | {{ error.name }}
             v-card
               v-card-text

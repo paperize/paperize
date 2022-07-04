@@ -2,8 +2,9 @@
 v-tooltip(v-if="imageId" top)
   | Drive Image: {{ (image && image.name) || imageId || "No Image ID" }}
 
-  a(slot="activator" :href="driveLink" target="_blank")
-    v-icon mdi-image
+  template(v-slot:activator="{ on }")
+    a(v-on="on" :href="driveLink" target="_blank")
+      v-icon mdi-image
 </template>
 
 <script>

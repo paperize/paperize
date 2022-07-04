@@ -11,13 +11,15 @@ v-card
 
     v-radio-group(v-model="printSelection")
       v-tooltip(top)
-        span(slot="activator")
-          v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
         span Print all components of the game.
 
       v-tooltip(top)
-        span(slot="activator")
-          v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
         span Select specific components to print.
 
     v-card.component-selection(v-if="printSelection == PRINT_SELECT_COMPONENTS")
@@ -31,18 +33,21 @@ v-card
 
     v-radio-group(v-model="printMode")
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
         span This is for most users who want to specify their paper size and have Paperize lay everything out.
 
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Tabletop Simulator" :value="MODE_TABLETOP_SIMULATOR")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Tabletop Simulator" :value="MODE_TABLETOP_SIMULATOR")
         span 25x24.5 with 0 margins, this setting is ideal for users looking to convert their PDF to a PNG and then feeding it to the Tabletop Simulator Deck Editor.
 
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
         p This allows advanced users to do their own layout.
         span Paperize will place each component onto a page of its own, sized exactly to the component with no margins. Advanced users can then do their own layout.
 

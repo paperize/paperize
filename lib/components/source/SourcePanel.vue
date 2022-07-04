@@ -13,8 +13,9 @@ v-flex#source-editor(sm4 md6)
 
       //- Change Spreadsheet
       v-tooltip(top)
-        v-btn.edit-spreadsheet(slot="activator" fab small @click="unlinkComponentSheet(component)")
-          v-icon close
+        template(v-slot:activator="{ on }")
+          v-btn.edit-spreadsheet(v-on="on" fab small @click="unlinkComponentSheet(component)")
+            v-icon close
         span Select a different Spreadsheet
 
     template(v-if="componentWorksheet")
@@ -22,8 +23,9 @@ v-flex#source-editor(sm4 md6)
         | {{ componentWorksheet.title }}
         //- Change Worksheet
         v-tooltip(top)
-          v-btn.edit-spreadsheet(slot="activator" fab small @click="unlinkComponentWorksheet(component)")
-            v-icon close
+          template(v-slot:activator="{ on }")
+            v-btn.edit-spreadsheet(v-on="on" fab small @click="unlinkComponentWorksheet(component)")
+              v-icon close
           span Select a different Worksheet
 
       //- Row Selection
@@ -38,7 +40,8 @@ v-flex#source-editor(sm4 md6)
 
       //- Quantity Property
       v-tooltip(bottom)
-        v-select.quantity-property(filled slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
+        template(v-slot:activator="{ on }")
+          v-select.quantity-property(filled v-on="on" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
         | A quantity property duplicates an item any number of times.
 
       //- List of Properties

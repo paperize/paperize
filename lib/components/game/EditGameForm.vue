@@ -20,8 +20,9 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
               v-tooltip(top)
                 | Clear this game's Folder
-                v-btn(fab slot="activator" @click="clearFolder")
-                  v-icon cancel
+                template(v-slot:activator="{ on }")
+                  v-btn(fab v-on="on" @click="clearFolder")
+                    v-icon cancel
 
             template(v-else xs12 sm6)
               p
@@ -41,8 +42,9 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
               v-tooltip(top)
                 | Clear this game's Spreadsheet
-                v-btn(fab slot="activator" @click="clearSpreadsheet")
-                  v-icon cancel
+                template(v-slot:activator="{ on }")
+                  v-btn(fab v-on="on" @click="clearSpreadsheet")
+                    v-icon cancel
 
             template(v-else)
               p

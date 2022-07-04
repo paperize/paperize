@@ -2,7 +2,8 @@
 v-tooltip(top)
   P Magic Property: <pre>{{ magicProperty }}</pre>
   | {{ statusMessage }}
-  v-icon(slot="activator" :color="statusColor" @click="dialogOpen = true") mdi-table-search
+  template(v-slot:activator="{ on }")
+    v-icon(v-on="on" :color="statusColor" @click="dialogOpen = true") mdi-table-search
 
   v-dialog(v-model="dialogOpen" max-width="500")
     v-card

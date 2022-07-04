@@ -50,7 +50,8 @@ v-expansion-panel#text-layer-editor(popout)
 
         v-tooltip(top)
           | Name a column "{{ layer.name }}" and leave this blank to pull from your spreadsheet.
-          v-icon(slot="activator") mdi-table-search
+          template(v-slot:activator="{ on }")
+            v-icon(v-on="on") mdi-table-search
         v-textarea.text-content(v-model="textContentTemplate" label="Text Template" filled :placeholder="`{{{${layer.name}}}}`")
 </template>
 

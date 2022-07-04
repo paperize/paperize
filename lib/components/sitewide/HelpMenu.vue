@@ -1,6 +1,7 @@
 <template lang="pug">
 v-menu
-  v-btn(text slot="activator") Help
+  template(v-slot:activator="{ on }")
+    v-btn(text v-on="on") Help
 
   v-list
     v-list-item(href="https://docs.paperize.io" target="_blank")
