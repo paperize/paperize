@@ -1,4 +1,4 @@
-import { createVuePlugin } from 'vite-plugin-vue2'
+import vue from '@vitejs/plugin-vue2'
 import Components from 'unplugin-vue-components/vite'
 import { VuetifyResolver } from 'unplugin-vue-components/resolvers'
 import shell from 'shelljs'
@@ -39,7 +39,7 @@ export default {
     sourcemap: true
   },
   plugins: [
-    createVuePlugin(),
+    vue(),
     Components({ resolvers: [VuetifyResolver()] })
   ],
 }
