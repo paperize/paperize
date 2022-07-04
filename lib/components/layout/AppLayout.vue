@@ -8,7 +8,7 @@ v-app(:dark="darkMode")
 
   v-footer(app)
     v-layout(row)
-      v-btn(flat href="/privacy-policy.html") Privacy Policy
+      v-btn(text href="/privacy-policy.html") Privacy Policy
       v-spacer
 </template>
 

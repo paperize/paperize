@@ -7,29 +7,29 @@ v-expansion-panel-content#dimension-editor
           v-flex
             label Coordinate Mode:
             v-btn-toggle(v-model="dimensionLayout" mandatory)
-              v-btn(small flat :value="XYWH") XYWH
-              v-btn(small flat :value="INSET") Inset
+              v-btn(small text :value="XYWH") XYWH
+              v-btn(small text :value="INSET") Inset
 
           v-flex#dimension-unit-selector
             p Units:
             v-btn-toggle(v-model="dimensionUnits" mandatory)
-              v-btn(small flat value="percent") %
-              v-btn(small flat value="inches") in
-              v-btn(small flat value="millimeters") mm
-              v-btn(small flat value="pixels") px
+              v-btn(small text value="percent") %
+              v-btn(small text value="inches") in
+              v-btn(small text value="millimeters") mm
+              v-btn(small text value="pixels") px
 
           v-flex(v-if="modeXYWH")
             v-layout#layout-xywh(row wrap)
               v-flex
                 p Expressed as {{ unitDescription }} from the top left corner.
               v-flex(xs12 md6)
-                v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX" @blur="roundToUnit('x')" box)
+                v-text-field#dim-x(prefix="X" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionX" @blur="roundToUnit('x')" filled)
               v-flex(xs12 md6)
-                v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY" @blur="roundToUnit('y')" box)
+                v-text-field#dim-y(prefix="Y" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionY" @blur="roundToUnit('y')" filled)
               v-flex(xs12 md6)
-                v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW" @blur="roundToUnit('w')" box)
+                v-text-field#dim-w(prefix="W" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionW" @blur="roundToUnit('w')" filled)
               v-flex(xs12 md6)
-                v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" @blur="roundToUnit('h')" box)
+                v-text-field#dim-h(prefix="H" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionH" @blur="roundToUnit('h')" filled)
 
           v-flex(v-else-if="modeInset")
             v-layout#layout-inset(row wrap)
@@ -37,14 +37,14 @@ v-expansion-panel-content#dimension-editor
                 p Expressed as {{ unitDescription }} in from the top, right, bottom, and left sides.
               v-flex(md3)
               v-flex(xs12 md6)
-                v-text-field#dim-t(prefix="Top" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT" box)
+                v-text-field#dim-t(prefix="Top" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionT" filled)
               v-flex(xs12 md6)
-                v-text-field#dim-l(prefix="Left" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL" box)
+                v-text-field#dim-l(prefix="Left" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionL" filled)
               v-flex(xs12 md6)
-                v-text-field#dim-r(prefix="Right" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR" box)
+                v-text-field#dim-r(prefix="Right" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionR" filled)
               v-flex(md3)
               v-flex(xs12 md6)
-                v-text-field#dim-b(prefix="Bottom" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB" box)
+                v-text-field#dim-b(prefix="Bottom" :suffix="unitName" :step='unitStep' type="number" v-model.number="dimensionB" filled)
 </template>
 
 <script>

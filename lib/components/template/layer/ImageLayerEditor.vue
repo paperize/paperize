@@ -18,13 +18,13 @@ v-expansion-panel#image-layer-editor(popout)
 
         template(v-if="imageNameStatic")
           v-btn(@click="pickImageFromDrive") Pick Image...
-          //- v-autocomplete(v-model="imageId" :items="allImages" item-text="name" item-value="id" box label="Select an Image")
+          //- v-autocomplete(v-model="imageId" :items="allImages" item-text="name" item-value="id" filled label="Select an Image")
 
         template(v-else)
-          v-text-field(v-model="imageNamePrefix" label="Prefix" box)
-          v-select.image-name-property(v-model="imageNameProperty" :items="activeSheetProperties" box)
-          v-text-field.image-name-suffix(v-model="imageNameSuffix" label="Suffix" box)
-          v-text-field(disabled label="Looks like" :value="dynamicImageName" box)
+          v-text-field(v-model="imageNamePrefix" label="Prefix" filled)
+          v-select.image-name-property(v-model="imageNameProperty" :items="activeSheetProperties" filled)
+          v-text-field.image-name-suffix(v-model="imageNameSuffix" label="Suffix" filled)
+          v-text-field(disabled label="Looks like" :value="dynamicImageName" filled)
 
   v-expansion-panel-content
     div(slot="header") Image Alignment
@@ -42,16 +42,16 @@ v-expansion-panel#image-layer-editor(popout)
         p Horizontal:
         magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
         v-btn-toggle(v-model="horizontalAlignment")
-          v-btn(small flat value="left") Left
-          v-btn(small flat value="center") Center
-          v-btn(small flat value="right") Right
+          v-btn(small text value="left") Left
+          v-btn(small text value="center") Center
+          v-btn(small text value="right") Right
 
         p Vertical:
         magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
         v-btn-toggle(v-model="verticalAlignment")
-          v-btn(small flat value="top") Top
-          v-btn(small flat value="middle") Middle
-          v-btn(small flat value="bottom") Bottom
+          v-btn(small text value="top") Top
+          v-btn(small text value="middle") Middle
+          v-btn(small text value="bottom") Bottom
 </template>
 
 <script>

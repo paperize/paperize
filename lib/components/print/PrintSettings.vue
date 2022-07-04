@@ -55,22 +55,22 @@ v-card
 
       div
         v-btn-toggle(v-model="paperMode")
-          v-btn(flat value="standard") Standard Sizes
-          v-btn(flat value="custom") Custom Size
+          v-btn(text value="standard") Standard Sizes
+          v-btn(text value="custom") Custom Size
 
       //- Standard Sizes
       div(v-if="paperMode != 'custom'")
         p Most home printers use A4 or Letter paper. Select "Universal" if you'd like a print that will work on either.
 
-        v-select(box label="Size" :items="printOptions" item-text="name" item-value="value" v-model="paper")
-        v-select(box label="Orientation" :items="orientationOptions" item-text="name" item-value="value" v-model="orientation")
+        v-select(filled label="Size" :items="printOptions" item-text="name" item-value="value" v-model="paper")
+        v-select(filled label="Orientation" :items="orientationOptions" item-text="name" item-value="value" v-model="orientation")
 
       //- Custom Size
       template(v-else)
         p Set your own custom page size in inches.
 
-        v-text-field(box v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
-        v-text-field(box v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(filled v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(filled v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
 
 
       v-label
@@ -93,10 +93,10 @@ v-card
 
       p How close to the edge will your printer allow you to print?
 
-      v-text-field(box v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
 </template>
 
 <script>

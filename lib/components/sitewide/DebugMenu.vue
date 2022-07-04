@@ -5,8 +5,8 @@ v-card
 
   v-card-title Uploader-majig
   v-list
-    v-list-tile
-      v-list-tile-content
+    v-list-item
+      v-list-item-content
         file-uploader(:folderId="workingDirectoryId")
 </template>
 

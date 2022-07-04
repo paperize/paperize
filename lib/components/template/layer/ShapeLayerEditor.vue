@@ -9,7 +9,7 @@ v-expansion-panel#shape-layer-editor(popout)
     .shape-settings(slot="header") Shape
     v-card
       v-card-text
-        v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" box)
+        v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" filled)
           magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="shape")
 
   v-expansion-panel-content
@@ -22,7 +22,7 @@ v-expansion-panel#shape-layer-editor(popout)
           v-flex
             v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
 
-        v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" box)
+        v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" filled)
           magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeWidth")
 
         v-layout(row)
@@ -45,7 +45,7 @@ v-expansion-panel#shape-layer-editor(popout)
           v-flex(shrink)
             magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillColor")
           v-flex
-            color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" box)
+            color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" filled)
 </template>
 
 <script>

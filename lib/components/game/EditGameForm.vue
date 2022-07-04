@@ -49,7 +49,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
                 spreadsheet-icon(:force="true")
                 | No Game Spreadsheet set
 
-                v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
+                v-autocomplete(filled label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
                 v-btn(@click="createSheetArtifactForGame(game)") Create New Spreadsheet
 
     v-card-actions

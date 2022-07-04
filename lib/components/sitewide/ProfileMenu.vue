@@ -1,25 +1,25 @@
 <template lang="pug">
 v-menu(v-if="loggedIn")
   //- Show account stuff and logout
-  v-btn(flat slot="activator")
+  v-btn(text slot="activator")
     v-avatar
       img(alt="avatar" :src="userAvatar")
 
   v-list
-    v-list-tile
-      v-list-tile-avatar
+    v-list-item
+      v-list-item-avatar
         img(alt="avatar" :src="userAvatar")
-      v-list-tile-title {{ userName }}
+      v-list-item-title {{ userName }}
 
-    v-list-tile(@click="revokeAccessAndLogout()")
+    v-list-item(@click="revokeAccessAndLogout()")
       v-tooltip(left)
         | Removes the permission you granted to Paperize upon sign-in. No data will be lost.
-        v-list-tile-title(slot="activator") Revoke Google Access &amp; Sign Out
+        v-list-item-title(slot="activator") Revoke Google Access &amp; Sign Out
 
-    v-list-tile(@click="logout()")
-      v-list-tile-title Sign Out
+    v-list-item(@click="logout()")
+      v-list-item-title Sign Out
 
-v-btn.log-in-button(v-else flat color="success" @click.stop="prepareForLogin") Sign In
+v-btn.log-in-button(v-else text color="success" @click.stop="prepareForLogin") Sign In
   //- Show login flow
   v-dialog(v-model="showPopupHelper" max-width="500" lazy)
     v-card(v-if="!loginError")

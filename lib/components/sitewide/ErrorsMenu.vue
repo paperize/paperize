@@ -1,5 +1,5 @@
 <template lang="pug">
-v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
+v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
   v-badge.error-count(color="red")
     | Errors
 
@@ -19,11 +19,11 @@ v-btn(v-if="anyErrors" flat @click="revealErrorExplorer")
             div(slot="header")
               v-tooltip(top)
                 | Clear
-                v-btn(slot="activator" flat icon color="primary")
+                v-btn(slot="activator" text icon color="primary")
                   v-icon(@click.stop="destroyError(error)") mdi-close-circle
               v-tooltip(top)
                 | Copy Error Message to Clipboard
-                v-btn(slot="activator" flat icon color="primary")
+                v-btn(slot="activator" text icon color="primary")
                   v-icon(@click.stop="copyToClipboard(error)") mdi-clipboard-plus
               | {{ error.name }}
             v-card

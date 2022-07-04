@@ -27,16 +27,16 @@ v-tooltip(top v-if="currentFolderId")
 
 
         v-list(v-if="anyFiles")
-          v-list-tile(v-for="file in files" :key="file.name")
-            v-list-tile-avatar
+          v-list-item(v-for="file in files" :key="file.name")
+            v-list-item-avatar
               v-icon mdi-file-image
 
-            v-list-tile-content
-              v-list-tile-title {{ file.name }}
-              v-list-tile-sub-title(v-if="uploading")
+            v-list-item-content
+              v-list-item-title {{ file.name }}
+              v-list-item-subtitle(v-if="uploading")
                 v-progress-linear(indeterminate)
 
-            v-list-tile-action
+            v-list-item-action
               v-btn(v-if="!uploading" @click="removeFile(file)" icon ripple)
                 v-icon(color="grey lighten-1") cancel
 

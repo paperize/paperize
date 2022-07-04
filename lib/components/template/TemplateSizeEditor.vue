@@ -4,8 +4,8 @@ fieldset.fieldset
     strong Component Size
 
   v-btn-toggle(v-model="paperMode" @change="paperModeChanged")
-    v-btn(flat value="standard") Standard
-    v-btn(flat value="custom") Custom
+    v-btn(text value="standard") Standard
+    v-btn(text value="custom") Custom
 
   v-divider
 

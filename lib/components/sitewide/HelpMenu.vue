@@ -1,19 +1,19 @@
 <template lang="pug">
 v-menu
-  v-btn(flat slot="activator") Help
+  v-btn(text slot="activator") Help
 
   v-list
-    v-list-tile(href="https://docs.paperize.io" target="_blank")
-      v-list-tile-title Documentation
+    v-list-item(href="https://docs.paperize.io" target="_blank")
+      v-list-item-title Documentation
 
-    v-list-tile(href="https://discord.gg/9ggkkQp" target="_blank")
-      v-list-tile-title Join Discord
+    v-list-item(href="https://discord.gg/9ggkkQp" target="_blank")
+      v-list-item-title Join Discord
 
-    v-list-tile(:href="bugLink" title="Send a bug report email")
-      v-list-tile-title Report a Bug
+    v-list-item(:href="bugLink" title="Send a bug report email")
+      v-list-item-title Report a Bug
 
-    v-list-tile(:href="featureLink" title="Send a feature request email")
-      v-list-tile-title Request a Feature
+    v-list-item(:href="featureLink" title="Send a feature request email")
+      v-list-item-title Request a Feature
 </template>
 
 <script>

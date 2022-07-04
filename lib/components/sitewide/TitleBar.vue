@@ -1,5 +1,5 @@
 <template lang="pug">
-v-toolbar(app)
+v-app-bar
   v-toolbar-title
     router-link(:to="{ name: homeLink }") Paperize.io
 
@@ -14,26 +14,26 @@ v-toolbar(app)
       errors-menu
 
       template(v-if="!isProduction")
-        v-btn(flat @click="showDebugMenu = true") Debug
+        v-btn(text @click="showDebugMenu = true") Debug
         v-dialog(v-model="showDebugMenu" @close-dialog="showDebugMenu = false" max-width="500" lazy)
           debug-menu
 
-      v-btn(flat @click="showDriveExplorer = true") Drive Explorer
+      v-btn(text @click="showDriveExplorer = true") Drive Explorer
       v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
         drive-explorer
 
-      v-btn.database-button(flat @click="showDatabaseManager = true") Database
+      v-btn.database-button(text @click="showDatabaseManager = true") Database
       v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         database-manager
 
-      v-btn(flat @click="showNetworkManager = true")
+      v-btn(text @click="showNetworkManager = true")
         = "Network "
         v-progress-circular(:size="16" :width="3" :class="{ invisible: !showSpinner }" indeterminate color="primary")
       v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
         network-manager
 
     help-menu
-    v-btn(flat icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
+    v-btn(text icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
         v-icon mdi-brightness-6
     profile-menu
     print-status

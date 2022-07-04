@@ -3,7 +3,7 @@ v-expansion-panel-content
   div(slot="header") Layer Name: "{{ name }}"
   v-card
     v-card-text
-      v-text-field.layer-name-input(v-model="name" label="Name" box)
+      v-text-field.layer-name-input(v-model="name" label="Name" filled)
 </template>
 
 <script>

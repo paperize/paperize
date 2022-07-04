@@ -32,13 +32,13 @@ v-flex#source-editor(sm4 md6)
 
       v-layout(v-if="worksheetId && showRowSelection")
         v-flex(xs-6)
-          v-text-field(box label="First Row" v-model="firstRow" type="number" min="2" :max="getRowCount(component)+1")
+          v-text-field(filled label="First Row" v-model="firstRow" type="number" min="2" :max="getRowCount(component)+1")
         v-flex(xs-6)
-          v-text-field(box label="Last Row" v-model="lastRow" type="number" min="2" :max="getRowCount(component)+1")
+          v-text-field(filled label="Last Row" v-model="lastRow" type="number" min="2" :max="getRowCount(component)+1")
 
       //- Quantity Property
       v-tooltip(bottom)
-        v-select.quantity-property(box slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
+        v-select.quantity-property(filled slot="activator" v-model="quantityProperty" label="Quantity Property" :items="worksheetPropertyNamesWithNull")
         | A quantity property duplicates an item any number of times.
 
       //- List of Properties
@@ -51,7 +51,7 @@ v-flex#source-editor(sm4 md6)
     //- Worksheet Select
     template(v-else)
       v-btn(small @click="createWorksheetDialog = true") Create New Worksheet
-      v-select(box label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
+      v-select(filled label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
       v-dialog(v-model="createWorksheetDialog" max-width="500" lazy)
         v-card
           v-card-text
@@ -69,7 +69,7 @@ v-flex#source-editor(sm4 md6)
 
     v-btn(v-if="gameHasSheet" small @click="useGameSheet") Use Game Spreadsheet
 
-    v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
+    v-autocomplete(filled label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
 </template>
 
 <script>
