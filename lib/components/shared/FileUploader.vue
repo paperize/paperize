@@ -7,7 +7,7 @@ v-tooltip(top v-if="currentFolderId")
   v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500")
     v-card
       v-toolbar
-        v-toolbar-title.text-xs-center File Uploader
+        v-toolbar-title.text-center File Uploader
 
       v-card-text
         v-alert(v-if="!anyFiles" type="warning" outlined)

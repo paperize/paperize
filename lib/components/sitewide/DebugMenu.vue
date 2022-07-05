@@ -1,7 +1,7 @@
 <template lang="pug">
 v-card
   v-toolbar
-    v-toolbar-title.text-xs-center Developer
+    v-toolbar-title.text-center Developer
 
   v-card-title Uploader-majig
   v-list

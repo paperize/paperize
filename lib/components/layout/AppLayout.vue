@@ -1,6 +1,5 @@
 <template lang="pug">
 v-app
-  //- v-navigation-drawer(app mini-variant)
   title-bar
 
   v-main

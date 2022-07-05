@@ -2,7 +2,7 @@
 v-card
   v-toolbar
 
-    v-toolbar-title.text-xs-center Network Manager
+    v-toolbar-title.text-center Network Manager
 
   v-list(subheader two-line)
     v-subheader Outstanding Network Requests

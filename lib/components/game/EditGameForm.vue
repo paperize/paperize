@@ -7,7 +7,7 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
-      v-container(grid-list-md text-xs-center)
+      v-container(grid-list-md text-center)
         v-layout
           v-flex(xs12 sm6)
             div
