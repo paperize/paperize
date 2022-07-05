@@ -37,7 +37,7 @@ v-btn.log-in-button(v-else text color="success" @click.stop="prepareForLogin") S
       v-card-title(primary-title)
         .headline Error Logging In
       v-card-text
-        v-alert(type="error" :value="true") {{ errorCodeInEnglish }}
+        v-alert(type="error") {{ errorCodeInEnglish }}
 
       v-card-actions
         v-btn(@click="login") Try Again

@@ -11,24 +11,25 @@ v-card.image-manager
     input(id="image-files-input" type="file" multiple @change="handleFileInput")
 
     v-data-table.elevation-1(:items="images")
-      template(slot="items" slot-scope="props")
-        td(v-if="editing == props.item.id")
-          v-btn(small @click="stopEditing") Accept
+      template(slot="item" slot-scope="props")
+        tr
+          td(v-if="editing == props.item.id")
+            v-btn(small @click="stopEditing") Accept
 
-        td(v-else)
-          v-btn(small @click="showDeleteImageDialogFor(props.item)")
-            v-icon delete
-          v-btn(small @click="editImage(props.item)")
-            v-icon edit
+          td(v-else)
+            v-btn(small @click="showDeleteImageDialogFor(props.item)")
+              v-icon delete
+            v-btn(small @click="editImage(props.item)")
+              v-icon edit
 
-        td(v-if="editing == props.item.id")
-          inline-image-editor(:image="props.item" @next="editNextImage(true)" @previous="editNextImage(false)")
+          td(v-if="editing == props.item.id")
+            inline-image-editor(:image="props.item" @next="editNextImage(true)" @previous="editNextImage(false)")
 
-        td(v-else)
-          a(:title="props.item.id" @click="editImage(props.item)")  {{ props.item.name }}
+          td(v-else)
+            a(:title="props.item.id" @click="editImage(props.item)")  {{ props.item.name }}
 
-        td.preview
-          local-image(:imageId="props.item.id")
+          td.preview
+            local-image(:imageId="props.item.id")
 
     v-dialog(v-model="showDeleteImageDialog" max-width="500")
       v-card

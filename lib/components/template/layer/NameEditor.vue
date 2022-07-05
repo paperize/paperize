@@ -1,9 +1,10 @@
 <template lang="pug">
-v-expansion-panel-content
-  div(slot="header") Layer Name: "{{ name }}"
-  v-card
-    v-card-text
-      v-text-field.layer-name-input(v-model="name" label="Name" filled)
+v-expansion-panel
+  v-expansion-panel-header Layer Name: "{{ name }}"
+  v-expansion-panel-content
+    v-card
+      v-card-text
+        v-text-field.layer-name-input(v-model="name" label="Name" filled)
 </template>
 
 <script>

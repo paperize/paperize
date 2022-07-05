@@ -44,7 +44,7 @@ v-layout(column)
             v-btn(small color="primary" @click="copyTemplate(componentIdToCopy)" :disabled="!componentIdToCopy") Copy
 
   draggable(v-model="templateLayers" tag="v-list" class="layer-list")
-    v-list-item(avatar v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer(layer)" :class="{ 'selected': isActive(layer) }")
+    v-list-item(v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer(layer)" :class="{ 'selected': isActive(layer) }")
       v-list-item-avatar
         v-avatar(color="primary" size="36")
           span.white--text.headline.text-capitalize {{ layer.type[0] }}

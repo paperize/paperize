@@ -6,7 +6,7 @@ v-card
 
   v-list(subheader two-line)
     v-subheader Outstanding Network Requests
-    v-list-item(avatar v-for="request in trackedRequests" :key="request.id")
+    v-list-item(v-for="request in trackedRequests" :key="request.id")
       v-list-item-avatar
         v-progress-circular(v-if="showSpinner" indeterminate color="primary")
       v-list-item-content

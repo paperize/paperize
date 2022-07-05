@@ -14,9 +14,9 @@ v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
         v-btn(@click="clearAndClose") Clear All
       v-card-text
         p This menu helps you see when Paperize is breaking, and why. You can look at the errors yourself, or copy-and-paste them to the dev team on Discord.
-        v-expansion-panel#errors-explorer(popout)
-          v-expansion-panel-content(v-for="error in allErrors" :key="error.id")
-            div(slot="header")
+        v-expansion-panels#errors-explorer(popout)
+          v-expansion-panel(v-for="error in allErrors" :key="error.id")
+            v-expansion-panel-header
               v-tooltip(top)
                 | Clear
                 template(v-slot:activator="{ on }")
@@ -28,10 +28,11 @@ v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
                   v-btn(v-on="on" text icon color="primary")
                     v-icon(@click.stop="copyToClipboard(error)") mdi-clipboard-plus
               | {{ error.name }}
-            v-card
-              v-card-text
-                .message {{ error.message }}
-                pre.details {{ error.details }}
+            v-expansion-panel-content
+              v-card
+                v-card-text
+                  .message {{ error.message }}
+                  pre.details {{ error.details }}
 </template>
 
 <script>
