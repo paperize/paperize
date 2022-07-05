@@ -23,7 +23,7 @@ v-menu(v-if="loggedIn")
 
 v-btn.log-in-button(v-else text color="success" @click.stop="prepareForLogin") Sign In
   //- Show login flow
-  v-dialog(v-model="showPopupHelper" max-width="500" lazy)
+  v-dialog(v-model="showPopupHelper" max-width="500")
     v-card(v-if="!loginError")
       v-card-title(primary-title)
         .headline Logging In With Google...

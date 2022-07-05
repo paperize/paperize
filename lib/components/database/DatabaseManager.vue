@@ -15,7 +15,7 @@ v-card.database-manager
   v-divider
 
   v-container(grid-list-md)
-    v-layout(row wrap v-observe-visibility="updateCacheCounts")
+    v-layout(wrap v-observe-visibility="updateCacheCounts")
       v-flex(xs12)
         .subtitle-1 Caches
         p Paperize limits its API calls to other services by caching heavy assets locally in your browser. Here you can see how many things are cached right now, and clear the cache if desired.

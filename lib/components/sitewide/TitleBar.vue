@@ -16,21 +16,21 @@ v-app-bar
 
       template(v-if="!isProduction")
         v-btn(text @click="showDebugMenu = true") Debug
-        v-dialog(v-model="showDebugMenu" @close-dialog="showDebugMenu = false" max-width="500" lazy)
+        v-dialog(v-model="showDebugMenu" @close-dialog="showDebugMenu = false" max-width="500")
           debug-menu
 
       v-btn(text @click="showDriveExplorer = true") Drive Explorer
-      v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500" lazy)
+      v-dialog(v-model="showDriveExplorer" @close-dialog="showDriveExplorer = false" max-width="500")
         drive-explorer
 
       v-btn.database-button(text @click="showDatabaseManager = true") Database
-      v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
+      v-dialog(v-model="showDatabaseManager" @close-dialog="showDatabaseManager = false" max-width="500")
         database-manager
 
       v-btn(text @click="showNetworkManager = true")
         = "Network "
         v-progress-circular(:size="16" :width="3" :class="{ invisible: !showSpinner }" indeterminate color="primary")
-      v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500" lazy)
+      v-dialog(v-model="showNetworkManager" @close-dialog="showDatabaseManager = false" max-width="500")
         network-manager
 
     help-menu

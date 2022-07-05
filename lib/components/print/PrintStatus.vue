@@ -1,5 +1,5 @@
 <template lang="pug">
-v-dialog(v-model="printStatusWindowOpen" @close-dialog="printStatusWindowOpen = false" max-width="500" lazy)
+v-dialog(v-model="printStatusWindowOpen" @close-dialog="printStatusWindowOpen = false" max-width="500")
   v-card.image-library
     v-card-title
       .headline Print In Progress...

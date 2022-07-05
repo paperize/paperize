@@ -1,6 +1,6 @@
 <template lang="pug">
 v-container(grid-list-xl fluid)
-  v-layout(row fluid wrap justify-space-around)
+  v-layout(fluid wrap justify-space-around)
     v-flex(sm8 md4)
       p.display-1.text-xs-center Get Involved!
 

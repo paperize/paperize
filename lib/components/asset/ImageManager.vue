@@ -30,7 +30,7 @@ v-card.image-manager
         td.preview
           local-image(:imageId="props.item.id")
 
-    v-dialog(v-model="showDeleteImageDialog" max-width="500" lazy)
+    v-dialog(v-model="showDeleteImageDialog" max-width="500")
       v-card
         v-card-title
           .headline Are you sure you want to delete the image "{{ imageToDelete.name }}"?

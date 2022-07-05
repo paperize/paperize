@@ -1,6 +1,6 @@
 <template lang="pug">
 v-container(fluid)
-  v-layout(row wrap)
+  v-layout(wrap)
     v-flex(sm12)
       .headline Game Manager
 
@@ -9,14 +9,14 @@ v-container(fluid)
           v-btn(v-on="on" small disabled) Load Example
         span Coming Soon!
 
-      v-dialog(v-model="showGameForm" max-width="500" lazy)
+      v-dialog(v-model="showGameForm" max-width="500")
         template(v-slot:activator="{ on }")
           v-btn.new-game-button(v-on="on" small) New Game
         new-game-form(@close-dialog="showGameForm = false")
 
     v-flex(sm12)
       v-container(grid-list-md fluid)
-        v-layout(row wrap)
+        v-layout(wrap)
           game-card(v-for="game in allGames" :key="game.id" :game="game")
 </template>
 

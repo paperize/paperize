@@ -8,19 +8,19 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" :disabled="!!game" label="Title" placeholder="Settlers of Carcassonne")
 
       template(v-if="game")
-        v-layout(row)
+        v-layout
           v-flex(xs2)
             v-icon(v-if="gameFolder" color="green") check_circle
             v-progress-circular(v-else indeterminate color="primary")
           v-flex(xs10) Creating Folder
 
-        v-layout(row)
+        v-layout
           v-flex(xs2)
             v-icon(v-if="gameImagesFolder" color="green") check_circle
             v-progress-circular(v-else indeterminate color="primary")
           v-flex(xs10) Creating Images Subfolder
 
-        v-layout(row)
+        v-layout
           v-flex(xs2)
             v-icon(v-if="gameSpreadsheet" color="green") check_circle
             v-progress-circular(v-else indeterminate color="primary")

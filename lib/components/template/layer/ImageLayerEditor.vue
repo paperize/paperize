@@ -30,7 +30,7 @@ v-expansion-panel#image-layer-editor(popout)
     div(slot="header") Image Alignment
     v-card
       v-card-text
-        v-layout(row)
+        v-layout
           v-flex(shrink)
             magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="imageScaling")
           v-flex

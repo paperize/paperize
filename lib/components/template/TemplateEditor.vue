@@ -11,7 +11,7 @@ v-card
 
   v-card-text
     v-container(ma-0 pa-0 grid-list-md fluid)
-      v-layout(row)
+      v-layout
         v-flex(xs4)
           .subtitle-1(v-if="editingSize")
             a(@click="editingSize = false")

@@ -11,7 +11,7 @@ v-layout(column)
       v-flex(xs8)
         v-checkbox(label="Highlight Selected Layer?" v-model="layerHighlighting" id="highlight-layer")
 
-    v-dialog(v-model="showNewLayerDialog" max-width="500" lazy)
+    v-dialog(v-model="showNewLayerDialog" max-width="500")
       v-card
         v-card-title
           .headline Add what type of Layer?
@@ -66,7 +66,7 @@ v-layout(column)
           v-btn(fab small @click="confirmDeleteLayer(layer)")
             v-icon delete
 
-  v-dialog(v-model="showDeleteLayerDialog" max-width="500" lazy)
+  v-dialog(v-model="showDeleteLayerDialog" max-width="500")
     v-card
       v-card-title
         .headline Are you sure?

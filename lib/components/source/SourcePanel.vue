@@ -55,7 +55,7 @@ v-flex#source-editor(sm4 md6)
     template(v-else)
       v-btn(small @click="createWorksheetDialog = true") Create New Worksheet
       v-select(filled label="Select Worksheet" v-model="worksheetId" :items="worksheetOptions" item-value="id" item-text="title" :error="!worksheetId")
-      v-dialog(v-model="createWorksheetDialog" max-width="500" lazy)
+      v-dialog(v-model="createWorksheetDialog" max-width="500")
         v-card
           v-card-text
             v-form(ref="worksheetForm")

@@ -4,7 +4,7 @@ v-tooltip(top v-if="currentFolderId")
   template(v-slot:activator="{ on }")
     v-icon(v-on="on" @click="showUploader = true") mdi-folder-plus
 
-  v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500" lazy)
+  v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500")
     v-card
       v-toolbar
         v-toolbar-title.text-xs-center File Uploader

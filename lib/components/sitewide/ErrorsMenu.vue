@@ -6,7 +6,7 @@ v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
     template(v-if="unreadErrorCount > 0" slot="badge")
       span.error-count-badge {{ unreadErrorCount }}
 
-  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="600" lazy)
+  v-dialog.errors-explorer(v-model="showErrorExplorer" @close-dialog="showErrorExplorer = false" max-width="600")
     v-card
       v-card-title
         | Recent Errors

@@ -3,11 +3,11 @@ v-app
   //- v-navigation-drawer(app mini-variant)
   title-bar
 
-  v-content
+  v-main
     router-view
 
   v-footer(app)
-    v-layout(row)
+    v-layout
       v-btn(text href="/privacy-policy.html") Privacy Policy
       v-spacer
 </template>

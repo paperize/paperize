@@ -18,7 +18,7 @@ v-expansion-panel#text-layer-editor(popout)
         v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" filled)
           magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
 
-        v-layout(row)
+        v-layout
           v-flex(shrink)
             magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textColor")
           v-flex

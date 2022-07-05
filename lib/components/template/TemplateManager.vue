@@ -6,7 +6,7 @@ v-card(v-else)
     .headline Template Manager
 
   v-card-text
-    v-layout(row)
+    v-layout
       v-flex(sm4)
         .subtitle-1 Create a new Template
         v-btn(@click="createComponentTemplate(component)") Create
