@@ -82,7 +82,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.21",
     "md5": "^2.2.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "promisify-file-reader": "^3.0.7",
     "uuid": "^3.1.0",
     "vue": "^2.5.21",
