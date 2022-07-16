@@ -1,7 +1,7 @@
 <template lang="pug">
-  //- iframe(:src="pdfBlob") eliminate warnings in chrome
-  object(:data="pdfBlob" type="application/pdf")
-  //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
+//- iframe(:src="pdfBlob") eliminate warnings in chrome
+object(:data="pdfBlob" type="application/pdf")
+//- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 </template>
 
 <script>

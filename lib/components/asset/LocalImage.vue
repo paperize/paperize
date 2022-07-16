@@ -10,7 +10,7 @@ img(:src="imageSource")
 
     asyncComputed: {
       imageSource() {
-        return assetStore.getImage(this.imageId).get("data")
+        return assetStore.getImage(this.imageId).then(image => image.data)
       }
     }
   }

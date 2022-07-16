@@ -1,9 +1,9 @@
 <template lang="pug">
-  div(v-observe-visibility="visibilityChanged")
-    v-label(v-if="label") {{ label }}
+div(v-observe-visibility="visibilityChanged")
+  v-label(v-if="label") {{ label }}
 
-    chrome(v-if="showPicker" :value="value" @input="emitOnlyHex")
-    div.color-swatch(v-else @click="showPicker = true" :style="{ backgroundColor: value }")
+  chrome(v-if="showPicker" :value="value" @input="emitOnlyHex")
+  div.color-swatch(v-else @click="showPicker = true" :style="{ backgroundColor: value }")
 </template>
 
 <script>

@@ -123,7 +123,7 @@ v-tooltip(top v-if="currentFolderId")
 
       performUpload() {
         this.uploading = true
-        return Promise.map(this.files, (fileToUpload) => {
+        return Bluebird.map(this.files, (fileToUpload) => {
           return readAsDataURL(fileToUpload.file)
 
           .then((result) => {

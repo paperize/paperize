@@ -1,9 +1,9 @@
 <template lang="pug">
-  v-tooltip(v-if="imageId" top)
-    | Drive Image: {{ (image && image.name) || imageId || "No Image ID" }}
+v-tooltip(v-if="imageId" top)
+  | Drive Image: {{ (image && image.name) || imageId || "No Image ID" }}
 
-    a(slot="activator" :href="driveLink" target="_blank")
-      v-icon mdi-image
+  a(slot="activator" :href="driveLink" target="_blank")
+    v-icon mdi-image
 </template>
 
 <script>

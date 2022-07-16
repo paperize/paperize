@@ -4,7 +4,7 @@ v-toolbar(app)
     router-link(:to="{ name: homeLink }") Paperize.io
 
     v-tooltip(bottom)
-      span.caption(slot="activator")= " ver.A8.1.6"
+      span.caption(slot="activator")= " ver.A8.2.0-exp"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
@@ -64,8 +64,7 @@ v-toolbar(app)
 
     data() {
       return {
-        gitSha: process.env.GIT_SHA,
-        gitChanges: process.env.GIT_CHANGE_INFO,
+        gitSha: import.meta.env.VITE_GIT_SHA || "Unknown Git SHA",
         showDebugMenu: false,
         showDriveExplorer: false,
         showDatabaseManager: false,

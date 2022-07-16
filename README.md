@@ -14,7 +14,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 - [Install NodeJS](https://nodejs.org). Suggested version is `14`.
 - clone this repository
-- Set up your API Keys:
+- Set up your API Keys with Google:
   - visit [the Google API Developer Console](https://console.developers.google.com/apis/credentials)
   - create a new Project for your Paperize keys
   - create the OAuth consent screen. You just need to enter the application name, the support email and keep the existing scopes for the moment.
@@ -24,16 +24,17 @@ Paperize helps game designers make better games by leveraging free web tools to 
     - Name: _totally up to you_
     - Authorized JavaScript Origins: `http://localhost:8080`
     - Authorized Redirect URIs: none
-  - from the Library menu, enable Web Fonts Developer API and create an API Key
-  - from the Library menu, enable the Google Drive API and choose the previously created API key
-  - from the Library menu, enable the Google Picker API and choose the previously created API Key
-  - from the Library menu, enable the Google Sheets API and choose the previously created API Key
+  - from the Library menu, enable these APIs:
+    - Web Fonts Developer API and create an API Key
+    - Google Drive API and choose the previously created API key
+    - Google Picker API and choose the previously created API Key
+    - Google Sheets API and choose the previously created API Key
   - Open the OAuth Consent Screen menu again, and add the following scopes:
     - Google Drive API `.../auth/drive.file`
-  - copy and rename `example.api_keys.dev.json` to `.api_keys.dev.json` (`cp example.api_keys.dev.json .api_keys.dev.json`)
-  - modify `.api_keys.dev.json` to contain the keys you just set up
+- Set up the API keys in your project:
+  - copy and rename `example.env.development` to `.env.development` (`cp example.env.development .env.development`)
+  - modify `.env.development` to contain the keys you just set up in the Google Developer Console
 - `npm install`
-- `npm test` (Optional test, may not work on some systems)
 - `npm start`
 - visit http://localhost:8080 and _go go go!_
 - **Please, be sure to use localhost:8080, as opposed to 127.0.0.1, when adding the Authorized Javascript Origins and opening your server in the browser, since 127.0.0.1 is not allowed by Google API permissions.**
