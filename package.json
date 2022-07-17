@@ -30,7 +30,7 @@
     "core-util-is": "^1.0.2",
     "cypress": "^9.0.0",
     "eslint": "^8.3.0",
-    "eslint-plugin-vue": "^4.3.0",
+    "eslint-plugin-vue": "^9.2.0",
     "express": "^4.17.1",
     "file-api": "^0.10.4",
     "http-server": "^0.12.3",
