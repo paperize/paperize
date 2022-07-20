@@ -43,7 +43,7 @@ v-layout(column)
           v-list-item-action
             v-btn(small color="primary" @click="copyTemplate(componentIdToCopy)" :disabled="!componentIdToCopy") Copy
 
-  draggable(v-model="templateLayers" tag="v-list" class="layer-list")
+  draggable(v-model="templateLayers" class="layer-list")
     v-list-item(v-for="layer in templateLayers" :key="layer.id" @click="setActiveLayer(layer)" :class="{ 'selected': isActive(layer) }")
       v-list-item-avatar
         v-avatar(color="primary" size="36")
