@@ -1,12 +1,12 @@
 <template lang="pug">
-v-layout(row fluid).game-panel
+v-layout(fluid).game-panel
   v-flex(xs12 md4)
     .headline {{ game.title || "[No title]" }}
 
     v-btn.edit-game-button(small fab @click="showEditDialog = true")
       v-icon edit
 
-      v-dialog(v-model="showEditDialog" max-width="500" lazy)
+      v-dialog(v-model="showEditDialog" max-width="500")
         edit-game-form(:game="game" @close-dialog="showEditDialog = false")
 
     folder-icon(:folderId="game.folderId")
@@ -14,7 +14,7 @@ v-layout(row fluid).game-panel
     spreadsheet-icon(:spreadsheetId="game.spreadsheetId")
 
   v-flex(xs12 md8)
-    v-layout(row fluid)
+    v-layout(fluid)
       v-flex(sm12)
         v-btn(small @click="printGame()")
           v-icon(left) photo_library
@@ -24,14 +24,14 @@ v-layout(row fluid).game-panel
           v-icon(left) settings
           | Print Settings
 
-          v-dialog(v-model="showPrintSettingsDialog" max-width="500" lazy)
+          v-dialog(v-model="showPrintSettingsDialog" max-width="500")
             print-settings
 
         v-btn(small @click="showDeleteDialog = true")
           v-icon(left) delete
           | Delete Game
 
-          v-dialog(v-model="showDeleteDialog" max-width="500" lazy)
+          v-dialog(v-model="showDeleteDialog" max-width="500")
             v-card.delete-game
               v-card-title
                 .headline Are you sure you want to delete the Game "{{ game.title }}"?

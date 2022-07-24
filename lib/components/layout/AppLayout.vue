@@ -1,14 +1,13 @@
 <template lang="pug">
-v-app(:dark="darkMode")
-  //- v-navigation-drawer(app mini-variant)
+v-app
   title-bar
 
-  v-content
+  v-main
     router-view
 
   v-footer(app)
-    v-layout(row)
-      v-btn(flat href="/privacy-policy.html") Privacy Policy
+    v-layout
+      v-btn(text href="/privacy-policy.html") Privacy Policy
       v-spacer
 </template>
 
@@ -17,7 +16,6 @@ v-app(:dark="darkMode")
   import { mapGetters } from 'vuex'
 
   export default {
-    components: { TitleBar },
-    computed: mapGetters(['darkMode'])
+    components: { TitleBar }
   }
 </script>

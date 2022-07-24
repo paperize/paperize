@@ -1,16 +1,17 @@
 <template lang="pug">
 v-tooltip(top v-if="currentFolderId")
   | Upload to linked Google Drive Folder: {{ folder.name }}
-  v-icon(slot="activator" @click="showUploader = true") mdi-folder-plus
+  template(v-slot:activator="{ on }")
+    v-icon(v-on="on" @click="showUploader = true") mdi-folder-plus
 
-  v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500" lazy)
+  v-dialog(v-model="showUploader" @close-dialog="showUploader = false" max-width="500")
     v-card
       v-toolbar
-        v-toolbar-title.text-xs-center File Uploader
+        v-toolbar-title.text-center File Uploader
 
       v-card-text
-        v-alert(v-if="!anyFiles" :value="true" type="warning" outline)
-          .subheading(align="center")
+        v-alert(v-if="!anyFiles" type="warning" outlined)
+          .subtitle-1(align="center")
             strong Remember!<br/> Upload All Paperize Files Through Paperize!
           |  Paperize can ONLY see files that you upload through Paperize.
 
@@ -27,16 +28,16 @@ v-tooltip(top v-if="currentFolderId")
 
 
         v-list(v-if="anyFiles")
-          v-list-tile(v-for="file in files" :key="file.name")
-            v-list-tile-avatar
+          v-list-item(v-for="file in files" :key="file.name")
+            v-list-item-avatar
               v-icon mdi-file-image
 
-            v-list-tile-content
-              v-list-tile-title {{ file.name }}
-              v-list-tile-sub-title(v-if="uploading")
+            v-list-item-content
+              v-list-item-title {{ file.name }}
+              v-list-item-subtitle(v-if="uploading")
                 v-progress-linear(indeterminate)
 
-            v-list-tile-action
+            v-list-item-action
               v-btn(v-if="!uploading" @click="removeFile(file)" icon ripple)
                 v-icon(color="grey lighten-1") cancel
 

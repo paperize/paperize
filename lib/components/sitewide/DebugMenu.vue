@@ -1,12 +1,12 @@
 <template lang="pug">
 v-card
   v-toolbar
-    v-toolbar-title.text-xs-center Developer
+    v-toolbar-title.text-center Developer
 
   v-card-title Uploader-majig
   v-list
-    v-list-tile
-      v-list-tile-content
+    v-list-item
+      v-list-item-content
         file-uploader(:folderId="workingDirectoryId")
 </template>
 

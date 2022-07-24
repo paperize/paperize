@@ -3,11 +3,12 @@ v-layout(column).component-panel
   v-flex(sm12)
     .headline Components
 
-    v-dialog(v-model="showNewDialog" max-width="500" lazy)
-      v-btn.new-component-button(small slot="activator") New Component
+    v-dialog(v-model="showNewDialog" max-width="500")
+      template(v-slot:activator="{ on }")
+        v-btn.new-component-button(small v-on="on") New Component
       new-component-form(@close-dialog="showNewDialog = false")
 
-    v-dialog(v-model="showEditDialog" max-width="500" lazy)
+    v-dialog(v-model="showEditDialog" max-width="500")
       edit-component-form(:component="editComponent" @close-dialog="showEditDialog = false")
 
   component-card(v-for="component in components" :key="component.id" :component="component" @edit-me="editComponent = component; showEditDialog = true")

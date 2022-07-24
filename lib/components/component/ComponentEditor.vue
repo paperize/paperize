@@ -1,6 +1,6 @@
 <template lang="pug">
 v-container(grid-list-md)
-  v-layout(row)
+  v-layout
     source-panel(:component="component")
     template-panel(:component="component")
 </template>

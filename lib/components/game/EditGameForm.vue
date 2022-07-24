@@ -7,8 +7,8 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
     v-card-text
       v-text-field.game-title(v-model="gameTitle" :rules="[rules.required]" label="Title" placeholder="Settlers of Carcassonne")
 
-      v-container(grid-list-md text-xs-center)
-        v-layout(row)
+      v-container(grid-list-md text-center)
+        v-layout
           v-flex(xs12 sm6)
             div
               v-label Game Folder:
@@ -20,8 +20,9 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
               v-tooltip(top)
                 | Clear this game's Folder
-                v-btn(fab slot="activator" @click="clearFolder")
-                  v-icon cancel
+                template(v-slot:activator="{ on }")
+                  v-btn(fab v-on="on" @click="clearFolder")
+                    v-icon cancel
 
             template(v-else xs12 sm6)
               p
@@ -41,15 +42,16 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 
               v-tooltip(top)
                 | Clear this game's Spreadsheet
-                v-btn(fab slot="activator" @click="clearSpreadsheet")
-                  v-icon cancel
+                template(v-slot:activator="{ on }")
+                  v-btn(fab v-on="on" @click="clearSpreadsheet")
+                    v-icon cancel
 
             template(v-else)
               p
                 spreadsheet-icon(:force="true")
                 | No Game Spreadsheet set
 
-                v-autocomplete(box label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
+                v-autocomplete(filled label="Select Spreadsheet" v-model="spreadsheetId" :items="allSpreadsheets" item-value="id" item-text="name")
                 v-btn(@click="createSheetArtifactForGame(game)") Create New Spreadsheet
 
     v-card-actions

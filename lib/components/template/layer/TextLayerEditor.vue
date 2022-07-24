@@ -1,57 +1,61 @@
 <template lang="pug">
-v-expansion-panel#text-layer-editor(popout)
+v-expansion-panels#text-layer-editor(popout)
   name-editor(:layer="layer")
 
   dimension-editor(:dimensions="dimensions" :size="templateSize")
 
-  v-expansion-panel-content.font-settings
-    div(slot="header") Font
-    v-card
-      v-card-text
-        p Need inspiration? <a href="https://fonts.google.com" target="_blank">Browse Google Fonts</a>
-        v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" box)
-          //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontName")
+  v-expansion-panel.font-settings
+    v-expansion-panel-header Font
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          p Need inspiration? <a href="https://fonts.google.com" target="_blank">Browse Google Fonts</a>
+          v-autocomplete(label="Font Family" v-model="textFontName" :items="allFonts" item-value="family" item-text="family" class="font-family-setting" filled)
+            //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontName")
 
-        v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" class="font-style-setting" box)
-          //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontStyle")
+          v-autocomplete(label="Font Style" v-model="textFontStyle" :items="availableFontStyles" class="font-style-setting" filled)
+            //- magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textFontStyle")
 
-        v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" box)
-          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
+          v-text-field.text-size(label="Text Size" v-model="textSize" type="number" min="1" max="128" filled)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textSize")
 
-        v-layout(row)
-          v-flex(shrink)
-            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textColor")
-          v-flex
-            color-picker(label="Text Color" v-model="textColor")
+          v-layout
+            v-flex(shrink)
+              magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="textColor")
+            v-flex
+              color-picker(label="Text Color" v-model="textColor")
 
-  v-expansion-panel-content
-    div(slot="header") Text Alignment
-    v-card
-      v-card-text
-        p Horizontal Alignment
-        magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
-        v-btn-toggle(v-model="horizontalAlignment")
-          v-btn(small flat value="left") Left
-          v-btn(small flat value="center") Center
-          v-btn(small flat value="right") Right
+  v-expansion-panel
+    v-expansion-panel-header Text Alignment
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          p Horizontal Alignment
+          magic-property-input-talker(:layer="layer" attributeName="horizontalAlignment")
+          v-btn-toggle(v-model="horizontalAlignment")
+            v-btn(small text value="left") Left
+            v-btn(small text value="center") Center
+            v-btn(small text value="right") Right
 
-        p Vertical Alignment
-        magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
-        v-btn-toggle(v-model="verticalAlignment")
-          v-btn(small flat value="top") Top
-          v-btn(small flat value="middle") Middle
-          v-btn(small flat value="bottom") Bottom
+          p Vertical Alignment
+          magic-property-input-talker(:layer="layer" attributeName="verticalAlignment")
+          v-btn-toggle(v-model="verticalAlignment")
+            v-btn(small text value="top") Top
+            v-btn(small text value="middle") Middle
+            v-btn(small text value="bottom") Bottom
 
-  v-expansion-panel-content
-    div(slot="header") Text Content
-    v-card
-      v-card-text
-        p(v-pre) Use triple curly-braces to reference columns, like: {{{Name}}}
+  v-expansion-panel
+    v-expansion-panel-header Text Content
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          p(v-pre) Use triple curly-braces to reference columns, like: {{{Name}}}
 
-        v-tooltip(top)
-          | Name a column "{{ layer.name }}" and leave this blank to pull from your spreadsheet.
-          v-icon(slot="activator") mdi-table-search
-        v-textarea.text-content(v-model="textContentTemplate" label="Text Template" box :placeholder="`{{{${layer.name}}}}`")
+          v-tooltip(top)
+            | Name a column "{{ layer.name }}" and leave this blank to pull from your spreadsheet.
+            template(v-slot:activator="{ on }")
+              v-icon(v-on="on") mdi-table-search
+          v-textarea.text-content(v-model="textContentTemplate" label="Text Template" filled :placeholder="`{{{${layer.name}}}}`")
 </template>
 
 <script>

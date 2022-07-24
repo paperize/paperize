@@ -1,10 +1,10 @@
 <template lang="pug">
 v-container(grid-list-xl fluid)
-  v-layout(row fluid wrap justify-space-around)
+  v-layout(fluid wrap justify-space-around)
     v-flex(sm8 md4)
-      p.display-1.text-xs-center Get Involved!
+      p.display-1.text-center Get Involved!
 
-      p.headline.text-xs-center Patreon
+      p.headline.text-center Patreon
 
       p.body-2 Paperize is supported in part with generous contributions from people like you!
 
@@ -12,7 +12,7 @@ v-container(grid-list-xl fluid)
         a(href="https://www.patreon.com/bePatron?u=67763" data-patreon-widget-type="become-patron-button")
           v-img(:src="becomeAPatron" contain max-height="51")
 
-      p.headline.text-xs-center Discord
+      p.headline.text-center Discord
 
       p.body-2 The Paperize community is growing. You can join us on the Paperize.io Discord server to get help, give feedback, request features, and design games together with other Paperize users.
 
@@ -21,15 +21,15 @@ v-container(grid-list-xl fluid)
           iframe(v-if="!isCypress" src="https://discordapp.com/widget?id=335061144311955456&theme=dark" width="100%" height="500" allowtransparency="true" frameborder="0")
 
     v-flex(sm8 md4)
-      p.display-1.text-xs-center What is Paperize.io?
+      p.display-1.text-center What is Paperize.io?
 
-      p.headline.text-xs-center Paperize is a Paper Prototyping Tool
+      p.headline.text-center Paperize is a Paper Prototyping Tool
 
       p.body-2 With Paperize, your ideas get out of your head and onto the tabletop, <em>fast</em>.
 
       p.body-2 Demo coming soon.
 
-      p.headline.text-xs-center Paperize is Free (as in Free)
+      p.headline.text-center Paperize is Free (as in Free)
 
       p.body-2 Paperize is "free as in pizza", which means "you can have this piece of software to use as you wish."
 
@@ -40,7 +40,7 @@ v-container(grid-list-xl fluid)
       p.body-2 Paperize is "free from ads", which means it's clean to look at and a pleasure to use.
 
     v-flex(sm8 md4)
-      p.display-1.text-xs-center Get Started!
+      p.display-1.text-center Get Started!
 
       p.body-2 You only need a Google account to log in and get started creating games right away! Just click "Sign In" above and to the right.
 </template>

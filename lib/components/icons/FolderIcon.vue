@@ -2,10 +2,11 @@
 v-tooltip(v-if="folderId || force" top)
   | Go to linked Google Drive Folder: {{ (folder && folder.name) || folderId || "No Folder ID" }}
 
-  a(v-if="driveLink" slot="activator" :href="driveLink" target="_blank")
-    v-icon(:large="large" :color="color") mdi-folder-google-drive
+  template(v-slot:activator="{ on }")
+    a(v-if="driveLink" v-on="on" :href="driveLink" target="_blank")
+      v-icon(:large="large" :color="color") mdi-folder-google-drive
 
-  v-icon(v-else slot="activator" :large="large" :color="color") mdi-folder-google-drive
+    v-icon(v-else v-on="on" :large="large" :color="color") mdi-folder-google-drive
 </template>
 
 <script>

@@ -2,10 +2,11 @@
 v-tooltip(v-if="(spreadsheetId || force)" top)
   | Google Sheet: {{ (sheet && sheet.name) || spreadsheetId || "No Spreadsheet ID" }}
 
-  a(v-if="driveLink" slot="activator" :href="driveLink" target="_blank")
-    v-icon(:large="large") mdi-google-spreadsheet
+  template(v-slot:activator="{ on }")
+    a(v-if="driveLink" v-on="on" :href="driveLink" target="_blank")
+      v-icon(:large="large") mdi-google-spreadsheet
 
-  v-icon(v-else slot="activator" :large="large") mdi-google-spreadsheet
+    v-icon(v-else v-on="on" :large="large") mdi-google-spreadsheet
 </template>
 
 <script>

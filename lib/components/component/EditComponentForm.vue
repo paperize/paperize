@@ -6,7 +6,8 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 
       v-tooltip(top)
         | Make a Copy of This Component
-        v-btn(slot="activator" fab small v-on:click="copyComponent")
+        template(v-slot:activator="{ on }")
+          v-btn(v-on="on" fab small v-on:click="copyComponent")
             v-icon mdi-content-copy
 
     v-card-text

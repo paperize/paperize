@@ -1,51 +1,55 @@
 <template lang="pug">
 
-v-expansion-panel#shape-layer-editor(popout)
+v-expansion-panels#shape-layer-editor(popout)
   name-editor(:layer="layer")
 
   dimension-editor(:dimensions="dimensions" :size="templateSize")
 
-  v-expansion-panel-content
-    .shape-settings(slot="header") Shape
-    v-card
-      v-card-text
-        v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" box)
-          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="shape")
+  v-expansion-panel
 
-  v-expansion-panel-content
-    .stroke-settings(slot="header") Stroke
-    v-card
-      v-card-text
-        v-layout(row)
-          v-flex(shrink)
-            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokePresent")
-          v-flex
-            v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
+    v-expansion-panel-header.shape-settings Shape
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          v-select.shape-select(v-model="shape" :items="shapeOptions" label="Shape" filled)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="shape")
 
-        v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" box)
-          magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeWidth")
+  v-expansion-panel
+    v-expansion-panel-header.stroke-settings Stroke
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          v-layout
+            v-flex(shrink)
+              magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokePresent")
+            v-flex
+              v-checkbox(color="primary" v-model="strokePresent" label="Stroke?")
 
-        v-layout(row)
-          v-flex(shrink)
-            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeColor")
-          v-flex
-            color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
+          v-text-field(v-if="strokePresent" label="Stroke Width" type="number" step="0.01" v-model.number="strokeWidth" filled)
+            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeWidth")
 
-  v-expansion-panel-content
-    .fill-settings(slot="header") Fill
-    v-card
-      v-card-text
-        v-layout(row)
-          v-flex(shrink)
-            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillPresent")
-          v-flex
-            v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
+          v-layout
+            v-flex(shrink)
+              magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="strokeColor")
+            v-flex
+              color-picker(v-if="strokePresent" label="Stroke Color" v-model="strokeColor")
 
-        v-layout(row)
-          v-flex(shrink)
-            magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillColor")
-          v-flex
-            color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" box)
+  v-expansion-panel
+    v-expansion-panel-header.fill-settings Fill
+    v-expansion-panel-content
+      v-card
+        v-card-text
+          v-layout
+            v-flex(shrink)
+              magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillPresent")
+            v-flex
+              v-checkbox(color="primary" v-model="fillPresent" label="Fill?")
+
+          v-layout
+            v-flex(shrink)
+              magic-property-input-talker(slot="prepend-inner" :layer="layer" attributeName="fillColor")
+            v-flex
+              color-picker(v-if="fillPresent" label="Fill Color" v-model="fillColor" filled)
 </template>
 
 <script>

@@ -11,13 +11,15 @@ v-card
 
     v-radio-group(v-model="printSelection")
       v-tooltip(top)
-        span(slot="activator")
-          v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="All Components" :value="PRINT_ALL_COMPONENTS")
         span Print all components of the game.
 
       v-tooltip(top)
-        span(slot="activator")
-          v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Select Components" :value="PRINT_SELECT_COMPONENTS")
         span Select specific components to print.
 
     v-card.component-selection(v-if="printSelection == PRINT_SELECT_COMPONENTS")
@@ -31,18 +33,21 @@ v-card
 
     v-radio-group(v-model="printMode")
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Auto Layout" :value="MODE_AUTO_LAYOUT")
         span This is for most users who want to specify their paper size and have Paperize lay everything out.
 
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Tabletop Simulator" :value="MODE_TABLETOP_SIMULATOR")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Tabletop Simulator" :value="MODE_TABLETOP_SIMULATOR")
         span 25x24.5 with 0 margins, this setting is ideal for users looking to convert their PDF to a PNG and then feeding it to the Tabletop Simulator Deck Editor.
 
       v-tooltip(bottom)
-        span(slot="activator")
-          v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
+        template(v-slot:activator="{ on }")
+          span(v-on="on")
+            v-radio(label="Component Per Page" :value="MODE_COMPONENT_PER_PAGE")
         p This allows advanced users to do their own layout.
         span Paperize will place each component onto a page of its own, sized exactly to the component with no margins. Advanced users can then do their own layout.
 
@@ -55,22 +60,22 @@ v-card
 
       div
         v-btn-toggle(v-model="paperMode")
-          v-btn(flat value="standard") Standard Sizes
-          v-btn(flat value="custom") Custom Size
+          v-btn(text value="standard") Standard Sizes
+          v-btn(text value="custom") Custom Size
 
       //- Standard Sizes
       div(v-if="paperMode != 'custom'")
         p Most home printers use A4 or Letter paper. Select "Universal" if you'd like a print that will work on either.
 
-        v-select(box label="Size" :items="printOptions" item-text="name" item-value="value" v-model="paper")
-        v-select(box label="Orientation" :items="orientationOptions" item-text="name" item-value="value" v-model="orientation")
+        v-select(filled label="Size" :items="printOptions" item-text="name" item-value="value" v-model="paper")
+        v-select(filled label="Orientation" :items="orientationOptions" item-text="name" item-value="value" v-model="orientation")
 
       //- Custom Size
       template(v-else)
         p Set your own custom page size in inches.
 
-        v-text-field(box v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
-        v-text-field(box v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(filled v-model.number="paperWidth" label="Width" suffix="in." type="number" step ="0.01" min="0")
+        v-text-field(filled v-model.number="paperHeight" label="Height" suffix="in." type="number" step ="0.01" min="0")
 
 
       v-label
@@ -93,10 +98,10 @@ v-card
 
       p How close to the edge will your printer allow you to print?
 
-      v-text-field(box v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
-      v-text-field(box v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginRight" label="Right" suffix="in." type="number" step ="0.01" min="0")
+      v-text-field(filled v-model.number="marginBottom" label="Bottom" suffix="in." type="number" step ="0.01" min="0")
 </template>
 
 <script>

@@ -19,7 +19,7 @@ v-flex#template-editor(sm8 md6)
       p
         em You need to select a Spreadsheet before you can get started with Templates.
 
-  v-dialog(v-model="showTemplateManager" full-width lazy)
+  v-dialog(v-model="showTemplateManager")
     template-manager(:component="component" @close-dialog="shutdownTemplateManager()")
 </template>
 

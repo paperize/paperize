@@ -12,7 +12,7 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
         v-radio(label="Copy Existing Component" :value="true")
 
       template(v-if="copyMode")
-        v-select.component-selector(box label="Select Component to Copy" v-model="componentIdToCopy" :rules="[rules.required]" :items="allComponents" item-value="id" item-text="title")
+        v-select.component-selector(filled label="Select Component to Copy" v-model="componentIdToCopy" :rules="[rules.required]" :items="allComponents" item-value="id" item-text="title")
 
     v-card-actions
       v-btn(small success @click="submitComponent") {{ actionName }} Component

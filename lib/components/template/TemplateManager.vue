@@ -6,18 +6,18 @@ v-card(v-else)
     .headline Template Manager
 
   v-card-text
-    v-layout(row)
+    v-layout
       v-flex(sm4)
-        .subheading Create a new Template
+        .subtitle-1 Create a new Template
         v-btn(@click="createComponentTemplate(component)") Create
 
       v-flex(sm4)
-        .subheading Load a Paperize Template
+        .subtitle-1 Load a Paperize Template
         p
           em Coming soon...
 
       v-flex(sm4)
-        .subheading Copy another Template
+        .subtitle-1 Copy another Template
         p
           em Coming soon...
 </template>

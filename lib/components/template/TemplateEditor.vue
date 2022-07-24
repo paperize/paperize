@@ -11,16 +11,16 @@ v-card
 
   v-card-text
     v-container(ma-0 pa-0 grid-list-md fluid)
-      v-layout(row)
+      v-layout
         v-flex(xs4)
-          .subheading(v-if="editingSize")
+          .subtitle-1(v-if="editingSize")
             a(@click="editingSize = false")
               i.fas.fa-pencil-alt
             |  Component Size
 
             template-size-editor(:template="componentTemplate")
 
-          .subheading(v-else)
+          .subtitle-1(v-else)
             a(@click="editingSize = true")
               i.fas.fa-pencil-alt
             |  Component Size {{ sizeLabel }}
@@ -28,7 +28,7 @@ v-card
           layer-manager(:template="componentTemplate")
 
         v-flex(xs4)
-          .subheading Layer Config
+          .subtitle-1 Layer Config
 
           template(v-if="activeLayer")
             layer-editor(:layer="activeLayer" :source="componentSource" :template="componentTemplate")
@@ -36,7 +36,7 @@ v-card
             p Create or select a layer
 
         v-flex(xs4)
-          .subheading Preview
+          .subtitle-1 Preview
 
           template-previewer.inline-preview(:game="activeGame" :component="component")
 </template>
