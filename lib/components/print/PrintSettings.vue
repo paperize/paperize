@@ -96,7 +96,11 @@ v-card
         strong Minimum Margins
       v-divider
 
-      p How close to the edge will your printer allow you to print?
+      p How close to the paper's edge will your printer allow you to print?
+
+      p
+        v-btn(text @click="clearMargins") Clear
+        v-btn(text @click="defaultMargins") Defaults
 
       v-text-field(filled v-model.number="marginTop" label="Top" suffix="in." type="number" step ="0.01" min="0")
       v-text-field(filled v-model.number="marginLeft" label="Left" suffix="in." type="number" step ="0.01" min="0")
@@ -105,207 +109,217 @@ v-card
 </template>
 
 <script>
-  import { capitalize, find, debounce, map } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
-  import { MODE_AUTO_LAYOUT, MODE_TABLETOP_SIMULATOR, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
-    ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
+import { capitalize, debounce, map } from 'lodash'
+import { mapGetters, mapActions } from 'vuex'
+import { MODE_AUTO_LAYOUT, MODE_TABLETOP_SIMULATOR, MODE_COMPONENT_PER_PAGE, PAGE_DIMENSIONS,
+  ORIENTATIONS, PRINT_ALL_COMPONENTS, PRINT_SELECT_COMPONENTS } from '../../store/print'
 
-  // Construct form-friendly collections from the print sources in the store
-  const printOptions = map(PAGE_DIMENSIONS, (dimension, key) => {
+// Construct form-friendly collections from the print sources in the store
+const
+  printOptions = map(PAGE_DIMENSIONS, (dimension, key) => {
     return { ...dimension, value: key}
   }),
-    orientationOptions = map(ORIENTATIONS, (orientation) => {
-      return { name: capitalize(orientation), value: orientation }
-    })
 
-  export default {
-    data() {
-      return {
-        MODE_AUTO_LAYOUT,
-        MODE_TABLETOP_SIMULATOR,
-        MODE_COMPONENT_PER_PAGE,
-        PRINT_ALL_COMPONENTS,
-        PRINT_SELECT_COMPONENTS,
-        printOptions,
-        orientationOptions,
+  orientationOptions = map(ORIENTATIONS, (orientation) => {
+    return { name: capitalize(orientation), value: orientation }
+  })
+
+export default {
+  data() {
+    return {
+      MODE_AUTO_LAYOUT,
+      MODE_TABLETOP_SIMULATOR,
+      MODE_COMPONENT_PER_PAGE,
+      PRINT_ALL_COMPONENTS,
+      PRINT_SELECT_COMPONENTS,
+      printOptions,
+      orientationOptions,
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getPrintSettings", "activeGame", "findAllGameComponents"]),
+
+    allComponents() {
+      return this.findAllGameComponents(this.activeGame)
+    },
+
+    selectedComponents: {
+      get() {
+        return this.activeGame.printSettings.componentIdsToPrint
+      },
+
+      set(components) {
+        const game = this.activeGame
+        this.updateGame({
+          ...game,
+          printSettings: {
+            ...game.printSettings,
+            componentIdsToPrint: components
+          }
+        })
       }
     },
 
-    computed: {
-      ...mapGetters(["getPrintSettings", "activeGame", "findAllGameComponents"]),
-
-      allComponents() {
-        return this.findAllGameComponents(this.activeGame)
+    printSelection: {
+      get() {
+        return this.activeGame.printSettings.componentSelection
       },
 
-      selectedComponents: {
-        get() {
-          return this.activeGame.printSettings.componentIdsToPrint
-        },
-
-        set(components) {
-          const game = this.activeGame
-          this.updateGame({
-            ...game,
-            printSettings: {
-              ...game.printSettings,
-              componentIdsToPrint: components
-            }
-          })
-        }
-      },
-
-      printSelection: {
-        get() {
-          return this.activeGame.printSettings.componentSelection
-        },
-
-        set(selection) {
-          const game = this.activeGame
-          this.updateGame({
-            ...game,
-            printSettings: {
-              ...game.printSettings,
-              componentSelection: selection
-            }
-          })
-        },
-      },
-
-      printMode: {
-        get() {
-          return this.getPrintSettings.mode
-        },
-
-        set(mode) {
-          this.updatePrintSettings({ mode })
-        },
-      },
-
-      paperMode: {
-        get() {
-          return this.paper === "custom" ? "custom" : "standard"
-        },
-
-        set(mode) {
-          if(mode === "custom") {
-            this.paper = "custom"
-          } else {
-            this.paper = "universal"
+      set(selection) {
+        const game = this.activeGame
+        this.updateGame({
+          ...game,
+          printSettings: {
+            ...game.printSettings,
+            componentSelection: selection
           }
-        }
+        })
       },
-
-      paper: {
-        get() {
-          return this.getPrintSettings.paper
-        },
-
-        set(paper) {
-          this.updatePrintSettings({ paper })
-        },
-      },
-
-      orientation: {
-        get() {
-          return this.getPrintSettings.orientation
-        },
-
-        set(orientation) {
-          this.updatePrintSettings({ orientation })
-        },
-      },
-
-      paperWidth: {
-        get() {
-          return this.getPrintSettings.width
-        },
-
-        set(width) {
-          this.updatePrintSettings({ customWidth: width })
-        },
-      },
-
-      paperHeight: {
-        get() {
-          return this.getPrintSettings.height
-        },
-
-        set(height) {
-          this.updatePrintSettings({ customHeight: height })
-        },
-      },
-
-      componentSpacing: {
-        get() {
-          return this.getPrintSettings.componentSpacing
-        },
-
-        set(componentSpacing) {
-          this.updatePrintSettings({ componentSpacing })
-        }
-      },
-
-      componentMerging: {
-        get() {
-          return this.getPrintSettings.componentMerging
-        },
-
-        set(componentMerging) {
-          this.updatePrintSettings({ componentMerging })
-        }
-      },
-
-      marginTop: {
-        get() {
-          return this.getPrintSettings.marginTop
-        },
-
-        set(marginTop) {
-          this.updatePrintSettings({ marginTop })
-        }
-      },
-
-      marginRight: {
-        get() {
-          return this.getPrintSettings.marginRight
-        },
-
-        set(marginRight) {
-          this.updatePrintSettings({ marginRight })
-        }
-      },
-
-      marginBottom: {
-        get() {
-          return this.getPrintSettings.marginBottom
-        },
-
-        set(marginBottom) {
-          this.updatePrintSettings({ marginBottom })
-        }
-      },
-
-      marginLeft: {
-        get() {
-          return this.getPrintSettings.marginLeft
-        },
-
-        set(marginLeft) {
-          this.updatePrintSettings({ marginLeft })
-        }
-      },
-
     },
 
-    methods: {
-      ...mapActions(["updateGame"]),
+    printMode: {
+      get() {
+        return this.getPrintSettings.mode
+      },
 
-      updatePrintSettings: debounce(function(attributes) {
-        this.$store.dispatch("updatePrintSettings", attributes)
-      }, 200),
-    }
+      set(mode) {
+        this.updatePrintSettings({ mode })
+      },
+    },
+
+    paperMode: {
+      get() {
+        return this.paper === "custom" ? "custom" : "standard"
+      },
+
+      set(mode) {
+        if(mode === "custom") {
+          this.paper = "custom"
+        } else {
+          this.paper = "universal"
+        }
+      }
+    },
+
+    paper: {
+      get() {
+        return this.getPrintSettings.paper
+      },
+
+      set(paper) {
+        this.updatePrintSettings({ paper })
+      },
+    },
+
+    orientation: {
+      get() {
+        return this.getPrintSettings.orientation
+      },
+
+      set(orientation) {
+        this.updatePrintSettings({ orientation })
+      },
+    },
+
+    paperWidth: {
+      get() {
+        return this.getPrintSettings.width
+      },
+
+      set(width) {
+        this.updatePrintSettings({ customWidth: width })
+      },
+    },
+
+    paperHeight: {
+      get() {
+        return this.getPrintSettings.height
+      },
+
+      set(height) {
+        this.updatePrintSettings({ customHeight: height })
+      },
+    },
+
+    componentSpacing: {
+      get() {
+        return this.getPrintSettings.componentSpacing
+      },
+
+      set(componentSpacing) {
+        this.updatePrintSettings({ componentSpacing })
+      }
+    },
+
+    componentMerging: {
+      get() {
+        return this.getPrintSettings.componentMerging
+      },
+
+      set(componentMerging) {
+        this.updatePrintSettings({ componentMerging })
+      }
+    },
+
+    marginTop: {
+      get() {
+        return this.getPrintSettings.marginTop
+      },
+
+      set(marginTop) {
+        this.updatePrintSettings({ marginTop })
+      }
+    },
+
+    marginRight: {
+      get() {
+        return this.getPrintSettings.marginRight
+      },
+
+      set(marginRight) {
+        this.updatePrintSettings({ marginRight })
+      }
+    },
+
+    marginBottom: {
+      get() {
+        return this.getPrintSettings.marginBottom
+      },
+
+      set(marginBottom) {
+        this.updatePrintSettings({ marginBottom })
+      }
+    },
+
+    marginLeft: {
+      get() {
+        return this.getPrintSettings.marginLeft
+      },
+
+      set(marginLeft) {
+        this.updatePrintSettings({ marginLeft })
+      }
+    },
+
+  },
+
+  methods: {
+    ...mapActions(["updateGame"]),
+
+    updatePrintSettings: debounce(function(attributes) {
+      this.$store.dispatch("updatePrintSettings", attributes)
+    }, 200),
+
+    clearMargins() {
+      this.$store.dispatch("updatePrintSettings", { marginTop: 0, marginBottom: 0, marginRight: 0, marginLeft: 0})
+    },
+
+    defaultMargins() {
+      this.$store.dispatch("updatePrintSettings", { marginTop: .25, marginBottom: .25, marginRight: .25, marginLeft: .25})
+    },
   }
+}
 </script>
 
 <style scoped>
