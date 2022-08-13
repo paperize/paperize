@@ -4,13 +4,12 @@
   "description": "The Paperize serverless web application",
   "main": "lib/main.js",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
-    "set-dev-creds": "cp .env.development .env.production",
-    "set-prod-creds": "cp .env.production.backup .env.production",
-    "build": "npm run set-prod-creds && vite build",
-    "preview": "npm run set-dev-creds && vite build && vite preview",
-    "start": "npm run dev",
-    "clean": "rm -rf dist",
+    "build": "npm run build-for-production",
+    "build-for-localhost": "cp .env.development .env.production && vite build",
+    "build-for-production": "cp .env.production.backup .env.production && vite build",
+    "preview": "npm run build-for-localhost && vite preview",
     "deploy-prod": "coffee deploy.coffee",
     "bump-prod": "npm run build && npm run deploy-prod"
   },
