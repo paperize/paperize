@@ -7,10 +7,11 @@ jobs:
     name: Builds Without Error
     runs-on: ubuntu-latest
 
-    # steps:
-    # - uses: actions/checkout@v3
-    # - uses: actions/setup-node@v3
-    #   with:
-    #     node-version: 14
-    # - run: npm ci
-    # - run: npm build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+    - run: npm ci
+    - run: cp example.env.development .env.development
+    - run: npm run build-for-localhost

@@ -6,7 +6,7 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 - [Use the tool](https://beta.editor.paperize.io)
 - Support the project on [Patreon](https://patreon.com/paperize)
-- Chat with programmers and game designers on [Discord](https://discord.gg/9ggkkQp)
+- Chat with other game designers (and the Paperize core team) on [Discord](https://discord.gg/9ggkkQp)
 - Read [the Docs](https://docs.paperize.io)
 - Contribute to [the Docs](https://github.com/paperize/docs)
 
@@ -41,11 +41,13 @@ Paperize helps game designers make better games by leveraging free web tools to 
 
 ## Libraries, Tools, & Services
 
-- [VueJS 2.x](https://vuejs.org/v2/guide/): low-overhead, highly productive front-end framework
-- [Vuetify 1.5.x](https://v15.vuetifyjs.com/en/): material design components for Vue
+We're trying to keep it simple!
+
+- [VueJS 2.x](https://vuejs.org/v2/guide/): low-overhead, highly productive front-end framework and ecosystem
+- [Vuetify 2.x](https://vuetifyjs.com/en/): material design components for Vue
 - [Material Design Icons](https://materialdesignicons.com/): icons integrated into Vuetify
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/docs/) and [my fork](https://github.com/lorennorman/jsPDF): PDF generation in the browser
 - [Cypress.io](https://cypress.io): modern, browser-based integration testing
-- NodeJS, Webpack, Babel: so we can write modern JS
-- Google Drive API for user-controlled storage (more to come)
+- [NodeJS](https://nodejs.org/en/): JavaScript-powered dev tools for JavaScript apps
+- Google Drive, Google Sheets, & Google Fonts to support persistence, game data, and pretty typography respectively
 - Amazon Route53/Cloudfront/S3: simple, fast, cheap, global CDN
