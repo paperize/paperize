@@ -5,25 +5,29 @@ v-dialog(v-model="printStatusWindowOpen" @close-dialog="printStatusWindowOpen = 
       .headline Print In Progress...
 
     v-card-text
-      pre {{ printJobStatus }}
+      p(style="margin-bottom: 5px;" v-for="line in status") {{ line }}
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapGetters(["printJobStatus", "statusWindowOpen"]),
+export default {
+  computed: {
+    ...mapGetters(["printJobStatus", "statusWindowOpen"]),
 
-      printStatusWindowOpen: {
-        get() {
-          return this.statusWindowOpen
-        },
+    status() {
+      return this.printJobStatus.split('\n')
+    },
 
-        set(newValue) {
-          this.$store.commit("setStatusWindowOpen", newValue)
-        }
+    printStatusWindowOpen: {
+      get() {
+        return this.statusWindowOpen
+      },
+
+      set(newValue) {
+        this.$store.commit("setStatusWindowOpen", newValue)
       }
     }
   }
+}
 </script>
