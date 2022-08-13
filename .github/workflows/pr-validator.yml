@@ -13,4 +13,5 @@ jobs:
       with:
         node-version: 14
     - run: npm ci
-    - run: npm run build
+    - run: cp example.env.development .env.development
+    - run: npm run build-for-localhost
