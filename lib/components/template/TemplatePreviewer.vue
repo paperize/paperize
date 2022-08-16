@@ -12,17 +12,23 @@ div
   v-layout
     v-flex(xs12)
       v-pagination(v-model="currentItemIndex" :length="totalItems")
+
+  v-layout
+    v-flex(xs12)
+      print-log(export-type="item")
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { clamp, range } from 'lodash'
+
 import TemplateRenderer from './TemplateRenderer.vue'
+import PrintLog from '../print/PrintLog.vue'
 
 export default {
   props: ["game", "component", "item"],
 
-  components: { TemplateRenderer },
+  components: { PrintLog, TemplateRenderer },
 
   mounted() { this.setActiveItem(this.currentItem) },
 

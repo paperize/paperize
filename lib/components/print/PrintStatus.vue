@@ -5,19 +5,18 @@ v-dialog(v-model="printStatusWindowOpen" @close-dialog="printStatusWindowOpen = 
       .headline Print In Progress...
 
     v-card-text
-      p(style="margin-bottom: 5px;" v-for="line in status") {{ line }}
+      print-log(export-type="game")
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import PrintLog from './PrintLog.vue'
 
 export default {
-  computed: {
-    ...mapGetters(["printJobStatus", "statusWindowOpen"]),
+  components: { PrintLog },
 
-    status() {
-      return this.printJobStatus.split('\n')
-    },
+  computed: {
+    ...mapGetters(["statusWindowOpen"]),
 
     printStatusWindowOpen: {
       get() {
