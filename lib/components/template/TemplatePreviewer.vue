@@ -15,7 +15,7 @@ div
 
   v-layout
     v-flex(xs12)
-      print-log(export-type="item")
+      export-log(export-type="item")
 </template>
 
 <script>
@@ -23,12 +23,12 @@ import { mapGetters, mapActions } from 'vuex'
 import { clamp, range } from 'lodash'
 
 import TemplateRenderer from './TemplateRenderer.vue'
-import PrintLog from '../print/PrintLog.vue'
+import ExportLog from '../print/ExportLog.vue'
 
 export default {
   props: ["game", "component", "item"],
 
-  components: { PrintLog, TemplateRenderer },
+  components: { ExportLog, TemplateRenderer },
 
   mounted() { this.setActiveItem(this.currentItem) },
 

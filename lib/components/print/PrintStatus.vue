@@ -5,15 +5,15 @@ v-dialog(v-model="printStatusWindowOpen" @close-dialog="printStatusWindowOpen = 
       .headline Print In Progress...
 
     v-card-text
-      print-log(export-type="game")
+      export-log(export-type="game")
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import PrintLog from './PrintLog.vue'
+import ExportLog from './ExportLog.vue'
 
 export default {
-  components: { PrintLog },
+  components: { ExportLog },
 
   computed: {
     ...mapGetters(["statusWindowOpen"]),

@@ -1,11 +1,12 @@
 <template lang="pug">
 div
-  p(style="margin-bottom: 5px;" v-for="line in logLines") {{ line }}
+  p(v-for="line in logLines") {{ line }}
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
+// TODO: make "compact" and "full" modes via prop
 export default {
   props: [
     "exportType"
@@ -26,7 +27,13 @@ export default {
 </script>
 
 <style scoped>
+div {
+  max-height: 100px;
+  overflow-y: scroll;
+}
 p {
+  color: lightgreen;
+  margin-bottom: 5px;
   font-size: 12px;
 }
 </style>
