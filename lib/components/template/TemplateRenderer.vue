@@ -1,39 +1,24 @@
 <template lang="pug">
-div(v-if="exportFormat == 'pdf'")
-  iframe(v-if="isSafari" :src="pdfBlob")
-  object(v-else :data="pdfBlob" type="application/pdf")
-  //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
-
-div(v-else-if="exportFormat == 'jpg'")
-  img(:src="jpgData")
-
-div(v-else-if="exportFormat == 'png'")
-  img(:src="pngData")
-
-div(v-else-if="exportFormat == 'svg'")
-  div(v-html="svgString")
-
+iframe(v-if="isSafari" :src="pdfBlob")
+object(v-else :data="pdfBlob" type="application/pdf")
+//- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 </template>
 
 <script>
 import { debounce } from 'lodash'
 import { mapGetters } from 'vuex'
 import pdfRenderer from '../../services/pdf_renderer'
-import { renderItemToPNG, renderItemToSVG, renderItemToJPG } from '../../services/svg_renderer'
 
 const RENDER_DELAY_MS = 600
 
 export default {
-  props: ["exportFormat", "game", "component", "item"],
+  props: ["game", "component", "item"],
 
-  mounted() { this.rerender() },
+  mounted() { this.renderPDF() },
 
   data() {
     return {
       pdfBlob: null,
-      svgString: null,
-      pngData: null,
-      jpgData: null,
       isSafari: navigator.userAgent.toLowerCase().indexOf('safari/') > -1
     }
   },
@@ -75,71 +60,41 @@ export default {
 
   watch: {
     // Props
-    exportFormat: "rerender",
-    game: "rerender",
-    component: "rerender",
-    item: "rerender",
+    game: "renderPDF",
+    component: "renderPDF",
+    item: "renderPDF",
     // Computed
-    activeDimensions: "rerender",
-    templateLayers: "rerender",
-    activeLayer: "rerender",
-    layerStrokePresent: "rerender",
-    layerStrokeWidth: "rerender",
-    layerStrokeColor: "rerender",
-    layerFillPresent: "rerender",
-    layerFillColor: "rerender",
-    layerImageNameStatic: "rerender",
-    layerImageName: "rerender",
-    layerImageNamePrefix: "rerender",
-    layerVisible: "rerender",
-    layerImageNameProperty: "rerender",
-    layerImageNameSuffix: "rerender",
-    layerImageScaling: "rerender",
-    layerHorizontalAlignment: "rerender",
-    layerVerticalAlignment: "rerender",
-    layerTextContentTemplate: "rerender",
-    layerTextColor: "rerender",
-    layerTextSize: "rerender",
-    layerHighlighting: "rerender",
-    allFonts: "rerender"
+    activeDimensions: "renderPDF",
+    templateLayers: "renderPDF",
+    activeLayer: "renderPDF",
+    layerStrokePresent: "renderPDF",
+    layerStrokeWidth: "renderPDF",
+    layerStrokeColor: "renderPDF",
+    layerFillPresent: "renderPDF",
+    layerFillColor: "renderPDF",
+    layerImageNameStatic: "renderPDF",
+    layerImageName: "renderPDF",
+    layerImageNamePrefix: "renderPDF",
+    layerVisible: "renderPDF",
+    layerImageNameProperty: "renderPDF",
+    layerImageNameSuffix: "renderPDF",
+    layerImageScaling: "renderPDF",
+    layerHorizontalAlignment: "renderPDF",
+    layerVerticalAlignment: "renderPDF",
+    layerTextContentTemplate: "renderPDF",
+    layerTextColor: "renderPDF",
+    layerTextSize: "renderPDF",
+    layerHighlighting: "renderPDF",
+    allFonts: "renderPDF"
   },
 
   methods: {
-    rerender() {
-      if(!this.game || !this.component || !this.item || !this.componentTemplate) { return }
-
-      switch(this.exportFormat){
-      case 'pdf':
-        this.renderPDF()
-        break
-      case 'jpg':
-        this.renderJPG()
-        break
-      case 'png':
-        this.renderPNG()
-        break
-      case 'svg':
-        this.renderSVG()
-        break
-      default:
-        throw new Error(`Unrecognized Render Format: ${this.exportFormat}`)
+    renderPDF: debounce(function() {
+      if(this.game && this.component && this.item && this.componentTemplate) {
+        pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate).then((pdf) => {
+          this.pdfBlob = pdf
+        })
       }
-    },
-
-    async renderJPG() {
-      this.jpgData = await renderItemToJPG(this.game, this.component, this.componentTemplate, this.item)
-    },
-
-    async renderPNG() {
-      this.pngData = await renderItemToPNG(this.game, this.component, this.componentTemplate, this.item)
-    },
-
-    async renderSVG() {
-      this.svgString = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
-    },
-
-    renderPDF: debounce(async function() {
-      this.pdfBlob = await pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate)
     }, RENDER_DELAY_MS)
   }
 }
