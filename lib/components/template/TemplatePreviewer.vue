@@ -1,17 +1,10 @@
 <template lang="pug">
-v-layout(wrap justify-center)
+div
   v-pagination(v-model="currentItemIndex" :length="totalItems")
 
-  v-btn-toggle(v-model="exportFormat")
-    v-btn(value="pdf") .PDF
-    v-btn(value="jpg") .JPG
-    v-btn(value="png") .PNG
-    v-btn(value="svg") .SVG
-
-  p(v-if="!currentItem") Nothing to render.
-
-  template(v-else)
-    template-renderer(:exportFormat="exportFormat" :game="game" :component="component" :item="currentItem")
+  v-flex
+    template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+    p(v-else) Nothing to render.
 
   v-pagination(v-model="currentItemIndex" :length="totalItems")
 </template>
@@ -31,7 +24,6 @@ v-layout(wrap justify-center)
     data() {
       return {
         currentItemIndex: 1,
-        exportFormat: 'svg'
       }
     },
 
