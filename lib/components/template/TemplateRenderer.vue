@@ -11,7 +11,8 @@ div(v-else-if="exportFormat == 'png'")
   img(:src="pngData")
 
 div(v-else-if="exportFormat == 'svg'")
-  div(v-html="svgString")
+  img(:src="svgData")
+  //- div(v-html="svgString")
 
 </template>
 
@@ -31,7 +32,7 @@ export default {
   data() {
     return {
       pdfBlob: null,
-      svgString: null,
+      svgData: null,
       pngData: null,
       jpgData: null,
       isSafari: navigator.userAgent.toLowerCase().indexOf('safari/') > -1
@@ -135,7 +136,7 @@ export default {
     },
 
     async renderSVG() {
-      this.svgString = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
+      this.svgData = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
     },
 
     renderPDF: debounce(async function() {
