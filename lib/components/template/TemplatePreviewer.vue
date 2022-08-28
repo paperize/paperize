@@ -1,54 +1,74 @@
 <template lang="pug">
 div
-  v-pagination(v-model="currentItemIndex" :length="totalItems")
+  v-layout
+    v-flex(xs12)
+      v-autocomplete(label="Go To Card:" v-model="inputIndex" :items="itemsIndex" filled)
 
-  v-flex
-    template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
-    p(v-else) Nothing to render.
+  v-layout
+    v-flex(xs12)
+      template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
+      p(v-else) Nothing to render.
 
-  v-pagination(v-model="currentItemIndex" :length="totalItems")
+  v-layout
+    v-flex(xs12)
+      v-pagination(v-model="currentItemIndex" :length="totalItems")
+
+  v-layout
+    v-flex(xs12)
+      export-log(export-type="item" compact="true")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import { clamp } from 'lodash'
-  import TemplateRenderer from './TemplateRenderer.vue'
+import { mapGetters, mapActions } from 'vuex'
+import { clamp, range } from 'lodash'
 
-  export default {
-    props: ["game", "component", "item"],
+import TemplateRenderer from './TemplateRenderer.vue'
+import ExportLog from '../print/ExportLog.vue'
 
-    components: { TemplateRenderer },
+export default {
+  props: ["game", "component", "item"],
 
-    mounted() { this.setActiveItem(this.currentItem) },
+  components: { ExportLog, TemplateRenderer },
 
-    data() {
-      return {
-        currentItemIndex: 1,
-      }
+  mounted() { this.setActiveItem(this.currentItem) },
+
+  data() {
+    return {
+      currentItemIndex: 1,
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getComponentItems"]),
+
+    items() {
+      return this.getComponentItems(this.component)
     },
 
-    computed: {
-      ...mapGetters(["getComponentItems"]),
-
-      items() {
-        return this.getComponentItems(this.component)
-      },
-
-      totalItems() {
-        return this.items.length
-      },
-
-      currentItem() {
-        return this.items[this.currentItemIndex-1]
-      },
+    totalItems() {
+      return this.items.length
     },
 
-    methods: mapActions(["setActiveItem"]),
+    itemsIndex() {
+      return range(1, this.totalItems+1)
+    },
 
-    watch: {
-      currentItem(newItem, oldItem) {
-        this.setActiveItem(newItem)
-      }
+    currentItem() {
+      return this.items[this.currentItemIndex-1]
+    },
+
+    inputIndex: {
+      get() { return this.currentItemIndex },
+      set(newIndex) { this.currentItemIndex = clamp(newIndex, 1, this.totalItems) }
+    }
+  },
+
+  methods: mapActions(["setActiveItem"]),
+
+  watch: {
+    currentItem(newItem, oldItem) {
+      this.setActiveItem(newItem)
     }
   }
+}
 </script>

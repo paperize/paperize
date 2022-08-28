@@ -1,7 +1,8 @@
 <template lang="pug">
-iframe(v-if="isSafari" :src="pdfBlob")
-object(v-else :data="pdfBlob" type="application/pdf")
-//- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
+div
+  iframe(v-if="isSafari" :src="pdfBlob")
+  object(v-else :data="pdfBlob" type="application/pdf")
+  //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 </template>
 
 <script>
@@ -11,16 +12,19 @@ import pdfRenderer from '../../services/pdf_renderer'
 
 const RENDER_DELAY_MS = 600
 
+// quick/dirty useragent detection
+const
+  userAgent = navigator.userAgent.toLowerCase(),
+  isChrome = userAgent.indexOf('chrome') > -1,
+  isSafari = !isChrome && userAgent.indexOf('safari/') > -1
+
 export default {
   props: ["game", "component", "item"],
 
   mounted() { this.renderPDF() },
 
   data() {
-    return {
-      pdfBlob: null,
-      isSafari: navigator.userAgent.toLowerCase().indexOf('safari/') > -1
-    }
+    return { isSafari, isChrome, pdfBlob: null }
   },
 
   computed: {
