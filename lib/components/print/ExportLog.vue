@@ -9,9 +9,9 @@ import { mapGetters } from 'vuex'
 
 export default {
   updated() {
-    if(!this.$el?.lastChild) { return }
+    if(!this.$el) { return }
 
-    this.$el.lastChild.scrollIntoView({ behavior: 'smooth' })
+    this.$el.scrollTop = this.$el.scrollHeight
   },
 
   props: [ "exportType", "compact" ],

@@ -37,7 +37,7 @@ v-app-bar
     v-btn(text icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
       v-icon mdi-brightness-6
     profile-menu
-    print-status
+    export-status
 </template>
 
 <script>
@@ -47,7 +47,7 @@ v-app-bar
   import HelpMenu from './HelpMenu.vue'
   import ErrorsMenu from './ErrorsMenu.vue'
   import DriveExplorer from '../drive/DriveExplorer.vue'
-  import PrintStatus from '../print/PrintStatus.vue'
+  import ExportStatus from '../print/ExportStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
   import NetworkManager from '../network/NetworkManager.vue'
 
@@ -58,7 +58,7 @@ v-app-bar
       HelpMenu,
       ErrorsMenu,
       DatabaseManager,
-      PrintStatus,
+      ExportStatus,
       DriveExplorer,
       NetworkManager,
     },
