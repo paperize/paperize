@@ -1,16 +1,20 @@
 <template lang="pug">
 div
+  h3 Export Log
   p(v-for="line in logLines") {{ line }}
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
-// TODO: make "compact" and "full" modes via prop
 export default {
-  props: [
-    "exportType"
-  ],
+  updated() {
+    if(!this.$el?.lastChild) { return }
+
+    this.$el.lastChild.scrollIntoView({ behavior: 'smooth' })
+  },
+
+  props: [ "exportType", "compact" ],
 
   computed: {
     ...mapGetters(["exportItemStatus", "exportGameStatus"]),
@@ -21,18 +25,20 @@ export default {
         : this.exportGameStatus
 
       return status.split('\n')
-    }
+    },
+
+    maxHeight() { return this.compact ? '160px' : '70vh' }
   }
 }
 </script>
 
 <style scoped>
 div {
-  max-height: 100px;
-  overflow-y: scroll;
+  max-height: v-bind(maxHeight);
+  overflow-y: auto;
 }
+
 p {
-  color: lightgreen;
   margin-bottom: 5px;
   font-size: 12px;
 }

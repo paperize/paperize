@@ -15,7 +15,7 @@ div
 
   v-layout
     v-flex(xs12)
-      export-log(export-type="item")
+      export-log(export-type="item" compact="true")
 </template>
 
 <script>
