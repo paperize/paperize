@@ -2,7 +2,7 @@
 div
   v-layout
     v-flex(xs12)
-      v-autocomplete(label="Go To Card:" v-model="inputIndex" :items="itemsIndex" filled)
+      v-autocomplete(label="Go To Item:" v-model="inputIndex" :items="itemsIndex" filled)
 
   v-layout
     v-flex(xs12)
