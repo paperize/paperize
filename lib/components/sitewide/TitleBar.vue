@@ -84,8 +84,6 @@ v-app-bar
     },
 
     methods: {
-      ...mapActions([ "saveToDrive" ]),
-
       setDarkMode(isDark) { this.$vuetify.theme.dark = isDark }
     }
   }
