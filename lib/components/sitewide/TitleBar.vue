@@ -5,7 +5,7 @@ v-app-bar
 
     v-tooltip(bottom)
       template(v-slot:activator="{ on }")
-        span.caption(v-on="on")= " ver.A8.5.0"
+        span.caption(v-on="on")= " ver.A8.7.0"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
@@ -37,7 +37,7 @@ v-app-bar
     v-btn(text icon @click="setDarkMode(!darkMode)" :class="{'toggle-on': darkMode, 'toggle-off': !darkMode}")
       v-icon mdi-brightness-6
     profile-menu
-    print-status
+    export-status
 </template>
 
 <script>
@@ -47,7 +47,7 @@ v-app-bar
   import HelpMenu from './HelpMenu.vue'
   import ErrorsMenu from './ErrorsMenu.vue'
   import DriveExplorer from '../drive/DriveExplorer.vue'
-  import PrintStatus from '../print/PrintStatus.vue'
+  import ExportStatus from '../print/ExportStatus.vue'
   import DatabaseManager from '../database/DatabaseManager.vue'
   import NetworkManager from '../network/NetworkManager.vue'
 
@@ -58,7 +58,7 @@ v-app-bar
       HelpMenu,
       ErrorsMenu,
       DatabaseManager,
-      PrintStatus,
+      ExportStatus,
       DriveExplorer,
       NetworkManager,
     },
@@ -84,8 +84,6 @@ v-app-bar
     },
 
     methods: {
-      ...mapActions([ "saveToDrive" ]),
-
       setDarkMode(isDark) { this.$vuetify.theme.dark = isDark }
     }
   }

@@ -25,7 +25,7 @@ v-expansion-panels#image-layer-editor(popout)
             v-text-field(v-model="imageNamePrefix" label="Prefix" filled)
             v-select.image-name-property(v-model="imageNameProperty" :items="activeSheetProperties" filled)
             v-text-field.image-name-suffix(v-model="imageNameSuffix" label="Suffix" filled)
-            v-text-field(disabled label="Looks like" :value="dynamicImageName" filled)
+            v-text-field(disabled label="This Item" :value="dynamicImageName" filled)
 
   v-expansion-panel
     v-expansion-panel-header Image Alignment
@@ -60,6 +60,7 @@ v-expansion-panels#image-layer-editor(popout)
   import Vue from 'vue'
   import { mapActions, mapGetters } from 'vuex'
   import { debounce } from 'lodash'
+  import { findProperty } from '../../../services/pdf_renderer/helpers'
   import { computedVModelUpdateAll } from '../../util/component_helper'
   import { openImagePicker } from '../../../services/google/picker'
   import NameEditor from './NameEditor.vue'
@@ -83,6 +84,7 @@ v-expansion-panels#image-layer-editor(popout)
         "getLayerDimensions",
         "findTemplateByLayerId",
         "gameImagesFolderOrDefault",
+        "activeItem",
         "activeSheetProperties",
         "activeComponent",
         "activeGame",
@@ -113,10 +115,10 @@ v-expansion-panels#image-layer-editor(popout)
       dynamicImageName() {
         const
           prefix = this.layer.imageNamePrefix,
-          property = this.layer.imageNameProperty,
+          property = findProperty(this.activeItem, this.layer.imageNameProperty),
           suffix = this.layer.imageNameSuffix
 
-        return `${prefix}[${property}]${suffix}`
+        return `${prefix}${property}${suffix}`
       }
     },
 

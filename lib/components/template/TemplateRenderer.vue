@@ -24,6 +24,12 @@ import { renderItemToPNG, renderItemToSVG, renderItemToJPG } from '../../service
 
 const RENDER_DELAY_MS = 600
 
+// quick/dirty useragent detection
+const
+  userAgent = navigator.userAgent.toLowerCase(),
+  isChrome = userAgent.indexOf('chrome') > -1,
+  isSafari = !isChrome && userAgent.indexOf('safari/') > -1
+
 export default {
   props: ["exportFormat", "game", "component", "item"],
 
@@ -31,11 +37,12 @@ export default {
 
   data() {
     return {
+      isSafari,
+      isChrome,
       pdfBlob: null,
       svgData: null,
       pngData: null,
       jpgData: null,
-      isSafari: navigator.userAgent.toLowerCase().indexOf('safari/') > -1
     }
   },
 
