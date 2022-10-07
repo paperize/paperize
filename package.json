@@ -11,13 +11,15 @@
     "build-for-production": "cp .env.production.backup .env.production && vite build",
     "preview": "npm run build-for-localhost && vite preview",
     "deploy-prod": "coffee deploy.coffee",
-    "bump-prod": "npm run build && npm run deploy-prod"
+    "bump-prod": "npm run build && npm run deploy-prod",
+    "tauri": "tauri"
   },
   "author": "Loren Norman <loren@oilandrope.com>",
   "license": "ISC",
   "devDependencies": {
     "@mdi/font": "^3.4.93",
     "@mdi/js": "^3.4.93",
+    "@tauri-apps/cli": "^1.1.1",
     "@vitejs/plugin-vue2": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.25",
     "ajv": "^6.12.3",
