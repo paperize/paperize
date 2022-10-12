@@ -11,8 +11,19 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
 
     <!-- Google API -->
-    <script src="https://apis.google.com/js/api.js" crossorigin="anonymous"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      window.gapiLoadPromise = new Promise((resolve, reject) => {
+        window.gapiLoadOkay = resolve
+        window.gapiLoadFail = reject
+      })
+      window.gisLoadPromise = new Promise((resolve, reject) => {
+        window.gisLoadOkay = resolve
+        window.gisLoadFail = reject
+      })
+    </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoadOkay()" onerror="gapiLoadFail(event)"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoadOkay()" onerror="gisLoadFail(event)"></script>
+
 
     <!-- Paperize Editor Vue application -->
     <script src="/lib/main.js" type="module"></script>
