@@ -12,10 +12,9 @@ v-app
 </template>
 
 <script>
-  import TitleBar from '../sitewide/TitleBar.vue'
-  import { mapGetters } from 'vuex'
+import TitleBar from '../sitewide/TitleBar.vue'
 
-  export default {
-    components: { TitleBar }
-  }
+export default {
+  components: { TitleBar }
+}
 </script>

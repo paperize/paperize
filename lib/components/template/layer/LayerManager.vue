@@ -76,137 +76,139 @@ v-layout(column)
 </template>
 
 <script>
-  import { filter } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
-  import draggable from 'vuedraggable'
+import { filter } from 'lodash'
+import { mapGetters, mapActions } from 'vuex'
+import draggable from 'vuedraggable'
 
-  export default {
-    props: {
-      template: {
-        required: true
-      }
-    },
-
-    components: { draggable },
-
-    data() {
-      return {
-        showNewLayerDialog: false,
-        showDeleteLayerDialog: false,
-        editingVar: null,
-        componentIdToCopy: null
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        "findAllTemplateLayers",
-        "findComponent",
-        "findComponentTemplate",
-        "activeLayer",
-        "activeComponent",
-        "allComponents",
-      ]),
-
-      layerHighlighting: {
-        get() {
-          return this.$store.getters["layerHighlighting"]
-        },
-
-        set(newSetting) {
-          this.$store.commit("setLayerHighlighting", newSetting)
-        }
-      },
-
-      editing: {
-        get() {
-          return this.editingVar
-        },
-
-        set(newEditing) {
-          if(this.editingVar = newEditing) {
-            this.$nextTick(() => {
-              this.$refs.editingInput[0].select()
-            })
-          }
-        }
-      },
-
-      templateLayers: {
-        get() {
-          return this.findAllTemplateLayers(this.template) || []
-        },
-
-        set(newLayers) {
-          this.setLayersRenderOrder(newLayers)
-        }
-      },
-
-      noLayers() {
-        return this.templateLayers.length == 0
-      },
-
-      copyableComponents() {
-        return filter(this.allComponents, (component) => {
-          const notThisComponent = (component.templateId != this.template.id)
-
-          return notThisComponent && this.hasLayers(component)
-        })
-      },
-    },
-
-    methods: {
-      ...mapActions([
-        "copyComponentTemplate",
-        "createTemplateLayer",
-        "copyTemplateLayer",
-        "destroyTemplateLayer",
-        "setLayersRenderOrder",
-        "toggleLayer",
-        "setActiveLayer",
-      ]),
-
-      hasLayers(component) {
-        const
-          template = this.findComponentTemplate(component),
-          layers = template && template.layerIds,
-          count = layers && layers.length || 0
-
-        return count > 0
-      },
-
-      isActive(layer) {
-        return this.activeLayer === layer
-      },
-
-      createLayer(layerType) {
-        this.createTemplateLayer({ template: this.template, layerType })
-        this.showNewLayerDialog = false
-      },
-
-      copyLayer(layer) {
-        this.copyTemplateLayer({ template: this.template, layer })
-      },
-
-      copyTemplate() {
-        const
-          componentSource = this.findComponent(this.componentIdToCopy),
-          templateToCopy = this.findComponentTemplate(componentSource)
-
-        this.copyComponentTemplate({ component: this.activeComponent, template: templateToCopy })
-      },
-
-      confirmDeleteLayer(layer) {
-        this.showDeleteLayerDialog = true
-        this.layerToDelete = layer
-      },
-
-      deleteLayer() {
-        this.destroyTemplateLayer({ template: this.template, layer: this.layerToDelete })
-        this.showDeleteLayerDialog = false
-      },
+export default {
+  props: {
+    template: {
+      required: true
     }
+  },
+
+  components: { draggable },
+
+  data() {
+    return {
+      showNewLayerDialog: false,
+      showDeleteLayerDialog: false,
+      editingVar: null,
+      componentIdToCopy: null
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "findAllTemplateLayers",
+      "findComponent",
+      "findComponentTemplate",
+      "activeLayer",
+      "activeComponent",
+      "allComponents",
+    ]),
+
+    layerHighlighting: {
+      get() {
+        return this.$store.getters["layerHighlighting"]
+      },
+
+      set(newSetting) {
+        this.$store.commit("setLayerHighlighting", newSetting)
+      }
+    },
+
+    editing: {
+      get() {
+        return this.editingVar
+      },
+
+      set(newEditing) {
+        this.editingVar = newEditing
+
+        if(newEditing) {
+          this.$nextTick(() => {
+            this.$refs.editingInput[0].select()
+          })
+        }
+      }
+    },
+
+    templateLayers: {
+      get() {
+        return this.findAllTemplateLayers(this.template) || []
+      },
+
+      set(newLayers) {
+        this.setLayersRenderOrder(newLayers)
+      }
+    },
+
+    noLayers() {
+      return this.templateLayers.length == 0
+    },
+
+    copyableComponents() {
+      return filter(this.allComponents, (component) => {
+        const notThisComponent = (component.templateId != this.template.id)
+
+        return notThisComponent && this.hasLayers(component)
+      })
+    },
+  },
+
+  methods: {
+    ...mapActions([
+      "copyComponentTemplate",
+      "createTemplateLayer",
+      "copyTemplateLayer",
+      "destroyTemplateLayer",
+      "setLayersRenderOrder",
+      "toggleLayer",
+      "setActiveLayer",
+    ]),
+
+    hasLayers(component) {
+      const
+        template = this.findComponentTemplate(component),
+        layers = template && template.layerIds,
+        count = layers && layers.length || 0
+
+      return count > 0
+    },
+
+    isActive(layer) {
+      return this.activeLayer === layer
+    },
+
+    createLayer(layerType) {
+      this.createTemplateLayer({ template: this.template, layerType })
+      this.showNewLayerDialog = false
+    },
+
+    copyLayer(layer) {
+      this.copyTemplateLayer({ template: this.template, layer })
+    },
+
+    copyTemplate() {
+      const
+        componentSource = this.findComponent(this.componentIdToCopy),
+        templateToCopy = this.findComponentTemplate(componentSource)
+
+      this.copyComponentTemplate({ component: this.activeComponent, template: templateToCopy })
+    },
+
+    confirmDeleteLayer(layer) {
+      this.showDeleteLayerDialog = true
+      this.layerToDelete = layer
+    },
+
+    deleteLayer() {
+      this.destroyTemplateLayer({ template: this.template, layer: this.layerToDelete })
+      this.showDeleteLayerDialog = false
+    },
   }
+}
 </script>
 
 <style scoped>

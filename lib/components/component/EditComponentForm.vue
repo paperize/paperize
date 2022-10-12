@@ -19,53 +19,53 @@ v-form.component-form(ref="componentForm" @submit.prevent="submitComponent")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import { computedVModelUpdate } from '../util/component_helper'
-  import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
+import { mapGetters, mapActions } from 'vuex'
+import { computedVModelUpdate } from '../util/component_helper'
+import TemplateSizeEditor from '../template/TemplateSizeEditor.vue'
 
-  export default {
-    props: {
-      component: { required: true }
-    },
+export default {
+  props: {
+    component: { required: true }
+  },
 
-    components: { TemplateSizeEditor },
+  components: { TemplateSizeEditor },
 
-    data() {
-      return {
-        rules: {
-          required: value => !!value || 'Required.'
-        }
+  data() {
+    return {
+      rules: {
+        required: value => !!value || 'Required.'
       }
-    },
+    }
+  },
 
-    computed: {
-      ...mapGetters(["activeGame", "findComponentTemplate"]),
+  computed: {
+    ...mapGetters(["activeGame", "findComponentTemplate"]),
 
-      title: computedVModelUpdate("component", "patchComponent", "title"),
+    title: computedVModelUpdate("component", "patchComponent", "title"),
 
-      componentTemplate() {
-        return this.component && this.findComponentTemplate(this.component)
+    componentTemplate() {
+      return this.component && this.findComponentTemplate(this.component)
+    }
+  },
+
+  methods: {
+    ...mapActions(["patchComponent", "copyGameComponent"]),
+
+    copyComponent() {
+      const copyComponent = {
+        ...this.component,
+        title: `${this.component.title} Copy`
       }
+
+      this.copyGameComponent({ game: this.activeGame, component: copyComponent })
+      this.$emit("close-dialog")
     },
 
-    methods: {
-      ...mapActions(["patchComponent", "copyGameComponent"]),
-
-      copyComponent() {
-        const copyComponent = {
-          ...this.component,
-          title: `${this.component.title} Copy`
-        }
-
-        this.copyGameComponent({ game: this.activeGame, component: copyComponent })
+    submitComponent() {
+      if(this.$refs.componentForm.validate()) {
         this.$emit("close-dialog")
-      },
-
-      submitComponent() {
-        if(this.$refs.componentForm.validate()) {
-          this.$emit("close-dialog")
-        }
       }
     }
   }
+}
 </script>

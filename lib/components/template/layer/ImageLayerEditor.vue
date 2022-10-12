@@ -57,82 +57,80 @@ v-expansion-panels#image-layer-editor(popout)
 </template>
 
 <script>
-  import Vue from 'vue'
-  import { mapActions, mapGetters } from 'vuex'
-  import { debounce } from 'lodash'
-  import { findProperty } from '../../../services/pdf_renderer/helpers'
-  import { computedVModelUpdateAll } from '../../util/component_helper'
-  import { openImagePicker } from '../../../services/google/picker'
-  import NameEditor from './NameEditor.vue'
-  import DimensionEditor from './DimensionEditor.vue'
-  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
-  import FileUploader from '../../shared/FileUploader.vue'
+import { mapActions, mapGetters } from 'vuex'
+import { findProperty } from '../../../services/pdf_renderer/helpers'
+import { computedVModelUpdateAll } from '../../util/component_helper'
+import { openImagePicker } from '../../../services/google/picker'
+import NameEditor from './NameEditor.vue'
+import DimensionEditor from './DimensionEditor.vue'
+import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
+import FileUploader from '../../shared/FileUploader.vue'
 
-  export default {
-    props: ["layer"],
+export default {
+  props: ["layer"],
 
-    components: {
-      NameEditor,
-      DimensionEditor,
-      MagicPropertyInputTalker,
-      FileUploader
+  components: {
+    NameEditor,
+    DimensionEditor,
+    MagicPropertyInputTalker,
+    FileUploader
+  },
+
+  computed: {
+    ...mapGetters([
+      "workingDirectoryId",
+      "getLayerDimensions",
+      "findTemplateByLayerId",
+      "gameImagesFolderOrDefault",
+      "activeItem",
+      "activeSheetProperties",
+      "activeComponent",
+      "activeGame",
+    ]),
+
+    gameImagesFolderId() {
+      return this.gameImagesFolderOrDefault(this.activeGame).id
     },
 
-    computed: {
-      ...mapGetters([
-        "workingDirectoryId",
-        "getLayerDimensions",
-        "findTemplateByLayerId",
-        "gameImagesFolderOrDefault",
-        "activeItem",
-        "activeSheetProperties",
-        "activeComponent",
-        "activeGame",
-      ]),
+    dimensions() { return this.getLayerDimensions(this.layer) },
 
-      gameImagesFolderId() {
-        return this.gameImagesFolderOrDefault(this.activeGame).id
-      },
-
-      dimensions() { return this.getLayerDimensions(this.layer) },
-
-      templateSize() {
-        const template = this.findTemplateByLayerId(this.layer.id)
-        return template && template.size
-      },
-
-      ...computedVModelUpdateAll("layer", "patchLayer", [
-        "imageNameStatic",
-        "imageId",
-        "imageNamePrefix",
-        "imageNameProperty",
-        "imageNameSuffix",
-        "imageScaling",
-        "horizontalAlignment",
-        "verticalAlignment",
-      ]),
-
-      dynamicImageName() {
-        const
-          prefix = this.layer.imageNamePrefix,
-          property = findProperty(this.activeItem, this.layer.imageNameProperty),
-          suffix = this.layer.imageNameSuffix
-
-        return `${prefix}${property}${suffix}`
-      }
+    templateSize() {
+      const template = this.findTemplateByLayerId(this.layer.id)
+      return template && template.size
     },
 
-    methods: {
-      ...mapActions(["patchLayer"]),
+    ...computedVModelUpdateAll("layer", "patchLayer", [
+      "imageNameStatic",
+      "imageId",
+      "imageNamePrefix",
+      "imageNameProperty",
+      "imageNameSuffix",
+      "imageScaling",
+      "horizontalAlignment",
+      "verticalAlignment",
+    ]),
 
-      getImageLabel(imageItem) { return imageItem },
+    dynamicImageName() {
+      const
+        prefix = this.layer.imageNamePrefix,
+        property = findProperty(this.activeItem, this.layer.imageNameProperty),
+        suffix = this.layer.imageNameSuffix
 
-      pickImageFromDrive() {
-        return openImagePicker(this.workingDirectoryId)
-          .then((imageId) => {
-            this.imageId = imageId
-          })
-      }
+      return `${prefix}${property}${suffix}`
+    }
+  },
+
+  methods: {
+    ...mapActions(["patchLayer"]),
+
+    getImageLabel(imageItem) { return imageItem },
+
+    pickImageFromDrive() {
+      return openImagePicker(this.workingDirectoryId)
+        .then((imageId) => {
+          this.imageId = imageId
+        })
     }
   }
+}
 </script>

@@ -18,60 +18,60 @@ v-flex.component(sm10 :elevation-10="isActiveComponent()" :class="{ active: isAc
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
-  export default {
-    props: {
-      component: {
-        required: true
-      }
+export default {
+  props: {
+    component: {
+      required: true
+    }
+  },
+
+  mounted() {
+    if(this.component.spreadsheetId) {
+      this.ensureSheetIndexed(this.component.spreadsheetId)
+    }
+  },
+
+  data() {
+    return {
+      showDeleteDialog: false
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "activeGame",
+      "activeComponent",
+      "getItemQuantity"
+    ]),
+
+    quantityLabel() {
+      const quantity = this.getItemQuantity(this.component)
+      return quantity > 0 ? `(${quantity})` : ""
+    }
+  },
+
+  methods: {
+    ...mapActions(["destroyGameComponent", "ensureSheetIndexed"]),
+
+    setActive() {
+      if(this.isActiveComponent()) { return }
+      let gameId = this.activeGame.id,
+        componentId = this.component.id
+      this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
     },
 
-    mounted() {
-      if(this.component.spreadsheetId) {
-        this.ensureSheetIndexed(this.component.spreadsheetId)
-      }
+    isActiveComponent() {
+      return this.component.id === (this.activeComponent && this.activeComponent.id)
     },
 
-    data() {
-      return {
-        showDeleteDialog: false
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        "activeGame",
-        "activeComponent",
-        "getItemQuantity"
-      ]),
-
-      quantityLabel() {
-        const quantity = this.getItemQuantity(this.component)
-        return quantity > 0 ? `(${quantity})` : ""
-      }
-    },
-
-    methods: {
-      ...mapActions(["destroyGameComponent", "ensureSheetIndexed"]),
-
-      setActive() {
-        if(this.isActiveComponent()) { return }
-        let gameId = this.activeGame.id,
-          componentId = this.component.id
-        this.$router.push({ name: 'componentEditor', params: { gameId, componentId } })
-      },
-
-      isActiveComponent() {
-        return this.component.id === (this.activeComponent && this.activeComponent.id)
-      },
-
-      deleteComponent() {
-        this.destroyGameComponent({ game: this.activeGame, component: this.component})
-        this.showDeleteDialog = false
-      }
+    deleteComponent() {
+      this.destroyGameComponent({ game: this.activeGame, component: this.component})
+      this.showDeleteDialog = false
     }
   }
+}
 </script>
 
 <style scoped>

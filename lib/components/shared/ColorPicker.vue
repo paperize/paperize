@@ -7,31 +7,31 @@ div(v-observe-visibility="visibilityChanged")
 </template>
 
 <script>
-  import { Chrome } from 'vue-color'
+import { Chrome } from 'vue-color'
 
-  export default {
-    props: ["value", "label"],
+export default {
+  props: ["value", "label"],
 
-    data() {
-      return {
-        showPicker: false
-      }
+  data() {
+    return {
+      showPicker: false
+    }
+  },
+
+  components: { Chrome },
+
+  methods: {
+    emitOnlyHex(color) {
+      this.$emit("input", color.hex)
     },
 
-    components: { Chrome },
-
-    methods: {
-      emitOnlyHex(color) {
-        this.$emit("input", color.hex)
-      },
-
-      visibilityChanged(visible) {
-        if(!visible) {
-          this.showPicker = false
-        }
+    visibilityChanged(visible) {
+      if(!visible) {
+        this.showPicker = false
       }
     }
   }
+}
 </script>
 
 <style>

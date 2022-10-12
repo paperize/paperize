@@ -3,15 +3,15 @@ img(:src="imageSource")
 </template>
 
 <script>
-  import assetStore from '../../services/asset_store'
+import assetStore from '../../services/asset_store'
 
-  export default {
-    props: ["imageId"],
+export default {
+  props: ["imageId"],
 
-    asyncComputed: {
-      imageSource() {
-        return assetStore.getImage(this.imageId).then(image => image.data)
-      }
+  asyncComputed: {
+    imageSource() {
+      return assetStore.getImage(this.imageId).then(image => image.data)
     }
   }
+}
 </script>

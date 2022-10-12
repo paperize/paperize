@@ -46,13 +46,13 @@ v-container(grid-list-xl fluid)
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import becomeAPatron from "/images/become_a_patron_button@2x.png"
+import { mapGetters } from 'vuex'
+import becomeAPatron from "/images/become_a_patron_button@2x.png"
 
-  export default {
-    data() {
-      return { becomeAPatron }
-    },
-    computed: mapGetters([ "isCypress" ])
-  }
+export default {
+  data() {
+    return { becomeAPatron }
+  },
+  computed: mapGetters([ "isCypress" ])
+}
 </script>

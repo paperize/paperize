@@ -15,22 +15,21 @@ v-layout(column).component-panel
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import ComponentCard from './ComponentCard.vue'
-  import NewComponentForm from './NewComponentForm.vue'
-  import EditComponentForm from './EditComponentForm.vue'
+import ComponentCard from './ComponentCard.vue'
+import NewComponentForm from './NewComponentForm.vue'
+import EditComponentForm from './EditComponentForm.vue'
 
-  export default {
-    props: ["components"],
+export default {
+  props: ["components"],
 
-    components: { ComponentCard, NewComponentForm, EditComponentForm },
+  components: { ComponentCard, NewComponentForm, EditComponentForm },
 
-    data() {
-      return {
-        showNewDialog: false,
-        showEditDialog: false,
-        editComponent: null
-      }
-    },
-  }
+  data() {
+    return {
+      showNewDialog: false,
+      showEditDialog: false,
+      editComponent: null
+    }
+  },
+}
 </script>

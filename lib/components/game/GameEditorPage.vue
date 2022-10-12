@@ -17,31 +17,31 @@ v-container(v-else fluid grid-list-md)
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
-  import GamePanel from './GamePanel.vue'
-  import ComponentPanel from '../component/ComponentPanel.vue'
-  import ComponentEditor from '../component/ComponentEditor.vue'
+import GamePanel from './GamePanel.vue'
+import ComponentPanel from '../component/ComponentPanel.vue'
+import ComponentEditor from '../component/ComponentEditor.vue'
 
-  export default {
-    props: ['gameId'],
+export default {
+  props: ['gameId'],
 
-    mounted() { this.ensureFontsFetchedForGame(this.game) },
+  mounted() { this.ensureFontsFetchedForGame(this.game) },
 
-    components: { GamePanel, ComponentPanel, ComponentEditor },
+  components: { GamePanel, ComponentPanel, ComponentEditor },
 
-    computed: {
-      ...mapGetters([
-        'findAllGameComponents',
-        'activeComponent',
-        "findGame"
-      ]),
+  computed: {
+    ...mapGetters([
+      'findAllGameComponents',
+      'activeComponent',
+      "findGame"
+    ]),
 
-      game() {
-        return this.findGame(this.gameId)
-      }
-    },
+    game() {
+      return this.findGame(this.gameId)
+    }
+  },
 
-    methods: mapActions([ 'ensureFontsFetchedForGame' ])
-  }
+  methods: mapActions([ 'ensureFontsFetchedForGame' ])
+}
 </script>

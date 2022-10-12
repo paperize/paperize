@@ -10,25 +10,26 @@ v-tooltip(v-if="(spreadsheetId || force)" top)
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    props: ["spreadsheetId", "large", "force"],
+export default {
+  props: ["spreadsheetId", "large", "force"],
 
-    computed: {
-      ...mapGetters(["findSpreadsheet"]),
+  computed: {
+    ...mapGetters(["findSpreadsheet"]),
 
-      sheet() {
-        return this.spreadsheetId && this.findSpreadsheet(this.spreadsheetId, false)
-      },
+    sheet() {
+      return this.spreadsheetId && this.findSpreadsheet(this.spreadsheetId, false)
+    },
 
-      driveLink() {
-        if(this.sheet) {
-          return `https://docs.google.com/spreadsheets/d/${this.spreadsheetId}/edit`
-        }
-      }
+    driveLink() {
+      return (this.sheet
+        ? `https://docs.google.com/spreadsheets/d/${this.spreadsheetId}/edit`
+        : ``
+      )
     }
   }
+}
 </script>
 
 <style scoped>

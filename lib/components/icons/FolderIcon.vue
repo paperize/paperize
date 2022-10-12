@@ -10,25 +10,25 @@ v-tooltip(v-if="folderId || force" top)
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    props: ["folderId", "color", "large", "force"],
+export default {
+  props: ["folderId", "color", "large", "force"],
 
-    computed: {
-      ...mapGetters(["findFolder"]),
+  computed: {
+    ...mapGetters(["findFolder"]),
 
-      folder() {
-        return this.folderId && this.findFolder(this.folderId, false)
-      },
+    folder() {
+      return this.folderId && this.findFolder(this.folderId, false)
+    },
 
-      driveLink() {
-        if(this.folder) {
-          return `https://drive.google.com/drive/folders/${this.folderId}`
-        }
+    driveLink() {
+      if(this.folder) {
+        return `https://drive.google.com/drive/folders/${this.folderId}`
       }
     }
   }
+}
 </script>
 
 <style scoped>

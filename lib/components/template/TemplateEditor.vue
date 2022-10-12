@@ -42,52 +42,52 @@ v-card
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  import LayerManager from './layer/LayerManager.vue'
-  import LayerEditor from './layer/LayerEditor.vue'
-  import TemplateSizeEditor from './TemplateSizeEditor.vue'
-  import TemplatePreviewer from './TemplatePreviewer.vue'
-  import RefreshSourceButton from '../source/RefreshSourceButton.vue'
+import LayerManager from './layer/LayerManager.vue'
+import LayerEditor from './layer/LayerEditor.vue'
+import TemplateSizeEditor from './TemplateSizeEditor.vue'
+import TemplatePreviewer from './TemplatePreviewer.vue'
+import RefreshSourceButton from '../source/RefreshSourceButton.vue'
 
-  export default {
-    props: ["component"],
+export default {
+  props: ["component"],
 
-    components: {
-      TemplatePreviewer,
-      TemplateSizeEditor,
-      LayerManager,
-      LayerEditor,
-      RefreshSourceButton,
+  components: {
+    TemplatePreviewer,
+    TemplateSizeEditor,
+    LayerManager,
+    LayerEditor,
+    RefreshSourceButton,
+  },
+
+  data() {
+    return {
+      editingSize: false,
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "activeGame",
+      "activeLayer",
+      "findComponentSheet",
+      "findComponentTemplate",
+    ]),
+
+    componentSource() {
+      return this.findComponentSheet(this.component)
     },
 
-    data() {
-      return {
-        editingSize: false,
-      }
+    componentTemplate() {
+      return this.findComponentTemplate(this.component)
     },
 
-    computed: {
-      ...mapGetters([
-        "activeGame",
-        "activeLayer",
-        "findComponentSheet",
-        "findComponentTemplate",
-      ]),
+    sizeLabel() {
+      return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
+    }
+  },
 
-      componentSource() {
-        return this.findComponentSheet(this.component)
-      },
-
-      componentTemplate() {
-        return this.findComponentTemplate(this.component)
-      },
-
-      sizeLabel() {
-        return `(${this.componentTemplate.size.w}in x ${this.componentTemplate.size.h}in)`
-      }
-    },
-
-    methods: { },
-  }
+  methods: { },
+}
 </script>

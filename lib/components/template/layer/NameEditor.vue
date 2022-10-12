@@ -8,16 +8,16 @@ v-expansion-panel
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
-  import { computedVModelUpdate } from '../../util/component_helper'
+import { mapActions } from 'vuex'
+import { computedVModelUpdate } from '../../util/component_helper'
 
-  export default {
-    props: ["layer"],
+export default {
+  props: ["layer"],
 
-    computed: {
-      name: computedVModelUpdate("layer", "patchLayer", "name"),
-    },
+  computed: {
+    name: computedVModelUpdate("layer", "patchLayer", "name"),
+  },
 
-    methods: mapActions(["patchLayer"]),
-  }
+  methods: mapActions(["patchLayer"]),
+}
 </script>

@@ -29,28 +29,28 @@ v-card.image-library
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
-  export default {
+export default {
 
-    data() {
-      return {
-        pastedLink: ""
-      }
-    },
+  data() {
+    return {
+      pastedLink: ""
+    }
+  },
 
-    computed: {
-      ...mapGetters(["imageFolders"])
-    },
+  computed: {
+    ...mapGetters(["imageFolders"])
+  },
 
-    methods: {
-      ...mapActions(["addImageFolderViaLink", "refreshImageFileIndex", "deleteImageFolder"]),
+  methods: {
+    ...mapActions(["addImageFolderViaLink", "refreshImageFileIndex", "deleteImageFolder"]),
 
-      confirmDeleteImageFolder(imageFolder) {
-        if(confirm(`Are you sure you want to stop tracking the image folder '${imageFolder.name}'?`)) {
-          this.deleteImageFolder(imageFolder.id)
-        }
+    confirmDeleteImageFolder(imageFolder) {
+      if(confirm(`Are you sure you want to stop tracking the image folder '${imageFolder.name}'?`)) {
+        this.deleteImageFolder(imageFolder.id)
       }
     }
   }
+}
 </script>

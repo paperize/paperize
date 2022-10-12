@@ -21,9 +21,9 @@ v-card
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    computed: mapGetters(["showSpinner", "trackedRequests", "completedRequests"])
-  }
+export default {
+  computed: mapGetters(["showSpinner", "trackedRequests", "completedRequests"])
+}
 </script>

@@ -11,20 +11,19 @@ v-card
 </template>
 
 <script>
-  import FileUploader from '../shared/FileUploader.vue'
-  import { mapActions, mapGetters } from 'vuex'
-  import drive from '../../services/google/drive'
+import FileUploader from '../shared/FileUploader.vue'
+import { mapActions, mapGetters } from 'vuex'
 
-  export default {
+export default {
 
-    components: { FileUploader },
+  components: { FileUploader },
 
-    computed: {
-      ...mapGetters(["workingDirectoryId"]),
-    },
+  computed: {
+    ...mapGetters(["workingDirectoryId"]),
+  },
 
-    methods: {
-      ...mapActions([ ]),
-    }
+  methods: {
+    ...mapActions([ ]),
   }
+}
 </script>

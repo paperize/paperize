@@ -53,55 +53,55 @@ v-expansion-panels#shape-layer-editor(popout)
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
-  import { computedVModelUpdateAll } from '../../util/component_helper'
-  import NameEditor from './NameEditor.vue'
-  import DimensionEditor from './DimensionEditor.vue'
-  import ColorPicker from '../../shared/ColorPicker.vue'
-  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
+import { mapActions, mapGetters } from 'vuex'
+import { computedVModelUpdateAll } from '../../util/component_helper'
+import NameEditor from './NameEditor.vue'
+import DimensionEditor from './DimensionEditor.vue'
+import ColorPicker from '../../shared/ColorPicker.vue'
+import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
 
-  const shapeOptions = [
-    { value: "rectangle", text: "Rectangle" },
-    { value: "roundedRectangle", text: "Rounded Rectangle" },
-    { value: "ellipse", text: "Ellipse" },
-  ]
+const shapeOptions = [
+  { value: "rectangle", text: "Rectangle" },
+  { value: "roundedRectangle", text: "Rounded Rectangle" },
+  { value: "ellipse", text: "Ellipse" },
+]
 
-  export default {
-    props: ["layer"],
+export default {
+  props: ["layer"],
 
-    components: {
-      NameEditor,
-      DimensionEditor,
-      ColorPicker,
-      MagicPropertyInputTalker
+  components: {
+    NameEditor,
+    DimensionEditor,
+    ColorPicker,
+    MagicPropertyInputTalker
+  },
+
+  data() {
+    return {
+      shapeOptions
+    }
+  },
+
+  computed: {
+    ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
+
+    dimensions() { return this.getLayerDimensions(this.layer) },
+
+    templateSize() {
+      const template = this.findTemplateByLayerId(this.layer.id)
+      return template && template.size
     },
 
-    data() {
-      return {
-        shapeOptions
-      }
-    },
+    ...computedVModelUpdateAll("layer", "patchLayer", [
+      "shape",
+      "strokePresent",
+      "strokeWidth",
+      "strokeColor",
+      "fillPresent",
+      "fillColor"
+    ])
+  },
 
-    computed: {
-      ...mapGetters(["getLayerDimensions", "findTemplateByLayerId"]),
-
-      dimensions() { return this.getLayerDimensions(this.layer) },
-
-      templateSize() {
-        const template = this.findTemplateByLayerId(this.layer.id)
-        return template && template.size
-      },
-
-      ...computedVModelUpdateAll("layer", "patchLayer", [
-        "shape",
-        "strokePresent",
-        "strokeWidth",
-        "strokeColor",
-        "fillPresent",
-        "fillColor"
-      ])
-    },
-
-    methods: mapActions(["patchLayer"])
-  }
+  methods: mapActions(["patchLayer"])
+}
 </script>

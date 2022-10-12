@@ -43,78 +43,78 @@ v-card.image-manager
 </template>
 
 <script>
-  import { find, findIndex } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
+import { find, findIndex } from 'lodash'
+import { mapGetters, mapActions } from 'vuex'
 
-  import InlineImageEditor from './InlineImageEditor.vue'
-  import LocalImage from './LocalImage.vue'
+import InlineImageEditor from './InlineImageEditor.vue'
+import LocalImage from './LocalImage.vue'
 
-  export default {
-    components: { InlineImageEditor, LocalImage },
+export default {
+  components: { InlineImageEditor, LocalImage },
 
-    data() {
-      return {
-        showImageSpinner: false,
-        showDeleteImageDialog: false,
-        imageToDelete: {},
-        editing: null
+  data() {
+    return {
+      showImageSpinner: false,
+      showDeleteImageDialog: false,
+      imageToDelete: {},
+      editing: null
+    }
+  },
+
+  computed: {
+    ...mapGetters(['images']),
+  },
+
+  methods: {
+    ...mapActions(["deleteImage"]),
+
+    editImage(image) {
+      this.editing = image.id
+    },
+
+    editNextImage(next) {
+      let currentImageIndex = findIndex(this.images, find(this.images, { id: this.editing }))
+      let nextImageIndex = currentImageIndex + (next ? 1 : -1)
+      let nextImage = this.images[nextImageIndex]
+
+      if(nextImage) {
+        this.editImage(nextImage)
+      } else {
+        this.stopEditing()
       }
     },
 
-    computed: {
-      ...mapGetters(['images']),
+    stopEditing() { this.editing = null },
+
+    handleFileInput(changeEvent) {
+      // Extract files from a file input
+      let files = changeEvent.target.files
+      this.showImageSpinner = true
+      this.$store.dispatch('importImageFiles', files).finally(() => {
+        this.showImageSpinner = false
+      })
     },
 
-    methods: {
-      ...mapActions(["deleteImage"]),
+    handleFileDragAndDrop(dropEvent) {
+      // Extract files from a drag-and-drop event
+      let files = dropEvent.dataTransfer.files
+      this.showImageSpinner = true
+      this.$store.dispatch('importImageFiles', files).finally(() => {
+        this.showImageSpinner = false
+      })
+    },
 
-      editImage(image) {
-        this.editing = image.id
-      },
+    showDeleteImageDialogFor(image) {
+      this.imageToDelete = image
+      this.showDeleteImageDialog = true
+    },
 
-      editNextImage(next) {
-        let currentImageIndex = findIndex(this.images, find(this.images, { id: this.editing }))
-        let nextImageIndex = currentImageIndex + (next ? 1 : -1)
-        let nextImage = this.images[nextImageIndex]
-
-        if(nextImage) {
-          this.editImage(nextImage)
-        } else {
-          this.stopEditing()
-        }
-      },
-
-      stopEditing() { this.editing = null },
-
-      handleFileInput(changeEvent) {
-        // Extract files from a file input
-        let files = changeEvent.target.files
-        this.showImageSpinner = true
-        this.$store.dispatch('importImageFiles', files).finally(() => {
-          this.showImageSpinner = false
-        })
-      },
-
-      handleFileDragAndDrop(dropEvent) {
-        // Extract files from a drag-and-drop event
-        let files = dropEvent.dataTransfer.files
-        this.showImageSpinner = true
-        this.$store.dispatch('importImageFiles', files).finally(() => {
-          this.showImageSpinner = false
-        })
-      },
-
-      showDeleteImageDialogFor(image) {
-        this.imageToDelete = image
-        this.showDeleteImageDialog = true
-      },
-
-      destroyImage() {
-        this.deleteImage({ image: this.imageToDelete })
-        this.showDeleteImageDialog = false
-      }
+    destroyImage() {
+      this.deleteImage({ image: this.imageToDelete })
+      this.showDeleteImageDialog = false
     }
   }
+}
 </script>
 
 <style>

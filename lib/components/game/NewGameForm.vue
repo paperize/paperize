@@ -31,87 +31,87 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
-  import FolderIcon from '../icons/FolderIcon.vue'
-  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+import FolderIcon from '../icons/FolderIcon.vue'
+import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
 
-  const DELAY_MS_AFTER_DRIVE_COMPLETE = 800
+const DELAY_MS_AFTER_DRIVE_COMPLETE = 800
 
-  export default {
-    components: {
-      FolderIcon,
-      SpreadsheetIcon
+export default {
+  components: {
+    FolderIcon,
+    SpreadsheetIcon
+  },
+
+  data() {
+    return {
+      gameId: null,
+      gameTitle: "",
+      rules: {
+        required: value => !!value || 'Required.'
+      }
+    }
+  },
+
+  watch: {
+    "game.spreadsheetId": "verifyDriveComplete"
+  },
+
+  computed: {
+    ...mapGetters({
+      workingDirectoryId: "workingDirectoryId",
+      findGame: "findGame",
+      getGameFolder: "gameFolder",
+      getGameImagesFolder: "gameImagesFolder",
+      getGameSpreadsheet: "gameSpreadsheet",
+    }),
+
+    game() {
+      return this.gameId && this.findGame(this.gameId)
     },
 
-    data() {
-      return {
-        gameId: null,
-        gameTitle: "",
-        rules: {
-          required: value => !!value || 'Required.'
-        }
+    gameFolder() {
+      return this.getGameFolder(this.game)
+    },
+
+    gameImagesFolder() {
+      return this.getGameImagesFolder(this.game)
+    },
+
+    gameSpreadsheet() {
+      return this.getGameSpreadsheet(this.game)
+    },
+  },
+
+  methods: {
+    ...mapActions([
+      "createGame",
+      "createDriveArtifactsForGame",
+    ]),
+
+    submitGame() {
+      if(this.$refs.gameForm.validate()) {
+        this.createGame({ title: this.gameTitle })
+          .then((gameId) => {
+            this.gameId = gameId
+            return this.createDriveArtifactsForGame(this.game)
+          })
       }
     },
 
-    watch: {
-      "game.spreadsheetId": "verifyDriveComplete"
-    },
-
-    computed: {
-      ...mapGetters({
-        workingDirectoryId: "workingDirectoryId",
-        findGame: "findGame",
-        getGameFolder: "gameFolder",
-        getGameImagesFolder: "gameImagesFolder",
-        getGameSpreadsheet: "gameSpreadsheet",
-      }),
-
-      game() {
-        return this.gameId && this.findGame(this.gameId)
-      },
-
-      gameFolder() {
-        return this.getGameFolder(this.game)
-      },
-
-      gameImagesFolder() {
-        return this.getGameImagesFolder(this.game)
-      },
-
-      gameSpreadsheet() {
-        return this.getGameSpreadsheet(this.game)
-      },
-    },
-
-    methods: {
-      ...mapActions([
-        "createGame",
-        "createDriveArtifactsForGame",
-      ]),
-
-      submitGame() {
-        if(this.$refs.gameForm.validate()) {
-          this.createGame({ title: this.gameTitle })
-            .then((gameId) => {
-              this.gameId = gameId
-              return this.createDriveArtifactsForGame(this.game)
-            })
-        }
-      },
-
-      verifyDriveComplete() {
-        // We don't move on until the spreadsheet is in place
-        if(this.game && this.gameSpreadsheet) {
-          // Pause a moment so user can see that we were successful
-          setTimeout(() => {
-            // Close dialog
-            this.$emit("close-dialog")
-            // Route to the game we just created
-            this.$router.push({ name: "gameEditor", params: { gameId: this.gameId }})
-          }, DELAY_MS_AFTER_DRIVE_COMPLETE)
-        }
+    verifyDriveComplete() {
+      // We don't move on until the spreadsheet is in place
+      if(this.game && this.gameSpreadsheet) {
+        // Pause a moment so user can see that we were successful
+        setTimeout(() => {
+          // Close dialog
+          this.$emit("close-dialog")
+          // Route to the game we just created
+          this.$router.push({ name: "gameEditor", params: { gameId: this.gameId }})
+        }, DELAY_MS_AFTER_DRIVE_COMPLETE)
       }
     }
   }
+}
 </script>

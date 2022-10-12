@@ -8,25 +8,26 @@ v-tooltip(v-if="imageId" top)
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    props: ["imageId"],
+export default {
+  props: ["imageId"],
 
-    computed: {
-      ...mapGetters(["findImage"]),
+  computed: {
+    ...mapGetters(["findImage"]),
 
-      image() {
-        return this.imageId && this.findImage(this.imageId, false)
-      },
+    image() {
+      return this.imageId && this.findImage(this.imageId, false)
+    },
 
-      driveLink() {
-        if(this.image) {
-          return `https://drive.google.com/open?id=${this.imageId}`
-        }
-      }
+    driveLink() {
+      return (this.image
+        ? `https://drive.google.com/open?id=${this.imageId}`
+        : ``
+      )
     }
   }
+}
 </script>
 
 <style scoped>

@@ -38,87 +38,87 @@ v-card.database-manager
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import imageCache from '../../services/image_cache'
-  import sheetCache from '../../services/sheet_cache'
-  import fontCache from '../../services/font_cache'
-  import databaseController from '../../services/database_controller'
+import { mapGetters } from 'vuex'
+import imageCache from '../../services/image_cache'
+import sheetCache from '../../services/sheet_cache'
+import fontCache from '../../services/font_cache'
+import databaseController from '../../services/database_controller'
 
-  export default {
-    data() {
-      return {
-        selectedDatabase: null,
-        showDatabaseExportDialog: false,
-        showDatabaseClearDialog: false,
-        jsonExport: {},
-        imageCount: 0,
-        sheetCount: 0,
-        fontCount: 0,
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        "allGames",
-        "allComponents",
-        "allSpreadsheets",
-        "allTemplates",
-        "allLayers",
-        "allDimensions",
-        "images",
-        "workingDirectory",
-        "databaseFile"
-      ]),
-
-      selectedDatabaseSize() {
-        // return this.selectedDatabased.length
-        return databaseController.getJSON().length
-      }
-    },
-
-    methods: {
-      exportDatabase() {
-        // get the JSON of the db
-        this.jsonExport = databaseController.getJSON()
-        this.showDatabaseExportDialog = true
-      },
-
-      clearDatabase() {
-        databaseController.clear()
-        this.showDatabaseClearDialog = false
-      },
-
-      updateCacheCounts() {
-        return Promise.all([
-          imageCache.count(),
-          sheetCache.count(),
-          fontCache.count(),
-        ]).then(([newImageCount, newSheetCount, newFontCount]) => {
-          this.imageCount = newImageCount
-          this.sheetCount = newSheetCount
-          this.fontCount = newFontCount
-        })
-      },
-
-      clearImages() {
-        return imageCache.clear().then(() => {
-          this.updateCacheCounts()
-        })
-      },
-
-      clearSheets() {
-        return sheetCache.clear().then(() => {
-          this.updateCacheCounts()
-        })
-      },
-
-      clearFonts() {
-        return fontCache.clear().then(() => {
-          this.updateCacheCounts()
-        })
-      },
+export default {
+  data() {
+    return {
+      selectedDatabase: null,
+      showDatabaseExportDialog: false,
+      showDatabaseClearDialog: false,
+      jsonExport: {},
+      imageCount: 0,
+      sheetCount: 0,
+      fontCount: 0,
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      "allGames",
+      "allComponents",
+      "allSpreadsheets",
+      "allTemplates",
+      "allLayers",
+      "allDimensions",
+      "images",
+      "workingDirectory",
+      "databaseFile"
+    ]),
+
+    selectedDatabaseSize() {
+      // return this.selectedDatabased.length
+      return databaseController.getJSON().length
+    }
+  },
+
+  methods: {
+    exportDatabase() {
+      // get the JSON of the db
+      this.jsonExport = databaseController.getJSON()
+      this.showDatabaseExportDialog = true
+    },
+
+    clearDatabase() {
+      databaseController.clear()
+      this.showDatabaseClearDialog = false
+    },
+
+    updateCacheCounts() {
+      return Promise.all([
+        imageCache.count(),
+        sheetCache.count(),
+        fontCache.count(),
+      ]).then(([newImageCount, newSheetCount, newFontCount]) => {
+        this.imageCount = newImageCount
+        this.sheetCount = newSheetCount
+        this.fontCount = newFontCount
+      })
+    },
+
+    clearImages() {
+      return imageCache.clear().then(() => {
+        this.updateCacheCounts()
+      })
+    },
+
+    clearSheets() {
+      return sheetCache.clear().then(() => {
+        this.updateCacheCounts()
+      })
+    },
+
+    clearFonts() {
+      return fontCache.clear().then(() => {
+        this.updateCacheCounts()
+      })
+    },
   }
+}
 </script>
 
 <style scoped="true">

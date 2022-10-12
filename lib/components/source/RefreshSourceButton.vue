@@ -8,18 +8,18 @@ v-tooltip(v-if="spreadsheet" top)
 </template>
 
 <script>
-  import moment from 'moment'
-  import { mapActions } from 'vuex'
+import moment from 'moment'
+import { mapActions } from 'vuex'
 
-  export default {
-    props: ["spreadsheet"],
+export default {
+  props: ["spreadsheet"],
 
-    computed: {
-      lastRefresh() {
-        return moment(this.spreadsheet.refreshedAt).fromNow()
-      },
+  computed: {
+    lastRefresh() {
+      return moment(this.spreadsheet.refreshedAt).fromNow()
     },
+  },
 
-    methods: mapActions(["refreshSheetIndex"])
-  }
+  methods: mapActions(["refreshSheetIndex"])
+}
 </script>

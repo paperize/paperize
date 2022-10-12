@@ -56,77 +56,75 @@ v-tooltip(top v-if="currentFolderId")
 </template>
 
 <script>
-  import { readAsDataURL } from 'promisify-file-reader'
-  import VueUploadComponent from 'vue-upload-component'
-  import { reduce, remove } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
-  import { openFolderPicker } from '../../services/google/picker'
-  import drive from '../../services/google/drive'
+import { readAsDataURL } from 'promisify-file-reader'
+import VueUploadComponent from 'vue-upload-component'
+import { mapGetters, mapActions } from 'vuex'
+import { openFolderPicker } from '../../services/google/picker'
+import drive from '../../services/google/drive'
 
-  const FILE_UPLOAD_CONCURRENCY = 5
+const FILE_UPLOAD_CONCURRENCY = 5
 
-  export default {
-    props: {
-      folderId: {
-        type: String,
-        required: true
-      },
+export default {
+  props: {
+    folderId: {
+      type: String,
+      required: true
+    },
+  },
+
+  data() {
+    return {
+      currentFolderId: this.folderId,
+      files: [],
+      showUploader: false,
+      uploading: false
+    }
+  },
+
+  components: { VueUploadComponent },
+
+  watch: {
+    showUploader(show) {
+      // Reset the folder when the modal is hidden
+      if(!show) { this.currentFolderId = this.folderId }
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "findFolder",
+    ]),
+
+    folder() {
+      return this.findFolder(this.currentFolderId)
     },
 
-    data() {
-      return {
-        currentFolderId: this.folderId,
-        files: [],
-        showUploader: false,
-        uploading: false
-      }
+    parentFolders() {
+      return this.$store.getters.parentFolders(this.folder)
     },
 
-    components: { VueUploadComponent },
+    anyFiles() {
+      return this.files.length > 0
+    }
+  },
 
-    watch: {
-      showUploader(show) {
-        // Reset the folder when the modal is hidden
-        if(!show) { this.currentFolderId = this.folderId }
-      }
+  methods: {
+    ...mapActions(["refreshRootFolderIndex"]),
+
+    removeFile(file) {
+      this.files.splice(this.files.indexOf(file), 1)
     },
 
-    computed: {
-      ...mapGetters([
-        "findFolder",
-      ]),
-
-      folder() {
-        return this.findFolder(this.currentFolderId)
-      },
-
-      parentFolders() {
-        return this.$store.getters.parentFolders(this.folder)
-      },
-
-      anyFiles() {
-        return this.files.length > 0
-      }
+    openFolderPicker() {
+      openFolderPicker(this.currentFolderId).then((newFolderId) => {
+        if(newFolderId) { this.currentFolderId = newFolderId }
+      })
     },
 
-    methods: {
-      ...mapActions(["refreshRootFolderIndex"]),
-
-      removeFile(file) {
-        this.files.splice(this.files.indexOf(file), 1)
-      },
-
-      openFolderPicker() {
-        openFolderPicker(this.currentFolderId).then((newFolderId) => {
-          if(newFolderId) { this.currentFolderId = newFolderId }
-        })
-      },
-
-      performUpload() {
-        this.uploading = true
-        return Bluebird.map(this.files, (fileToUpload) => {
-          return readAsDataURL(fileToUpload.file)
-
+    performUpload() {
+      this.uploading = true
+      return Bluebird.map(this.files, (fileToUpload) => {
+        return readAsDataURL(fileToUpload.file)
           .then((result) => {
             const
               fileContents = result.replace(`data:${fileToUpload.type};base64,`, ""),
@@ -140,7 +138,7 @@ v-tooltip(top v-if="currentFolderId")
           .then(() => {
             this.removeFile(fileToUpload)
           })
-        }, { concurrency: FILE_UPLOAD_CONCURRENCY })
+      }, { concurrency: FILE_UPLOAD_CONCURRENCY })
 
         .then(() => {
           this.files.splice(0)
@@ -152,11 +150,9 @@ v-tooltip(top v-if="currentFolderId")
           this.uploading = false
           this.showUploader = false
         })
-      }
     }
   }
-
-
+}
 </script>
 
 <style>

@@ -76,190 +76,192 @@ v-flex#source-editor(sm4 md6)
 </template>
 
 <script>
-  import { includes, map, max, min, pick } from 'lodash'
-  import { mapGetters, mapActions } from 'vuex'
-  import { computedVModelUpdateAll } from '../util/component_helper'
-  import { openSheetPicker } from '../../services/google/picker'
-  import MagicPropertyAlignmentPanel from './MagicPropertyAlignmentPanel.vue'
-  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
-  import RefreshSourceButton from './RefreshSourceButton.vue'
+import { includes, map, max, min, pick } from 'lodash'
+import { mapGetters, mapActions } from 'vuex'
+import { computedVModelUpdateAll } from '../util/component_helper'
+import { openSheetPicker } from '../../services/google/picker'
+import MagicPropertyAlignmentPanel from './MagicPropertyAlignmentPanel.vue'
+import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+import RefreshSourceButton from './RefreshSourceButton.vue'
 
-  export default {
-    props: ["component"],
+export default {
+  props: ["component"],
 
-    components: {
-      SpreadsheetIcon,
-      MagicPropertyAlignmentPanel,
-      RefreshSourceButton,
-    },
+  components: {
+    SpreadsheetIcon,
+    MagicPropertyAlignmentPanel,
+    RefreshSourceButton,
+  },
 
-    updated() {
-      this.detectRowSelection()
-      this.validateWorksheetForm()
-    },
+  updated() {
+    this.detectRowSelection()
+    this.validateWorksheetForm()
+  },
 
-    data() {
-      return {
-        createSheetDialog: false,
-        createWorksheetDialog: false,
-        showRowSelection: false,
-        worksheetTitle: this.component.title,
-        rules: {
-          required: value => !!value || 'Required.',
-          noDupes: value => !includes(this.worksheetTitles(this.componentSheet.id), value) || 'No duplicate names.'
-        }
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        "workingDirectoryId",
-        "worksheetTitles",
-        "worksheetPropertyNames",
-        "worksheetMagicProperties",
-        "findComponentSheet",
-        "findComponentTemplate",
-        "findSpreadsheetWorksheet",
-        "activeGame",
-        "gameFolderOrDefault",
-        "getRowCount",
-        "allSpreadsheets"
-      ]),
-
-      ...computedVModelUpdateAll("component", "patchComponent", [
-        "quantityProperty"
-      ]),
-
-      spreadsheetId: {
-        get() { return this.component.spreadsheetId },
-        set(spreadsheetId) { this.linkComponentSheet({ component: this.component, spreadsheetId }) }
-      },
-
-      worksheetId: {
-        get() { return this.component.worksheetId },
-        set(worksheetId) { this.setComponentWorksheet({ component: this.component, worksheetId }) }
-      },
-
-      worksheetPropertyNamesWithNull() {
-        return [ { text: 'No Quantity Expansion', value: null },
-                 ...this.worksheetPropertyNames(this.spreadsheetId, this.worksheetId) ]
-      },
-
-      firstRow: {
-        // 2 offset so the user can work in terms of spreadsheet row numbers
-        get() { return this.component.worksheetFirstRow+2 },
-
-        set(newFirstRow) {
-          // 2 offset so the user can work in terms of spreadsheet row numbers
-          newFirstRow -= 2
-          const patchProps = {
-            worksheetFirstRow: newFirstRow,
-            worksheetLastRow: max([this.component.worksheetLastRow, newFirstRow])
-          }
-          this.patchComponent({ ...this.component,  ...patchProps })
-        }
-      },
-
-      lastRow: {
-        // 2 offset so the user can work in terms of spreadsheet row numbers
-        get() { return this.component.worksheetLastRow+2 },
-
-        set(newLastRow) {
-          // 2 offset so the user can work in terms of spreadsheet row numbers
-          newLastRow -= 2
-          const patchProps = {
-            worksheetLastRow: newLastRow,
-            worksheetFirstRow: min([this.component.worksheetFirstRow, newLastRow])
-          }
-          this.patchComponent({ ...this.component,  ...patchProps })
-        }
-      },
-
-      worksheetOptions() {
-        return map(this.componentSheet.worksheets, (ws) => pick(ws, ["id", "title"]))
-      },
-
-      gameHasSheet() { return !!this.activeGame.spreadsheetId },
-
-      componentSheet() { return this.findComponentSheet(this.component) },
-
-      componentWorksheet() {
-        return this.findSpreadsheetWorksheet(this.componentSheet.id, this.worksheetId)
-      },
-
-      componentTemplate() { return this.findComponentTemplate(this.component) },
-    },
-
-    methods: {
-      ...mapActions([
-        "linkComponentSheet",
-        "unlinkComponentSheet",
-        "setComponentWorksheet",
-        "patchComponent",
-        "googleCreateSpreadsheet",
-        "createComponentSpreadsheetWorksheet",
-      ]),
-
-      validateWorksheetForm() {
-        this.$refs.worksheetForm && this.$refs.worksheetForm.validate()
-      },
-
-      pickSheetFromDrive() {
-        return openSheetPicker(this.workingDirectoryId)
-          .then((spreadsheetId) => {
-            if(!spreadsheetId) { return Promise.reject(new Error("No sheet picked.")) }
-
-            return this.linkComponentSheet({
-              component: this.component,
-              spreadsheetId
-            })
-          })
-      },
-
-      useGameSheet() {
-        return this.patchComponent({
-          id: this.component.id,
-          spreadsheetId: this.activeGame.spreadsheetId
-        })
-      },
-
-      createAndLinkWorksheet() {
-        this.createComponentSpreadsheetWorksheet({ component: this.component, worksheetTitle: this.worksheetTitle  })
-
-          .then(() => {
-            this.createWorksheetDialog = false
-          })
-      },
-
-      detectRowSelection() {
-        this.showRowSelection =
-          this.component.worksheetFirstRow      ||
-          this.component.worksheetFirstRow == 0 ||
-          this.component.worksheetLastRow       ||
-          this.component.worksheetLastRow == 0
-      },
-
-      enableRowSelect() {
-        this.showRowSelection = true
-        this.patchComponent({
-          ...this.component,
-          worksheetFirstRow: 0,
-          worksheetLastRow: this.getRowCount(this.component)-1
-        })
-      },
-
-      unlinkComponentWorksheet(component) {
-        this.setComponentWorksheet({ component, worksheetId: null })
-      },
-
-      disableRowSelect() {
-        this.showRowSelection = false
-        this.patchComponent({
-          ...this.component,
-          worksheetFirstRow: null,
-          worksheetLastRow: null
-        })
+  data() {
+    return {
+      createSheetDialog: false,
+      createWorksheetDialog: false,
+      showRowSelection: false,
+      worksheetTitle: this.component.title,
+      rules: {
+        required: value => !!value || 'Required.',
+        noDupes: value => !includes(this.worksheetTitles(this.componentSheet.id), value) || 'No duplicate names.'
       }
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      "workingDirectoryId",
+      "worksheetTitles",
+      "worksheetPropertyNames",
+      "worksheetMagicProperties",
+      "findComponentSheet",
+      "findComponentTemplate",
+      "findSpreadsheetWorksheet",
+      "activeGame",
+      "gameFolderOrDefault",
+      "getRowCount",
+      "allSpreadsheets"
+    ]),
+
+    ...computedVModelUpdateAll("component", "patchComponent", [
+      "quantityProperty"
+    ]),
+
+    spreadsheetId: {
+      get() { return this.component.spreadsheetId },
+      set(spreadsheetId) { this.linkComponentSheet({ component: this.component, spreadsheetId }) }
+    },
+
+    worksheetId: {
+      get() { return this.component.worksheetId },
+      set(worksheetId) { this.setComponentWorksheet({ component: this.component, worksheetId }) }
+    },
+
+    worksheetPropertyNamesWithNull() {
+      return [
+        { text: 'No Quantity Expansion', value: null },
+        ...this.worksheetPropertyNames(this.spreadsheetId, this.worksheetId)
+      ]
+    },
+
+    firstRow: {
+      // 2 offset so the user can work in terms of spreadsheet row numbers
+      get() { return this.component.worksheetFirstRow+2 },
+
+      set(newFirstRow) {
+        // 2 offset so the user can work in terms of spreadsheet row numbers
+        newFirstRow -= 2
+        const patchProps = {
+          worksheetFirstRow: newFirstRow,
+          worksheetLastRow: max([this.component.worksheetLastRow, newFirstRow])
+        }
+        this.patchComponent({ ...this.component,  ...patchProps })
+      }
+    },
+
+    lastRow: {
+      // 2 offset so the user can work in terms of spreadsheet row numbers
+      get() { return this.component.worksheetLastRow+2 },
+
+      set(newLastRow) {
+        // 2 offset so the user can work in terms of spreadsheet row numbers
+        newLastRow -= 2
+        const patchProps = {
+          worksheetLastRow: newLastRow,
+          worksheetFirstRow: min([this.component.worksheetFirstRow, newLastRow])
+        }
+        this.patchComponent({ ...this.component,  ...patchProps })
+      }
+    },
+
+    worksheetOptions() {
+      return map(this.componentSheet.worksheets, (ws) => pick(ws, ["id", "title"]))
+    },
+
+    gameHasSheet() { return !!this.activeGame.spreadsheetId },
+
+    componentSheet() { return this.findComponentSheet(this.component) },
+
+    componentWorksheet() {
+      return this.findSpreadsheetWorksheet(this.componentSheet.id, this.worksheetId)
+    },
+
+    componentTemplate() { return this.findComponentTemplate(this.component) },
+  },
+
+  methods: {
+    ...mapActions([
+      "linkComponentSheet",
+      "unlinkComponentSheet",
+      "setComponentWorksheet",
+      "patchComponent",
+      "googleCreateSpreadsheet",
+      "createComponentSpreadsheetWorksheet",
+    ]),
+
+    validateWorksheetForm() {
+      this.$refs.worksheetForm && this.$refs.worksheetForm.validate()
+    },
+
+    pickSheetFromDrive() {
+      return openSheetPicker(this.workingDirectoryId)
+        .then((spreadsheetId) => {
+          if(!spreadsheetId) { return Promise.reject(new Error("No sheet picked.")) }
+
+          return this.linkComponentSheet({
+            component: this.component,
+            spreadsheetId
+          })
+        })
+    },
+
+    useGameSheet() {
+      return this.patchComponent({
+        id: this.component.id,
+        spreadsheetId: this.activeGame.spreadsheetId
+      })
+    },
+
+    createAndLinkWorksheet() {
+      this.createComponentSpreadsheetWorksheet({ component: this.component, worksheetTitle: this.worksheetTitle  })
+
+        .then(() => {
+          this.createWorksheetDialog = false
+        })
+    },
+
+    detectRowSelection() {
+      this.showRowSelection =
+        this.component.worksheetFirstRow      ||
+        this.component.worksheetFirstRow == 0 ||
+        this.component.worksheetLastRow       ||
+        this.component.worksheetLastRow == 0
+    },
+
+    enableRowSelect() {
+      this.showRowSelection = true
+      this.patchComponent({
+        ...this.component,
+        worksheetFirstRow: 0,
+        worksheetLastRow: this.getRowCount(this.component)-1
+      })
+    },
+
+    unlinkComponentWorksheet(component) {
+      this.setComponentWorksheet({ component, worksheetId: null })
+    },
+
+    disableRowSelect() {
+      this.showRowSelection = false
+      this.patchComponent({
+        ...this.component,
+        worksheetFirstRow: null,
+        worksheetLastRow: null
+      })
+    }
   }
+}
 </script>

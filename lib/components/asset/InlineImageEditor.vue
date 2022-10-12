@@ -4,17 +4,17 @@ v-form(@submit.stop.prevent="$emit('next')")
 </template>
 
 <script>
-  export default {
-    props: ["image"],
+export default {
+  props: ["image"],
 
-    computed: {
-      imageName: {
-        get() { return this.image.name },
+  computed: {
+    imageName: {
+      get() { return this.image.name },
 
-        set(newName) {
-          this.$store.commit('updateImageName', { image: this.image, name: newName })
-        }
+      set(newName) {
+        this.$store.commit('updateImageName', { image: this.image, name: newName })
       }
     }
   }
+}
 </script>

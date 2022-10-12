@@ -23,18 +23,18 @@ v-card(v-else)
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import TemplateEditor from './TemplateEditor.vue'
+import { mapGetters, mapActions } from 'vuex'
+import TemplateEditor from './TemplateEditor.vue'
 
-  export default {
-    props: ["component"],
+export default {
+  props: ["component"],
 
-    components: { TemplateEditor },
+  components: { TemplateEditor },
 
-    data() { return { } },
+  data() { return { } },
 
-    computed: mapGetters(["findComponentTemplate"]),
+  computed: mapGetters(["findComponentTemplate"]),
 
-    methods: mapActions(["createComponentTemplate"])
-  }
+  methods: mapActions(["createComponentTemplate"])
+}
 </script>

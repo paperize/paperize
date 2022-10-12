@@ -21,20 +21,20 @@ v-container(fluid)
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import GameCard from './GameCard.vue'
-  import NewGameForm from './NewGameForm.vue'
+import { mapGetters } from 'vuex'
+import GameCard from './GameCard.vue'
+import NewGameForm from './NewGameForm.vue'
 
-  export default {
-    components: { GameCard, NewGameForm },
+export default {
+  components: { GameCard, NewGameForm },
 
-    data() {
-      return {
-        showGameForm: false
-      }
-    },
+  data() {
+    return {
+      showGameForm: false
+    }
+  },
 
-    computed: mapGetters(["allGames"])
-  }
+  computed: mapGetters(["allGames"])
+}
 
 </script>

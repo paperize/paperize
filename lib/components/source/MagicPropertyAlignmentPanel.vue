@@ -10,40 +10,40 @@
 </template>
 
 <script>
-  import { includes, keys, map } from 'lodash'
-  import { mapGetters } from 'vuex'
+import { includes, keys, map } from 'lodash'
+import { mapGetters } from 'vuex'
 
-  export default {
-    props: [
-      "magicProperties",
-      "template"
-    ],
+export default {
+  props: [
+    "magicProperties",
+    "template"
+  ],
 
-    computed: {
-      ...mapGetters(["searchLayers"]),
+  computed: {
+    ...mapGetters(["searchLayers"]),
 
-      magicPropertiesWithMatches() {
-        return map(this.magicProperties, (property) => {
-          return {
-            ...property,
-            layerMatchIcon: !!this.matchLayer(property.layerName) ? "check" : "cancel",
-            attributeMatchIcon: !!this.matchAttribute(property) ? "check" : "cancel"
-          }
-        })
-      },
-
-      matchLayer: () => function(layerName) {
-        return this.searchLayers({ name: layerName })[0]
-      },
-
-      matchAttribute: () => function(property) {
-        const matchedLayer = this.matchLayer(property.layerName)
-        if(!matchedLayer) {
-          return null
+    magicPropertiesWithMatches() {
+      return map(this.magicProperties, (property) => {
+        return {
+          ...property,
+          layerMatchIcon: this.matchLayer(property.layerName) ? "check" : "cancel",
+          attributeMatchIcon: this.matchAttribute(property) ? "check" : "cancel"
         }
+      })
+    },
 
-        return includes(keys(matchedLayer), property.layerAttributeName)
-      },
-    }
+    matchLayer: () => function(layerName) {
+      return this.searchLayers({ name: layerName })[0]
+    },
+
+    matchAttribute: () => function(property) {
+      const matchedLayer = this.matchLayer(property.layerName)
+      if(!matchedLayer) {
+        return null
+      }
+
+      return includes(keys(matchedLayer), property.layerAttributeName)
+    },
   }
+}
 </script>

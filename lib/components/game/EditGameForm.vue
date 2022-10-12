@@ -59,86 +59,86 @@ v-form.game-form(ref="gameForm" @submit.prevent="submitGame")
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
-  import { openFolderPicker } from '../../services/google/picker'
+import { mapActions, mapGetters } from 'vuex'
+import { openFolderPicker } from '../../services/google/picker'
 
-  import FolderIcon from '../icons/FolderIcon.vue'
-  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+import FolderIcon from '../icons/FolderIcon.vue'
+import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
 
-  export default {
-    props: {
-      game: {
-        required: true
-      }
-    },
-
-    components: {
-      FolderIcon,
-      SpreadsheetIcon
-    },
-
-    data() {
-      return {
-        gameTitle: this.game.title,
-        rules: {
-          required: value => !!value || 'Required.'
-        }
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        "workingDirectoryId",
-        "allSpreadsheets",
-      ]),
-
-      gameFolder() {
-        return this.$store.getters.gameFolder(this.game)
-      },
-
-      gameSpreadsheet() {
-        return this.$store.getters.gameSpreadsheet(this.game)
-      },
-
-      spreadsheetId: {
-        get() { return this.gameSpreadsheet },
-        set(spreadsheetId) {
-          return this.updateGame({ ...this.game, spreadsheetId })
-        }
-      },
-    },
-
-    methods: {
-      ...mapActions([
-        "updateGame",
-        "createSheetArtifactForGame"
-       ]),
-
-      submitGame() {
-        if(this.$refs.gameForm.validate()) {
-          this.updateGame({ ...this.game, title: this.gameTitle })
-            .then(() => {
-              this.$emit("close-dialog")
-            })
-        }
-      },
-
-      clearFolder() {
-        this.updateGame({ ...this.game, folderId: null })
-      },
-
-      clearSpreadsheet() {
-        this.updateGame({ ...this.game, spreadsheetId: null })
-      },
-
-      pickFolderFromDrive() {
-        return openFolderPicker(this.workingDirectoryId)
-          .then((folderId) => {
-            if(!folderId) { return Promise.reject(new Error("No Folder picked.")) }
-
-            return this.updateGame({ ...this.game, folderId })
-          })
-      },
+export default {
+  props: {
+    game: {
+      required: true
     }
+  },
+
+  components: {
+    FolderIcon,
+    SpreadsheetIcon
+  },
+
+  data() {
+    return {
+      gameTitle: this.game.title,
+      rules: {
+        required: value => !!value || 'Required.'
+      }
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "workingDirectoryId",
+      "allSpreadsheets",
+    ]),
+
+    gameFolder() {
+      return this.$store.getters.gameFolder(this.game)
+    },
+
+    gameSpreadsheet() {
+      return this.$store.getters.gameSpreadsheet(this.game)
+    },
+
+    spreadsheetId: {
+      get() { return this.gameSpreadsheet },
+      set(spreadsheetId) {
+        return this.updateGame({ ...this.game, spreadsheetId })
+      }
+    },
+  },
+
+  methods: {
+    ...mapActions([
+      "updateGame",
+      "createSheetArtifactForGame"
+    ]),
+
+    submitGame() {
+      if(this.$refs.gameForm.validate()) {
+        this.updateGame({ ...this.game, title: this.gameTitle })
+          .then(() => {
+            this.$emit("close-dialog")
+          })
+      }
+    },
+
+    clearFolder() {
+      this.updateGame({ ...this.game, folderId: null })
+    },
+
+    clearSpreadsheet() {
+      this.updateGame({ ...this.game, spreadsheetId: null })
+    },
+
+    pickFolderFromDrive() {
+      return openFolderPicker(this.workingDirectoryId)
+        .then((folderId) => {
+          if(!folderId) { return Promise.reject(new Error("No Folder picked.")) }
+
+          return this.updateGame({ ...this.game, folderId })
+        })
+    },
   }
+}
 </script>

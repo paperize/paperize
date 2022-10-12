@@ -24,43 +24,43 @@ v-flex#template-editor(sm8 md6)
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import TemplateManager from './TemplateManager.vue'
-  import TemplatePreviewer from './TemplatePreviewer.vue'
+import { mapGetters, mapActions } from 'vuex'
+import TemplateManager from './TemplateManager.vue'
+import TemplatePreviewer from './TemplatePreviewer.vue'
 
-  export default {
-    props: ["component"],
+export default {
+  props: ["component"],
 
-    components: { TemplateManager, TemplatePreviewer },
+  components: { TemplateManager, TemplatePreviewer },
 
-    data() {
-      return {
-        showTemplateManager: false
-      }
-    },
+  data() {
+    return {
+      showTemplateManager: false
+    }
+  },
 
-    computed: {
-      ...mapGetters([
-        "activeGame",
-        "activeComponent",
-        "findComponentSheet",
-        "findComponentTemplate"
-      ]),
+  computed: {
+    ...mapGetters([
+      "activeGame",
+      "activeComponent",
+      "findComponentSheet",
+      "findComponentTemplate"
+    ]),
 
-      componentSource() { return this.findComponentSheet(this.component) },
+    componentSource() { return this.findComponentSheet(this.component) },
 
-      componentTemplate() { return this.findComponentTemplate(this.component) }
-    },
+    componentTemplate() { return this.findComponentTemplate(this.component) }
+  },
 
-    methods: {
-      ...mapActions(["clearActiveLayer"]),
+  methods: {
+    ...mapActions(["clearActiveLayer"]),
 
-      shutdownTemplateManager() {
-        this.showTemplateManager = false
-        this.$nextTick(() => {
-          this.clearActiveLayer()
-        })
-      }
+    shutdownTemplateManager() {
+      this.showTemplateManager = false
+      this.$nextTick(() => {
+        this.clearActiveLayer()
+      })
     }
   }
+}
 </script>

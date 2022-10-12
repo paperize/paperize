@@ -42,44 +42,44 @@ v-layout(fluid).game-panel
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
-  import pdfRenderer from '../../services/pdf_renderer'
-  import EditGameForm from './EditGameForm.vue'
-  import FolderIcon from '../icons/FolderIcon.vue'
-  import FileUploader from '../shared/FileUploader.vue'
-  import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
-  import PrintSettings from '../print/PrintSettings.vue'
+import { mapActions } from 'vuex'
+import pdfRenderer from '../../services/pdf_renderer'
+import EditGameForm from './EditGameForm.vue'
+import FolderIcon from '../icons/FolderIcon.vue'
+import FileUploader from '../shared/FileUploader.vue'
+import SpreadsheetIcon from '../icons/SpreadsheetIcon.vue'
+import PrintSettings from '../print/PrintSettings.vue'
 
-  export default {
-    props: ["game"],
+export default {
+  props: ["game"],
 
-    components: {
-      EditGameForm,
-      FolderIcon,
-      FileUploader,
-      SpreadsheetIcon,
-      PrintSettings,
+  components: {
+    EditGameForm,
+    FolderIcon,
+    FileUploader,
+    SpreadsheetIcon,
+    PrintSettings,
+  },
+
+  data() {
+    return {
+      showEditDialog: false,
+      showDeleteDialog: false,
+      showPrintSettingsDialog: false
+    }
+  },
+
+  methods: {
+    ...mapActions(["destroyGame"]),
+
+    deleteGame() {
+      this.$router.push({ name: "gameManager" })
+      return this.destroyGame(this.game)
     },
 
-    data() {
-      return {
-        showEditDialog: false,
-        showDeleteDialog: false,
-        showPrintSettingsDialog: false
-      }
-    },
-
-    methods: {
-      ...mapActions(["destroyGame"]),
-
-      deleteGame() {
-        this.$router.push({ name: "gameManager" })
-        return this.destroyGame(this.game)
-      },
-
-      printGame() {
-        pdfRenderer.renderGameToPdf(this.game)
-      }
+    printGame() {
+      pdfRenderer.renderGameToPdf(this.game)
     }
   }
+}
 </script>

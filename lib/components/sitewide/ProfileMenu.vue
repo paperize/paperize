@@ -44,50 +44,50 @@ v-btn.log-in-button(v-else text color="success" @click.stop="prepareForLogin") S
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
-  const ERROR_CODE_MAP = {
-    popup_closed_by_user: "You closed the pop-up without logging in.",
-    popup_blocked_by_browser: "Your browser blocked the login pop-up. Enable pop-ups for this site and try again!",
-    access_denied: "You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.",
-  }
+const ERROR_CODE_MAP = {
+  popup_closed_by_user: "You closed the pop-up without logging in.",
+  popup_blocked_by_browser: "Your browser blocked the login pop-up. Enable pop-ups for this site and try again!",
+  access_denied: "You denied Paperize access to the required scopes. Paperize cannot run without a linked Google account.",
+}
 
-  export default {
-    data() {
-      return {
-        showPopupHelper: false
-      }
-    },
-
-    computed: {
-      ...mapGetters([
-        'loggedIn',
-        'loginStatus',
-        'loginError',
-        'showSpinner',
-        'userName',
-        'userAvatar'
-      ]),
-
-      errorCodeInEnglish() {
-        return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`
-      }
-    },
-
-    methods: {
-      ...mapActions(["login", "logout", "revokeAccessAndLogout"]),
-
-      prepareForLogin() {
-        // Helpful information inside our app about the Google login process
-        this.showPopupHelper = true
-        // Start the Google login process
-        return this.login().then(() => {
-          if(!this.loginError) {
-            // Don't hide if there was an error to see
-            this.showPopupHelper = false
-          }
-        })
-      },
+export default {
+  data() {
+    return {
+      showPopupHelper: false
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'loggedIn',
+      'loginStatus',
+      'loginError',
+      'showSpinner',
+      'userName',
+      'userAvatar'
+    ]),
+
+    errorCodeInEnglish() {
+      return ERROR_CODE_MAP[this.loginError] || `There was an unknown error logging in: ${this.loginError}`
+    }
+  },
+
+  methods: {
+    ...mapActions(["login", "logout", "revokeAccessAndLogout"]),
+
+    prepareForLogin() {
+      // Helpful information inside our app about the Google login process
+      this.showPopupHelper = true
+      // Start the Google login process
+      return this.login().then(() => {
+        if(!this.loginError) {
+          // Don't hide if there was an error to see
+          this.showPopupHelper = false
+        }
+      })
+    },
   }
+}
 </script>

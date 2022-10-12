@@ -7,17 +7,17 @@ v-layout(column)
 </template>
 
 <script>
-  import TextLayerEditor from './TextLayerEditor.vue'
-  import ImageLayerEditor from './ImageLayerEditor.vue'
-  import ShapeLayerEditor from './ShapeLayerEditor.vue'
+import TextLayerEditor from './TextLayerEditor.vue'
+import ImageLayerEditor from './ImageLayerEditor.vue'
+import ShapeLayerEditor from './ShapeLayerEditor.vue'
 
-  export default {
-    props: ["layer", "source", "template"],
+export default {
+  props: ["layer", "source", "template"],
 
-    components: {
-      TextLayerEditor,
-      ImageLayerEditor,
-      ShapeLayerEditor,
-    },
-  }
+  components: {
+    TextLayerEditor,
+    ImageLayerEditor,
+    ShapeLayerEditor,
+  },
+}
 </script>

@@ -36,52 +36,52 @@ v-btn(v-if="anyErrors" text @click="revealErrorExplorer")
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
-  export default {
-    data() {
-      return {
-        showErrorExplorer: false
-      }
+export default {
+  data() {
+    return {
+      showErrorExplorer: false
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      "allErrors",
+      "errorCount",
+      "unreadErrorCount"
+    ]),
+
+    anyErrors() { return this.errorCount > 0 },
+  },
+
+  methods: {
+    ...mapActions([
+      "clearUnreadErrors",
+      "destroyError",
+      "clearAllErrors"
+    ]),
+
+    revealErrorExplorer() {
+      this.showErrorExplorer = true
+      this.clearUnreadErrors()
     },
 
-    computed: {
-      ...mapGetters([
-        "allErrors",
-        "errorCount",
-        "unreadErrorCount"
-      ]),
-
-      anyErrors() { return this.errorCount > 0 },
+    clearAndClose() {
+      this.showErrorExplorer = false
+      this.clearAllErrors()
     },
 
-    methods: {
-      ...mapActions([
-        "clearUnreadErrors",
-        "destroyError",
-        "clearAllErrors"
-      ]),
-
-      revealErrorExplorer() {
-        this.showErrorExplorer = true
-        this.clearUnreadErrors()
-      },
-
-      clearAndClose() {
-        this.showErrorExplorer = false
-        this.clearAllErrors()
-      },
-
-      copyToClipboard(error={}) {
-        navigator.clipboard.writeText(error.details).then(
-          () => {}, // success
-          (error) => { // failure
-            console.warn(`Failed to copy error clipboard: ${error}`)
-          }
-        )
-      }
+    copyToClipboard(error={}) {
+      navigator.clipboard.writeText(error.details).then(
+        () => {}, // success
+        (error) => { // failure
+          console.warn(`Failed to copy error clipboard: ${error}`)
+        }
+      )
     }
   }
+}
 </script>
 
 <style>

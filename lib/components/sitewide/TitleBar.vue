@@ -41,52 +41,52 @@ v-app-bar
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import DebugMenu from './DebugMenu.vue'
-  import ProfileMenu from './ProfileMenu.vue'
-  import HelpMenu from './HelpMenu.vue'
-  import ErrorsMenu from './ErrorsMenu.vue'
-  import DriveExplorer from '../drive/DriveExplorer.vue'
-  import ExportStatus from '../print/ExportStatus.vue'
-  import DatabaseManager from '../database/DatabaseManager.vue'
-  import NetworkManager from '../network/NetworkManager.vue'
+import { mapGetters } from 'vuex'
+import DebugMenu from './DebugMenu.vue'
+import ProfileMenu from './ProfileMenu.vue'
+import HelpMenu from './HelpMenu.vue'
+import ErrorsMenu from './ErrorsMenu.vue'
+import DriveExplorer from '../drive/DriveExplorer.vue'
+import ExportStatus from '../print/ExportStatus.vue'
+import DatabaseManager from '../database/DatabaseManager.vue'
+import NetworkManager from '../network/NetworkManager.vue'
 
-  export default {
-    components: {
-      DebugMenu,
-      ProfileMenu,
-      HelpMenu,
-      ErrorsMenu,
-      DatabaseManager,
-      ExportStatus,
-      DriveExplorer,
-      NetworkManager,
-    },
+export default {
+  components: {
+    DebugMenu,
+    ProfileMenu,
+    HelpMenu,
+    ErrorsMenu,
+    DatabaseManager,
+    ExportStatus,
+    DriveExplorer,
+    NetworkManager,
+  },
 
-    data() {
-      return {
-        gitSha: import.meta.env.VITE_GIT_SHA || "Unknown Git SHA",
-        showDebugMenu: false,
-        showDriveExplorer: false,
-        showDatabaseManager: false,
-        showNetworkManager: false,
-      }
-    },
-
-    computed: {
-      ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
-
-      darkMode() { return this.$vuetify.theme.dark },
-
-      homeLink () {
-        return this.loggedIn ? 'gameManager' : 'splash'
-      }
-    },
-
-    methods: {
-      setDarkMode(isDark) { this.$vuetify.theme.dark = isDark }
+  data() {
+    return {
+      gitSha: import.meta.env.VITE_GIT_SHA || "Unknown Git SHA",
+      showDebugMenu: false,
+      showDriveExplorer: false,
+      showDatabaseManager: false,
+      showNetworkManager: false,
     }
+  },
+
+  computed: {
+    ...mapGetters([ "loggedIn", "showSpinner", "isProduction" ]),
+
+    darkMode() { return this.$vuetify.theme.dark },
+
+    homeLink () {
+      return this.loggedIn ? 'gameManager' : 'splash'
+    }
+  },
+
+  methods: {
+    setDarkMode(isDark) { this.$vuetify.theme.dark = isDark }
   }
+}
 </script>
 
 <style scoped>

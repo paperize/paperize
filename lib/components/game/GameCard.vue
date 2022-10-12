@@ -23,26 +23,26 @@ v-flex.game(sm6 md4 lg3 :id="`game-${ game.id }`")
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
-  import FolderIcon from '../icons/FolderIcon.vue'
+import { mapActions } from 'vuex'
+import FolderIcon from '../icons/FolderIcon.vue'
 
-  export default {
-    props: {
-      game: {
-        required: true
-      }
-    },
+export default {
+  props: {
+    game: {
+      required: true
+    }
+  },
 
-    components: { FolderIcon },
+  components: { FolderIcon },
 
-    data() {
-      return {
-        showDeleteDialog: false
-      }
-    },
+  data() {
+    return {
+      showDeleteDialog: false
+    }
+  },
 
-    methods: mapActions(["destroyGame"]),
-  }
+  methods: mapActions(["destroyGame"]),
+}
 </script>
 
 <style scoped>

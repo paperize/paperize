@@ -41,63 +41,63 @@ v-card
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-  import moment from 'moment'
-  import FolderIcon from "../icons/FolderIcon.vue"
-  import FileUploader from '../shared/FileUploader.vue'
-  import ImageIcon from "../icons/ImageIcon.vue"
-  import SpreadsheetIcon from "../icons/SpreadsheetIcon.vue"
+import { mapGetters, mapActions } from 'vuex'
+import moment from 'moment'
+import FolderIcon from "../icons/FolderIcon.vue"
+import FileUploader from '../shared/FileUploader.vue'
+import ImageIcon from "../icons/ImageIcon.vue"
+import SpreadsheetIcon from "../icons/SpreadsheetIcon.vue"
 
-  export default {
-    components: {
-      FolderIcon,
-      FileUploader,
-      ImageIcon,
-      SpreadsheetIcon
-    },
+export default {
+  components: {
+    FolderIcon,
+    FileUploader,
+    ImageIcon,
+    SpreadsheetIcon
+  },
 
-    data() {
-      return {
-        tree: []
-      }
-    },
+  data() {
+    return {
+      tree: []
+    }
+  },
 
-    computed: mapGetters([
-      "workingDirectoryId",
-      "completeIndexAsTree"
+  computed: mapGetters([
+    "workingDirectoryId",
+    "completeIndexAsTree"
+  ]),
+
+  methods: {
+    ...mapActions([
+      "refreshRootFolderIndex",
+      "refreshFolderIndex",
+      "refreshImageRecord",
+      "refreshSheetRecord",
     ]),
 
-    methods: {
-      ...mapActions([
-        "refreshRootFolderIndex",
-        "refreshFolderIndex",
-        "refreshImageRecord",
-        "refreshSheetRecord",
-      ]),
+    refreshFolder(folderId) {
+      return folderId == this.workingDirectoryId ?
+        this.refreshRootFolderIndex() :
+        this.refreshFolderIndex({ folderId })
+    },
 
-      refreshFolder(folderId) {
-        return folderId == this.workingDirectoryId ?
-          this.refreshRootFolderIndex() :
-          this.refreshFolderIndex({ folderId })
-      },
+    lastRefresh(refreshedAt) {
+      return refreshedAt ?
+        moment(refreshedAt).fromNow() :
+        'never'
+    },
 
-      lastRefresh(refreshedAt) {
-        return refreshedAt ?
-          moment(refreshedAt).fromNow() :
-          'never'
-      },
+    neverRefreshed(item) {
+      return !item.refreshedAt
+    },
 
-      neverRefreshed(item) {
-        return !item.refreshedAt
-      },
-
-      refreshColor(item) {
-        if(!item.refreshedAt) {
-          return 'rgb(200, 200, 200)'
-        }
+    refreshColor(item) {
+      if(!item.refreshedAt) {
+        return 'rgb(200, 200, 200)'
       }
     }
   }
+}
 </script>
 
 <style scoped>

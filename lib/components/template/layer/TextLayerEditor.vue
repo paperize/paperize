@@ -59,81 +59,81 @@ v-expansion-panels#text-layer-editor(popout)
 </template>
 
 <script>
-  import { debounce, find } from 'lodash'
-  import { mapActions, mapGetters } from 'vuex'
-  import { computedVModelUpdateAll } from '../../util/component_helper'
-  import NameEditor from './NameEditor.vue'
-  import DimensionEditor from './DimensionEditor.vue'
-  import ColorPicker from '../../shared/ColorPicker.vue'
-  import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
+import { find } from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
+import { computedVModelUpdateAll } from '../../util/component_helper'
+import NameEditor from './NameEditor.vue'
+import DimensionEditor from './DimensionEditor.vue'
+import ColorPicker from '../../shared/ColorPicker.vue'
+import MagicPropertyInputTalker from '../../source/MagicPropertyInputTalker.vue'
 
 
-  export default {
-    props: ["layer", "source"],
+export default {
+  props: ["layer", "source"],
 
-    mounted() { this.fetchGoogleFonts() },
+  mounted() { this.fetchGoogleFonts() },
 
-    components: {
-      NameEditor,
-      DimensionEditor,
-      ColorPicker,
-      MagicPropertyInputTalker,
+  components: {
+    NameEditor,
+    DimensionEditor,
+    ColorPicker,
+    MagicPropertyInputTalker,
+  },
+
+  computed: {
+    ...mapGetters([
+      "getLayerDimensions",
+      "findTemplateByLayerId",
+      "allFonts"
+    ]),
+
+    dimensions() { return this.getLayerDimensions(this.layer) },
+
+    templateSize() {
+      const template = this.findTemplateByLayerId(this.layer.id)
+      return template && template.size
     },
 
-    computed: {
-      ...mapGetters([
-        "getLayerDimensions",
-        "findTemplateByLayerId",
-        "allFonts"
-      ]),
+    availableFontStyles() {
+      const font = find(this.allFonts, { family: this.textFontName })
 
-      dimensions() { return this.getLayerDimensions(this.layer) },
-
-      templateSize() {
-        const template = this.findTemplateByLayerId(this.layer.id)
-        return template && template.size
-      },
-
-      availableFontStyles() {
-        const font = find(this.allFonts, { family: this.textFontName })
-
-        return font && font.variants || []
-      },
-
-      propertyNames() {
-        return this.$store.getters.sourceProperties(this.source)
-      },
-
-      ...computedVModelUpdateAll("layer", "patchLayer", [
-        "textFontName",
-        "textFontStyle",
-        "textContentTemplate",
-        "textColor",
-        "textSize",
-        "horizontalAlignment",
-        "verticalAlignment",
-      ])
+      return font && font.variants || []
     },
 
-    methods: {
-      ...mapActions(["patchLayer", "fetchGoogleFonts"]),
-
-      ensureValidStyle() {
-        // Wait for styles to be reactively updated
-        this.$nextTick(() => {
-          // If our selected style vanished
-          if(this.availableFontStyles.indexOf(this.textFontStyle) == -1) {
-            // Default to a working style
-            this.textFontStyle = this.availableFontStyles[0]
-          }
-        })
-      },
+    propertyNames() {
+      return this.$store.getters.sourceProperties(this.source)
     },
 
-    watch: {
-      availableFontStyles: "ensureValidStyle"
-    }
+    ...computedVModelUpdateAll("layer", "patchLayer", [
+      "textFontName",
+      "textFontStyle",
+      "textContentTemplate",
+      "textColor",
+      "textSize",
+      "horizontalAlignment",
+      "verticalAlignment",
+    ])
+  },
+
+  methods: {
+    ...mapActions(["patchLayer", "fetchGoogleFonts"]),
+
+    ensureValidStyle() {
+      // Wait for styles to be reactively updated
+      this.$nextTick(() => {
+        // If our selected style vanished
+        if(this.availableFontStyles.indexOf(this.textFontStyle) == -1) {
+          // Default to a working style
+          this.textFontStyle = this.availableFontStyles[0]
+        }
+      })
+    },
+  },
+
+  watch: {
+    availableFontStyles: "ensureValidStyle"
   }
+}
 </script>
 
 <style scoped>

@@ -6,12 +6,12 @@ v-container(grid-list-md)
 </template>
 
 <script>
-  import SourcePanel from '../source/SourcePanel.vue'
-  import TemplatePanel from '../template/TemplatePanel.vue'
+import SourcePanel from '../source/SourcePanel.vue'
+import TemplatePanel from '../template/TemplatePanel.vue'
 
-  export default {
-    props: ["component"],
+export default {
+  props: ["component"],
 
-    components: { SourcePanel, TemplatePanel },
-  }
+  components: { SourcePanel, TemplatePanel },
+}
 </script>
