@@ -20,9 +20,9 @@ div(v-else-if="exportFormat == 'svg'")
 import { debounce } from 'lodash'
 import { mapGetters } from 'vuex'
 import pdfRenderer from '../../services/pdf_renderer'
-import { renderItemToPNG, renderItemToSVG, renderItemToJPG } from '../../services/svg_renderer'
+import { renderItemToPNG, renderItemToSVG, renderItemToJPG, renderItemToPDF } from '../../services/svg_renderer'
 
-const RENDER_DELAY_MS = 600
+const RENDER_DELAY_MS = 250
 
 // quick/dirty useragent detection
 const
@@ -147,6 +147,8 @@ export default {
     },
 
     renderPDF: debounce(async function() {
+      // this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
+
       this.pdfBlob = await pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate)
     }, RENDER_DELAY_MS)
   }
