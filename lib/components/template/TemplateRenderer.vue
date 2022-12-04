@@ -139,20 +139,20 @@ export default {
     },
 
     async renderPNG() {
-      // this.pngData = await renderItemToPNG(this.game, this.component, this.componentTemplate, this.item)
+      this.pngData = await renderItemToPNG(this.game, this.component, this.componentTemplate, this.item)
 
-      this.pngData = (await renderComponentToPNG(this.game, this.component))
+      // this.pngData = (await renderComponentToPNG(this.game, this.component))
     },
 
     async renderSVG() {
-      // this.svgData = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
+      this.svgData = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
 
-      this.svgData = (await renderComponentToSVG(this.game, this.component))
+      // this.svgData = (await renderComponentToSVG(this.game, this.component))
     },
 
     renderPDF: debounce(async function() {
-      // this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
-      this.pdfBlob = await renderComponentToPDF(this.game, this.component)
+      this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
+      // this.pdfBlob = await renderComponentToPDF(this.game, this.component)
 
       // this.pdfBlob = await pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate)
     }, RENDER_DELAY_MS)
