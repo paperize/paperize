@@ -24,7 +24,7 @@
     "aws-sdk": "^2.1033.0",
     "cloc": "^2.3.4",
     "coffee-loader": "^0.9.0",
-    "coffeescript": "^2.0.0",
+    "coffeescript": "^2.7.0",
     "concurrently": "^3.5.0",
     "core-util-is": "^1.0.2",
     "eslint": "^8.3.0",
