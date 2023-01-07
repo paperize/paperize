@@ -13,7 +13,7 @@ div
         v-btn(value="svg") .SVG
 
   v-layout
-    v-flex(xs12)
+    v-flex.preview-container(xs12)
       p(v-if="!currentItem") Nothing to render.
 
       template(v-else)
@@ -83,3 +83,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.preview-container * {
+  max-width: 100%;
+}
+</style>
