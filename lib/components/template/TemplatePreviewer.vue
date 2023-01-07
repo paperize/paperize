@@ -7,6 +7,7 @@ div
   v-layout
     v-flex(xs12)
       v-btn-toggle(v-model="exportFormat")
+        v-btn(title="Legacy" value="pdf-old") .PDF
         v-btn(value="pdf") .PDF
         v-btn(value="jpg") .JPG
         v-btn(value="png") .PNG

@@ -1,5 +1,5 @@
 <template lang="pug">
-div(v-if="exportFormat == 'pdf'")
+div(v-if="exportFormat.startsWith('pdf')")
   iframe(v-if="isSafari" :src="pdfBlob")
   object(v-else :data="pdfBlob" type="application/pdf")
   //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
@@ -129,6 +129,9 @@ export default {
       case 'svg':
         this.renderSVG()
         break
+      case 'pdf-old':
+        this.renderPDFOld()
+        break
       default:
         throw new Error(`Unrecognized Render Format: ${this.exportFormat}`)
       }
@@ -146,9 +149,11 @@ export default {
       this.svgData = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
     },
 
-    renderPDF: debounce(async function() {
-      // this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
+    async renderPDF() {
+      this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
+    },
 
+    renderPDFOld: debounce(async function() {
       this.pdfBlob = await pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate)
     }, RENDER_DELAY_MS)
   }
