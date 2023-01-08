@@ -5,20 +5,11 @@ div
       v-autocomplete(label="Go To Item:" v-model="inputIndex" :items="itemsIndex" filled)
 
   v-layout
-    v-flex(xs12)
-      v-btn-toggle(v-model="exportFormat")
-        v-btn(title="Legacy" value="pdf-old") .PDF
-        v-btn(value="pdf") .PDF
-        v-btn(value="jpg") .JPG
-        v-btn(value="png") .PNG
-        v-btn(value="svg") .SVG
-
-  v-layout
     v-flex.preview-container(xs12)
       p(v-if="!currentItem") Nothing to render.
 
       template(v-else)
-        template-renderer(:exportFormat="exportFormat" :game="game" :component="component" :item="currentItem")
+        template-renderer(exportFormat="pdf-old" :game="game" :component="component" :item="currentItem")
 
   v-layout
     v-flex(xs12)
@@ -45,8 +36,7 @@ export default {
 
   data() {
     return {
-      currentItemIndex: 1,
-      exportFormat: 'svg'
+      currentItemIndex: 1
     }
   },
 
@@ -86,7 +76,7 @@ export default {
 </script>
 
 <style>
-.preview-container * {
-  max-width: 100%;
+.preview-container {
+  min-height: 400px;
 }
 </style>

@@ -6,6 +6,8 @@ v-flex#template-editor(sm8 md6)
     v-btn(fab small @click="showTemplateManager = true")
       v-icon edit
 
+    v-btn(small @click="showRendererExperiment = true") Test New Renderer
+
     template-previewer.inline-preview(v-if="!showTemplateManager" :game="activeGame" :component="activeComponent")
 
   template(v-else)
@@ -21,21 +23,26 @@ v-flex#template-editor(sm8 md6)
 
   v-dialog(v-model="showTemplateManager")
     template-manager(:component="component" @close-dialog="shutdownTemplateManager()")
+
+  v-dialog(v-model="showRendererExperiment")
+    renderer-experiment(:component="component" @close-dialog="showRendererExperiment = false")
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import TemplateManager from './TemplateManager.vue'
   import TemplatePreviewer from './TemplatePreviewer.vue'
+  import RendererExperiment from './RendererExperiment.vue'
 
   export default {
     props: ["component"],
 
-    components: { TemplateManager, TemplatePreviewer },
+    components: { TemplateManager, TemplatePreviewer, RendererExperiment },
 
     data() {
       return {
-        showTemplateManager: false
+        showTemplateManager: false,
+        showRendererExperiment: false
       }
     },
 

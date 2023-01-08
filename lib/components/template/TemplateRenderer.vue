@@ -5,14 +5,13 @@ div(v-if="exportFormat.startsWith('pdf')")
   //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
 
 div(v-else-if="exportFormat == 'jpg'")
-  img(:src="jpgData")
+  img(:src="jpgData" style="max-width: 100%;")
 
 div(v-else-if="exportFormat == 'png'")
-  img(:src="pngData")
+  img(:src="pngData" style="max-width: 100%;")
 
 div(v-else-if="exportFormat == 'svg'")
-  img(:src="svgData")
-  //- div(v-html="svgString")
+  img(:src="svgData" style="max-width: 100%;")
 
 </template>
 
@@ -163,6 +162,6 @@ export default {
 <style scoped>
   iframe, object, embed {
     width: 100%;
-    min-height: 400px;
+    min-height: 450px;
   }
 </style>
