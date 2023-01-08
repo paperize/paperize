@@ -25,7 +25,7 @@ v-flex#template-editor(sm8 md6)
     template-manager(:component="component" @close-dialog="shutdownTemplateManager()")
 
   v-dialog(v-model="showRendererExperiment")
-    renderer-experiment(:component="component" @close-dialog="showRendererExperiment = false")
+    renderer-experiment(v-if="showRendererExperiment" :component="component" @close-dialog="showRendererExperiment = false")
 </template>
 
 <script>
