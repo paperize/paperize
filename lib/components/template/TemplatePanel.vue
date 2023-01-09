@@ -6,7 +6,7 @@ v-flex#template-editor(sm8 md6)
     v-btn(fab small @click="showTemplateManager = true")
       v-icon edit
 
-    v-btn(small @click="showRendererExperiment = true") Test New Renderer
+    v-btn(small @click="showRendererExperiment = true") Render Test
 
     template-previewer.inline-preview(v-if="!showTemplateManager" :game="activeGame" :component="activeComponent")
 
