@@ -5,7 +5,7 @@ v-app-bar
 
     v-tooltip(bottom)
       template(v-slot:activator="{ on }")
-        span.caption(v-on="on")= " ver.A8.7.2"
+        span.caption(v-on="on")= " ver.A8.8.0"
       | Alpha 8 "Personal Space" {{ gitSha }}
 
   v-spacer
