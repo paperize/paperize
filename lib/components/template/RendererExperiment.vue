@@ -4,11 +4,14 @@ v-card
     .headline Renderer Comparator
 
   v-card-text
-    v-layout
-      v-flex(sm6)
+    v-layout(flex-wrap)
+      v-flex(xs12)
+        p Side-by-side PDF render accuracy test, report large differences on Discord with a screenshot and description of the template layers in question. Also try the SVG, PNG, and JPG outputs for sheer speed.
+
+      v-flex(xs6)
         template-previewer(:game="activeGame" :component="activeComponent")
 
-      v-flex(sm6)
+      v-flex(xs6)
         v-btn-toggle(v-model="exportFormat" style="margin-bottom: 38px;")
           v-btn(value="pdf") .PDF
           v-btn(value="jpg") .JPG
@@ -31,7 +34,7 @@ export default {
 
   data() {
     return {
-      exportFormat: 'svg'
+      exportFormat: 'pdf'
     }
   },
 
