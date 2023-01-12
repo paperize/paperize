@@ -5,9 +5,11 @@ div
       v-autocomplete(label="Go To Item:" v-model="inputIndex" :items="itemsIndex" filled)
 
   v-layout
-    v-flex(xs12)
-      template-renderer(v-if="currentItem" :game="game" :component="component" :item="currentItem")
-      p(v-else) Nothing to render.
+    v-flex.preview-container(xs12)
+      p(v-if="!currentItem") Nothing to render.
+
+      template(v-else)
+        template-renderer(exportFormat="pdf-old" :game="game" :component="component" :item="currentItem")
 
   v-layout
     v-flex(xs12)
@@ -34,7 +36,7 @@ export default {
 
   data() {
     return {
-      currentItemIndex: 1,
+      currentItemIndex: 1
     }
   },
 
@@ -72,3 +74,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.preview-container {
+  min-height: 400px;
+}
+</style>

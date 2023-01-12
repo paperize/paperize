@@ -1,16 +1,27 @@
 <template lang="pug">
-div
+div(v-if="exportFormat.startsWith('pdf')")
   iframe(v-if="isSafari" :src="pdfBlob")
   object(v-else :data="pdfBlob" type="application/pdf")
   //- embed(:src="pdfBlob" width="100%" height="100%" name="plugin" id="plugin" type="application/pdf")
+
+div(v-else-if="exportFormat == 'jpg'")
+  img(:src="jpgData" style="max-width: 100%;")
+
+div(v-else-if="exportFormat == 'png'")
+  img(:src="pngData" style="max-width: 100%;")
+
+div(v-else-if="exportFormat == 'svg'")
+  img(:src="svgData" style="max-width: 100%;")
+
 </template>
 
 <script>
 import { debounce } from 'lodash'
 import { mapGetters } from 'vuex'
 import pdfRenderer from '../../services/pdf_renderer'
+import { renderItemToPDF, renderItemToPNG, renderItemToSVG, renderItemToJPG } from '../../services/svg_renderer'
 
-const RENDER_DELAY_MS = 600
+const RENDER_DELAY_MS = 250
 
 // quick/dirty useragent detection
 const
@@ -19,12 +30,19 @@ const
   isSafari = !isChrome && userAgent.indexOf('safari/') > -1
 
 export default {
-  props: ["game", "component", "item"],
+  props: ["exportFormat", "game", "component", "item"],
 
-  mounted() { this.renderPDF() },
+  mounted() { this.rerender() },
 
   data() {
-    return { isSafari, isChrome, pdfBlob: null }
+    return {
+      isSafari,
+      isChrome,
+      pdfBlob: null,
+      svgData: null,
+      pngData: null,
+      jpgData: null,
+    }
   },
 
   computed: {
@@ -64,41 +82,78 @@ export default {
 
   watch: {
     // Props
-    game: "renderPDF",
-    component: "renderPDF",
-    item: "renderPDF",
+    exportFormat: "rerender",
+    game: "rerender",
+    component: "rerender",
+    item: "rerender",
     // Computed
-    activeDimensions: "renderPDF",
-    templateLayers: "renderPDF",
-    activeLayer: "renderPDF",
-    layerStrokePresent: "renderPDF",
-    layerStrokeWidth: "renderPDF",
-    layerStrokeColor: "renderPDF",
-    layerFillPresent: "renderPDF",
-    layerFillColor: "renderPDF",
-    layerImageNameStatic: "renderPDF",
-    layerImageName: "renderPDF",
-    layerImageNamePrefix: "renderPDF",
-    layerVisible: "renderPDF",
-    layerImageNameProperty: "renderPDF",
-    layerImageNameSuffix: "renderPDF",
-    layerImageScaling: "renderPDF",
-    layerHorizontalAlignment: "renderPDF",
-    layerVerticalAlignment: "renderPDF",
-    layerTextContentTemplate: "renderPDF",
-    layerTextColor: "renderPDF",
-    layerTextSize: "renderPDF",
-    layerHighlighting: "renderPDF",
-    allFonts: "renderPDF"
+    activeDimensions: "rerender",
+    templateLayers: "rerender",
+    activeLayer: "rerender",
+    layerStrokePresent: "rerender",
+    layerStrokeWidth: "rerender",
+    layerStrokeColor: "rerender",
+    layerFillPresent: "rerender",
+    layerFillColor: "rerender",
+    layerImageNameStatic: "rerender",
+    layerImageName: "rerender",
+    layerImageNamePrefix: "rerender",
+    layerVisible: "rerender",
+    layerImageNameProperty: "rerender",
+    layerImageNameSuffix: "rerender",
+    layerImageScaling: "rerender",
+    layerHorizontalAlignment: "rerender",
+    layerVerticalAlignment: "rerender",
+    layerTextContentTemplate: "rerender",
+    layerTextColor: "rerender",
+    layerTextSize: "rerender",
+    layerHighlighting: "rerender",
+    allFonts: "rerender"
   },
 
   methods: {
-    renderPDF: debounce(function() {
-      if(this.game && this.component && this.item && this.componentTemplate) {
-        pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate).then((pdf) => {
-          this.pdfBlob = pdf
-        })
+    rerender() {
+      if(!this.game || !this.component || !this.item || !this.componentTemplate) { return }
+
+      switch(this.exportFormat){
+      case 'pdf':
+        this.renderPDF()
+        break
+      case 'jpg':
+        this.renderJPG()
+        break
+      case 'png':
+        this.renderPNG()
+        break
+      case 'svg':
+        this.renderSVG()
+        break
+      case 'pdf-old':
+        this.renderPDFOld()
+        break
+      default:
+        throw new Error(`Unrecognized Render Format: ${this.exportFormat}`)
       }
+    },
+
+    async renderJPG() {
+      this.jpgData = await renderItemToJPG(this.game, this.component, this.componentTemplate, this.item)
+    },
+
+    async renderPNG() {
+      this.pngData = await renderItemToPNG(this.game, this.component, this.componentTemplate, this.item)
+    },
+
+    async renderSVG() {
+      this.svgData = await renderItemToSVG(this.game, this.component, this.componentTemplate, this.item)
+    },
+
+    async renderPDF() {
+      this.pdfBlob = await renderItemToPDF(this.game, this.component, this.componentTemplate, this.item)
+    },
+
+    renderPDFOld: debounce(async function() {
+      this.pdfBlob = await pdfRenderer.renderItemToPdf(this.game, this.component, this.item, this.componentTemplate)
     }, RENDER_DELAY_MS)
   }
 }
@@ -107,6 +162,6 @@ export default {
 <style scoped>
   iframe, object, embed {
     width: 100%;
-    min-height: 400px;
+    min-height: 450px;
   }
 </style>

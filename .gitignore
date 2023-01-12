@@ -6,3 +6,4 @@ cypress/screenshots
 cypress/videos
 .api_keys*.json
 .env.*
+src-tauri
